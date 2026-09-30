@@ -123,8 +123,11 @@ const Moteur = (() => {
       }
       s -= 1.5 * usages(r);
       s -= poidsCout * (coutRef(r) / coutMoyen - 1);
-      // stock de départ : bonus si le plat l'utilise et qu'il en reste assez
-      for (const [a, q] of r.portions.nicolas) if (stockDispo[a] != null && stockDispo[a] >= q * 2) s += 1.5;
+      // stock de départ : bonus si le plat l'utilise et qu'il en reste assez ; en mode « selon le stock »,
+      // chaque ingrédient qu'il faudrait acheter pénalise aussi le plat
+      for (const [a, q] of r.portions.nicolas) if (stockDispo[a] != null && stockDispo[a] >= q * 2) s += ctx.poidsStock != null ? ctx.poidsStock : 1.5;
+      if (ctx.penaliteManque && stockConnu)
+        for (const [a] of r.portions.nicolas) if (!(stockDispo[a] >= besoinRef(r, a))) s -= ctx.penaliteManque;
       // avant la première course, on vit sur le stock : chaque ingrédient manquant coûte cher
       if (j <= avantCourse && stockConnu)
         for (const [a] of r.portions.nicolas) if (!(stockDispo[a] >= besoinRef(r, a))) s -= 2;
@@ -370,6 +373,7 @@ const Moteur = (() => {
     for (let passe = 0; passe < passes; passe++) {
       const historique = (entrees.historique || []).map(h => ({ j: Math.round((dateISO(h.date) - debut) / JOUR_MS) + 1, recette: h.recette }));
       const ctx = { cat, recettes: recs, reglages, cal, exclure, quotas, invites, historique, stockDepart: entrees.stockDepart || {},
+        poidsStock: entrees.poidsStock, penaliteManque: entrees.penaliteManque || 0,
         alea: hasard((entrees.graine || 1) + passe * 7919), poidsCout: 0.5 + passe * pasCout };
       const { grille, joursPlaisir } = composer(ctx);
       const plan = [];
@@ -527,6 +531,13 @@ const Moteur = (() => {
       recompose: true, budget: bilanBudget, bilan: suite.bilan };
   }
 
-  return { composerMois, reajuster, avecPrix, objectifs, prixUnitaire, totaux, calendrier, portionsDuJour, aProteineAnimale };
+  // Listes de courses d'un planning existant (par exemple octobre repassé en courses hebdomadaires).
+  // e : { catalogue, reglages, plan, debut, joursCourses (dates ISO), stockDepart?, invites? }
+  function coursesPour(e) {
+    const cal = calendrier(dateISO(e.debut), e.plan.length, e.reglages, e.joursCourses);
+    return listeCourses({ cat: e.catalogue, reglages: e.reglages, cal, invites: e.invites || 0, stockDepart: e.stockDepart || {} }, e.plan);
+  }
+
+  return { composerMois, reajuster, coursesPour, avecPrix, objectifs, prixUnitaire, totaux, calendrier, portionsDuJour, aProteineAnimale };
 })();
 if (typeof module !== "undefined") module.exports = Moteur;

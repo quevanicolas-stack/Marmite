@@ -18,10 +18,27 @@ sans_jambon = lambda x: {a: v for a, v in x.items() if a != "Jambon" and a in or
 verif(sans_jambon(d["cat"]) == sans_jambon(orig["cat"]), "cat diffère de l'archive")
 j = d["cat"]["Jambon"]
 verif(j["vrac"] == 1 and j["cond"] == 1 and j["prix"] == 11.24, f"jambon : {j}")
+# courses hebdomadaires depuis le 30/09/2026 : l'ancienne liste en deux courses reste dans coursesDeuxFois
+octobre = json.loads((RACINE / "donnees" / "mois" / "2026-10.json").read_text(encoding="utf-8"))
 courses_sans = lambda cs: [dict(c, items=[i for i in c["items"] if i["a"] != "Jambon"]) for c in cs]
-verif(courses_sans(d["courses"]) == courses_sans(orig["courses"]), "courses diffèrent de l'archive")
+verif(courses_sans(octobre["coursesDeuxFois"]) == courses_sans(orig["courses"]), "ancienne liste d'octobre modifiée")
+verif([c["date"] for c in d["courses"]] == ["2026-10-01", "2026-10-08", "2026-10-15"], "courses hebdomadaires attendues le 1er, le 8 et le 15")
+verif([c["jourPlan"] for c in d["courses"]] == [1, 8, 15], "jours des courses")
 achats_jambon = [(i["buy"], i["est"]) for c in d["courses"] for i in c["items"] if i["a"] == "Jambon"]
-verif(achats_jambon == [(150, 1.69), (550, 6.18)], f"jambon acheté : {achats_jambon}")
+verif(achats_jambon == [(210, 2.36), (210, 2.36), (280, 3.15)], f"jambon acheté : {achats_jambon}")
+# chaque produit du planning est acheté en quantité suffisante sur le cycle
+besoin = {}
+for j in d["plan"]:
+    for m in j["meals"]:
+        for p in ("nicolas", "aurelie"):
+            for a, q in m["items"][p]: besoin[a] = besoin.get(a, 0) + q
+achete = {a: q for a, q in octobre["stockDepart"].items()}
+for c in d["courses"]:
+    for i in c["items"]:
+        cc = d["cat"][i["a"]]
+        achete[i["a"]] = achete.get(i["a"], 0) + (i["buy"] * cc["rend"] if cc["vrac"] else i["buy"] * cc["cond"])
+for a, q in besoin.items():
+    verif(achete.get(a, 0) >= q - 0.01, f"{a} : {achete.get(a, 0)} achetés pour {q} consommés")
 verif({a: v for a, v in d["nut"].items() if a in orig["nut"]} == orig["nut"], "nut diffère de l'archive")
 verif(d["share"] == orig["share"], "share diffère de l'archive")
 verif(list(d["nut"])[:len(orig["nut"])] == list(orig["nut"]), "ordre de nut modifié")

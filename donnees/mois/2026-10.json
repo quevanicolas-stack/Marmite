@@ -25,12 +25,12 @@
   "Riz (sec)": 0.6667,
   "Pâtes (sèches)": 0.6364,
   "Pâtes à lasagnes (sèches)": 0.5909,
-  "Flocons d'avoine": 1.0,
+  "Flocons d'avoine": 1,
   "Pommes de terre": 0.6981,
   "Patates douces": 0.6818,
   "Wraps": 0.6667,
   "Pains burger": 0.5,
-  "Pain complet": 0.0,
+  "Pain complet": 0,
   "Haricots verts": 0.4639,
   "Carottes": 0.4431,
   "Oignons": 0.5,
@@ -41,14 +41,14 @@
   "Aubergines": 0.4468,
   "Champignons": 0.473,
   "Salade": 0.4018,
-  "Pommes": 0.0,
-  "Bananes": 1.0,
+  "Pommes": 0,
+  "Bananes": 1,
   "Avocat (chair)": 0.5732,
   "Mangue": 0.5556,
   "Ananas": 0.55,
   "Glace": 0.5769,
   "Chocolat noir": 0.5385,
-  "Café": 1.0,
+  "Café": 1,
   "Eau (bouteilles 5 L)": 0.5,
   "Citrons": 0.5,
   "Sauce soja": 0.5,
@@ -77,41 +77,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -128,37 +128,37 @@
       "nicolas": [
        [
         "Poulet",
-        150.0
+        150
        ],
        [
         "Pommes de terre",
-        360.0
+        360
        ],
        [
         "Haricots verts",
-        250.0
+        250
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        120.0
+        120
        ],
        [
         "Pommes de terre",
-        170.0
+        170
        ],
        [
         "Haricots verts",
-        280.0
+        280
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -175,53 +175,53 @@
       "nicolas": [
        [
         "Poisson blanc",
-        150.0
+        150
        ],
        [
         "Patates douces",
-        300.0
+        300
        ],
        [
         "Courgettes",
-        170.0
+        170
        ],
        [
         "Poivrons",
-        50.0
+        50
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poisson blanc",
-        125.0
+        125
        ],
        [
         "Patates douces",
-        140.0
+        140
        ],
        [
         "Courgettes",
-        200.0
+        200
        ],
        [
         "Poivrons",
-        60.0
+        60
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -238,21 +238,21 @@
       "nicolas": [
        [
         "Yaourt nature",
-        125.0
+        125
        ],
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Yaourt nature",
-        125.0
+        125
        ],
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ]
      },
@@ -276,41 +276,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -327,61 +327,61 @@
       "nicolas": [
        [
         "Poulet",
-        100.0
+        100
        ],
        [
         "Lentilles (égouttées)",
-        140.0
+        140
        ],
        [
         "Riz (sec)",
-        50.0
+        50
        ],
        [
         "Tomates",
-        120.0
+        120
        ],
        [
         "Oignons",
-        40.0
+        40
        ],
        [
         "Carottes",
-        80.0
+        80
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        80.0
+        80
        ],
        [
         "Lentilles (égouttées)",
-        120.0
+        120
        ],
        [
         "Riz (sec)",
-        20.0
+        20
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Oignons",
-        40.0
+        40
        ],
        [
         "Carottes",
-        100.0
+        100
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -398,61 +398,61 @@
       "nicolas": [
        [
         "Œufs",
-        3.0
+        3
        ],
        [
         "Pommes de terre",
-        300.0
+        300
        ],
        [
         "Courgettes",
-        150.0
+        150
        ],
        [
         "Tomates",
-        100.0
+        100
        ],
        [
         "Salade",
-        40.0
+        40
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Huile",
-        8.0
+        8
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Pommes de terre",
-        110.0
+        110
        ],
        [
         "Courgettes",
-        170.0
+        170
        ],
        [
         "Tomates",
-        130.0
+        130
        ],
        [
         "Salade",
-        60.0
+        60
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Huile",
-        6.0
+        6
        ]
       ]
      },
@@ -469,13 +469,13 @@
       "nicolas": [
        [
         "Ananas",
-        110.0
+        110
        ]
       ],
       "aurelie": [
        [
         "Ananas",
-        90.0
+        90
        ]
       ]
      },
@@ -499,41 +499,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -550,53 +550,53 @@
       "nicolas": [
        [
         "Lentilles (égouttées)",
-        150.0
+        150
        ],
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Pommes de terre",
-        240.0
+        240
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Lentilles (égouttées)",
-        120.0
+        120
        ],
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Pommes de terre",
-        90.0
+        90
        ],
        [
         "Tomates",
-        180.0
+        180
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -613,53 +613,53 @@
       "nicolas": [
        [
         "Bœuf",
-        130.0
+        130
        ],
        [
         "Riz (sec)",
-        85.0
+        85
        ],
        [
         "Poivrons",
-        60.0
+        60
        ],
        [
         "Carottes",
-        80.0
+        80
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Bœuf",
-        100.0
+        100
        ],
        [
         "Riz (sec)",
-        45.0
+        45
        ],
        [
         "Poivrons",
-        80.0
+        80
        ],
        [
         "Carottes",
-        100.0
+        100
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -676,13 +676,13 @@
       "nicolas": [
        [
         "Ananas",
-        110.0
+        110
        ]
       ],
       "aurelie": [
        [
         "Ananas",
-        90.0
+        90
        ]
       ]
      },
@@ -706,41 +706,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -757,69 +757,69 @@
       "nicolas": [
        [
         "Bœuf",
-        150.0
+        150
        ],
        [
         "Pains burger",
-        1.0
+        1
        ],
        [
         "Cheddar",
-        20.0
+        20
        ],
        [
         "Tomates",
-        60.0
+        60
        ],
        [
         "Salade",
-        30.0
+        30
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Pommes de terre",
-        300.0
+        300
        ],
        [
         "Huile",
-        8.0
+        8
        ]
       ],
       "aurelie": [
        [
         "Bœuf",
-        120.0
+        120
        ],
        [
         "Pains burger",
-        1.0
+        1
        ],
        [
         "Cheddar",
-        15.0
+        15
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Salade",
-        40.0
+        40
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Pommes de terre",
-        140.0
+        140
        ],
        [
         "Huile",
-        5.0
+        5
        ]
       ]
      },
@@ -836,53 +836,53 @@
       "nicolas": [
        [
         "Poulet",
-        130.0
+        130
        ],
        [
         "Avocat (chair)",
-        80.0
+        80
        ],
        [
         "Tomates",
-        120.0
+        120
        ],
        [
         "Maïs",
-        40.0
+        40
        ],
        [
         "Salade",
-        40.0
+        40
        ],
        [
         "Huile",
-        8.0
+        8
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        100.0
+        100
        ],
        [
         "Avocat (chair)",
-        60.0
+        60
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Maïs",
-        30.0
+        30
        ],
        [
         "Salade",
-        60.0
+        60
        ],
        [
         "Huile",
-        6.0
+        6
        ]
       ]
      },
@@ -899,13 +899,13 @@
       "nicolas": [
        [
         "Glace",
-        75.0
+        75
        ]
       ],
       "aurelie": [
        [
         "Glace",
-        55.0
+        55
        ]
       ]
      },
@@ -929,41 +929,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -980,37 +980,37 @@
       "nicolas": [
        [
         "Poulet",
-        150.0
+        150
        ],
        [
         "Patates douces",
-        300.0
+        300
        ],
        [
         "Haricots verts",
-        250.0
+        250
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        120.0
+        120
        ],
        [
         "Patates douces",
-        140.0
+        140
        ],
        [
         "Haricots verts",
-        280.0
+        280
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -1027,53 +1027,53 @@
       "nicolas": [
        [
         "Poulet",
-        130.0
+        130
        ],
        [
         "Avocat (chair)",
-        80.0
+        80
        ],
        [
         "Carottes",
-        100.0
+        100
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pommes de terre",
-        240.0
+        240
        ],
        [
         "Huile",
-        8.0
+        8
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        100.0
+        100
        ],
        [
         "Avocat (chair)",
-        60.0
+        60
        ],
        [
         "Carottes",
-        120.0
+        120
        ],
        [
         "Tomates",
-        100.0
+        100
        ],
        [
         "Pommes de terre",
-        90.0
+        90
        ],
        [
         "Huile",
-        6.0
+        6
        ]
       ]
      },
@@ -1090,21 +1090,21 @@
       "nicolas": [
        [
         "Yaourt nature",
-        125.0
+        125
        ],
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Yaourt nature",
-        125.0
+        125
        ],
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ]
      },
@@ -1128,41 +1128,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -1179,53 +1179,53 @@
       "nicolas": [
        [
         "Poulet",
-        150.0
+        150
        ],
        [
         "Poivrons",
-        70.0
+        70
        ],
        [
         "Tomates",
-        120.0
+        120
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Riz (sec)",
-        85.0
+        85
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        120.0
+        120
        ],
        [
         "Poivrons",
-        90.0
+        90
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Riz (sec)",
-        45.0
+        45
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -1242,45 +1242,45 @@
       "nicolas": [
        [
         "Poulet",
-        120.0
+        120
        ],
        [
         "Pâtes (sèches)",
-        105.0
+        105
        ],
        [
         "Champignons",
-        80.0
+        80
        ],
        [
         "Courgettes",
-        120.0
+        120
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        90.0
+        90
        ],
        [
         "Pâtes (sèches)",
-        60.0
+        60
        ],
        [
         "Champignons",
-        80.0
+        80
        ],
        [
         "Courgettes",
-        150.0
+        150
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -1297,13 +1297,13 @@
       "nicolas": [
        [
         "Chocolat noir",
-        15.0
+        15
        ]
       ],
       "aurelie": [
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ]
      },
@@ -1327,41 +1327,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -1378,37 +1378,37 @@
       "nicolas": [
        [
         "Poisson blanc",
-        150.0
+        150
        ],
        [
         "Patates douces",
-        300.0
+        300
        ],
        [
         "Haricots verts",
-        250.0
+        250
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poisson blanc",
-        125.0
+        125
        ],
        [
         "Patates douces",
-        140.0
+        140
        ],
        [
         "Haricots verts",
-        280.0
+        280
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -1425,69 +1425,69 @@
       "nicolas": [
        [
         "Poulet",
-        150.0
+        150
        ],
        [
         "Aubergines",
-        100.0
+        100
        ],
        [
         "Courgettes",
-        100.0
+        100
        ],
        [
         "Poivrons",
-        40.0
+        40
        ],
        [
         "Tomates",
-        100.0
+        100
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Pommes de terre",
-        300.0
+        300
        ],
        [
         "Huile",
-        12.0
+        12
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        120.0
+        120
        ],
        [
         "Aubergines",
-        120.0
+        120
        ],
        [
         "Courgettes",
-        120.0
+        120
        ],
        [
         "Poivrons",
-        50.0
+        50
        ],
        [
         "Tomates",
-        120.0
+        120
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Pommes de terre",
-        140.0
+        140
        ],
        [
         "Huile",
-        8.0
+        8
        ]
       ]
      },
@@ -1504,13 +1504,13 @@
       "nicolas": [
        [
         "Mangue",
-        100.0
+        100
        ]
       ],
       "aurelie": [
        [
         "Mangue",
-        80.0
+        80
        ]
       ]
      },
@@ -1534,41 +1534,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -1585,45 +1585,45 @@
       "nicolas": [
        [
         "Poulet",
-        150.0
+        150
        ],
        [
         "Pommes de terre",
-        360.0
+        360
        ],
        [
         "Salade",
-        40.0
+        40
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        120.0
+        120
        ],
        [
         "Pommes de terre",
-        170.0
+        170
        ],
        [
         "Salade",
-        60.0
+        60
        ],
        [
         "Tomates",
-        180.0
+        180
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -1640,61 +1640,61 @@
       "nicolas": [
        [
         "Poisson blanc",
-        150.0
+        150
        ],
        [
         "Carottes",
-        120.0
+        120
        ],
        [
         "Champignons",
-        80.0
+        80
        ],
        [
         "Oignons",
-        40.0
+        40
        ],
        [
         "Tomates",
-        60.0
+        60
        ],
        [
         "Pommes de terre",
-        300.0
+        300
        ],
        [
         "Huile",
-        8.0
+        8
        ]
       ],
       "aurelie": [
        [
         "Poisson blanc",
-        125.0
+        125
        ],
        [
         "Carottes",
-        150.0
+        150
        ],
        [
         "Champignons",
-        100.0
+        100
        ],
        [
         "Oignons",
-        40.0
+        40
        ],
        [
         "Tomates",
-        60.0
+        60
        ],
        [
         "Pommes de terre",
-        140.0
+        140
        ],
        [
         "Huile",
-        6.0
+        6
        ]
       ]
      },
@@ -1711,21 +1711,21 @@
       "nicolas": [
        [
         "Yaourt nature",
-        125.0
+        125
        ],
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Yaourt nature",
-        125.0
+        125
        ],
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ]
      },
@@ -1749,41 +1749,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -1800,61 +1800,61 @@
       "nicolas": [
        [
         "Poulet",
-        100.0
+        100
        ],
        [
         "Lentilles (égouttées)",
-        140.0
+        140
        ],
        [
         "Riz (sec)",
-        50.0
+        50
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Oignons",
-        40.0
+        40
        ],
        [
         "Haricots verts",
-        150.0
+        150
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        80.0
+        80
        ],
        [
         "Lentilles (égouttées)",
-        120.0
+        120
        ],
        [
         "Riz (sec)",
-        20.0
+        20
        ],
        [
         "Tomates",
-        180.0
+        180
        ],
        [
         "Oignons",
-        40.0
+        40
        ],
        [
         "Haricots verts",
-        200.0
+        200
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -1871,77 +1871,77 @@
       "nicolas": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Lardons",
-        60.0
+        60
        ],
        [
         "Lait",
-        100.0
+        100
        ],
        [
         "Farine",
-        60.0
+        60
        ],
        [
         "Huile",
-        12.0
+        12
        ],
        [
         "Courgettes",
-        150.0
+        150
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Salade",
-        40.0
+        40
        ],
        [
         "Tomates",
-        100.0
+        100
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Lardons",
-        40.0
+        40
        ],
        [
         "Lait",
-        100.0
+        100
        ],
        [
         "Farine",
-        35.0
+        35
        ],
        [
         "Huile",
-        7.0
+        7
        ],
        [
         "Courgettes",
-        150.0
+        150
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Salade",
-        60.0
+        60
        ],
        [
         "Tomates",
-        130.0
+        130
        ]
       ]
      },
@@ -1958,13 +1958,13 @@
       "nicolas": [
        [
         "Ananas",
-        110.0
+        110
        ]
       ],
       "aurelie": [
        [
         "Ananas",
-        90.0
+        90
        ]
       ]
      },
@@ -1988,41 +1988,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -2039,85 +2039,85 @@
       "nicolas": [
        [
         "Bœuf",
-        110.0
+        110
        ],
        [
         "Pâtes à lasagnes (sèches)",
-        65.0
+        65
        ],
        [
         "Courgettes",
-        100.0
+        100
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Mozzarella râpée",
-        30.0
+        30
        ],
        [
         "Lait",
-        80.0
+        80
        ],
        [
         "Farine",
-        8.0
+        8
        ],
        [
         "Huile",
-        8.0
+        8
        ],
        [
         "Salade",
-        40.0
+        40
        ]
       ],
       "aurelie": [
        [
         "Bœuf",
-        85.0
+        85
        ],
        [
         "Pâtes à lasagnes (sèches)",
-        45.0
+        45
        ],
        [
         "Courgettes",
-        120.0
+        120
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Mozzarella râpée",
-        25.0
+        25
        ],
        [
         "Lait",
-        60.0
+        60
        ],
        [
         "Farine",
-        6.0
+        6
        ],
        [
         "Huile",
-        6.0
+        6
        ],
        [
         "Salade",
-        60.0
+        60
        ]
       ]
      },
@@ -2134,61 +2134,61 @@
       "nicolas": [
        [
         "Lentilles (égouttées)",
-        150.0
+        150
        ],
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Carottes",
-        80.0
+        80
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Pommes de terre",
-        240.0
+        240
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Lentilles (égouttées)",
-        120.0
+        120
        ],
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Carottes",
-        100.0
+        100
        ],
        [
         "Tomates",
-        180.0
+        180
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Pommes de terre",
-        90.0
+        90
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -2205,13 +2205,13 @@
       "nicolas": [
        [
         "Ananas",
-        110.0
+        110
        ]
       ],
       "aurelie": [
        [
         "Ananas",
-        90.0
+        90
        ]
       ]
      },
@@ -2235,41 +2235,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -2286,77 +2286,77 @@
       "nicolas": [
        [
         "Farine",
-        100.0
+        100
        ],
        [
         "Huile",
-        10.0
+        10
        ],
        [
         "Bœuf",
-        90.0
+        90
        ],
        [
         "Mozzarella râpée",
-        50.0
+        50
        ],
        [
         "Tomates",
-        160.0
+        160
        ],
        [
         "Poivrons",
-        50.0
+        50
        ],
        [
         "Champignons",
-        50.0
+        50
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Salade",
-        30.0
+        30
        ]
       ],
       "aurelie": [
        [
         "Farine",
-        65.0
+        65
        ],
        [
         "Huile",
-        7.0
+        7
        ],
        [
         "Bœuf",
-        70.0
+        70
        ],
        [
         "Mozzarella râpée",
-        35.0
+        35
        ],
        [
         "Tomates",
-        180.0
+        180
        ],
        [
         "Poivrons",
-        60.0
+        60
        ],
        [
         "Champignons",
-        50.0
+        50
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Salade",
-        50.0
+        50
        ]
       ]
      },
@@ -2373,53 +2373,53 @@
       "nicolas": [
        [
         "Poulet",
-        130.0
+        130
        ],
        [
         "Avocat (chair)",
-        80.0
+        80
        ],
        [
         "Tomates",
-        120.0
+        120
        ],
        [
         "Maïs",
-        40.0
+        40
        ],
        [
         "Carottes",
-        60.0
+        60
        ],
        [
         "Huile",
-        8.0
+        8
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        100.0
+        100
        ],
        [
         "Avocat (chair)",
-        60.0
+        60
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Maïs",
-        30.0
+        30
        ],
        [
         "Carottes",
-        80.0
+        80
        ],
        [
         "Huile",
-        6.0
+        6
        ]
       ]
      },
@@ -2436,13 +2436,13 @@
       "nicolas": [
        [
         "Glace",
-        75.0
+        75
        ]
       ],
       "aurelie": [
        [
         "Glace",
-        55.0
+        55
        ]
       ]
      },
@@ -2466,41 +2466,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -2517,53 +2517,53 @@
       "nicolas": [
        [
         "Poulet",
-        150.0
+        150
        ],
        [
         "Patates douces",
-        300.0
+        300
        ],
        [
         "Avocat (chair)",
-        80.0
+        80
        ],
        [
         "Salade",
-        40.0
+        40
        ],
        [
         "Tomates",
-        120.0
+        120
        ],
        [
         "Huile",
-        8.0
+        8
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        120.0
+        120
        ],
        [
         "Patates douces",
-        140.0
+        140
        ],
        [
         "Avocat (chair)",
-        60.0
+        60
        ],
        [
         "Salade",
-        60.0
+        60
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Huile",
-        6.0
+        6
        ]
       ]
      },
@@ -2580,85 +2580,85 @@
       "nicolas": [
        [
         "Bœuf",
-        110.0
+        110
        ],
        [
         "Pâtes à lasagnes (sèches)",
-        65.0
+        65
        ],
        [
         "Courgettes",
-        100.0
+        100
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Mozzarella râpée",
-        30.0
+        30
        ],
        [
         "Lait",
-        80.0
+        80
        ],
        [
         "Farine",
-        8.0
+        8
        ],
        [
         "Huile",
-        8.0
+        8
        ],
        [
         "Salade",
-        40.0
+        40
        ]
       ],
       "aurelie": [
        [
         "Bœuf",
-        85.0
+        85
        ],
        [
         "Pâtes à lasagnes (sèches)",
-        45.0
+        45
        ],
        [
         "Courgettes",
-        120.0
+        120
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Mozzarella râpée",
-        25.0
+        25
        ],
        [
         "Lait",
-        60.0
+        60
        ],
        [
         "Farine",
-        6.0
+        6
        ],
        [
         "Huile",
-        6.0
+        6
        ],
        [
         "Salade",
-        60.0
+        60
        ]
       ]
      },
@@ -2675,21 +2675,21 @@
       "nicolas": [
        [
         "Yaourt nature",
-        125.0
+        125
        ],
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Yaourt nature",
-        125.0
+        125
        ],
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ]
      },
@@ -2713,41 +2713,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -2764,53 +2764,53 @@
       "nicolas": [
        [
         "Poulet",
-        150.0
+        150
        ],
        [
         "Courgettes",
-        150.0
+        150
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Riz (sec)",
-        85.0
+        85
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        120.0
+        120
        ],
        [
         "Courgettes",
-        180.0
+        180
        ],
        [
         "Tomates",
-        100.0
+        100
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Riz (sec)",
-        45.0
+        45
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -2827,61 +2827,61 @@
       "nicolas": [
        [
         "Poulet",
-        130.0
+        130
        ],
        [
         "Wraps",
-        2.0
+        2
        ],
        [
         "Poivrons",
-        60.0
+        60
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Tomates",
-        60.0
+        60
        ],
        [
         "Cheddar",
-        15.0
+        15
        ],
        [
         "Huile",
-        8.0
+        8
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        100.0
+        100
        ],
        [
         "Wraps",
-        1.0
+        1
        ],
        [
         "Poivrons",
-        80.0
+        80
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Cheddar",
-        10.0
+        10
        ],
        [
         "Huile",
-        6.0
+        6
        ]
       ]
      },
@@ -2898,13 +2898,13 @@
       "nicolas": [
        [
         "Chocolat noir",
-        15.0
+        15
        ]
       ],
       "aurelie": [
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ]
      },
@@ -2928,41 +2928,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -2979,53 +2979,53 @@
       "nicolas": [
        [
         "Poisson blanc",
-        150.0
+        150
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Oignons",
-        40.0
+        40
        ],
        [
         "Riz (sec)",
-        85.0
+        85
        ],
        [
         "Haricots verts",
-        150.0
+        150
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poisson blanc",
-        125.0
+        125
        ],
        [
         "Tomates",
-        180.0
+        180
        ],
        [
         "Oignons",
-        40.0
+        40
        ],
        [
         "Riz (sec)",
-        45.0
+        45
        ],
        [
         "Haricots verts",
-        200.0
+        200
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -3042,45 +3042,45 @@
       "nicolas": [
        [
         "Poulet",
-        120.0
+        120
        ],
        [
         "Pâtes (sèches)",
-        105.0
+        105
        ],
        [
         "Tomates",
-        100.0
+        100
        ],
        [
         "Courgettes",
-        120.0
+        120
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        90.0
+        90
        ],
        [
         "Pâtes (sèches)",
-        60.0
+        60
        ],
        [
         "Tomates",
-        120.0
+        120
        ],
        [
         "Courgettes",
-        150.0
+        150
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -3097,13 +3097,13 @@
       "nicolas": [
        [
         "Mangue",
-        100.0
+        100
        ]
       ],
       "aurelie": [
        [
         "Mangue",
-        80.0
+        80
        ]
       ]
      },
@@ -3127,41 +3127,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -3178,37 +3178,37 @@
       "nicolas": [
        [
         "Poulet",
-        150.0
+        150
        ],
        [
         "Pommes de terre",
-        360.0
+        360
        ],
        [
         "Haricots verts",
-        250.0
+        250
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        120.0
+        120
        ],
        [
         "Pommes de terre",
-        170.0
+        170
        ],
        [
         "Haricots verts",
-        280.0
+        280
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -3225,61 +3225,61 @@
       "nicolas": [
        [
         "Bœuf",
-        130.0
+        130
        ],
        [
         "Riz (sec)",
-        85.0
+        85
        ],
        [
         "Poivrons",
-        50.0
+        50
        ],
        [
         "Carottes",
-        80.0
+        80
        ],
        [
         "Courgettes",
-        60.0
+        60
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Bœuf",
-        100.0
+        100
        ],
        [
         "Riz (sec)",
-        45.0
+        45
        ],
        [
         "Poivrons",
-        60.0
+        60
        ],
        [
         "Carottes",
-        100.0
+        100
        ],
        [
         "Courgettes",
-        80.0
+        80
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -3296,21 +3296,21 @@
       "nicolas": [
        [
         "Yaourt nature",
-        125.0
+        125
        ],
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Yaourt nature",
-        125.0
+        125
        ],
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ]
      },
@@ -3334,41 +3334,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -3385,61 +3385,61 @@
       "nicolas": [
        [
         "Poulet",
-        100.0
+        100
        ],
        [
         "Lentilles (égouttées)",
-        140.0
+        140
        ],
        [
         "Riz (sec)",
-        50.0
+        50
        ],
        [
         "Tomates",
-        120.0
+        120
        ],
        [
         "Oignons",
-        40.0
+        40
        ],
        [
         "Carottes",
-        80.0
+        80
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        80.0
+        80
        ],
        [
         "Lentilles (égouttées)",
-        120.0
+        120
        ],
        [
         "Riz (sec)",
-        20.0
+        20
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Oignons",
-        40.0
+        40
        ],
        [
         "Carottes",
-        100.0
+        100
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -3456,61 +3456,61 @@
       "nicolas": [
        [
         "Pâtes (sèches)",
-        105.0
+        105
        ],
        [
         "Lardons",
-        60.0
+        60
        ],
        [
         "Jambon",
-        40.0
+        40
        ],
        [
         "Œufs",
-        1.0
+        1
        ],
        [
         "Champignons",
-        60.0
+        60
        ],
        [
         "Courgettes",
-        120.0
+        120
        ],
        [
         "Huile",
-        5.0
+        5
        ]
       ],
       "aurelie": [
        [
         "Pâtes (sèches)",
-        60.0
+        60
        ],
        [
         "Lardons",
-        40.0
+        40
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Œufs",
-        1.0
+        1
        ],
        [
         "Champignons",
-        60.0
+        60
        ],
        [
         "Courgettes",
-        150.0
+        150
        ],
        [
         "Huile",
-        3.0
+        3
        ]
       ]
      },
@@ -3527,13 +3527,13 @@
       "nicolas": [
        [
         "Chocolat noir",
-        15.0
+        15
        ]
       ],
       "aurelie": [
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ]
      },
@@ -3557,41 +3557,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -3608,53 +3608,53 @@
       "nicolas": [
        [
         "Lentilles (égouttées)",
-        150.0
+        150
        ],
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Pommes de terre",
-        240.0
+        240
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Lentilles (égouttées)",
-        120.0
+        120
        ],
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Tomates",
-        180.0
+        180
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Pommes de terre",
-        90.0
+        90
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -3671,69 +3671,69 @@
       "nicolas": [
        [
         "Bœuf",
-        120.0
+        120
        ],
        [
         "Wraps",
-        2.0
+        2
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Avocat (chair)",
-        70.0
+        70
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Salade",
-        30.0
+        30
        ],
        [
         "Cheddar",
-        15.0
+        15
        ],
        [
         "Huile",
-        6.0
+        6
        ]
       ],
       "aurelie": [
        [
         "Bœuf",
-        95.0
+        95
        ],
        [
         "Wraps",
-        1.0
+        1
        ],
        [
         "Tomates",
-        100.0
+        100
        ],
        [
         "Avocat (chair)",
-        50.0
+        50
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Salade",
-        40.0
+        40
        ],
        [
         "Cheddar",
-        10.0
+        10
        ],
        [
         "Huile",
-        4.0
+        4
        ]
       ]
      },
@@ -3750,21 +3750,21 @@
       "nicolas": [
        [
         "Yaourt nature",
-        125.0
+        125
        ],
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Yaourt nature",
-        125.0
+        125
        ],
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ]
      },
@@ -3788,41 +3788,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -3839,61 +3839,61 @@
       "nicolas": [
        [
         "Bœuf",
-        100.0
+        100
        ],
        [
         "Poulet",
-        100.0
+        100
        ],
        [
         "Pommes de terre",
-        300.0
+        300
        ],
        [
         "Courgettes",
-        120.0
+        120
        ],
        [
         "Aubergines",
-        110.0
+        110
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Huile",
-        12.0
+        12
        ]
       ],
       "aurelie": [
        [
         "Bœuf",
-        80.0
+        80
        ],
        [
         "Poulet",
-        80.0
+        80
        ],
        [
         "Pommes de terre",
-        140.0
+        140
        ],
        [
         "Courgettes",
-        150.0
+        150
        ],
        [
         "Aubergines",
-        140.0
+        140
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Huile",
-        8.0
+        8
        ]
       ]
      },
@@ -3910,61 +3910,61 @@
       "nicolas": [
        [
         "Poulet",
-        110.0
+        110
        ],
        [
         "Avocat (chair)",
-        80.0
+        80
        ],
        [
         "Tomates",
-        120.0
+        120
        ],
        [
         "Salade",
-        40.0
+        40
        ],
        [
         "Carottes",
-        60.0
+        60
        ],
        [
         "Pommes de terre",
-        240.0
+        240
        ],
        [
         "Huile",
-        8.0
+        8
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        90.0
+        90
        ],
        [
         "Avocat (chair)",
-        60.0
+        60
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Salade",
-        60.0
+        60
        ],
        [
         "Carottes",
-        80.0
+        80
        ],
        [
         "Pommes de terre",
-        90.0
+        90
        ],
        [
         "Huile",
-        6.0
+        6
        ]
       ]
      },
@@ -3981,13 +3981,13 @@
       "nicolas": [
        [
         "Glace",
-        75.0
+        75
        ]
       ],
       "aurelie": [
        [
         "Glace",
-        55.0
+        55
        ]
       ]
      },
@@ -4011,41 +4011,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -4062,37 +4062,37 @@
       "nicolas": [
        [
         "Poulet",
-        150.0
+        150
        ],
        [
         "Patates douces",
-        300.0
+        300
        ],
        [
         "Haricots verts",
-        250.0
+        250
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        120.0
+        120
        ],
        [
         "Patates douces",
-        140.0
+        140
        ],
        [
         "Haricots verts",
-        280.0
+        280
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -4109,45 +4109,45 @@
       "nicolas": [
        [
         "Poisson blanc",
-        150.0
+        150
        ],
        [
         "Champignons",
-        80.0
+        80
        ],
        [
         "Pommes de terre",
-        300.0
+        300
        ],
        [
         "Tomates",
-        100.0
+        100
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poisson blanc",
-        125.0
+        125
        ],
        [
         "Champignons",
-        100.0
+        100
        ],
        [
         "Pommes de terre",
-        140.0
+        140
        ],
        [
         "Tomates",
-        120.0
+        120
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -4164,21 +4164,21 @@
       "nicolas": [
        [
         "Yaourt nature",
-        125.0
+        125
        ],
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Yaourt nature",
-        125.0
+        125
        ],
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ]
      },
@@ -4202,41 +4202,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -4253,45 +4253,45 @@
       "nicolas": [
        [
         "Poisson blanc",
-        150.0
+        150
        ],
        [
         "Riz (sec)",
-        85.0
+        85
        ],
        [
         "Courgettes",
-        180.0
+        180
        ],
        [
         "Tomates",
-        60.0
+        60
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poisson blanc",
-        125.0
+        125
        ],
        [
         "Riz (sec)",
-        45.0
+        45
        ],
        [
         "Courgettes",
-        220.0
+        220
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -4308,53 +4308,53 @@
       "nicolas": [
        [
         "Poulet",
-        150.0
+        150
        ],
        [
         "Poivrons",
-        60.0
+        60
        ],
        [
         "Tomates",
-        120.0
+        120
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Pommes de terre",
-        360.0
+        360
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poulet",
-        120.0
+        120
        ],
        [
         "Poivrons",
-        80.0
+        80
        ],
        [
         "Tomates",
-        150.0
+        150
        ],
        [
         "Oignons",
-        30.0
+        30
        ],
        [
         "Pommes de terre",
-        170.0
+        170
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -4371,13 +4371,13 @@
       "nicolas": [
        [
         "Chocolat noir",
-        15.0
+        15
        ]
       ],
       "aurelie": [
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ]
      },
@@ -4401,41 +4401,41 @@
       "nicolas": [
        [
         "Lait",
-        250.0
+        250
        ],
        [
         "Bananes",
-        100.0
+        100
        ],
        [
         "Flocons d'avoine",
-        65.0
+        65
        ],
        [
         "Œufs",
-        1.0
+        1
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Jambon",
-        30.0
+        30
        ],
        [
         "Tomates",
-        80.0
+        80
        ],
        [
         "Pain complet",
-        40.0
+        40
        ],
        [
         "Pommes",
-        150.0
+        150
        ]
       ]
      },
@@ -4452,61 +4452,61 @@
       "nicolas": [
        [
         "Œufs",
-        3.0
+        3
        ],
        [
         "Pommes de terre",
-        300.0
+        300
        ],
        [
         "Courgettes",
-        150.0
+        150
        ],
        [
         "Tomates",
-        100.0
+        100
        ],
        [
         "Salade",
-        40.0
+        40
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Huile",
-        8.0
+        8
        ]
       ],
       "aurelie": [
        [
         "Œufs",
-        2.0
+        2
        ],
        [
         "Pommes de terre",
-        110.0
+        110
        ],
        [
         "Courgettes",
-        170.0
+        170
        ],
        [
         "Tomates",
-        130.0
+        130
        ],
        [
         "Salade",
-        60.0
+        60
        ],
        [
         "Oignons",
-        20.0
+        20
        ],
        [
         "Huile",
-        6.0
+        6
        ]
       ]
      },
@@ -4523,37 +4523,37 @@
       "nicolas": [
        [
         "Poisson blanc",
-        150.0
+        150
        ],
        [
         "Patates douces",
-        300.0
+        300
        ],
        [
         "Haricots verts",
-        250.0
+        250
        ],
        [
         "Huile",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Poisson blanc",
-        125.0
+        125
        ],
        [
         "Patates douces",
-        140.0
+        140
        ],
        [
         "Haricots verts",
-        280.0
+        280
        ],
        [
         "Huile",
-        7.0
+        7
        ]
       ]
      },
@@ -4570,21 +4570,21 @@
       "nicolas": [
        [
         "Yaourt nature",
-        125.0
+        125
        ],
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ],
       "aurelie": [
        [
         "Yaourt nature",
-        125.0
+        125
        ],
        [
         "Chocolat noir",
-        10.0
+        10
        ]
       ]
      },
@@ -4594,6 +4594,686 @@
   }
  ],
  "courses": [
+  {
+   "id": 1,
+   "date": "2026-10-01",
+   "jourPlan": 1,
+   "titre": "Course 1",
+   "jour": "jeudi 1er octobre",
+   "couvre": "du 1er octobre au 7 octobre",
+   "items": [
+    {
+     "a": "Lait",
+     "buy": 2,
+     "est": 2.38,
+     "needN": 1750,
+     "needA": 0
+    },
+    {
+     "a": "Bananes",
+     "buy": 700,
+     "est": 1.32,
+     "needN": 700,
+     "needA": 0
+    },
+    {
+     "a": "Flocons d'avoine",
+     "buy": 1,
+     "est": 1.71,
+     "needN": 455,
+     "needA": 0
+    },
+    {
+     "a": "Œufs",
+     "buy": 3,
+     "est": 11.4,
+     "needN": 12,
+     "needA": 18
+    },
+    {
+     "a": "Poulet",
+     "buy": 2,
+     "est": 22.54,
+     "needN": 1080,
+     "needA": 850
+    },
+    {
+     "a": "Pommes de terre",
+     "buy": 2500,
+     "est": 3.63,
+     "needN": 1740,
+     "needA": 740
+    },
+    {
+     "a": "Haricots verts",
+     "buy": 4,
+     "est": 6.88,
+     "needN": 750,
+     "needA": 840
+    },
+    {
+     "a": "Poisson blanc",
+     "buy": 1,
+     "est": 7.49,
+     "needN": 300,
+     "needA": 250
+    },
+    {
+     "a": "Patates douces",
+     "buy": 1350,
+     "est": 4.44,
+     "needN": 900,
+     "needA": 420
+    },
+    {
+     "a": "Courgettes",
+     "buy": 1200,
+     "est": 1.79,
+     "needN": 540,
+     "needA": 640
+    },
+    {
+     "a": "Poivrons",
+     "buy": 500,
+     "est": 6.99,
+     "needN": 220,
+     "needA": 280
+    },
+    {
+     "a": "Oignons",
+     "buy": 450,
+     "est": 1.12,
+     "needN": 220,
+     "needA": 220
+    },
+    {
+     "a": "Yaourt nature",
+     "buy": 1,
+     "est": 3.25,
+     "needN": 250,
+     "needA": 250
+    },
+    {
+     "a": "Chocolat noir",
+     "buy": 1,
+     "est": 5.26,
+     "needN": 35,
+     "needA": 30
+    },
+    {
+     "a": "Café",
+     "buy": 1,
+     "est": 16,
+     "needN": 333.2,
+     "needA": 0
+    },
+    {
+     "a": "Eau (bouteilles 5 L)",
+     "buy": 6,
+     "est": 9.24,
+     "needN": 14,
+     "needA": 14
+    },
+    {
+     "a": "Jambon",
+     "buy": 210,
+     "est": 2.36,
+     "needN": 0,
+     "needA": 210
+    },
+    {
+     "a": "Tomates",
+     "buy": 2500,
+     "est": 6.98,
+     "needN": 850,
+     "needA": 1620
+    },
+    {
+     "a": "Pain complet",
+     "buy": 3,
+     "est": 3.6,
+     "needN": 0,
+     "needA": 280
+    },
+    {
+     "a": "Pommes",
+     "buy": 1050,
+     "est": 3.14,
+     "needN": 0,
+     "needA": 1050
+    },
+    {
+     "a": "Riz (sec)",
+     "buy": 1,
+     "est": 2.34,
+     "needN": 220,
+     "needA": 110
+    },
+    {
+     "a": "Carottes",
+     "buy": 600,
+     "est": 1.19,
+     "needN": 260,
+     "needA": 320
+    },
+    {
+     "a": "Salade",
+     "buy": 1,
+     "est": 1.39,
+     "needN": 110,
+     "needA": 160
+    },
+    {
+     "a": "Ananas",
+     "buy": 1,
+     "est": 2.69,
+     "needN": 220,
+     "needA": 180
+    },
+    {
+     "a": "Bœuf",
+     "buy": 1,
+     "est": 8.4,
+     "needN": 280,
+     "needA": 220
+    },
+    {
+     "a": "Pains burger",
+     "buy": 1,
+     "est": 3,
+     "needN": 1,
+     "needA": 1
+    },
+    {
+     "a": "Cheddar",
+     "buy": 50,
+     "est": 0.83,
+     "needN": 20,
+     "needA": 15
+    },
+    {
+     "a": "Avocat (chair)",
+     "buy": 1,
+     "est": 1.99,
+     "needN": 160,
+     "needA": 120
+    },
+    {
+     "a": "Maïs",
+     "buy": 1,
+     "est": 0.89,
+     "needN": 40,
+     "needA": 30
+    },
+    {
+     "a": "Glace",
+     "buy": 1,
+     "est": 2.49,
+     "needN": 75,
+     "needA": 55
+    },
+    {
+     "a": "Pâtes (sèches)",
+     "buy": 1,
+     "est": 1.45,
+     "needN": 105,
+     "needA": 60
+    },
+    {
+     "a": "Champignons",
+     "buy": 1,
+     "est": 1.08,
+     "needN": 80,
+     "needA": 80
+    },
+    {
+     "a": "Aubergines",
+     "buy": 250,
+     "est": 0.57,
+     "needN": 100,
+     "needA": 120
+    },
+    {
+     "a": "Mangue",
+     "buy": 300,
+     "est": 2.7,
+     "needN": 100,
+     "needA": 80
+    },
+    {
+     "a": "Citrons",
+     "buy": 2,
+     "est": 0,
+     "needN": 1,
+     "needA": 1
+    },
+    {
+     "a": "Sauce soja",
+     "buy": 1,
+     "est": 0,
+     "needN": 0.5,
+     "needA": 0.5
+    },
+    {
+     "a": "Concentré de tomate",
+     "buy": 1,
+     "est": 0,
+     "needN": 0.5,
+     "needA": 0.5
+    },
+    {
+     "a": "Moutarde / ketchup",
+     "buy": 1,
+     "est": 0,
+     "needN": 0.5,
+     "needA": 0.5
+    },
+    {
+     "a": "Ail, gingembre, curcuma",
+     "buy": 1,
+     "est": 0,
+     "needN": 0.5,
+     "needA": 0.5
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "date": "2026-10-08",
+   "jourPlan": 8,
+   "titre": "Course 2",
+   "jour": "jeudi 8 octobre",
+   "couvre": "du 8 octobre au 14 octobre",
+   "items": [
+    {
+     "a": "Lait",
+     "buy": 2,
+     "est": 2.38,
+     "needN": 2010,
+     "needA": 220
+    },
+    {
+     "a": "Bananes",
+     "buy": 700,
+     "est": 1.32,
+     "needN": 700,
+     "needA": 0
+    },
+    {
+     "a": "Flocons d'avoine",
+     "buy": 1,
+     "est": 1.71,
+     "needN": 455,
+     "needA": 0
+    },
+    {
+     "a": "Œufs",
+     "buy": 2,
+     "est": 7.6,
+     "needN": 11,
+     "needA": 18
+    },
+    {
+     "a": "Poulet",
+     "buy": 2,
+     "est": 22.54,
+     "needN": 930,
+     "needA": 730
+    },
+    {
+     "a": "Pommes de terre",
+     "buy": 1300,
+     "est": 1.89,
+     "needN": 900,
+     "needA": 400
+    },
+    {
+     "a": "Haricots verts",
+     "buy": 2,
+     "est": 3.44,
+     "needN": 300,
+     "needA": 400
+    },
+    {
+     "a": "Poisson blanc",
+     "buy": 1,
+     "est": 7.49,
+     "needN": 300,
+     "needA": 250
+    },
+    {
+     "a": "Patates douces",
+     "buy": 450,
+     "est": 1.48,
+     "needN": 300,
+     "needA": 140
+    },
+    {
+     "a": "Courgettes",
+     "buy": 1350,
+     "est": 2.01,
+     "needN": 620,
+     "needA": 720
+    },
+    {
+     "a": "Poivrons",
+     "buy": 250,
+     "est": 3.5,
+     "needN": 110,
+     "needA": 140
+    },
+    {
+     "a": "Oignons",
+     "buy": 600,
+     "est": 1.49,
+     "needN": 290,
+     "needA": 290
+    },
+    {
+     "a": "Yaourt nature",
+     "buy": 1,
+     "est": 3.25,
+     "needN": 250,
+     "needA": 250
+    },
+    {
+     "a": "Eau (bouteilles 5 L)",
+     "buy": 6,
+     "est": 9.24,
+     "needN": 14,
+     "needA": 14
+    },
+    {
+     "a": "Jambon",
+     "buy": 210,
+     "est": 2.36,
+     "needN": 0,
+     "needA": 210
+    },
+    {
+     "a": "Tomates",
+     "buy": 4250,
+     "est": 11.86,
+     "needN": 1700,
+     "needA": 2550
+    },
+    {
+     "a": "Pain complet",
+     "buy": 3,
+     "est": 3.6,
+     "needN": 0,
+     "needA": 280
+    },
+    {
+     "a": "Pommes",
+     "buy": 1050,
+     "est": 3.14,
+     "needN": 0,
+     "needA": 1050
+    },
+    {
+     "a": "Carottes",
+     "buy": 600,
+     "est": 1.19,
+     "needN": 260,
+     "needA": 330
+    },
+    {
+     "a": "Salade",
+     "buy": 2,
+     "est": 2.78,
+     "needN": 230,
+     "needA": 350
+    },
+    {
+     "a": "Ananas",
+     "buy": 1,
+     "est": 2.69,
+     "needN": 220,
+     "needA": 180
+    },
+    {
+     "a": "Bœuf",
+     "buy": 1,
+     "est": 8.4,
+     "needN": 310,
+     "needA": 240
+    },
+    {
+     "a": "Cheddar",
+     "buy": 50,
+     "est": 0.83,
+     "needN": 15,
+     "needA": 10
+    },
+    {
+     "a": "Avocat (chair)",
+     "buy": 1,
+     "est": 1.99,
+     "needN": 160,
+     "needA": 120
+    },
+    {
+     "a": "Champignons",
+     "buy": 1,
+     "est": 1.08,
+     "needN": 130,
+     "needA": 150
+    },
+    {
+     "a": "Mangue",
+     "buy": 250,
+     "est": 2.25,
+     "needN": 100,
+     "needA": 80
+    },
+    {
+     "a": "Lardons",
+     "buy": 1,
+     "est": 1.27,
+     "needN": 60,
+     "needA": 40
+    },
+    {
+     "a": "Pâtes à lasagnes (sèches)",
+     "buy": 1,
+     "est": 2.47,
+     "needN": 130,
+     "needA": 90
+    },
+    {
+     "a": "Mozzarella râpée",
+     "buy": 2,
+     "est": 6.26,
+     "needN": 110,
+     "needA": 85
+    },
+    {
+     "a": "Wraps",
+     "buy": 1,
+     "est": 2.74,
+     "needN": 2,
+     "needA": 1
+    },
+    {
+     "a": "Levure boulangère",
+     "buy": 1,
+     "est": 0,
+     "needN": 0.5,
+     "needA": 0.5
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "date": "2026-10-15",
+   "jourPlan": 15,
+   "titre": "Course 3",
+   "jour": "jeudi 15 octobre",
+   "couvre": "du 15 octobre au 21 octobre",
+   "items": [
+    {
+     "a": "Lait",
+     "buy": 2,
+     "est": 2.38,
+     "needN": 1750,
+     "needA": 0
+    },
+    {
+     "a": "Bananes",
+     "buy": 700,
+     "est": 1.32,
+     "needN": 700,
+     "needA": 0
+    },
+    {
+     "a": "Flocons d'avoine",
+     "buy": 1,
+     "est": 1.71,
+     "needN": 455,
+     "needA": 0
+    },
+    {
+     "a": "Œufs",
+     "buy": 3,
+     "est": 11.4,
+     "needN": 13,
+     "needA": 19
+    },
+    {
+     "a": "Poulet",
+     "buy": 1,
+     "est": 11.27,
+     "needN": 760,
+     "needA": 610
+    },
+    {
+     "a": "Pommes de terre",
+     "buy": 3000,
+     "est": 4.35,
+     "needN": 2100,
+     "needA": 910
+    },
+    {
+     "a": "Haricots verts",
+     "buy": 3,
+     "est": 5.16,
+     "needN": 750,
+     "needA": 840
+    },
+    {
+     "a": "Patates douces",
+     "buy": 850,
+     "est": 2.8,
+     "needN": 600,
+     "needA": 280
+    },
+    {
+     "a": "Courgettes",
+     "buy": 1400,
+     "est": 2.09,
+     "needN": 630,
+     "needA": 770
+    },
+    {
+     "a": "Poivrons",
+     "buy": 250,
+     "est": 3.5,
+     "needN": 110,
+     "needA": 140
+    },
+    {
+     "a": "Oignons",
+     "buy": 350,
+     "est": 0.87,
+     "needN": 190,
+     "needA": 190
+    },
+    {
+     "a": "Yaourt nature",
+     "buy": 2,
+     "est": 6.5,
+     "needN": 500,
+     "needA": 500
+    },
+    {
+     "a": "Eau (bouteilles 5 L)",
+     "buy": 5,
+     "est": 7.7,
+     "needN": 14,
+     "needA": 14
+    },
+    {
+     "a": "Jambon",
+     "buy": 280,
+     "est": 3.15,
+     "needN": 40,
+     "needA": 240
+    },
+    {
+     "a": "Tomates",
+     "buy": 2450,
+     "est": 6.84,
+     "needN": 850,
+     "needA": 1620
+    },
+    {
+     "a": "Pain complet",
+     "buy": 3,
+     "est": 3.6,
+     "needN": 0,
+     "needA": 280
+    },
+    {
+     "a": "Pommes",
+     "buy": 1050,
+     "est": 3.14,
+     "needN": 0,
+     "needA": 1050
+    },
+    {
+     "a": "Carottes",
+     "buy": 500,
+     "est": 1,
+     "needN": 220,
+     "needA": 280
+    },
+    {
+     "a": "Salade",
+     "buy": 1,
+     "est": 1.39,
+     "needN": 110,
+     "needA": 160
+    },
+    {
+     "a": "Avocat (chair)",
+     "buy": 1,
+     "est": 1.99,
+     "needN": 150,
+     "needA": 110
+    },
+    {
+     "a": "Champignons",
+     "buy": 1,
+     "est": 1.08,
+     "needN": 140,
+     "needA": 160
+    },
+    {
+     "a": "Aubergines",
+     "buy": 250,
+     "est": 0.57,
+     "needN": 110,
+     "needA": 140
+    }
+   ]
+  }
+ ],
+ "corrections": [
+  "30/09/2026 : jambon acheté au gramme (11,24 €/kg) au lieu du paquet de 500 g.",
+  "30/09/2026 : courses hebdomadaires le 1er, le 8 et le 15 octobre (au lieu du 1er et du 6), recalculées par le moteur ; l'ancienne liste est gardée dans coursesDeuxFois."
+ ],
+ "coursesDeuxFois": [
   {
    "id": 1,
    "date": "2026-10-01",
@@ -5097,8 +5777,5 @@
     }
    ]
   }
- ],
- "corrections": [
-  "30/09/2026 : jambon acheté au gramme (11,24 €/kg) au lieu du paquet de 500 g."
  ]
 }

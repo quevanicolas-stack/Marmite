@@ -50,6 +50,7 @@ async def main():
         verif(await pg.locator("input[data-prix-a='Poulet']").input_value() == "10.5", "prix payé : 21 € pour 2 paquets → 10,50 € attendus")
         verif("d'après le prix payé" in await pg.inner_text(".prix-ligne:has(input[data-prix-a='Poulet'])"), "mention « d'après le prix payé » absente")
         # prix tapé directement sur la ligne, sans cocher : l'article se coche, la projection du cycle suit
+        await pg.click("button[data-course='1']")   # retour aux listes, puis la Course 2
         await pg.click("button[data-course='2']")
         proj0 = await pg.evaluate("projectionFoyer().total")
         it = await pg.evaluate("DONNEES.courses[1].items.find(i => i.a === 'Bœuf')")
