@@ -72,7 +72,7 @@ Il contient 8 onglets et environ 3 860 formules. Il est généré par `python/bu
 
 - **Publiée** : https://claude.ai/artifact/8Ez5pJQH4tzZ49GJLgvpB5. C'est une page hébergée par claude.ai, qui appartient au compte de Nico.
 - **Capacités d'exécution déclarées** : `db`, pour les données privées synchronisées sur tous ses appareils ; `sample`, pour les appels à Claude de l'assistant ; `user`, pour l'identifiant.
-- **Mise à jour** : republier `app/marmite.html` avec l'outil Artifact (action publish, avec l'`url` ci-dessus), sans redéclarer les capacités. Les sessions Claude Code web disposent de cet outil ; lire d'abord la version en ligne (action read) pour vérifier qu'elle n'a pas bougé. Au 30/09/2026, la version publiée a les mêmes données que `app/marmite.html` (seul l'ordre des clés JSON des courses diffère).
+- **Mise à jour** : republier `app/marmite.html` avec l'outil Artifact (action publish, avec l'`url` ci-dessus), sans redéclarer les capacités. Les sessions Claude Code web disposent de cet outil ; lire d'abord la version en ligne (action read) pour vérifier qu'elle n'a pas bougé. Republiée le 30/09/2026 depuis Claude Code (version 4 : prix sur les lignes et onglet Prix, projection et choix face à un dépassement, poubelle, jambon au gramme, ligne de course cochable en entier) ; elle correspond à `app/marmite.html`. Titre de la page : « Marmite ». Partage : « toute personne ayant le lien » (réglé dans le menu Partager de la page) ; chaque compte voit ses propres données (`db` par utilisateur).
 - **En local** : ouvrir `app/marmite.html` suffit. Les données passent alors en localStorage et l'assistant est indisponible, car `window.claude` est absent. Tout le reste fonctionne.
 
 ### Construire
