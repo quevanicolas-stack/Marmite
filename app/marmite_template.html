@@ -348,9 +348,26 @@ __MOTEUR__
    ============================================================ */
 const DONNEES = __DATA__;
 
+/* ---------- Mois actif ----------
+   Octobre vient des données de la page ; un mois préparé par le chef est enregistré dans E.mois (compte en ligne).
+   Tout ce qui dépend du mois passe par ces variables, remises à jour par activerMois(). */
+let DEBUT = new Date(2026, 9, 1), NB_JOURS = 21, PLAN = DONNEES.plan, BASE_COURSES = DONNEES.courses, SHARE = DONNEES.share, INVITES = 0;
+let STOCK_DEPART = Object.fromEntries(Object.entries(DONNEES.cat).filter(([, c]) => c.stock).map(([a, c]) => [a, c.stock]));
+let MOIS_ID = DONNEES.mois ? DONNEES.mois.id : "2026-10", MOIS_TITRE = DONNEES.mois ? DONNEES.mois.titre : "Octobre 2026";
+const dateLocale = s => { const [a, m, j] = s.split("-").map(Number); return new Date(a, m - 1, j); };
+function activerMois() {
+  const m = E.mois, avant = MOIS_ID;
+  if (m) {
+    DEBUT = dateLocale(m.debut); NB_JOURS = m.jours; PLAN = m.plan; BASE_COURSES = m.courses; SHARE = m.share || {};
+    STOCK_DEPART = m.stockDepart || {}; INVITES = m.invites || 0; MOIS_ID = m.id; MOIS_TITRE = m.titre;
+  } else {
+    DEBUT = new Date(2026, 9, 1); NB_JOURS = DONNEES.plan.length; PLAN = DONNEES.plan; BASE_COURSES = DONNEES.courses; SHARE = DONNEES.share; INVITES = 0;
+    STOCK_DEPART = Object.fromEntries(Object.entries(DONNEES.cat).filter(([, c]) => c.stock).map(([a, c]) => [a, c.stock]));
+    MOIS_ID = DONNEES.mois ? DONNEES.mois.id : "2026-10"; MOIS_TITRE = DONNEES.mois ? DONNEES.mois.titre : "Octobre 2026";
+  }
+  if (avant !== MOIS_ID && typeof jourSel !== "undefined") { jourSel = jourDuPlan(); courseSel = courseDuJour(); gen = null; }
+}
 /* ---------- Constantes ---------- */
-const DEBUT = new Date(2026, 9, 1);
-const NB_JOURS = 21;
 const CLES = ["pdj", "dej", "din", "des"];
 const COULEUR = { pdj: "var(--c-pdj)", dej: "var(--c-dej)", din: "var(--c-din)", des: "var(--c-des)" };
 const PERSONNES = { nicolas: { nom: "Nicolas", autre: "aurelie" }, aurelie: { nom: "Aurélie", autre: "nicolas" } };
@@ -370,6 +387,7 @@ const DEFAUT = {
 /* ---------- État ---------- */
 let E = structuredClone(DEFAUT);
 let actif = "nicolas";
+let gen = null;   // proposition du chef en cours, pas encore appliquée : { mode: "stock" | "mois", … }
 try { const a = localStorage.getItem("marmite-actif"); if (PERSONNES[a]) actif = a; } catch (e) {}
 let vue = "jour";
 let jourSel = jourDuPlan();
@@ -407,7 +425,8 @@ const echap = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const nom = (p = actif) => PERSONNES[p].nom;
 const de = (p = actif) => /^[AEÉIOU]/i.test(nom(p)) ? "d'" + nom(p) : "de " + nom(p);
-function dateDuJour(j) { return new Date(2026, 9, j); }
+function dateDuJour(j) { return new Date(DEBUT.getFullYear(), DEBUT.getMonth(), DEBUT.getDate() + j - 1); }
+const jourMoisCourt = j => { const d = dateDuJour(j); return (d.getDate() === 1 ? "1er" : d.getDate()) + " " + d.toLocaleDateString("fr-FR", { month: "long" }); };
 function libelleJour(j) {
   const t = dateDuJour(j).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
   return cap(t.replace(/^(\S+) 1 /, "$1 1er "));
@@ -417,7 +436,12 @@ function libelleJour(j) {
 // (déjà commencées) suivies des courses recalculées par le moteur.
 function COURSES() {
   const g = E.foyer.generation;
-  return g ? DONNEES.courses.filter(c => g.gardees.includes(c.id)).concat(g.courses) : DONNEES.courses;
+  if (!g) return BASE_COURSES;
+  // courses gardées ; celles déjà passées au moment de refaire le planning ne gardent que les articles cochés
+  // (le reste n'a pas été trouvé en rayon ou a été laissé volontairement)
+  return BASE_COURSES.filter(c => g.gardees.includes(c.id))
+    .map(c => c.jourPlan <= (g.jourRefait || 0) ? { ...c, items: c.items.filter(it => E.foyer.achats[cleArticle(c.id, it.a)]) } : c)
+    .concat(g.courses);
 }
 function courseDuJour() { const j = planPasCommence() ? 1 : jourDuPlan(); let id = COURSES()[0].id; for (const c of COURSES()) if (c.jourPlan <= j) id = c.id; return id; }
 const dateCourte = iso => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" }).replace(/^(\S+) 1 /, "$1 1er ");
@@ -455,7 +479,7 @@ function fiche(a) { const c = DONNEES.cat[a]; if (!c) return null; const p = E.f
 function prixUnitaire(a) { const c = fiche(a); if (!c || c.prix == null) return null; return c.vrac ? c.prix / 1000 / (c.rend || 1) : c.prix / c.cond; }
 function nutrition(a, q) { const n = DONNEES.nut[a]; if (!n) return null; return { kcal: q / n[0] * n[2], prot: q / n[0] * n[3] }; }
 function repasPlan(j, k, p = actif) {
-  const m = DONNEES.plan[j - 1].meals.find(x => x.k === k);
+  const m = PLAN[j - 1].meals.find(x => x.k === k);
   return { k, label: m.label, plat: m.plat[p], items: m.items[p] };
 }
 function repasDe(j, k, p = actif) {
@@ -470,7 +494,7 @@ function statsRepas(m) {
   }
   return { kcal, prot, cout, inconnu };
 }
-function horsRepasJour(p = actif) { return HORS_REPAS[p].reduce((s, h) => s + (prixUnitaire(h.a) || 0) * h.q, 0) / NB_JOURS; }
+function horsRepasJour(p = actif) { return (DONNEES.reglages.horsRepas || []).reduce((s, h) => s + (prixUnitaire(h.a) || 0) * (h.parJour[p] || 0), 0); }
 function statsJour(j, p = actif) {
   const r = { kcal: 0, prot: 0, cout: 0, kcalFait: 0, coutFait: 0, faits: 0 };
   for (const k of CLES) {
@@ -487,10 +511,11 @@ function quantiteUtile(it) { const c = DONNEES.cat[it.a]; return c.vrac ? it.buy
 // Stock au matin du jour j (j = 22 : fin du cycle). planSeul = sans les ajustements ni remplacements.
 function stockBrut(j, planSeul = false) {
   const s = {};
-  for (const [a, c] of Object.entries(DONNEES.cat)) if (c.stock) s[a] = c.stock;
+  Object.assign(s, STOCK_DEPART);
   for (const c of COURSES()) if (c.jourPlan <= j) for (const it of (planSeul ? c.items : itemsCourse(c))) s[it.a] = (s[it.a] || 0) + quantiteUtile(it);
   for (let d = 1; d < j && d <= NB_JOURS; d++) for (const p of Object.keys(PERSONNES)) for (const k of CLES)
     for (const [a, q] of (planSeul ? repasPlan(d, k, p) : repasDe(d, k, p)).items) s[a] = (s[a] || 0) - q;
+  retirerInvites(s, j);
   // produits jetés (poubelle de l'onglet « À la maison ») : retirés à partir du jour où ils l'ont été
   if (!planSeul) for (const x of E.foyer.pertes || []) if (x.j <= j) s[x.a] = (s[x.a] || 0) - x.q;
   return s;
@@ -499,12 +524,18 @@ function stockBrut(j, planSeul = false) {
 // Un article non coché n'est pas à la maison.
 function stockReel(j) {
   const s = {};
-  for (const [a, c] of Object.entries(DONNEES.cat)) if (c.stock) s[a] = c.stock;
+  Object.assign(s, STOCK_DEPART);
   for (const c of COURSES()) for (const it of itemsCourse(c)) if (E.foyer.achats[cleLigne(c.id, it)]) s[it.a] = (s[it.a] || 0) + quantiteUtile(it);
   for (let d = 1; d < j && d <= NB_JOURS; d++) for (const p of Object.keys(PERSONNES)) for (const k of CLES)
     for (const [a, q] of repasDe(d, k, p).items) s[a] = (s[a] || 0) - q;
+  retirerInvites(s, j);
   for (const x of E.foyer.pertes || []) if (x.j <= j) s[x.a] = (s[x.a] || 0) - x.q;
   return s;
+}
+// invités du mois (préparé avec des invités) : leurs portions sortent aussi du stock
+function retirerInvites(s, j) {
+  if (!INVITES) return;
+  for (let d = 1; d < j && d <= NB_JOURS; d++) for (const m of PLAN[d - 1].meals) for (const [a, q] of (m.items.invites || [])) s[a] = (s[a] || 0) - q * INVITES;
 }
 function stockAuDebut(j) {
   const s = stockBrut(j);
@@ -539,7 +570,7 @@ function ligneSubstitut(it, m) {
   const buy = c.vrac ? Math.ceil(need / (c.rend || 1) / 50) * 50 : Math.max(1, Math.ceil(need / c.cond - 1e-9));
   return { a: m.b, buy, needN, needA, remplace: it.a };
 }
-function part(a, p = actif) { const s = DONNEES.share[a]; const n = s == null ? 0.5 : s; return p === "nicolas" ? n : 1 - n; }
+function part(a, p = actif) { const s = SHARE[a]; const n = s == null ? 0.5 : s; return p === "nicolas" ? n : 1 - n; }
 function bilanCourse(cid, p = actif) {
   const c = COURSES().find(x => x.id === cid);
   let est = 0, maPart = 0, paye = 0, partPaye = 0, faits = 0;
@@ -566,10 +597,12 @@ function charger(obj) {
     return;
   }
   E.foyer = { ...structuredClone(DEFAUT.foyer), ...(obj.foyer || {}) };
+  E.mois = obj.mois || null; E.archives = obj.archives || {};
   for (const p of Object.keys(PERSONNES)) {
     const src = (obj.personnes || {})[p] || {}, d = structuredClone(DEFAUT.personnes[p]);
     E.personnes[p] = { ...d, ...src, profil: { ...d.profil, ...(src.profil || {}) } };
   }
+  activerMois();
 }
 try { const l = localStorage.getItem("marmite-nicolas"); if (l) charger(JSON.parse(l)); } catch (e) {}
 function sauver() {
@@ -639,9 +672,9 @@ function assietteSVG(j) {
     <text x="130" y="170" text-anchor="middle" style="font:700 14px var(--texte);fill:var(--or)">${st.faits}/4 repas</text></svg>`;
 }
 function vueJour() {
-  const j = jourSel, jour = DONNEES.plan[j - 1], st = statsJour(j), pr = P().profil;
+  const j = jourSel, jour = PLAN[j - 1], st = statsJour(j), pr = P().profil;
   let b = "";
-  if (planPasCommence() && j === 1) b += `<p class="bandeau">${ICONES.info}Le planning démarre le jeudi 1er octobre. Voici la première journée.</p>`;
+  if (planPasCommence() && j === 1) b += `<p class="bandeau">${ICONES.info}Le planning démarre le ${libelleJour(1).toLowerCase()}. Voici la première journée.</p>`;
   for (const c of COURSES()) if (c.jourPlan === j) b += `<p class="bandeau">${ICONES.panier}${c.titre} aujourd'hui : ce qu'il faut ${c.couvre}.</p>`;
   if (jour.tag === "plaisir") b += `<p class="bandeau">${ICONES.etoile}Jour plaisir : le déjeuner est le repas plaisir de la semaine.</p>`;
   const kp = Math.min(st.kcal / pr.kcalMax, 1) * 100, pp = Math.min(st.prot / pr.prot, 1) * 100;
@@ -718,7 +751,6 @@ function ticketRepas(j, k) {
 
 /* ---------- Vue : planning ---------- */
 /* ---------- Générer le menu selon le stock ---------- */
-let gen = null;   // { j0, graine, invites, budget, res } : proposition en cours, pas encore appliquée
 const dernierPoids = p => { const l = [...P(p).pesees].sort((a, b) => a.date.localeCompare(b.date)); return l.length ? l[l.length - 1].kg : null; };
 // premier jour qu'on peut encore changer : aujourd'hui si aucun repas n'est coché, sinon demain
 function premierJourLibre() {
@@ -729,20 +761,20 @@ function genererMenu(j0, graine, invites, budget) {
   const stock = {}, sr = stockReel(j0);
   for (const [a, q] of Object.entries(sr)) if (q > 0.5) stock[a] = Math.round(q * 10) / 10;
   // une course dont un article est déjà coché est gardée telle quelle ; les suivantes sont recalculées
-  const base = DONNEES.courses, commencees = base.filter(c => itemsCourse(c).some(it => E.foyer.achats[cleLigne(c.id, it)])).map(c => c.id);
+  const base = BASE_COURSES, commencees = base.filter(c => itemsCourse(c).some(it => E.foyer.achats[cleLigne(c.id, it)])).map(c => c.id);
   const gardees = base.filter(c => c.jourPlan < j0 || commencees.includes(c.id)).map(c => c.id);
   const joursCourses = base.filter(c => !gardees.includes(c.id)).map(c => c.date);
   const historique = [];
   for (let d = Math.max(1, j0 - 5); d < j0; d++) for (const k of ["dej", "din"]) {
-    const r = repasDe(d, k, "nicolas"), m = DONNEES.plan[d - 1].meals.find(x => x.k === k);
-    historique.push({ date: DONNEES.plan[d - 1].date || iso(dateDuJour(d)), recette: r.recette || m.recette });
+    const r = repasDe(d, k, "nicolas"), m = PLAN[d - 1].meals.find(x => x.k === k);
+    historique.push({ date: PLAN[d - 1].date || iso(dateDuJour(d)), recette: r.recette || m.recette });
   }
   const profils = {}, poidsActuels = {};
   for (const p of Object.keys(PERSONNES)) { profils[p] = { ...P(p).profil, budgetJours: NB_JOURS }; poidsActuels[p] = dernierPoids(p); }
   const res = Moteur.composerMois({
     catalogue: Moteur.avecPrix(DONNEES.catalogue, E.foyer.prix), recettes: DONNEES.recettes, reglages: DONNEES.reglages,
     debut: iso(dateDuJour(j0)), jours: NB_JOURS - j0 + 1, joursCourses, stockDepart: stock, historique,
-    profils, poidsActuels, invites, budget: budget || undefined, graine, moisReference: { plan: DONNEES.plan },
+    profils, poidsActuels, invites, budget: budget || undefined, graine, moisReference: { plan: PLAN },
     poidsStock: 3, penaliteManque: 1,
   });
   const utilises = new Set(res.mois.plan.flatMap(j => j.meals.flatMap(m => m.items.nicolas.map(([a]) => a))));
@@ -769,9 +801,9 @@ function appliquerGeneration() {
   // les décisions prises sur les courses recalculées n'ont plus d'objet : on les met de côté avec l'état d'avant
   const modifsAvant = (E.foyer.modifs || []).filter(m => !gardees.includes(m.cid));
   E.foyer.modifs = (E.foyer.modifs || []).filter(m => gardees.includes(m.cid));
-  E.foyer.generation = { depuis: j0, date: iso(new Date()), graine: gen.graine, invites: gen.invites, gardees, courses, avant, modifsAvant, precedente: E.foyer.generation || null };
+  E.foyer.generation = { depuis: j0, jourRefait: jourActuel(), date: iso(new Date()), graine: gen.graine, invites: gen.invites, gardees, courses, avant, modifsAvant, precedente: E.foyer.generation || null };
   if (typeof courseSel === "number" && !COURSES().some(c => c.id === courseSel)) courseSel = courseDuJour();
-  gen = null; sauver(); toast("Nouveau menu appliqué à partir du " + libelleJour(j0).toLowerCase());
+  gen = null; sauver(); toast("Nouveau planning à partir du " + libelleJour(j0).toLowerCase());
 }
 function annulerGeneration() {
   const g = E.foyer.generation; if (!g) return;
@@ -779,23 +811,113 @@ function annulerGeneration() {
   E.foyer.modifs = (E.foyer.modifs || []).concat(g.modifsAvant || []);
   E.foyer.generation = g.precedente || null;
   if (typeof courseSel === "number" && !COURSES().some(c => c.id === courseSel)) courseSel = courseDuJour();
-  sauver(); toast("Menu précédent rétabli");
+  sauver(); toast("Planning d'avant rétabli");
+}
+/* ---------- Préparer le mois : planning et listes de la semaine, pour le budget du mois ---------- */
+const CLES_MOIS = ["achats", "payes", "magasins", "pertes", "modifs", "depassementAccepte", "quantites", "generation"];
+function moisSuivants() {
+  const fin = dateDuJour(NB_JOURS), out = [];
+  for (let i = 1; i <= 3; i++) out.push(new Date(fin.getFullYear(), fin.getMonth() + i, 1));
+  return out;
+}
+const joursDuMois = d => new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+function ouvrirPreparation() {
+  const d = moisSuivants()[0], n = joursDuMois(d);
+  const ref = Object.keys(PERSONNES).reduce((s, p) => s + (+E.personnes[p].profil.budget || 0), 0);
+  gen = { mode: "mois", debut: iso(d), jours: n, invites: 0, budget: Math.round(E.mois && E.mois.budget ? E.mois.budget : ref * n / 21), graine: 1, res: null };
+  gen.res = genererMoisSuivant();
+}
+function genererMoisSuivant() {
+  // stock de départ : ce qu'il restera à la maison à la fin du mois en cours
+  const stock = {}, sr = stockReel(NB_JOURS + 1);
+  for (const [a, q] of Object.entries(sr)) if (q > 0.5) stock[a] = Math.round(q * 10) / 10;
+  const profils = {}, poidsActuels = {};
+  for (const p of Object.keys(PERSONNES)) { profils[p] = { ...P(p).profil, budgetJours: 21 }; poidsActuels[p] = dernierPoids(p); }
+  return Moteur.composerMois({
+    catalogue: Moteur.avecPrix(DONNEES.catalogue, E.foyer.prix), recettes: DONNEES.recettes, reglages: DONNEES.reglages,
+    debut: gen.debut, jours: gen.jours, invites: gen.invites, budget: gen.budget, graine: gen.graine,
+    stockDepart: stock, profils, poidsActuels, moisReference: { plan: PLAN },
+  });
+}
+function archiverMoisActif() {
+  const foyer = {}, personnes = {};
+  for (const k of CLES_MOIS) foyer[k] = E.foyer[k];
+  for (const p of Object.keys(PERSONNES)) personnes[p] = { coches: P(p).coches, remplacements: P(p).remplacements };
+  E.archives = E.archives || {};
+  E.archives[MOIS_ID] = { titre: MOIS_TITRE, date: iso(new Date()), foyer, personnes, mois: E.mois || null };
+}
+function validerMois() {
+  const m = gen.res.mois;
+  archiverMoisActif();
+  for (const k of CLES_MOIS) E.foyer[k] = structuredClone(DEFAUT.foyer[k]);
+  for (const p of Object.keys(PERSONNES)) { P(p).coches = {}; P(p).remplacements = {}; }
+  E.mois = { id: m.id, titre: m.titre, debut: m.debut, jours: m.jours, invites: m.invites || 0, plan: m.plan, courses: m.courses,
+    share: m.share, stockDepart: m.stockDepart, budget: gen.budget, graine: gen.graine, date: iso(new Date()) };
+  const titre = m.titre; gen = null; activerMois(); sauver(); toast(titre + " est prêt");
+}
+// Rouvrir un mois archivé : le mois affiché est archivé à son tour.
+function rouvrirMois(id) {
+  const a = E.archives[id]; if (!a) return;
+  archiverMoisActif();
+  for (const k of CLES_MOIS) E.foyer[k] = a.foyer[k] != null ? a.foyer[k] : structuredClone(DEFAUT.foyer[k]);
+  for (const p of Object.keys(PERSONNES)) { P(p).coches = (a.personnes[p] || {}).coches || {}; P(p).remplacements = (a.personnes[p] || {}).remplacements || {}; }
+  E.mois = a.mois; delete E.archives[id];
+  gen = null; activerMois(); sauver(); toast(a.titre + " rouvert");
+}
+function listeMenu(plan, j0) {
+  return `<ul class="gen-liste">${plan.map(j => { const g2 = k => { const m = j.meals.find(x => x.k === k); return m ? echap(m.plat.nicolas) : "—"; };
+    const d = j.date ? dateLocale(j.date) : dateDuJour(j.d + j0 - 1);
+    return `<li><span class="gen-jour">${cap(d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric" }))}${j.tag === "plaisir" ? " " + ICONES.etoile : ""}${j.fish ? " " + ICONES.poisson : ""}</span>
+      <span><b>${g2("dej")}</b><br>${g2("din")}<br><span class="discret">${g2("des")}</span></span></li>`; }).join("")}</ul>`;
+}
+function carteMois() {
+  const archives = Object.entries(E.archives || {});
+  const lienArchives = archives.length ? `<p class="petit discret" style="margin:8px 0 0">Mois archivés : ${archives.map(([id, a]) => `${echap(a.titre)} <button class="lien" data-rouvrir="${echap(id)}">Rouvrir</button>`).join(" · ")}</p>` : "";
+  if (!gen || gen.mode !== "mois") return `<section class="carte generation"><div class="sect-titre"><h3>Le chef prépare votre mois</h3></div>
+    <p class="discret petit" style="margin:4px 0 10px">En début de mois : le chef compose le planning du mois et vous dit quoi acheter chaque semaine, pour le budget choisi. Il part de ce qu'il restera à la maison à la fin de ${echap(MOIS_TITRE.toLowerCase())}.</p>
+    <button class="bouton plein" data-generer="mois">${ICONES.etincelle}Préparer le mois suivant</button>${lienArchives}</section>`;
+  const r = gen.res, options = moisSuivants().map(d => `<option value="${iso(d)}" ${iso(d) === gen.debut ? "selected" : ""}>${cap(d.toLocaleDateString("fr-FR", { month: "long", year: "numeric" }))}</option>`).join("");
+  let corps = "";
+  if (r) {
+    const b = r.bilan, n = b.nutrition, depasse = b.cout.achats > gen.budget + 0.5, nbSem = r.mois.courses.length || 1;
+    const semaines = r.mois.courses.map(c => { const t = c.items.reduce((x, i) => x + (i.est || 0), 0);
+      return `<tr><td><b>${c.titre}</b><br><span class="discret petit">${cap(c.jour)}, ${c.couvre}</span></td><td class="n">${c.items.length}</td><td class="n ${t > gen.budget / nbSem + 0.5 ? "surcout" : ""}">${eur(t)}</td></tr>`; }).join("");
+    const manques = b.manquesAvantPremiereCourse.filter(x => DONNEES.nut[x.a]);
+    corps = `<div class="stats">
+        <div><span class="chiffre ${depasse ? "surcout" : "eco"}">${eur(b.cout.achats)}</span><span class="discret">courses du mois pour ${eur(gen.budget)}</span></div>
+        <div><span class="chiffre">${b.quotas.poisson} · ${b.quotas.plaisir}</span><span class="discret">repas poisson · plaisir</span></div>
+        <div><span class="chiffre">${nb(n.nicolas.kcalMoyen)}</span><span class="discret">kcal/j Nicolas · ${n.nicolas.protMoyen} g prot.</span></div>
+        <div><span class="chiffre">${nb(n.aurelie.kcalMoyen)}</span><span class="discret">kcal/j Aurélie · ${n.aurelie.protMoyen} g prot.</span></div></div>
+      ${depasse ? `<p class="petit surcout" style="margin:10px 0 0">Le chef n'arrive pas sous ${eur(gen.budget)} sans trop répéter les mêmes plats : il dépasse de ${eur(b.cout.achats - gen.budget)}. Vous pourrez retirer ou changer des aliments pendant les courses.</p>` : ""}
+      <h3 style="margin-top:14px">À acheter chaque semaine</h3>
+      <table class="tab"><thead><tr><th>Course</th><th class="n">Articles</th><th class="n">Total</th></tr></thead><tbody>${semaines}</tbody></table>
+      ${manques.length ? `<p class="petit" style="margin:8px 0 0"><b>Avant la première course</b> (il n'en restera pas assez à la maison) : ${manques.map(x => echap(x.a) + " " + quantite(x.a, x.q)).join(", ")}.</p>` : ""}
+      ${listeMenu(r.mois.plan, 1)}
+      ${gen.confirmer ? `<p class="petit" style="margin:0 0 8px"><b>${echap(r.mois.titre)} devient le mois affiché.</b> ${echap(MOIS_TITRE)} est archivé avec ses coches et ses prix payés ; on peut le rouvrir.</p>
+        <div class="btns-ed"><button class="bouton" data-generer="valider-oui">Oui, passer à ${echap(r.mois.titre.toLowerCase())}</button><button class="bouton leger" data-generer="valider-non">Pas encore</button></div>`
+      : `<div class="btns-ed"><button class="bouton" data-generer="valider">Valider ce mois</button><button class="bouton leger" data-generer="autre">Une autre idée, chef</button><button class="bouton leger" data-generer="fermer">Fermer</button></div>`}`;
+  }
+  return `<section class="carte generation"><div class="sect-titre"><h3>Le chef prépare votre mois</h3></div>
+    <div class="form-ia" style="gap:10px;margin-top:8px">
+      <div class="rangee"><label class="champ">Mois<select id="mois-debut" data-gen="debut">${options}</select></label>
+        <label class="champ">Nombre de jours<input id="mois-jours" type="number" min="1" max="31" step="1" data-gen="jours" value="${gen.jours}"></label></div>
+      <div class="rangee"><label class="champ">Budget du mois (€)<input id="mois-budget" type="number" min="0" step="1" inputmode="decimal" data-gen="budget" value="${gen.budget}"></label>
+        <label class="champ">Invités en plus<input id="mois-invites" type="number" min="0" max="12" step="1" data-gen="invites" value="${gen.invites}"></label></div>
+      <button class="bouton or plein" data-generer="calculer">${r ? "Relancer le chef" : "Proposer le mois"}</button>
+    </div>${corps}</section>`;
 }
 function carteGeneration() {
   const g = E.foyer.generation;
-  const etat = g ? `<p class="petit" style="margin:6px 0 10px">Menu généré le ${new Date(g.date + "T12:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}, à partir du ${libelleJour(g.depuis).toLowerCase()}. <button class="lien" data-generer="annuler">Revenir au menu d'avant</button></p>` : "";
-  if (!gen) return `<section class="carte generation"><div class="sect-titre"><h3>Le chef prépare votre menu</h3></div>
-    <p class="discret petit" style="margin:4px 0 10px">Recompose les repas à venir en partant de ce qu'il reste à la maison (articles cochés, moins ce qui est mangé et jeté), puis recalcule les courses suivantes. Viande ou poisson à chaque déjeuner et dîner, portions calées sur vos objectifs.</p>
-    ${etat}<button class="bouton plein" data-generer="ouvrir">${ICONES.etincelle}Demander au chef un menu selon le stock</button></section>`;
+  const etat = g ? `<p class="petit" style="margin:6px 0 10px">Planning refait le ${new Date(g.date + "T12:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}, à partir du ${libelleJour(g.depuis).toLowerCase()}. <button class="lien" data-generer="annuler">Revenir au planning d'avant</button></p>` : "";
+  if (!gen || gen.mode !== "stock") return `<section class="carte generation"><div class="sect-titre"><h3>Refaire le planning selon le stock</h3></div>
+    <p class="discret petit" style="margin:4px 0 10px">En cours de mois, si des aliments ont disparu ou n'ont pas pu être achetés (rayon vide, budget) : le chef recompose les repas à venir avec ce qu'il y a vraiment à la maison, et recalcule les courses suivantes. Les articles non cochés d'une course passée sortent de la liste.</p>
+    ${etat}<button class="bouton plein" data-generer="ouvrir">${ICONES.etincelle}Demander au chef un planning selon le stock</button></section>`;
   const j0 = gen.j0, options = [];
   for (let d = jourActuel(); d <= NB_JOURS; d++) options.push(`<option value="${d}" ${d === j0 ? "selected" : ""}>${libelleJour(d)}</option>`);
   const r = gen.res;
   let corps = "";
   if (r) {
-    const b = r.bilan, n = b.nutrition, conso = b.cout.consommation;
-    const lignes = r.mois.plan.map(j => { const g2 = k => { const m = j.meals.find(x => x.k === k); return m ? echap(m.plat.nicolas) : "—"; };
-      return `<li><span class="gen-jour">${libelleJour(j.d + j0 - 1).replace(/ \S+$/, "")}${j.tag === "plaisir" ? " " + ICONES.etoile : ""}${j.fish ? " " + ICONES.poisson : ""}</span>
-        <span><b>${g2("dej")}</b><br>${g2("din")}<br><span class="discret">${g2("des")}</span></span></li>`; }).join("");
+    const b = r.bilan, n = b.nutrition;
     const manques = b.manquesAvantPremiereCourse.filter(x => DONNEES.nut[x.a]);
     corps = `<div class="stats">
         <div><span class="chiffre">${r.stockUtilise.length}/${r.stockTotal.length}</span><span class="discret">produits du stock utilisés</span></div>
@@ -804,15 +926,15 @@ function carteGeneration() {
         <div><span class="chiffre">${nb(n.aurelie.kcalMoyen)}</span><span class="discret">kcal/j Aurélie · ${n.aurelie.protMoyen} g prot.</span></div>
       </div>
       ${manques.length ? `<p class="petit" style="margin:10px 0 0"><b>À acheter avant la prochaine course :</b> ${manques.map(x => echap(x.a) + " " + quantite(x.a, x.q)).join(", ")}.</p>` : `<p class="petit eco" style="margin:10px 0 0">Tout ce qu'il faut avant la prochaine course est à la maison.</p>`}
-      <ul class="gen-liste">${lignes}</ul>
-      <div class="btns-ed"><button class="bouton" data-generer="appliquer">Appliquer ce menu</button><button class="bouton leger" data-generer="autre">Une autre idée, chef</button><button class="bouton leger" data-generer="fermer">Fermer</button></div>`;
+      ${listeMenu(r.mois.plan, j0)}
+      <div class="btns-ed"><button class="bouton" data-generer="appliquer">Appliquer ce planning</button><button class="bouton leger" data-generer="autre">Une autre idée, chef</button><button class="bouton leger" data-generer="fermer">Fermer</button></div>`;
   }
-  return `<section class="carte generation"><div class="sect-titre"><h3>Le chef prépare votre menu</h3></div>${etat}
+  return `<section class="carte generation"><div class="sect-titre"><h3>Refaire le planning selon le stock</h3></div>${etat}
     <div class="form-ia" style="gap:10px;margin-top:8px">
       <label class="champ">À partir du<select id="gen-j0" data-gen="j0">${options.join("")}</select></label>
       <div class="rangee"><label class="champ">Invités en plus<input id="gen-invites" type="number" min="0" max="12" step="1" data-gen="invites" value="${gen.invites}"></label>
         <label class="champ">Budget des courses (facultatif)<input id="gen-budget" type="number" min="0" step="1" inputmode="decimal" data-gen="budget" value="${gen.budget || ""}" placeholder="€"></label></div>
-      <button class="bouton or plein" data-generer="calculer">${r ? "Relancer le chef" : "Proposer un menu"}</button>
+      <button class="bouton or plein" data-generer="calculer">${r ? "Relancer le chef" : "Proposer un planning"}</button>
     </div>${corps}</section>`;
 }
 function vuePlanning() {
@@ -822,7 +944,7 @@ function vuePlanning() {
   for (let i = 0; i < decal; i++) cases += `<div class="case-j vide" aria-hidden="true"></div>`;
   let faits = 0;
   for (let j = 1; j <= NB_JOURS; j++) {
-    const jour = DONNEES.plan[j - 1], st = statsJour(j); faits += st.faits;
+    const jour = PLAN[j - 1], st = statsJour(j); faits += st.faits;
     const barres = CLES.map(k => `<i style="--c:${COULEUR[k]}" class="${P().coches["d" + j + "-" + k] ? "ok" : ""}"></i>`).join("");
     const marques = (jour.tag === "plaisir" ? ICONES.etoile : "") + (jour.fish ? ICONES.poisson : "") + (COURSES().some(c => c.jourPlan === j) ? ICONES.panier : "");
     cases += `<button class="case-j ${commence && j < auj ? "passe" : ""}" data-voir="${j}" ${commence && j === auj ? 'aria-current="date"' : ""} aria-label="${libelleJour(j)} : ${st.faits} repas sur 4 faits">
@@ -830,11 +952,12 @@ function vuePlanning() {
   }
   const total = NB_JOURS * 4;
   return `<h1>Planning ${de()}</h1>
-  <p class="discret" style="margin:6px 0 0">Du jeudi 1er au mercredi 21 octobre. Touche un jour pour voir ses repas.</p>
+  <p class="discret" style="margin:6px 0 0">${MOIS_TITRE} : du ${libelleJour(1).toLowerCase()} au ${libelleJour(NB_JOURS).toLowerCase()}. Touche un jour pour voir ses repas.</p>
   <div class="progress-plan"><div class="sect-titre"><h3>Repas suivis</h3><span class="chiffre" style="font-size:22px">${faits}/${total}</span></div>
     <div class="barre-prog" style="height:10px"><i style="width:${faits / total * 100}%;background:var(--c-dej)"></i></div></div>
   <div class="cal">${cases}</div>
   <div class="legende"><span>${ICONES.etoile}Repas plaisir</span><span>${ICONES.poisson}Poisson</span><span>${ICONES.panier}Jour de courses</span></div>
+  ${carteMois()}
   ${carteGeneration()}`;
 }
 
@@ -855,12 +978,12 @@ function vueStock(seg) {
   return `<h1>Courses du foyer</h1>
   <div class="segments" role="group" aria-label="Choisir la liste">${seg}</div>
   <div class="totaux">
-    <div><span class="chiffre ${manques ? "surcout" : "eco"}">${manques}</span><span class="discret">aliment${manques > 1 ? "s" : ""} en rupture avant le 21</span></div>
+    <div><span class="chiffre ${manques ? "surcout" : "eco"}">${manques}</span><span class="discret">aliment${manques > 1 ? "s" : ""} en rupture avant le ${dateDuJour(NB_JOURS).getDate()}</span></div>
     <div><span class="chiffre">${eur(valeur)}</span><span class="discret">à la maison aujourd'hui</span></div>
     <div><span class="chiffre">${adj}</span><span class="discret">repas ajustés ${de()} (${dk >= 0 ? "+" : "−"}${nb(Math.abs(dk))} kcal)</span></div>
   </div>
   <p class="discret petit">Ce qu'il reste à la maison aujourd'hui : articles cochés aux courses, moins les repas des jours passés et la poubelle. La dernière colonne prévoit la fin du cycle avec toutes les courses de la liste.</p>
-  <div class="stock-ligne stock-tete"><span>Aliment</span><span class="n">${aujourdhui}</span><span class="n">Le 21 au soir</span><span></span></div>
+  <div class="stock-ligne stock-tete"><span>Aliment</span><span class="n">${aujourdhui}</span><span class="n">Le ${dateDuJour(NB_JOURS).getDate()} au soir</span><span></span></div>
   ${lignes.map(l => `<div class="stock-ligne"><span>${echap(l.a)}</span><span class="n">${quantite(l.a, l.n)}</span>
     <span class="n ${l.f < -0.5 ? "manque" : ""}">${l.f < -0.5 ? "manque " + quantite(l.a, -l.f) : quantite(l.a, Math.max(0, l.f))}</span>
     ${l.n > 0.5 ? `<button class="jeter" data-jeter="${echap(l.a)}" aria-label="Jeter du stock : ${echap(l.a)}">${ICONES.poubelle}</button>` : "<span></span>"}
@@ -906,8 +1029,16 @@ function vuePrix(seg) {
 function projectionFoyer() {
   let paye = 0, avenir = 0;
   for (const c of COURSES()) { const b = bilanCourse(c.id); paye += b.paye; avenir += b.avenir; }
-  const budget = Object.keys(PERSONNES).reduce((s, p) => s + (+E.personnes[p].profil.budget || 0), 0);
+  const budget = budgetFoyer();
   return { paye, avenir, total: paye + avenir, budget };
+}
+// Budget du foyer : celui choisi pour le mois préparé par le chef, sinon la somme des budgets des profils.
+// La part d'une personne suit le rapport de son budget de profil.
+function budgetFoyer() { return E.mois && E.mois.budget ? +E.mois.budget : Object.keys(PERSONNES).reduce((s, p) => s + (+E.personnes[p].profil.budget || 0), 0); }
+function budgetPersonne(p = actif) {
+  const b = +E.personnes[p].profil.budget || 0; if (!(E.mois && E.mois.budget)) return b;
+  const tot = Object.keys(PERSONNES).reduce((s, q) => s + (+E.personnes[q].profil.budget || 0), 0);
+  return tot ? E.mois.budget * b / tot : E.mois.budget / 2;
 }
 // Dépassement du foyer : ce qui sera mangé sur le cycle (aux derniers prix validés) face à la somme des budgets.
 // Les achats peuvent dépasser un peu la consommation : ce qui reste en stock sert au cycle suivant.
@@ -935,7 +1066,7 @@ function lignesAAcheter() {
   }
   return out;
 }
-const HORS_REPAS_NOMS = new Set(Object.values(HORS_REPAS).flat().map(h => h.a));
+const HORS_REPAS_NOMS = new Set((DONNEES.reglages.horsRepas || []).map(h => h.a));
 const roleDe = a => ((DONNEES.catalogue || {})[a] || {}).role || "autre";
 // quantité de b qui remplace q de a : mêmes protéines pour une protéine, mêmes kcal pour un féculent, même poids sinon
 function facteurEchange(a, b) {
@@ -1078,7 +1209,7 @@ function carteFoyer() {
     </div></section>`;
 }
 function vueBudget() {
-  const pr = P().profil, prevu = totalPrevu(), budget = +pr.budget || 0, ref = +pr.reference || 0;
+  const pr = P().profil, prevu = totalPrevu(), budget = budgetPersonne(), ref = E.mois ? 0 : +pr.reference || 0;
   const auj = planPasCommence() ? 0 : jourDuPlan();
   let consomme = 0; for (let j = 1; j <= NB_JOURS; j++) consomme += statsJour(j).coutFait;
   consomme += horsRepasJour() * auj;
@@ -1097,8 +1228,8 @@ function vueBudget() {
     <polyline points="${pts.map(q => q.join(",")).join(" ")}" fill="none" style="stroke:var(--c-dej)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
     ${ptsF.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" style="fill:var(--or)"/>`).join("")}
     <text x="${W - pad}" y="${yB - 8}" text-anchor="end" style="font:13px var(--texte);fill:var(--brume)">Budget ${eur(budget)}</text>
-    <text x="${pad}" y="${H - 6}" style="font:12px var(--texte);fill:var(--brume)">1er oct.</text>
-    <text x="${W - pad}" y="${H - 6}" text-anchor="end" style="font:12px var(--texte);fill:var(--brume)">21 oct.</text></svg>`;
+    <text x="${pad}" y="${H - 6}" style="font:12px var(--texte);fill:var(--brume)">${dateCourte(iso(dateDuJour(1))).replace(/^\S+ /, "")}</text>
+    <text x="${W - pad}" y="${H - 6}" text-anchor="end" style="font:12px var(--texte);fill:var(--brume)">${dateCourte(iso(dateDuJour(NB_JOURS))).replace(/^\S+ /, "")}</text></svg>`;
   const ecarts = [];
   for (const c of COURSES()) for (const it of itemsCourse(c)) {
     const v = E.foyer.payes[cleLigne(c.id, it)]; if (v == null || v === "") continue;
@@ -1114,11 +1245,11 @@ function vueBudget() {
   ${carteFoyer()}
   ${panneauDepassement()}
   <h2 style="margin-top:22px">Part ${de()}</h2>
-  <p class="discret" style="margin:6px 0 0">Ce que ${nom()} mange du 1er au 21 octobre, au prix validé dès que l'article est coché.</p>
+  <p class="discret" style="margin:6px 0 0">Ce que ${nom()} mange du ${jourMoisCourt(1)} au ${jourMoisCourt(NB_JOURS)}, au prix validé dès que l'article est coché.</p>
   <section class="carte pot">
     <div class="sect-titre" style="flex-wrap:wrap"><h2>${eur(prevu)} prévus</h2><span class="${depasse ? "surcout" : "eco"}">${depasse ? "Au-dessus du budget de " + eur(prevu - budget) : "Sous le budget de " + eur(budget - prevu)}</span></div>
     <div class="pot-barre"><i style="width:${Math.min(prevu / maxi, 1) * 100}%;background:${depasse ? "var(--alerte)" : "var(--or)"}"></i><b style="left:calc(${Math.min(budget / maxi, 1) * 100}% - 2px)"></b></div>
-    <p class="discret petit" style="margin:0">Budget fixé : ${eur(budget)}, modifiable dans Profil</p>
+    <p class="discret petit" style="margin:0">${E.mois ? "Sa part du budget du mois (" + eur(budgetFoyer()) + ")" : "Budget fixé : " + eur(budget) + ", modifiable dans Profil"}</p>
     <div class="stats">
       <div><span class="chiffre">${eur(consomme)}</span><span class="discret">déjà consommé</span></div>
       <div><span class="chiffre">${eur(prevu - consomme)}</span><span class="discret">reste à manger</span></div>
@@ -1126,7 +1257,7 @@ function vueBudget() {
       <div><span class="chiffre eco">${eur(ref - prevu)}</span><span class="discret">économisé vs liste initiale</span></div>
     </div></section>
   <section class="carte"><h3>Dépense prévue jour après jour</h3>${courbe}
-    <p class="discret petit" style="margin:4px 0 0">Ligne verte : dépense cumulée. Pointillés : budget réparti sur 21 jours. Point doré : journée entièrement suivie.</p></section>
+    <p class="discret petit" style="margin:4px 0 0">Ligne verte : dépense cumulée. Pointillés : budget réparti sur ${NB_JOURS} jours. Point doré : journée entièrement suivie.</p></section>
   <section class="carte"><h3>Par course</h3>
     <table class="tab"><thead><tr><th>Course</th><th class="n">Sa part</th><th class="n">Dont payé</th></tr></thead><tbody>
       ${bilans.map(({ c, b }) => `<tr><td>${c.titre}<br><span class="discret petit">${c.jour}</span></td><td class="n">${eur(b.maPart)}</td><td class="n">${eur(b.partPaye)}</td></tr>`).join("")}
@@ -1160,7 +1291,7 @@ function vueProfil() {
       ${dernieres ? `<table class="tab">${dernieres}</table>` : ""}</section>
     <section class="carte"><h3>Budget</h3>
       <div class="form-ia" style="margin-top:10px">
-        <label class="champ">Budget pour les 21 jours (€)<input type="number" inputmode="decimal" step="1" min="0" data-profil="budget" value="${pr.budget}"></label>
+        <label class="champ">Budget de référence pour 21 jours (€)<input type="number" inputmode="decimal" step="1" min="0" data-profil="budget" value="${pr.budget}"></label>
         <label class="champ">Sa part de la liste initiale (€)<input type="number" inputmode="decimal" step="0.01" min="0" data-profil="reference" value="${pr.reference}"></label>
       </div><p class="discret petit">La liste initiale sert de point de comparaison pour calculer les économies.</p></section>
     <section class="carte"><h3>Objectifs du jour</h3>
@@ -1245,7 +1376,7 @@ function stockPourIA() {
 }
 function prixTexte(a) {
   const pu = prixUnitaire(a), u = uniteDe(a); if (pu == null) return "prix inconnu";
-  if (pu === 0 && DONNEES.cat[a] && DONNEES.cat[a].stock) return "déjà payé";
+  if (pu === 0 && STOCK_DEPART[a]) return "déjà payé";
   return u === "unité" ? nb(pu, 2) + " €/unité" : u === "ml" ? nb(pu * 1000, 2) + " €/L" : nb(pu * 1000, 2) + " €/kg";
 }
 function consigne() {
@@ -1375,13 +1506,19 @@ function action(b) {
     return rendre();
   }
   if (d.generer) {
-    if (d.generer === "ouvrir") { gen = { j0: premierJourLibre(), graine: 1, invites: 0, budget: null, res: null }; gen.res = genererMenu(gen.j0, 1, 0, null); return rendre(); }
-    if (d.generer === "calculer") { gen.res = genererMenu(gen.j0, gen.graine, gen.invites, gen.budget); return rendre(); }
-    if (d.generer === "autre") { gen.graine++; gen.res = genererMenu(gen.j0, gen.graine, gen.invites, gen.budget); return rendre(); }
+    const refaire = () => { gen.res = gen.mode === "mois" ? genererMoisSuivant() : genererMenu(gen.j0, gen.graine, gen.invites, gen.budget); };
+    if (d.generer === "ouvrir") { gen = { mode: "stock", j0: premierJourLibre(), graine: 1, invites: 0, budget: null, res: null }; refaire(); return rendre(); }
+    if (d.generer === "mois") { ouvrirPreparation(); return rendre(); }
+    if (d.generer === "calculer") { gen.confirmer = false; refaire(); return rendre(); }
+    if (d.generer === "autre") { gen.graine++; gen.confirmer = false; refaire(); return rendre(); }
+    if (d.generer === "valider") { gen.confirmer = true; return rendre(); }
+    if (d.generer === "valider-non") { gen.confirmer = false; return rendre(); }
+    if (d.generer === "valider-oui") { validerMois(); return rendre(); }
     if (d.generer === "appliquer") { appliquerGeneration(); return rendre(); }
     if (d.generer === "fermer") { gen = null; return rendre(); }
     if (d.generer === "annuler") { annulerGeneration(); return rendre(); }
   }
+  if (d.rouvrir) { rouvrirMois(d.rouvrir); return rendre(); }
   if (d.modifAnnuler) { annulerModif(+d.modifAnnuler); sauver(); return rendre(); }
   if (d.accepter) { E.foyer.depassementAccepte = +d.accepter; sauver(); toast("Dépassement accepté"); return rendre(); }
   if (d.prixReset) { delete E.foyer.prix[d.prixReset]; sauver(); toast(d.prixReset + " : prix d'origine rétabli"); return rendre(); }
@@ -1465,8 +1602,10 @@ document.onchange = e => {
   if (d.gen && gen) {
     const v = parseFloat(t.value);
     if (d.gen === "j0") gen.j0 = +t.value;
+    if (d.gen === "debut") { gen.debut = t.value; gen.jours = joursDuMois(dateLocale(t.value)); }
+    if (d.gen === "jours") gen.jours = isNaN(v) ? gen.jours : Math.max(1, Math.min(31, Math.round(v)));
     if (d.gen === "invites") gen.invites = isNaN(v) ? 0 : Math.max(0, Math.min(12, Math.round(v)));
-    if (d.gen === "budget") gen.budget = isNaN(v) || v <= 0 ? null : v;
+    if (d.gen === "budget") gen.budget = isNaN(v) || v <= 0 ? (gen.mode === "mois" ? gen.budget : null) : v;
     gen.res = null; return rendre();
   }
   if (d.qte) {

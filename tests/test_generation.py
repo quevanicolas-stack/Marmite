@@ -1,4 +1,4 @@
-"""Planning : « Demander au chef un menu selon le stock ». La proposition part du stock réel, s'applique aux repas
+"""Planning : « Demander au chef un planning selon le stock » (en cours de mois). La proposition part du stock réel, s'applique aux repas
 à venir des deux personnes et recalcule les courses suivantes ; on peut revenir au menu d'avant.
 Aucune mention de Claude à l'écran : on parle du chef."""
 import asyncio, pathlib, sys
@@ -23,7 +23,7 @@ async def main():
         await pg.click("#nav-barre button[data-vue='planning']")
         await pg.click("button[data-generer='ouvrir']")
         texte = await pg.inner_text("main")
-        verif("Le chef prépare votre menu" in texte, "titre « Le chef prépare votre menu » absent")
+        verif("Refaire le planning selon le stock" in texte and "Le chef prépare votre mois" in texte, "cartes du chef absentes")
         res = await pg.evaluate("gen && gen.res && { j0: gen.j0, jours: gen.res.mois.plan.length, courses: gen.res.mois.courses.map(c => c.date), gardees: gen.res.gardees, stock: gen.res.stockUtilise.length }")
         verif(res and res["j0"] == 4, f"premier jour modifiable : {res and res['j0']}, 4 attendu (repas du 3 déjà coché)")
         verif(res and res["jours"] == 18, "18 jours à composer du 4 au 21")
@@ -48,7 +48,7 @@ async def main():
         verif(etat["avant"] == 0, "des jours déjà passés ont été modifiés")
         verif(not etat["sansViande"], f"repas sans viande ni poisson : {etat['sansViande']}")
         verif(etat["courses"] == [[1, 1], [2, 8], [3, 15]], f"courses après génération : {etat['courses']}")
-        verif("Revenir au menu d'avant" in await pg.inner_text("main"), "lien pour revenir au menu d'avant absent")
+        verif("Revenir au planning d'avant" in await pg.inner_text("main"), "lien pour revenir au planning d'avant absent")
 
         # revenir au menu d'avant
         await pg.click("button[data-generer='annuler']")
