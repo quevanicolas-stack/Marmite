@@ -94,7 +94,10 @@ const Moteur = (() => {
     const libre = (j, k) => j >= 1 && j <= N && !grille[`${j}-${k}`];
     // les variantes d'un même plat (« Bœuf sauté asiatique, riz, légumes » / « …, poivrons-carottes ») comptent ensemble
     const usages = r => Object.values(grille).filter(x => famille(x) === famille(r)).length;
-    const tropProche = (r, j) => Object.entries(grille).some(([cle, x]) => famille(x) === famille(r) && Math.abs(+cle.split("-")[0] - j) < ecart);
+    // historique : plats des jours précédant la période (j ≤ 0), pour respecter l'écart à la jointure
+    const historique = (ctx.historique || []).map(h => ({ j: h.j, r: recettes.find(x => x.id === h.recette) })).filter(h => h.r);
+    const tropProche = (r, j) => Object.entries(grille).some(([cle, x]) => famille(x) === famille(r) && Math.abs(+cle.split("-")[0] - j) < ecart)
+      || historique.some(h => famille(h.r) === famille(r) && j - h.j < ecart);
     const coutRef = r => PERSONNES.reduce((s, p) => s + coutItems(cat, r.portions[p]), 0);
     const coutMoyen = plats.reduce((s, r) => s + coutRef(r), 0) / Math.max(1, plats.length);
     const principal = (r, role) => {
@@ -363,9 +366,11 @@ const Moteur = (() => {
 
     // on recompose en donnant plus de poids au coût tant que les achats dépassent le budget (6 passes au plus)
     let res = null;
-    for (let passe = 0; passe < 6; passe++) {
-      const ctx = { cat, recettes: recs, reglages, cal, exclure, quotas, invites, stockDepart: entrees.stockDepart || {},
-        alea: hasard((entrees.graine || 1) + passe * 7919), poidsCout: 0.5 + passe * 0.8 };
+    const passes = entrees.passes || 6, pasCout = entrees.pasCout || 0.8;
+    for (let passe = 0; passe < passes; passe++) {
+      const historique = (entrees.historique || []).map(h => ({ j: Math.round((dateISO(h.date) - debut) / JOUR_MS) + 1, recette: h.recette }));
+      const ctx = { cat, recettes: recs, reglages, cal, exclure, quotas, invites, historique, stockDepart: entrees.stockDepart || {},
+        alea: hasard((entrees.graine || 1) + passe * 7919), poidsCout: 0.5 + passe * pasCout };
       const { grille, joursPlaisir } = composer(ctx);
       const plan = [];
       for (let j = 1; j <= n; j++) {
@@ -443,6 +448,85 @@ const Moteur = (() => {
     return { mois: moisObj, bilan };
   }
 
-  return { composerMois, objectifs, prixUnitaire, totaux, calendrier, portionsDuJour, aProteineAnimale };
+  /* ---------- Réajustement en cours de mois ---------- */
+  // Catalogue avec les prix validés (onglet Prix ou prix payés : { aliment: { prix } } ou { aliment: nombre }).
+  function avecPrix(catalogue, prix) {
+    const cat = {};
+    for (const [a, c] of Object.entries(catalogue)) {
+      const p = prix && prix[a] != null ? (typeof prix[a] === "object" ? prix[a].prix : prix[a]) : null;
+      cat[a] = p != null ? Object.assign({}, c, { prix: p }) : c;
+    }
+    return cat;
+  }
+  const estimation = (cat, it) => { const c = cat[it.a]; if (!c || c.prix == null) return 0; return c.vrac ? it.buy / 1000 * c.prix : it.buy * c.prix; };
+  const quantiteAchetee = (cat, it) => { const c = cat[it.a]; return c.vrac ? it.buy * (c.rend || 1) : it.buy * c.cond; };
+
+  // Après une ou plusieurs courses : dépensé réel (prix payés, sinon prix validés), estimation des courses restantes
+  // aux prix validés, projection face au budget. Si la projection dépasse le budget, les jours à partir de la
+  // prochaine course sont recomposés avec le budget qui reste ; les jours déjà couverts ne bougent pas.
+  // entrees : celles de composerMois + { mois, prix, payes ({ "c1-Poulet": 21.5 }), aPartirDe (jour de la prochaine course), budget }
+  function reajuster(entrees) {
+    const m = entrees.mois, reglages = entrees.reglages;
+    const cat = avecPrix(entrees.catalogue, entrees.prix || {});
+    const payes = entrees.payes || {};
+    const aPartirDe = entrees.aPartirDe;
+    const budget = entrees.budget;
+    const faites = m.courses.filter(c => c.jourPlan < aPartirDe), restantes = m.courses.filter(c => c.jourPlan >= aPartirDe);
+    const depenseCourse = c => c.items.reduce((s, it) => { const v = payes[`c${c.id}-${it.a}`]; return s + (v != null ? +v : estimation(cat, it)); }, 0);
+    const depense = r2(faites.reduce((s, c) => s + depenseCourse(c), 0));
+    // les courses restantes, réestimées aux prix validés
+    const reestimees = restantes.map(c => Object.assign({}, c, { items: c.items.map(it => Object.assign({}, it, { est: r2(estimation(cat, it)) })) }));
+    const reste = r2(reestimees.reduce((s, c) => s + c.items.reduce((t, it) => t + it.est, 0), 0));
+    const projection = r2(depense + reste);
+    const bilanBudget = { budget, depense, resteEstime: reste, projection, resteBudget: r2(budget - depense) };
+    if (projection <= budget || !restantes.length)
+      return { mois: Object.assign({}, m, { courses: faites.concat(reestimees) }), recompose: false, budget: bilanBudget };
+
+    // stock au matin de la prochaine course : départ + achats faits − consommation des jours déjà passés
+    const stock = Object.assign({}, m.stockDepart || {});
+    for (const c of faites) for (const it of c.items) stock[it.a] = (stock[it.a] || 0) + quantiteAchetee(cat, it);
+    const n = m.invites || 0;
+    for (const j of m.plan.filter(x => x.d < aPartirDe)) {
+      for (const x of j.meals) for (const [qui, f] of [["nicolas", 1], ["aurelie", 1], ["invites", n]]) for (const [a, q] of x.items[qui] || []) stock[a] = (stock[a] || 0) - q * f;
+      for (const h of reglages.horsRepas || []) for (const p of PERSONNES) if (h.parJour[p]) stock[h.a] = (stock[h.a] || 0) - h.parJour[p];
+    }
+    for (const a of Object.keys(stock)) if (stock[a] <= 0.5) delete stock[a]; else stock[a] = r2(stock[a]);
+
+    // quotas restants et historique des jours juste avant, pour l'écart entre deux mêmes plats
+    const fixes = m.plan.filter(x => x.d < aPartirDe);
+    const tags = id => ((entrees.recettes.find(r => r.id === id) || {}).tags || []);
+    const faitsTag = t => fixes.reduce((s, j) => s + j.meals.filter(x => (x.k === "dej" || x.k === "din") && tags(x.recette).includes(t)).length, 0);
+    const q0 = entrees.quotas || reglages.quotas;
+    const quotas = { poisson: Math.max(0, q0.poisson - faitsTag("poisson")), plaisir: Math.max(0, q0.plaisir - faitsTag("plaisir")) };
+    const ecart = reglages.ecartMinJours || 5;
+    const historique = fixes.filter(j => j.d >= aPartirDe - ecart).flatMap(j => j.meals.filter(x => x.k === "dej" || x.k === "din").map(x => ({ date: j.date, recette: x.recette })));
+
+    // le coût pèse plus fort qu'à la composition initiale : le menu peut rattraper quelques pour cent, pas davantage
+    const suite = composerMois(Object.assign({}, entrees, {
+      catalogue: cat, debut: m.plan[aPartirDe - 1].date, jours: m.jours - aPartirDe + 1, invites: n,
+      budget: r2(budget - depense), quotas, stockDepart: stock, historique, joursCourses: restantes.map(c => c.date),
+      passes: 10, pasCout: 1.2,
+    }));
+    const projectionApres = r2(depense + suite.bilan.cout.achats);
+    // la nouvelle version n'est retenue que si elle coûte vraiment moins ; sinon on garde le planning réestimé
+    if (projectionApres >= projection - 1)
+      return { mois: Object.assign({}, m, { courses: faites.concat(reestimees) }), recompose: false,
+        budget: Object.assign(bilanBudget, { projectionApres, horsDePortee: true }) };
+    const decale = aPartirDe - 1;
+    const plan = fixes.concat(suite.mois.plan.map(j => Object.assign({}, j, { d: j.d + decale })));
+    const courses = faites.concat(suite.mois.courses.map((c, i) => Object.assign({}, c, { id: faites.length + i + 1, titre: `Course ${faites.length + i + 1}`, jourPlan: c.jourPlan + decale })));
+    // part de Nicolas recalculée sur tout le mois
+    const tot = {};
+    for (const j of plan) for (const x of j.meals) for (const p of PERSONNES) for (const [a, q] of x.items[p]) { tot[a] = tot[a] || { nicolas: 0, aurelie: 0 }; tot[a][p] += q; }
+    for (const h of reglages.horsRepas || []) for (const p of PERSONNES) if (h.parJour[p]) { tot[h.a] = tot[h.a] || { nicolas: 0, aurelie: 0 }; tot[h.a][p] += h.parJour[p] * m.jours; }
+    const share = {};
+    for (const [a, t] of Object.entries(tot)) share[a] = t.nicolas + t.aurelie ? Math.round(t.nicolas / (t.nicolas + t.aurelie) * 10000) / 10000 : 0.5;
+    bilanBudget.projectionApres = projectionApres;
+    bilanBudget.horsDePortee = projectionApres > budget;
+    return { mois: Object.assign({}, m, { plan, courses, share, note: `${m.note || ""} Réajusté${entrees.aujourdhui ? " le " + entrees.aujourdhui : ""} à partir du jour ${aPartirDe}.`.trim() }),
+      recompose: true, budget: bilanBudget, bilan: suite.bilan };
+  }
+
+  return { composerMois, reajuster, avecPrix, objectifs, prixUnitaire, totaux, calendrier, portionsDuJour, aProteineAnimale };
 })();
 if (typeof module !== "undefined") module.exports = Moteur;

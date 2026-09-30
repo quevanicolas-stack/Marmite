@@ -77,6 +77,49 @@ verif(achatLentilles.length === 0, "lentilles achetées alors qu'il y en a 5 kg 
   verif(b.cout.achats > seul.bilan.cout.achats * 1.8, `3 invités : achats ${b.cout.achats} € contre ${seul.bilan.cout.achats} € sans`);
 }
 
+// réajustement en cours de mois : novembre, après la Course 1 (le 3), prochaine course le 10
+{
+  const base = composer(2026, 11, 1);
+  const m = base.mois, budget = 500;
+  const c1 = m.courses[0], aPartirDe = m.courses[1].jourPlan;
+  const commun = { catalogue, recettes, reglages, graine: 1, moisReference: reference, mois: m, aPartirDe, budget };
+
+  // prix conformes aux estimations : rien ne bouge, projection = achats prévus
+  const payesJustes = Object.fromEntries(c1.items.map(it => [`c1-${it.a}`, it.est]));
+  const r0 = Moteur.reajuster(Object.assign({}, commun, { payes: payesJustes, budget: 600 }));
+  verif(!r0.recompose, "réajustement : recomposé alors que le budget tient");
+  verif(Math.abs(r0.budget.projection - base.bilan.cout.achats) < 0.05, `projection ${r0.budget.projection} ≠ achats prévus ${base.bilan.cout.achats}`);
+
+  // poulet validé plus cher : les courses restantes sont réestimées à ce prix
+  const r1 = Moteur.reajuster(Object.assign({}, commun, { payes: payesJustes, budget: 600, prix: { Poulet: { prix: 15 } } }));
+  const poulet = cs => cs.slice(1).flatMap(c => c.items).filter(i => i.a === "Poulet").reduce((s, i) => s + i.est, 0);
+  verif(poulet(r1.mois.courses) > poulet(m.courses) * 1.3, "prix validé du poulet non repris dans les courses restantes");
+
+  // Course 1 payée 80 € de plus que prévu : hors de portée du menu, le planning est gardé et le dépassement signalé
+  const payesChers = Object.assign({}, payesJustes); payesChers[`c1-${c1.items[0].a}`] = c1.items[0].est + 80;
+  const rx = Moteur.reajuster(Object.assign({}, commun, { payes: payesChers }));
+  verif(rx.budget.depense > c1.items.reduce((s, i) => s + i.est, 0) + 79, "dépensé : prix payés non pris en compte");
+  verif(rx.budget.horsDePortee && rx.budget.projectionApres > budget, "80 € de trop : dépassement non signalé");
+  if (!rx.recompose) verif(JSON.stringify(rx.mois.plan) === JSON.stringify(m.plan), "sans recomposition, le planning doit rester le même");
+
+  // Course 1 payée 25 € de plus : la suite est recomposée, moins chère, avec le budget restant
+  const payesPlus = Object.assign({}, payesJustes); payesPlus[`c1-${c1.items[0].a}`] = c1.items[0].est + 25;
+  const r2 = Moteur.reajuster(Object.assign({}, commun, { payes: payesPlus }));
+  verif(r2.recompose, "25 € de trop : pas de recomposition");
+  verif(r2.budget.projectionApres < r2.budget.projection, `projection non réduite : ${r2.budget.projection} → ${r2.budget.projectionApres}`);
+  verif(JSON.stringify(r2.mois.plan.slice(0, aPartirDe - 1)) === JSON.stringify(m.plan.slice(0, aPartirDe - 1)), "jours déjà couverts modifiés");
+  verif(JSON.stringify(r2.mois.courses[0]) === JSON.stringify(c1), "Course 1 modifiée");
+  verif(r2.mois.plan.length === 30 && r2.mois.courses.length === 4, "mois réajusté incomplet");
+  verif(JSON.stringify(r2.mois.courses.map(c => c.jourPlan)) === JSON.stringify(m.courses.map(c => c.jourPlan)), "jours de courses déplacés");
+  // l'écart entre deux mêmes plats tient aussi à la jointure, et les quotas du mois restent atteints
+  const vus = [];
+  for (const j of r2.mois.plan) for (const x of j.meals) if (x.k === "dej" || x.k === "din") vus.push([j.d, famille(x.recette)]);
+  for (const [d1, f1] of vus) for (const [d2, f2] of vus) if (d2 > d1 && f1 === f2 && d2 - d1 < reglages.ecartMinJours) verif(false, `réajusté : « ${f1} » les ${d1} et ${d2}`);
+  const tag = t => r2.mois.plan.reduce((s, j) => s + j.meals.filter(x => (x.k === "dej" || x.k === "din") && recettes.find(r => r.id === x.recette).tags.includes(t)).length, 0);
+  verif(tag("poisson") === 8 && tag("plaisir") === 6, `réajusté : ${tag("poisson")} poissons, ${tag("plaisir")} plaisirs`);
+  console.log(`réajustement : projection ${r2.budget.projection} € → ${r2.budget.projectionApres} € (budget ${budget} €, dépensé ${r2.budget.depense} €)`);
+}
+
 // objectifs : 3 kg de moins, environ 42 kcal de moins par jour, protéines inchangées
 const o = Moteur.objectifs(reglages.personnes.nicolas, 82);
 verif(o.kcalMin === 1808 && o.kcalMax === 1908 && o.prot === 110, `objectifs après pesée : ${JSON.stringify(o)}`);

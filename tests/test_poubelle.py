@@ -27,7 +27,7 @@ async def main():
         verif(await pg.locator(".article button.check").nth(3).get_attribute("aria-pressed") == "true", "clic sur le nom : case non cochée")
         await pg.locator(".article input[data-paye]").first.click()
         verif(await pg.locator(".article button.check").nth(3).get_attribute("aria-pressed") == "true", "clic sur « Prix payé » : case décochée")
-        await pg.locator(".article .prix").nth(3).click()
+        await pg.locator(".article .detail").nth(3).click()
         verif(await pg.locator(".article button.check").nth(3).get_attribute("aria-pressed") == "false", "second clic sur la ligne : case toujours cochée")
 
         j = await pg.evaluate("jourDuPlan()")

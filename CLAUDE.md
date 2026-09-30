@@ -133,7 +133,7 @@ L'app reprend exactement la palette du site Fluent & Forward d'Aurélie :
   - à l'enregistrement, le repas passe en `ajuste:true`. Si les quantités redeviennent celles du plan, l'ajustement est supprimé.
 - **Planning** : calendrier du lundi au dimanche, qui commence un jeudi. Chaque case affiche les 4 barres de repas, les repères plaisir, poisson et courses, et le coût du jour. Une barre montre le nombre de repas suivis sur 84.
 - **Courses** : quatre onglets.
-  - **Course 1 / Course 2** : cases à cocher (toucher n'importe où sur la ligne coche ou décoche, sauf le champ « Prix payé ») et prix payé. Un prix payé devient le prix unitaire du produit dans toute l'app. Magasin, totaux, part de la personne active.
+  - **Course 1 / Course 2** : cases à cocher (toucher n'importe où sur la ligne coche ou décoche, sauf le champ de prix) et prix payé, tapé directement dans le champ de chaque ligne (l'estimation sert d'indication ; saisir un prix coche l'article). Sous les totaux, la **projection du cycle** : prix payés + courses à venir aux derniers prix validés, face au budget du foyer (somme des budgets des profils). Un prix payé devient le prix unitaire du produit dans toute l'app. Magasin, totaux, part de la personne active.
   - **À la maison** : stock estimé du foyer, trois colonnes (ce matin, le 21 au soir, écart avec le plan d'origine), ruptures en premier, bilan des ajustements. Chaque ligne en stock a une **poubelle** : on saisit la quantité jetée, elle sort du stock à partir de ce jour (jamais d'office), et la carte « À la poubelle » liste les pertes avec leur valeur et un bouton Annuler.
   - **Prix** : le prix de chaque produit, par rayon (au conditionnement, ou au kilo pour le vrac), modifiable. Un prix modifié (`source:"saisi"`) ou déduit d'un prix payé (`source:"paye"`) va dans `foyer.prix` et remplace celui du catalogue partout ; « Rétablir » revient au prix d'origine. Les produits aux prix estimés portent l'étiquette « estimé ».
 - **Budget** : pour la personne active.
@@ -299,11 +299,12 @@ Nico veut enchaîner sans tout régénérer en Python, et être prévenu avant l
 - **Portions** : par personne et par jour, protéines des plats principaux calées sur l'objectif (facteur 0,85 à 1,4), puis féculents calés sur le milieu de la fourchette de kcal (0,5 à 1,6) ; arrondis à 5 g ou à l'unité. `objectifs(profil, poids)` retire environ 14 kcal par kg perdu.
 - **Courses** : chaque course achète le besoin de sa période moins le stock, arrondi au conditionnement (vrac : `pasAchat` du produit, 50 g par défaut, 1 g pour le jambon ; rendement compris). Tous les restes passent à la période suivante ; le frais plus vieux que sa conservation estimée est seulement signalé (`fraisAVerifier`), pour l'inventaire.
 - **Budget** : celui saisi pour la période, sinon celui des profils (prévu pour `budgetJours` jours) ramené à la durée. Si les achats le dépassent, le moteur recompose en pesant davantage le coût (6 passes au plus) et garde la passe la moins chère.
+- **Réajustement en cours de mois** : `Moteur.reajuster({ ...entrées, mois, prix, payes, aPartirDe, budget })`. Dépensé = prix payés des courses faites (sinon estimation aux prix validés) ; les courses restantes sont réestimées aux prix validés (`prix` = `foyer.prix`). Si la projection dépasse le budget, les jours à partir de la prochaine course sont recomposés avec le budget restant (stock réel reporté, quotas restants, écart respecté à la jointure, coût plus pesant : 10 passes) ; la version n'est gardée que si elle coûte vraiment moins, sinon `horsDePortee:true`. Ordre de grandeur mesuré : le menu seul rattrape 3 à 8 % ; au-delà, la variété s'effondre (le même plat plaisir 3 fois).
 - **Bilan** : nutrition moyenne, jours hors fourchette, quotas obtenus et visés, coûts (consommation par convive, achats, budget, par course), frais à vérifier, frais consommés au-delà de leur conservation (plats et petits-déjeuners à part), ce qu'il faut avant la première course, stock de fin de période.
 
 ### Points ouverts
 
-- **Prix saisis dans l'app et moteur** : le moteur lit les prix du catalogue ; une fois branché dans l'app, il devra prendre `foyer.prix` en priorité.
+- **Moteur branché dans l'app** : il devra prendre `foyer.prix` en priorité (`Moteur.avecPrix`) et lancer `reajuster` après chaque course validée, en proposant la nouvelle suite du mois plutôt qu'en l'imposant.
 
 - **Conditionnements à confirmer** : avocat compté à 350 g de chair, salade entière (300 g), champignons en barquette de 250 g : leurs restes s'accumulent d'une semaine à l'autre.
 - **Bibliothèque encore dominée par le poulet** : 40 plats principaux avec viande ou poisson (restes compris), 5 plats plaisir (burger, pizza, barbecue, steak frites, saucisses-frites) pour 6 repas plaisir par mois.
@@ -336,7 +337,7 @@ Les données sont dans un seul document `db`. Avec plusieurs mois et une bibliot
 6. **Ajustement ingrédient par ingrédient** et onglet de stock « À la maison ».
 7. **Réflexion sur le cycle suivant** (section 6).
 8. **Décisions du 30/09/2026** : cycle mensuel, 4 courses par mois, Claude limité à un appel par mois pour enrichir la bibliothèque, inventaire validé avant chaque course (vérification facultative). Repo rangé : le contenu des zips est versionné fichier par fichier. Puis : « J'ai faim » en deux voies (bibliothèque locale ou « Nouveauté » via Claude), période du 22 au 31 octobre en attente, quotas de 8 poissons et 6 plaisirs, jours de courses dans les réglages (le premier le 3), vérification mensuelle du frais acceptée. Données découpées en blocs.
-9. **Décisions du 30/09/2026, suite** : protéine animale à chaque déjeuner et dîner, aucune perte d'office (poubelle), jambon au gramme, préparation le 30, génération paramétrable (jours, invités, budget). Puis : porc réintégré, 6 plats ajoutés (saucisses-frites, steak frites, hachis parmentier bœuf-porc, cassoulet, riz mexicain poulet ou bœuf), ligne de courses cochable en entier, onglet « Prix » pour modifier les prix.
+9. **Décisions du 30/09/2026, suite** : protéine animale à chaque déjeuner et dîner, aucune perte d'office (poubelle), jambon au gramme, préparation le 30, génération paramétrable (jours, invités, budget). Puis : porc réintégré, 6 plats ajoutés (saucisses-frites, steak frites, hachis parmentier bœuf-porc, cassoulet, riz mexicain poulet ou bœuf), ligne de courses cochable en entier, onglet « Prix » pour modifier les prix, prix modifiable directement sur la ligne de course, projection du cycle, réajustement du budget par le moteur après chaque course.
 
 ## 8. Arborescence
 
@@ -364,7 +365,7 @@ outils/proposer_mois.js            node outils/proposer_mois.js 2026-11 : propos
 donnees/propositions/              propositions du moteur, en attente de validation
 tests/test_moteur.js               règles du mois (quotas, écart, protéine animale, courses, nutrition, graine, stock, invités, période libre)
 tests/test_donnees.py              blocs de données cohérents, app nourrie à l'identique
-tests/test_prix.py                 onglet Prix : modification, effet sur les courses, rétablir, prix payé
+tests/test_prix.py                 onglet Prix, prix tapé sur la ligne de course, projection du cycle, pas de débordement à 360 px
 tests/test_poubelle.py             case cochée en touchant la ligne, poubelle du stock, annulation, jambon au gramme
 tests/test_ajustement_stock.py     ajustement d'un repas, retour au plan, stock
 tests/test_assistant_personnes_theme.py   Nicolas/Aurélie, thème, assistant simulé, remplacement à 2

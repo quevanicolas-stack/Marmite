@@ -49,6 +49,7 @@ svg{ max-width:100%; }
 
 /* ---------- Mise en page ---------- */
 .app{ display:grid; min-height:100vh; }
+.app > div, main{ min-width:0; }
 .rail{ display:none; }
 .hautbar{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 18px 0; max-width:760px; margin:0 auto; }
 main{ padding:14px 18px 110px; max-width:760px; width:100%; margin:0 auto; }
@@ -149,7 +150,7 @@ h3{ font-size:18px; font-weight:700; }
 .btns-ed .bouton{ padding:10px 16px; font-size:15px; }
 
 /* ---------- Stock ---------- */
-.stock-ligne{ display:grid; grid-template-columns:1fr auto auto auto 34px; gap:10px; align-items:baseline; padding:9px 4px; border-bottom:1px solid var(--trait); font-variant-numeric:tabular-nums; }
+.stock-ligne{ display:grid; grid-template-columns:minmax(0,1fr) auto auto auto 34px; gap:8px; align-items:baseline; padding:9px 4px; border-bottom:1px solid var(--trait); font-variant-numeric:tabular-nums; }
 .stock-ligne .n{ text-align:right; min-width:68px; }
 .stock-tete{ font-size:12px; font-weight:700; color:var(--brume); border-bottom:1px solid var(--trait); }
 .manque{ color:var(--alerte); font-weight:700; }
@@ -193,7 +194,7 @@ h3{ font-size:18px; font-weight:700; }
 
 /* ---------- Courses ---------- */
 .segments{ display:grid; grid-template-columns:repeat(var(--n,3),1fr); background:var(--surface-2); border-radius:16px; padding:4px; margin:16px 0; }
-.segments button{ border:0; background:none; border-radius:12px; padding:10px 8px; font-weight:700; text-align:left; line-height:1.25; }
+.segments button{ border:0; background:none; border-radius:12px; padding:10px 8px; font-weight:700; text-align:left; line-height:1.25; min-width:0; overflow-wrap:anywhere; }
 .segments button span{ display:block; font-weight:500; font-size:13px; color:var(--brume); }
 .segments button[aria-pressed="true"]{ background:var(--surface); box-shadow:var(--ombre); }
 @media (max-width:420px){ .segments button{ padding:9px 6px; font-size:14px; } .segments button span{ font-size:12px; } }
@@ -205,14 +206,14 @@ h3{ font-size:18px; font-weight:700; }
 .prix-ligne input.modifie{ border-color:var(--or); border-width:2px; }
 .prix-ligne .lien{ padding:0 2px; font-size:13px; }
 .etiq-estime{ display:inline-block; font-size:11px; font-weight:700; padding:1px 7px; border-radius:999px; background:color-mix(in srgb, var(--or) 25%, var(--surface)); color:var(--titre-c); margin-left:6px; vertical-align:1px; }
-.totaux{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.totaux{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
 .totaux div{ background:var(--surface); border-radius:16px; padding:12px; }
 .totaux .chiffre{ font-size:20px; display:block; }
 .totaux .discret{ font-size:12px; }
 .champ{ display:flex; flex-direction:column; gap:4px; font-size:13px; font-weight:700; color:var(--brume); }
 .champ input,.champ select{ border:1px solid var(--trait); background:var(--surface); border-radius:12px; padding:10px 12px; font-size:16px; color:var(--encre); font-weight:500; }
 .cat-titre{ font-family:var(--titre); font-weight:700; font-size:16px; margin:22px 0 6px; color:var(--titre-c); }
-.article{ display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:center; padding:10px 4px; border-bottom:1px solid var(--trait); cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.article{ display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:12px; align-items:center; padding:10px 4px; border-bottom:1px solid var(--trait); cursor:pointer; -webkit-tap-highlight-color:transparent; }
 .article .saisie{ cursor:default; }
 .article .check{ width:28px; height:28px; border-radius:9px; border:2px solid var(--vert); background:var(--surface); display:grid; place-items:center; padding:0; }
 :root[data-theme="dark"] .article .check{ border-color:var(--or); }
@@ -224,8 +225,9 @@ h3{ font-size:18px; font-weight:700; }
 .article .detail{ font-size:13px; color:var(--brume); }
 .article .prix{ text-align:right; font-variant-numeric:tabular-nums; font-weight:700; }
 .article .prix span{ display:block; font-weight:500; font-size:12px; color:var(--brume); }
-.article .saisie{ grid-column:2 / 4; display:flex; gap:8px; align-items:center; font-size:13px; color:var(--brume); }
-.article .saisie input{ width:96px; border:1px solid var(--trait); border-radius:10px; padding:6px 8px; background:var(--surface); font-size:15px; }
+.article .saisie{ display:inline-flex; gap:4px; align-items:center; font-size:14px; font-weight:700; }
+.article .saisie input{ width:78px; border:1px solid var(--trait); border-radius:10px; padding:6px 8px; background:var(--surface); font-size:15px; font-weight:700; text-align:right; font-variant-numeric:tabular-nums; }
+.article .saisie input:not(:placeholder-shown){ border-color:var(--or); border-width:2px; }
 
 /* ---------- Budget ---------- */
 .carte{ background:var(--surface); border-radius:22px; padding:18px; box-shadow:var(--ombre); }
@@ -255,7 +257,8 @@ table.tab .n{ text-align:right; }
 .puce{ display:inline-flex; align-items:center; gap:6px; border:1px solid var(--trait); background:var(--surface); border-radius:999px; padding:6px 12px; font-size:14px; font-weight:700; }
 .puce[aria-pressed="true"]{ background:var(--primaire); border-color:var(--primaire); color:var(--sur-primaire); }
 .puce button{ border:0; background:none; padding:0 0 0 2px; font-weight:700; color:var(--brume); }
-.ligne-saisie{ display:flex; gap:8px; margin-top:10px; align-items:flex-end; }
+.ligne-saisie{ display:flex; gap:8px; margin-top:10px; align-items:flex-end; min-width:0; }
+.ligne-saisie .champ{ min-width:0; }
 .ligne-saisie .champ{ flex:1; }
 .etat-sync{ display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:700; }
 .etat-sync i{ width:9px; height:9px; border-radius:50%; background:var(--or); }
@@ -469,6 +472,7 @@ function stockAuDebut(j) {
 
 /* ---------- Courses ---------- */
 function texteAchat(it) { const c = DONNEES.cat[it.a]; return c.vrac ? quantite(it.a, it.buy) + " en vrac" : it.buy + " × " + c.achat; }
+function est0(it) { const c = DONNEES.cat[it.a]; if (!c || c.prix == null) return null; return c.vrac ? it.buy / 1000 * c.prix : it.buy * c.prix; }
 function estimationLigne(it) { const c = fiche(it.a); if (!c || c.prix == null) return null; return c.vrac ? it.buy / 1000 * c.prix : it.buy * c.prix; }
 function cleArticle(cid, a) { return "c" + cid + "-" + a; }
 function part(a, p = actif) { const s = DONNEES.share[a]; const n = s == null ? 0.5 : s; return p === "nicolas" ? n : 1 - n; }
@@ -736,6 +740,21 @@ function vuePrix(seg) {
   <p class="discret petit">Prix au conditionnement, ou au kilo pour le vrac. Un prix modifié ici, ou déduit d'un prix payé, remplace le prix d'origine dans toute l'app : courses, budget, coût des repas et assistant.${modifies ? ` ${modifies} prix modifié${modifies > 1 ? "s" : ""}.` : ""}</p>
   ${liste}`;
 }
+// Projection des courses du cycle : prix payés quand ils sont saisis, sinon estimation aux derniers prix validés.
+function projectionFoyer() {
+  let paye = 0, avenir = 0;
+  for (const c of DONNEES.courses) for (const it of c.items) {
+    const v = E.foyer.payes[cleArticle(c.id, it.a)];
+    if (v != null && v !== "") paye += +v; else avenir += estimationLigne(it) || 0;
+  }
+  const budget = Object.keys(PERSONNES).reduce((s, p) => s + (+E.personnes[p].profil.budget || 0), 0);
+  return { paye, avenir, total: paye + avenir, budget };
+}
+function ligneProjection() {
+  const x = projectionFoyer(), ecart = x.budget - x.total;
+  return `<p class="petit" style="margin:10px 0 0">Projection du cycle : <b class="${ecart < 0 ? "surcout" : "eco"}">${eur(x.total)}</b>
+    <span class="discret">(${eur(x.paye)} payés + ${eur(x.avenir)} à venir aux derniers prix) pour un budget foyer de ${eur(x.budget)}, ${ecart < 0 ? "dépassé de " + eur(-ecart) : "reste " + eur(ecart)}.</span></p>`;
+}
 function vueCourses() {
   const seg = DONNEES.courses.map(x => `<button data-course="${x.id}" aria-pressed="${x.id === courseSel}">${x.titre}<span>${x.id === 1 ? "jeu. 1er oct." : "mar. 6 oct."}</span></button>`).join("")
     + `<button data-course="stock" aria-pressed="${courseSel === "stock"}">À la maison<span>stock estimé</span></button>`
@@ -753,8 +772,9 @@ function vueCourses() {
       liste += `<div class="article ${fait ? "achete" : ""}">
         <button class="check" data-achat="${echap(k)}" aria-pressed="${fait}" aria-label="${echap(it.a)} acheté">${ICONES.coche}</button>
         <div><div class="nom">${echap(it.a)}</div><div class="detail">${echap(texteAchat(it))}</div></div>
-        <div class="prix">${est == null ? "prix ?" : eur(est)}<span>part ${de()} ${est == null ? "—" : eur(est * part(it.a))}</span></div>
-        ${fait ? `<label class="saisie">Prix payé <input type="number" inputmode="decimal" step="0.01" min="0" data-paye="${echap(k)}" data-art="${echap(it.a)}" data-buy="${it.buy}" value="${v != null ? v : ""}" placeholder="${est != null ? nb(est, 2) : "0,00"}"> €</label>` : ""}
+        <div class="prix"><label class="saisie"><input type="number" inputmode="decimal" step="0.01" min="0" data-paye="${echap(k)}" data-art="${echap(it.a)}" data-buy="${it.buy}"
+            value="${v != null ? v : ""}" placeholder="${est != null ? nb(est, 2) : "prix ?"}" aria-label="Prix payé pour ${echap(it.a)} (estimé ${est == null ? "inconnu" : eur(est)})"> €</label>
+          <span>${v != null ? "estimé " + (est0(it) == null ? "—" : eur(est0(it))) : "part " + de() + " " + (est == null ? "—" : eur(est * part(it.a)))}</span></div>
       </div>`;
     }
   }
@@ -766,9 +786,10 @@ function vueCourses() {
     <div><span class="chiffre" style="color:var(--or)">${eur(b.maPart)}</span><span class="discret">part ${de()}</span></div>
     <div><span class="chiffre">${eur(b.paye)}</span><span class="discret">payé (saisi)</span></div>
   </div>
+  ${ligneProjection()}
   <div class="ligne-saisie"><label class="champ">Magasin<input type="text" data-magasin="${courseSel}" value="${echap(E.foyer.magasins[courseSel] || "")}" placeholder="Ex. Leclerc Saint-Pierre"></label>
     <p class="discret petit" style="margin:0 0 10px">${b.faits}/${b.total} articles</p></div>
-  <p class="discret petit">Coche un article quand il est dans le panier, puis note le prix payé : il remplace l'estimation partout.</p>
+  <p class="discret petit">Touche un article quand il est dans le panier. Tu peux taper le prix payé directement sur la ligne (l'article se coche) : il remplace l'estimation partout, et le budget se recalcule avec.</p>
   ${liste}`;
 }
 
@@ -1125,6 +1146,7 @@ document.addEventListener("change", e => {
     if (v == null || isNaN(v)) delete E.foyer.payes[d.paye];
     else {
       E.foyer.payes[d.paye] = Math.round(v * 100) / 100;
+      E.foyer.achats[d.paye] = true;   // un prix payé vaut article dans le panier
       const c = DONNEES.cat[d.art], buy = +d.buy;
       if (c && buy > 0) E.foyer.prix[d.art] = { prix: c.vrac ? v / (buy / 1000) : v / buy, date: new Date().toISOString().slice(0, 10), source: "paye" };
     }

@@ -49,6 +49,26 @@ async def main():
         await pg.click("button[data-course='prix']")
         verif(await pg.locator("input[data-prix-a='Poulet']").input_value() == "10.5", "prix payé : 21 € pour 2 paquets → 10,50 € attendus")
         verif("d'après le prix payé" in await pg.inner_text(".prix-ligne:has(input[data-prix-a='Poulet'])"), "mention « d'après le prix payé » absente")
+        # prix tapé directement sur la ligne, sans cocher : l'article se coche, la projection du cycle suit
+        await pg.click("button[data-course='2']")
+        proj0 = await pg.evaluate("projectionFoyer().total")
+        it = await pg.evaluate("DONNEES.courses[1].items.find(i => i.a === 'Bœuf')")
+        est = await pg.evaluate("estimationLigne(DONNEES.courses[1].items.find(i => i.a === 'Bœuf'))")
+        await pg.fill("input[data-paye='c2-Bœuf']", str(round(est + 5, 2)))
+        await pg.dispatch_event("input[data-paye='c2-Bœuf']", "change")
+        verif(await pg.evaluate("!!E.foyer.achats['c2-Bœuf']"), "prix tapé sans cocher : article non coché")
+        proj1 = await pg.evaluate("projectionFoyer().total")
+        # +5 € sur la ligne payée, et le nouveau prix du bœuf réestime aussi les lignes de bœuf pas encore payées
+        autres = await pg.evaluate("DONNEES.courses.filter(c => c.id !== 2).flatMap(c => c.items).filter(i => i.a === 'Bœuf').reduce((s, i) => s + i.buy, 0)")
+        attendu = 5 + autres * 5 / it["buy"]
+        verif(abs(proj1 - proj0 - attendu) < 0.02, f"projection : {proj0:.2f} → {proj1:.2f}, +{attendu:.2f} € attendus")
+        verif("Projection du cycle" in await pg.inner_text("main"), "ligne de projection absente")
+        await pg.screenshot(path="/tmp/marmite_course_prix.png")
+        # pas de défilement horizontal sur téléphone, dans aucun onglet des courses
+        await pg.set_viewport_size({"width": 360, "height": 800})
+        for c in ("1", "2", "stock", "prix"):
+            await pg.click(f"button[data-course='{c}']")
+            verif(await pg.evaluate("document.documentElement.scrollWidth <= innerWidth"), f"onglet {c} : la page déborde à 360 px")
         verif(not errs, f"erreurs de page : {errs}")
         await b.close()
     print("erreurs", erreurs)
