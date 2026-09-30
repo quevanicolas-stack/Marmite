@@ -192,10 +192,19 @@ h3{ font-size:18px; font-weight:700; }
 .progress-plan{ margin-top:16px; background:var(--surface); border-radius:18px; padding:16px; }
 
 /* ---------- Courses ---------- */
-.segments{ display:grid; grid-template-columns:repeat(3,1fr); background:var(--surface-2); border-radius:16px; padding:4px; margin:16px 0; }
+.segments{ display:grid; grid-template-columns:repeat(var(--n,3),1fr); background:var(--surface-2); border-radius:16px; padding:4px; margin:16px 0; }
 .segments button{ border:0; background:none; border-radius:12px; padding:10px 8px; font-weight:700; text-align:left; line-height:1.25; }
 .segments button span{ display:block; font-weight:500; font-size:13px; color:var(--brume); }
 .segments button[aria-pressed="true"]{ background:var(--surface); box-shadow:var(--ombre); }
+@media (max-width:420px){ .segments button{ padding:9px 6px; font-size:14px; } .segments button span{ font-size:12px; } }
+.prix-ligne{ display:grid; grid-template-columns:1fr auto; gap:6px 12px; align-items:center; padding:10px 4px; border-bottom:1px solid var(--trait); }
+.prix-ligne .nom{ font-weight:700; }
+.prix-ligne .detail{ font-size:13px; color:var(--brume); }
+.prix-ligne .saisie-prix{ display:flex; align-items:center; gap:6px; font-size:13px; color:var(--brume); white-space:nowrap; }
+.prix-ligne input{ width:84px; border:1px solid var(--trait); border-radius:10px; padding:6px 8px; background:var(--surface); font-size:15px; text-align:right; }
+.prix-ligne input.modifie{ border-color:var(--or); border-width:2px; }
+.prix-ligne .lien{ padding:0 2px; font-size:13px; }
+.etiq-estime{ display:inline-block; font-size:11px; font-weight:700; padding:1px 7px; border-radius:999px; background:color-mix(in srgb, var(--or) 25%, var(--surface)); color:var(--titre-c); margin-left:6px; vertical-align:1px; }
 .totaux{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
 .totaux div{ background:var(--surface); border-radius:16px; padding:12px; }
 .totaux .chiffre{ font-size:20px; display:block; }
@@ -677,7 +686,7 @@ function vueStock(seg) {
   let adj = 0, dk = 0, dc = 0;
   for (let j = 1; j <= NB_JOURS; j++) for (const k of CLES) { const r = P().remplacements["d" + j + "-" + k]; if (r && r.ajuste) { adj++; const x = statsRepas(r), y = statsRepas(repasPlan(j, k)); dk += x.kcal - y.kcal; dc += x.cout - y.cout; } }
   return `<h1>Courses du foyer</h1>
-  <div class="segments" role="group" aria-label="Choisir la liste">${seg}</div>
+  <div class="segments" style="--n:4" role="group" aria-label="Choisir la liste">${seg}</div>
   <div class="totaux">
     <div><span class="chiffre ${manques ? "surcout" : "eco"}">${manques}</span><span class="discret">aliment${manques > 1 ? "s" : ""} en rupture avant le 21</span></div>
     <div><span class="chiffre ${valeurEcart < 0 ? "surcout" : "eco"}">${valeurEcart < 0 ? "−" : "+"}${eur(Math.abs(valeurEcart))}</span><span class="discret">stock en fin de cycle vs plan</span></div>
@@ -702,10 +711,37 @@ function vuePertes() {
     <ul>${l.map((x, i) => `<li><span>${echap(x.a)} · ${quantite(x.a, x.q)} <span class="discret">${libelleJour(x.j).toLowerCase()}</span></span>
       <button class="lien" data-perte-suppr="${i}">Annuler</button></li>`).join("")}</ul></div>`;
 }
+// Onglet « Prix » : prix de chaque produit, modifiable. Un prix saisi (ou payé) remplace celui du catalogue partout.
+function vuePrix(seg) {
+  const groupes = {};
+  for (const [a, c] of Object.entries(DONNEES.cat)) { if (c.cat === "Déjà en stock") continue; (groupes[c.cat] = groupes[c.cat] || []).push(a); }
+  const date = s => new Date(s + "T12:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
+  let liste = "", modifies = 0;
+  for (const [rayon, alim] of Object.entries(groupes)) {
+    liste += `<h3 class="cat-titre">${echap(rayon)}</h3>`;
+    for (const a of alim) {
+      const c = DONNEES.cat[a], p = E.foyer.prix[a], cat = (DONNEES.catalogue || {})[a] || {};
+      if (p) modifies++;
+      const unite = c.vrac ? "€/kg" : "€";
+      const pour = c.vrac ? (c.rend && c.rend < 1 ? `au kilo brut (rendement ${nb(c.rend * 100)} %)` : "au kilo") : c.achat;
+      const origine = p ? `${p.source === "paye" ? "d'après le prix payé" : "modifié"} le ${date(p.date)} · catalogue ${c.prix == null ? "sans prix" : nb(c.prix, 2) + " " + unite}` : (c.prix == null ? "pas encore de prix" : "");
+      liste += `<div class="prix-ligne"><div><div class="nom">${echap(a)}${!p && cat.prixEstime ? '<span class="etiq-estime">estimé</span>' : ""}</div>
+        <div class="detail">${echap(pour)}${origine ? " · " + echap(origine) : ""}${p ? ` · <button class="lien" data-prix-reset="${echap(a)}">Rétablir</button>` : ""}</div></div>
+        <label class="saisie-prix"><input type="number" inputmode="decimal" step="0.01" min="0" data-prix-a="${echap(a)}" class="${p ? "modifie" : ""}"
+          value="${p ? p.prix : (c.prix == null ? "" : c.prix)}" placeholder="0,00" aria-label="Prix de ${echap(a)} en ${unite}"> ${unite}</label></div>`;
+    }
+  }
+  return `<h1>Courses du foyer</h1>
+  <div class="segments" style="--n:4" role="group" aria-label="Choisir la liste">${seg}</div>
+  <p class="discret petit">Prix au conditionnement, ou au kilo pour le vrac. Un prix modifié ici, ou déduit d'un prix payé, remplace le prix d'origine dans toute l'app : courses, budget, coût des repas et assistant.${modifies ? ` ${modifies} prix modifié${modifies > 1 ? "s" : ""}.` : ""}</p>
+  ${liste}`;
+}
 function vueCourses() {
   const seg = DONNEES.courses.map(x => `<button data-course="${x.id}" aria-pressed="${x.id === courseSel}">${x.titre}<span>${x.id === 1 ? "jeu. 1er oct." : "mar. 6 oct."}</span></button>`).join("")
-    + `<button data-course="stock" aria-pressed="${courseSel === "stock"}">À la maison<span>stock estimé</span></button>`;
+    + `<button data-course="stock" aria-pressed="${courseSel === "stock"}">À la maison<span>stock estimé</span></button>`
+    + `<button data-course="prix" aria-pressed="${courseSel === "prix"}">Prix<span>à modifier</span></button>`;
   if (courseSel === "stock") return vueStock(seg);
+  if (courseSel === "prix") return vuePrix(seg);
   const c = DONNEES.courses.find(x => x.id === courseSel), b = bilanCourse(courseSel);
   const groupes = {};
   for (const it of c.items) (groupes[DONNEES.cat[it.a].cat] = groupes[DONNEES.cat[it.a].cat] || []).push(it);
@@ -723,7 +759,7 @@ function vueCourses() {
     }
   }
   return `<h1>Courses du foyer</h1>
-  <div class="segments" role="group" aria-label="Choisir la liste">${seg}</div>
+  <div class="segments" style="--n:4" role="group" aria-label="Choisir la liste">${seg}</div>
   <p class="discret petit" style="margin:-6px 0 12px">${cap(c.jour)}, ${c.couvre}.</p>
   <div class="totaux">
     <div><span class="chiffre">${eur(b.est)}</span><span class="discret">estimé pour le foyer</span></div>
@@ -1021,7 +1057,8 @@ function action(b) {
   if (d.jour) { jourSel = +d.jour; edition = null; return rendre(); }
   if (d.voir) { jourSel = +d.voir; return aller("jour"); }
   if (d.coche) { const c = P().coches; c[d.coche] ? delete c[d.coche] : (c[d.coche] = true); sauver(); return rendre(); }
-  if (d.course) { courseSel = d.course === "stock" ? "stock" : +d.course; jeterSel = null; return rendre(); }
+  if (d.course) { courseSel = d.course === "stock" || d.course === "prix" ? d.course : +d.course; jeterSel = null; return rendre(); }
+  if (d.prixReset) { delete E.foyer.prix[d.prixReset]; sauver(); toast(d.prixReset + " : prix d'origine rétabli"); return rendre(); }
   if (d.jeter) { jeterSel = jeterSel === d.jeter ? null : d.jeter; rendre(); const i = document.getElementById("jeter-q"); if (i) i.focus(); return; }
   if (d.jeterAnnuler) { jeterSel = null; return rendre(); }
   if (d.jeterOk) {
@@ -1089,8 +1126,14 @@ document.addEventListener("change", e => {
     else {
       E.foyer.payes[d.paye] = Math.round(v * 100) / 100;
       const c = DONNEES.cat[d.art], buy = +d.buy;
-      if (c && buy > 0) E.foyer.prix[d.art] = { prix: c.vrac ? v / (buy / 1000) : v / buy, date: new Date().toISOString().slice(0, 10) };
+      if (c && buy > 0) E.foyer.prix[d.art] = { prix: c.vrac ? v / (buy / 1000) : v / buy, date: new Date().toISOString().slice(0, 10), source: "paye" };
     }
+    sauver(); return rendre();
+  }
+  if (d.prixA != null) {
+    const v = t.value === "" ? null : parseFloat(t.value.replace(",", "."));
+    if (v == null || isNaN(v) || v < 0) delete E.foyer.prix[d.prixA];
+    else E.foyer.prix[d.prixA] = { prix: Math.round(v * 100) / 100, date: new Date().toISOString().slice(0, 10), source: "saisi" };
     sauver(); return rendre();
   }
   if (d.magasin) { E.foyer.magasins[d.magasin] = t.value.trim(); return sauver(); }
