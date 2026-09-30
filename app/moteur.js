@@ -361,7 +361,7 @@ const Moteur = (() => {
     for (const j of entrees.moisReference ? entrees.moisReference.plan : []) for (const m of j.meals) if (m.k === "des") freq[m.recette] = (freq[m.recette] || 0) + 1;
     const recs = recettes.map(r => Object.assign({}, r, { frequenceReference: freq[r.id] || 1 }));
 
-    // on recompose en donnant plus de poids au coût tant que les achats dépassent le budget
+    // on recompose en donnant plus de poids au coût tant que les achats dépassent le budget (6 passes au plus)
     let res = null;
     for (let passe = 0; passe < 6; passe++) {
       const ctx = { cat, recettes: recs, reglages, cal, exclure, quotas, invites, stockDepart: entrees.stockDepart || {},
@@ -386,7 +386,8 @@ const Moteur = (() => {
       }
       const cr = listeCourses(ctx, plan);
       const achats = cr.courses.reduce((s, c) => s + c.items.reduce((t, i) => t + i.est, 0), 0);
-      res = { ctx, plan, cr, joursPlaisir, achats };
+      // on garde la passe la moins chère (la dernière n'est pas forcément la meilleure)
+      if (!res || achats < res.achats) res = { ctx, plan, cr, joursPlaisir, achats };
       if (achats <= budget) break;
     }
 

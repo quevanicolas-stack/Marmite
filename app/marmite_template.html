@@ -203,7 +203,8 @@ h3{ font-size:18px; font-weight:700; }
 .champ{ display:flex; flex-direction:column; gap:4px; font-size:13px; font-weight:700; color:var(--brume); }
 .champ input,.champ select{ border:1px solid var(--trait); background:var(--surface); border-radius:12px; padding:10px 12px; font-size:16px; color:var(--encre); font-weight:500; }
 .cat-titre{ font-family:var(--titre); font-weight:700; font-size:16px; margin:22px 0 6px; color:var(--titre-c); }
-.article{ display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:center; padding:10px 4px; border-bottom:1px solid var(--trait); }
+.article{ display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:center; padding:10px 4px; border-bottom:1px solid var(--trait); cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.article .saisie{ cursor:default; }
 .article .check{ width:28px; height:28px; border-radius:9px; border:2px solid var(--vert); background:var(--surface); display:grid; place-items:center; padding:0; }
 :root[data-theme="dark"] .article .check{ border-color:var(--or); }
 .article .check .ico{ width:16px; height:16px; opacity:0; stroke:var(--surface); stroke-width:3; }
@@ -1067,7 +1068,9 @@ function action(b) {
 }
 document.addEventListener("click", e => {
   const v = e.target.closest(".voile"); if (v && e.target === v) return fermerIA();
-  const b = e.target.closest("button, .interrupteur"); if (b) action(b);
+  const b = e.target.closest("button, .interrupteur"); if (b) return action(b);
+  // liste de courses : toucher n'importe où sur la ligne coche l'article (sauf le champ « Prix payé »)
+  const art = e.target.closest(".article"); if (art && !e.target.closest(".saisie")) { const c = art.querySelector("button.check"); if (c) action(c); }
 });
 document.addEventListener("keydown", e => {
   if (e.key === "Escape" && ia) return fermerIA();

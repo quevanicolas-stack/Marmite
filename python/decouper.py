@@ -5,7 +5,8 @@ donnees/recettes.json     bibliothèque : plats d'octobre avec leurs portions de
 donnees/mois/2026-10.json le mois d'octobre : dates, stock de départ, parts, planning, courses
 donnees/reglages.json     règles des mois suivants (dates des courses, quotas, inventaire, Claude)
 
-Migration à lancer une fois. Ensuite, ces fichiers sont la source : app/construire.py les assemble.
+Migration lancée une fois, le 30/09/2026. Ensuite, ces fichiers sont la source (enrichis à la main) :
+app/construire.py les assemble. Le script refuse de les écraser sans --force.
 """
 import json, os, re, unicodedata
 
@@ -175,6 +176,11 @@ def ecrire(chemin, obj):
 
 
 if __name__ == "__main__":
+    import sys
+    # les blocs ont été enrichis à la main depuis (recettes et produits de Nico) : ne pas les écraser par erreur
+    if os.path.exists(os.path.join(DON, "catalogue.json")) and "--force" not in sys.argv:
+        sys.exit("Les blocs de donnees/ existent déjà et ont été enrichis depuis la migration. "
+                 "Relancer écraserait ces ajouts ; ajouter --force pour le faire quand même.")
     rec, plan = recettes_et_plan()
     ecrire(os.path.join(DON, "catalogue.json"), catalogue())
     ecrire(os.path.join(DON, "recettes.json"), rec)

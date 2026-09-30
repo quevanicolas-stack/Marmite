@@ -1728,7 +1728,7 @@
   },
   {
    "id": "lasagnes-restes-du-samedi-salade",
-   "nom": "Lasagnes (restes du samedi) + salade",
+   "nom": "Lasagnes (restes) + salade",
    "repas": [
     "din"
    ],
@@ -2804,6 +2804,418 @@
      [
       "Huile",
       7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "saucisses-grillees-frites-haricots-verts",
+   "nom": "Saucisses grillées, frites au four, haricots verts",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "nico-2026-09-30",
+   "portions": {
+    "nicolas": [
+     [
+      "Saucisses (porc)",
+      150
+     ],
+     [
+      "Pommes de terre",
+      350
+     ],
+     [
+      "Haricots verts",
+      200
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Saucisses (porc)",
+      120
+     ],
+     [
+      "Pommes de terre",
+      170
+     ],
+     [
+      "Haricots verts",
+      250
+     ],
+     [
+      "Huile",
+      7
+     ]
+    ]
+   }
+  },
+  {
+   "id": "steak-frites-salade",
+   "nom": "Steak frites + salade",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "nico-2026-09-30",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      150
+     ],
+     [
+      "Pommes de terre",
+      350
+     ],
+     [
+      "Salade",
+      40
+     ],
+     [
+      "Huile",
+      12
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      120
+     ],
+     [
+      "Pommes de terre",
+      170
+     ],
+     [
+      "Salade",
+      60
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ]
+   }
+  },
+  {
+   "id": "hachis-parmentier-boeuf-porc-salade",
+   "nom": "Hachis parmentier bœuf-porc + salade",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "nico-2026-09-30",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      70
+     ],
+     [
+      "Porc haché",
+      70
+     ],
+     [
+      "Pommes de terre",
+      300
+     ],
+     [
+      "Lait",
+      50
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Huile",
+      5
+     ],
+     [
+      "Salade",
+      40
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      55
+     ],
+     [
+      "Porc haché",
+      55
+     ],
+     [
+      "Pommes de terre",
+      150
+     ],
+     [
+      "Lait",
+      40
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Huile",
+      4
+     ],
+     [
+      "Salade",
+      60
+     ]
+    ]
+   }
+  },
+  {
+   "id": "cassoulet-pommes-de-terre",
+   "nom": "Cassoulet aux pommes de terre",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "nico-2026-09-30",
+   "portions": {
+    "nicolas": [
+     [
+      "Saucisses (porc)",
+      120
+     ],
+     [
+      "Lardons",
+      30
+     ],
+     [
+      "Haricots blancs (égouttés)",
+      120
+     ],
+     [
+      "Pommes de terre",
+      150
+     ],
+     [
+      "Tomates",
+      100
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Carottes",
+      60
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ],
+    "aurelie": [
+     [
+      "Saucisses (porc)",
+      100
+     ],
+     [
+      "Lardons",
+      20
+     ],
+     [
+      "Haricots blancs (égouttés)",
+      80
+     ],
+     [
+      "Pommes de terre",
+      80
+     ],
+     [
+      "Tomates",
+      130
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Carottes",
+      80
+     ],
+     [
+      "Huile",
+      4
+     ]
+    ]
+   }
+  },
+  {
+   "id": "riz-mexicain-poulet",
+   "nom": "Riz mexicain (poulet, chorizo, haricots rouges, poivrons)",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "nico-2026-09-30",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      120
+     ],
+     [
+      "Chorizo",
+      25
+     ],
+     [
+      "Riz (sec)",
+      70
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      80
+     ],
+     [
+      "Poivrons",
+      70
+     ],
+     [
+      "Tomates",
+      80
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      95
+     ],
+     [
+      "Chorizo",
+      20
+     ],
+     [
+      "Riz (sec)",
+      35
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      60
+     ],
+     [
+      "Poivrons",
+      90
+     ],
+     [
+      "Tomates",
+      100
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Huile",
+      6
+     ]
+    ]
+   }
+  },
+  {
+   "id": "riz-mexicain-boeuf",
+   "nom": "Riz mexicain (bœuf, chorizo, haricots rouges, poivrons)",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "nico-2026-09-30",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      120
+     ],
+     [
+      "Chorizo",
+      25
+     ],
+     [
+      "Riz (sec)",
+      70
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      80
+     ],
+     [
+      "Poivrons",
+      70
+     ],
+     [
+      "Tomates",
+      80
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      95
+     ],
+     [
+      "Chorizo",
+      20
+     ],
+     [
+      "Riz (sec)",
+      35
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      60
+     ],
+     [
+      "Poivrons",
+      90
+     ],
+     [
+      "Tomates",
+      100
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Huile",
+      6
      ]
     ]
    }

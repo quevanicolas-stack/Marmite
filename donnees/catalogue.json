@@ -865,6 +865,124 @@
    },
    "note": "Pizza, quiche, béchamel."
   },
+  "Saucisses (porc)": {
+   "rayon": "Viande",
+   "achat": "paquet 500 g (6 saucisses)",
+   "cond": 500,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 5.5,
+   "nut": [
+    100,
+    "g",
+    280,
+    15
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 90,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Congeler par repas le jour de l'achat. Prix estimé le 30/09/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "animal": true
+  },
+  "Porc haché": {
+   "rayon": "Viande",
+   "achat": "barquette 500 g",
+   "cond": 500,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 5.9,
+   "nut": [
+    100,
+    "g",
+    230,
+    18
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 90,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Congeler par repas le jour de l'achat. Prix estimé le 30/09/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "animal": true
+  },
+  "Chorizo": {
+   "rayon": "Viande",
+   "achat": "paquet 200 g",
+   "cond": 200,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 3.2,
+   "nut": [
+    100,
+    "g",
+    450,
+    24
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 30,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Se garde longtemps fermé. Prix estimé le 30/09/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "animal": true
+  },
+  "Haricots rouges (égouttés)": {
+   "rayon": "Féculents",
+   "achat": "boîte 400 g (250 g égouttés)",
+   "cond": 250,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.25,
+   "nut": [
+    100,
+    "g",
+    110,
+    8
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 365,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 30/09/2026 : se corrige au premier prix payé.",
+   "prixEstime": true
+  },
+  "Haricots blancs (égouttés)": {
+   "rayon": "Féculents",
+   "achat": "boîte 400 g (265 g égouttés)",
+   "cond": 265,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.25,
+   "nut": [
+    100,
+    "g",
+    100,
+    7
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 365,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 30/09/2026 : se corrige au premier prix payé.",
+   "prixEstime": true
+  },
   "Café": {
    "rayon": "Épicerie",
    "achat": "paquet 1 kg",

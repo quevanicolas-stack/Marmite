@@ -1,4 +1,5 @@
-"""Poubelle de l'onglet « À la maison » : un produit jeté sort du stock, jamais d'office ; on peut annuler.
+"""Courses : toucher la ligne d'un article le coche (le champ « Prix payé » ne décoche pas).
+Poubelle de l'onglet « À la maison » : un produit jeté sort du stock, jamais d'office ; on peut annuler.
 Jambon acheté au gramme : 150 g à la Course 1."""
 import asyncio, pathlib, sys
 PAGE = (pathlib.Path(__file__).resolve().parent.parent / "app" / "marmite.html").as_uri()
@@ -20,6 +21,14 @@ async def main():
         await pg.click("#nav-barre button[data-vue='courses']")
         texte = await pg.inner_text("main")
         verif("150 g en vrac" in texte, "Course 1 : jambon attendu à 150 g en vrac")
+
+        # toucher le nom de l'article coche la case ; toucher le champ « Prix payé » ne la décoche pas
+        await pg.locator(".article .nom").nth(3).click()
+        verif(await pg.locator(".article button.check").nth(3).get_attribute("aria-pressed") == "true", "clic sur le nom : case non cochée")
+        await pg.locator(".article input[data-paye]").first.click()
+        verif(await pg.locator(".article button.check").nth(3).get_attribute("aria-pressed") == "true", "clic sur « Prix payé » : case décochée")
+        await pg.locator(".article .prix").nth(3).click()
+        verif(await pg.locator(".article button.check").nth(3).get_attribute("aria-pressed") == "false", "second clic sur la ligne : case toujours cochée")
 
         j = await pg.evaluate("jourDuPlan()")
         avant = await pg.evaluate(f"stockBrut({j})['Jambon']")

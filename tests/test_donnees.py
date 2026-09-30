@@ -13,7 +13,8 @@ def verif(ok, msg):
 
 # 1. l'ancienne forme est reconstituée à l'identique, ordre de la table nutritionnelle compris,
 #    à la seule correction près du jambon, acheté au gramme depuis le 30/09/2026
-sans_jambon = lambda x: {a: v for a, v in x.items() if a != "Jambon"}
+# (les produits ajoutés depuis, porc, chorizo, haricots…, viennent en plus et ne sont pas comparés)
+sans_jambon = lambda x: {a: v for a, v in x.items() if a != "Jambon" and a in orig["cat"]}
 verif(sans_jambon(d["cat"]) == sans_jambon(orig["cat"]), "cat diffère de l'archive")
 j = d["cat"]["Jambon"]
 verif(j["vrac"] == 1 and j["cond"] == 1 and j["prix"] == 11.24, f"jambon : {j}")
@@ -21,9 +22,9 @@ courses_sans = lambda cs: [dict(c, items=[i for i in c["items"] if i["a"] != "Ja
 verif(courses_sans(d["courses"]) == courses_sans(orig["courses"]), "courses diffèrent de l'archive")
 achats_jambon = [(i["buy"], i["est"]) for c in d["courses"] for i in c["items"] if i["a"] == "Jambon"]
 verif(achats_jambon == [(150, 1.69), (550, 6.18)], f"jambon acheté : {achats_jambon}")
-for k in ("nut", "share"):
-    verif(d[k] == orig[k], f"{k} diffère de l'archive")
-verif(list(d["nut"]) == list(orig["nut"]), "ordre de nut modifié")
+verif({a: v for a, v in d["nut"].items() if a in orig["nut"]} == orig["nut"], "nut diffère de l'archive")
+verif(d["share"] == orig["share"], "share diffère de l'archive")
+verif(list(d["nut"])[:len(orig["nut"])] == list(orig["nut"]), "ordre de nut modifié")
 plan_sans_id = [dict(j, meals=[{k: v for k, v in m.items() if k != "recette"} for m in j["meals"]]) for j in d["plan"]]
 verif(plan_sans_id == orig["plan"], "plan diffère de l'archive")
 
@@ -42,7 +43,7 @@ for r in d["recettes"]:
     for p, items in r["portions"].items():
         for a, q in items:
             verif(a in cat and cat[a]["nut"], f"{r['id']} : {a} absent du catalogue ou sans nutrition")
-verif({a for a, p in cat.items() if p.get("animal")} == {"Poulet", "Bœuf", "Lardons", "Jambon", "Poisson blanc"}, "protéines animales")
+verif({a for a, p in cat.items() if p.get("animal")} == {"Poulet", "Bœuf", "Lardons", "Jambon", "Poisson blanc", "Saucisses (porc)", "Porc haché", "Chorizo"}, "protéines animales")
 for a, p in cat.items():
     verif(p["role"] in ("proteine", "feculent", "legume", "matiere_grasse", "autre"), f"{a} : rôle inconnu")
     verif(p["conservation"]["jours"] > 0, f"{a} : conservation manquante")
