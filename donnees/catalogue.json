@@ -1,0 +1,999 @@
+{
+ "version": 1,
+ "produits": {
+  "Poulet": {
+   "rayon": "Viande",
+   "achat": "paquet 1 kg",
+   "cond": 1000,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 11.27,
+   "nut": [
+    100,
+    "g",
+    115,
+    23
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 90,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Congeler en portions d'un repas le jour de l'achat."
+  },
+  "Bœuf": {
+   "rayon": "Viande",
+   "achat": "paquet 900 g",
+   "cond": 900,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 8.4,
+   "nut": [
+    100,
+    "g",
+    140,
+    21
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 90,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Congeler en portions."
+  },
+  "Lardons": {
+   "rayon": "Viande",
+   "achat": "paquet 200 g",
+   "cond": 200,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.27,
+   "nut": [
+    100,
+    "g",
+    270,
+    15
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 21,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Longue DLC sous vide, se congèle."
+  },
+  "Jambon": {
+   "rayon": "Viande",
+   "achat": "paquet 500 g (hypothèse)",
+   "cond": 500,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 5.62,
+   "nut": [
+    100,
+    "g",
+    110,
+    20
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 7,
+    "lieu": "frigo",
+    "frais": true,
+    "estime": true
+   },
+   "note": "2 à 3 jours une fois ouvert : préférer plusieurs petits paquets."
+  },
+  "Poisson blanc": {
+   "rayon": "Poisson",
+   "achat": "sachet 1 kg surgelé",
+   "cond": 1000,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 7.49,
+   "nut": [
+    100,
+    "g",
+    80,
+    17
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 180,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Surgelé."
+  },
+  "Œufs": {
+   "rayon": "Œufs et laitages",
+   "achat": "boîte de 12",
+   "cond": 12,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 3.8,
+   "nut": [
+    1,
+    "unité",
+    87,
+    7.5
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 28,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Vérifier une date au-delà du 21/10."
+  },
+  "Lait": {
+   "rayon": "Œufs et laitages",
+   "achat": "brique 1 L",
+   "cond": 1000,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.19,
+   "nut": [
+    100,
+    "ml",
+    46,
+    3.3
+   ],
+   "role": "autre",
+   "conservation": {
+    "jours": 90,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "UHT : se garde des mois fermé."
+  },
+  "Mozzarella râpée": {
+   "rayon": "Œufs et laitages",
+   "achat": "sachet 150 g",
+   "cond": 150,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 3.13,
+   "nut": [
+    100,
+    "g",
+    280,
+    21
+   ],
+   "role": "autre",
+   "conservation": {
+    "jours": 60,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Se congèle."
+  },
+  "Cheddar": {
+   "rayon": "Œufs et laitages",
+   "achat": "vrac (g)",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 16.5,
+   "nut": [
+    100,
+    "g",
+    410,
+    25
+   ],
+   "role": "autre",
+   "conservation": {
+    "jours": 21,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": ""
+  },
+  "Riz (sec)": {
+   "rayon": "Féculents",
+   "achat": "paquet 1 kg",
+   "cond": 1000,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 2.34,
+   "nut": [
+    100,
+    "g",
+    355,
+    7
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 365,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": ""
+  },
+  "Pâtes (sèches)": {
+   "rayon": "Féculents",
+   "achat": "paquet 500 g",
+   "cond": 500,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.45,
+   "nut": [
+    100,
+    "g",
+    355,
+    12.5
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 365,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": ""
+  },
+  "Pâtes à lasagnes (sèches)": {
+   "rayon": "Féculents",
+   "achat": "paquet 500 g",
+   "cond": 500,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 2.47,
+   "nut": [
+    100,
+    "g",
+    355,
+    12.5
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 365,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": ""
+  },
+  "Flocons d'avoine": {
+   "rayon": "Féculents",
+   "achat": "paquet 500 g",
+   "cond": 500,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.71,
+   "nut": [
+    100,
+    "g",
+    372,
+    13.5
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 180,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": ""
+  },
+  "Pommes de terre": {
+   "rayon": "Féculents",
+   "achat": "vrac (g)",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 1.45,
+   "nut": [
+    100,
+    "g",
+    80,
+    2
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 21,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Au sec, à l'ombre, loin des oignons : germent vite à la chaleur."
+  },
+  "Patates douces": {
+   "rayon": "Féculents",
+   "achat": "vrac (g)",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 3.29,
+   "nut": [
+    100,
+    "g",
+    86,
+    1.6
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 10,
+    "lieu": "placard",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Hors frigo, 1 à 2 semaines."
+  },
+  "Wraps": {
+   "rayon": "Féculents",
+   "achat": "paquet de 8",
+   "cond": 8,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 2.74,
+   "nut": [
+    1,
+    "unité",
+    186,
+    5
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 60,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Longue conservation fermés."
+  },
+  "Pains burger": {
+   "rayon": "Pain",
+   "achat": "paquet de 2",
+   "cond": 2,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 3,
+   "nut": [
+    1,
+    "unité",
+    200,
+    7
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 60,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Pour le 4 octobre."
+  },
+  "Pain complet": {
+   "rayon": "Pain",
+   "achat": "pièce ~100 g (hypothèse)",
+   "cond": 100,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.2,
+   "nut": [
+    100,
+    "g",
+    240,
+    9
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 60,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Congeler en tranches, sortir la veille."
+  },
+  "Courgettes": {
+   "rayon": "Légumes",
+   "achat": "vrac (g)",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 1.49,
+   "nut": [
+    100,
+    "g",
+    17,
+    1.2
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 7,
+    "lieu": "frigo",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Risque sur 16 jours (~1 semaine au frigo) : congeler crues en rondelles celles des plats cuits de la 2e semaine."
+  },
+  "Haricots verts": {
+   "rayon": "Légumes",
+   "achat": "sachet 440 g surgelé",
+   "cond": 440,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.72,
+   "nut": [
+    100,
+    "g",
+    31,
+    1.8
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 180,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Surgelés."
+  },
+  "Tomates": {
+   "rayon": "Légumes",
+   "achat": "vrac (g)",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 2.79,
+   "nut": [
+    100,
+    "g",
+    18,
+    0.9
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 6,
+    "lieu": "ambiant",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Risque sur 16 jours : en prendre une partie peu mûre ; pour les plats cuits de fin de période, la conserve fait l'affaire."
+  },
+  "Poivrons": {
+   "rayon": "Légumes",
+   "achat": "vrac (g)",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 13.98,
+   "nut": [
+    100,
+    "g",
+    27,
+    1
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 10,
+    "lieu": "frigo",
+    "frais": true,
+    "estime": true
+   },
+   "note": "13,98 €/kg. 1 à 2 semaines au frigo, se congèlent crus en lanières."
+  },
+  "Carottes": {
+   "rayon": "Légumes",
+   "achat": "vrac (g)",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 1.99,
+   "nut": [
+    100,
+    "g",
+    41,
+    0.9
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 18,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "2 à 3 semaines au bac à légumes."
+  },
+  "Aubergines": {
+   "rayon": "Légumes",
+   "achat": "vrac (g)",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 2.29,
+   "nut": [
+    100,
+    "g",
+    25,
+    1
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 6,
+    "lieu": "frigo",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Celles du barbecue du 18 risquent de ne pas tenir : prendre les plus fermes."
+  },
+  "Champignons": {
+   "rayon": "Légumes",
+   "achat": "barquette 250 g (hypothèse)",
+   "cond": 250,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.08,
+   "nut": [
+    100,
+    "g",
+    22,
+    3.1
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 4,
+    "lieu": "frigo",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Risque : 3 à 5 jours. Pour les repas après le 11, champignons en conserve ou surgelés."
+  },
+  "Salade": {
+   "rayon": "Légumes",
+   "achat": "pièce ~300 g utiles",
+   "cond": 300,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.39,
+   "nut": [
+    100,
+    "g",
+    15,
+    1.4
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 5,
+    "lieu": "frigo",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Risque : 4 à 7 jours. En fin de période, remplacer par des carottes râpées."
+  },
+  "Oignons": {
+   "rayon": "Légumes",
+   "achat": "vrac (g)",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 2.49,
+   "nut": [
+    100,
+    "g",
+    40,
+    1.1
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 30,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Plusieurs semaines au sec."
+  },
+  "Maïs": {
+   "rayon": "Légumes",
+   "achat": "boîte (~140 g égouttés)",
+   "cond": 140,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 0.89,
+   "nut": [
+    100,
+    "g",
+    80,
+    2.9
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 365,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Conserve."
+  },
+  "Avocat (chair)": {
+   "rayon": "Fruits",
+   "achat": "avocat ~350 g de chair (hypothèse)",
+   "cond": 350,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.99,
+   "nut": [
+    100,
+    "g",
+    160,
+    2
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 5,
+    "lieu": "ambiant",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Choisir 3 stades de maturité : un mûr pour le 11-12, deux fermes pour le 17-18."
+  },
+  "Bananes": {
+   "rayon": "Fruits",
+   "achat": "vrac (g)",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 1.89,
+   "nut": [
+    100,
+    "g",
+    90,
+    1.1
+   ],
+   "role": "autre",
+   "conservation": {
+    "jours": 6,
+    "lieu": "ambiant",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Risque sur 16 jours : acheter vertes, congeler en rondelles les mûres (parfait pour le smoothie)."
+  },
+  "Mangue": {
+   "rayon": "Fruits",
+   "achat": "vrac (g, rendement 70 %)",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 0.7,
+   "prix": 8.99,
+   "nut": [
+    100,
+    "g",
+    60,
+    0.8
+   ],
+   "role": "autre",
+   "conservation": {
+    "jours": 6,
+    "lieu": "ambiant",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Celle du 14 : la prendre ferme."
+  },
+  "Ananas": {
+   "rayon": "Fruits",
+   "achat": "pièce ~400 g de chair (hypothèse)",
+   "cond": 400,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 2.69,
+   "nut": [
+    100,
+    "g",
+    50,
+    0.5
+   ],
+   "role": "autre",
+   "conservation": {
+    "jours": 6,
+    "lieu": "ambiant",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Mangés les 9 et 10 : pas de souci."
+  },
+  "Pommes": {
+   "rayon": "Fruits",
+   "achat": "vrac (g)",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 2.99,
+   "nut": [
+    100,
+    "g",
+    52,
+    0.3
+   ],
+   "role": "autre",
+   "conservation": {
+    "jours": 25,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "3 à 4 semaines au frigo."
+  },
+  "Yaourt nature": {
+   "rayon": "Œufs et laitages",
+   "achat": "pot 500 g",
+   "cond": 500,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 3.25,
+   "nut": [
+    100,
+    "g",
+    60,
+    4.5
+   ],
+   "role": "autre",
+   "conservation": {
+    "jours": 21,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Vérifier une date au-delà du 21/10."
+  },
+  "Glace": {
+   "rayon": "Desserts",
+   "achat": "bac 500 g",
+   "cond": 500,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 2.49,
+   "nut": [
+    100,
+    "g",
+    200,
+    3.5
+   ],
+   "role": "autre",
+   "conservation": {
+    "jours": 180,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Congélateur."
+  },
+  "Chocolat noir": {
+   "rayon": "Desserts",
+   "achat": "500 g",
+   "cond": 500,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 5.26,
+   "nut": [
+    100,
+    "g",
+    580,
+    7.5
+   ],
+   "role": "autre",
+   "conservation": {
+    "jours": 365,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": ""
+  },
+  "Lentilles (égouttées)": {
+   "rayon": "Déjà en stock",
+   "achat": "3 boîtes de 530 g",
+   "cond": 530,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 0,
+   "nut": [
+    100,
+    "g",
+    100,
+    7.5
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 365,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Ton stock, utilisé en entier."
+  },
+  "Huile": {
+   "rayon": "Déjà en stock",
+   "achat": "stock",
+   "cond": 1000,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 0,
+   "nut": [
+    100,
+    "g",
+    900,
+    0
+   ],
+   "role": "matiere_grasse",
+   "conservation": {
+    "jours": 365,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Vérifie qu'il en reste ~700 g."
+  },
+  "Farine": {
+   "rayon": "Déjà en stock",
+   "achat": "stock",
+   "cond": 1000,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 0,
+   "nut": [
+    100,
+    "g",
+    350,
+    10
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 180,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Pizza, quiche, béchamel."
+  },
+  "Café": {
+   "rayon": "Épicerie",
+   "achat": "paquet 1 kg",
+   "cond": 1000,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 16,
+   "nut": null,
+   "role": "autre",
+   "conservation": {
+    "jours": 180,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Hors menu : 100 % Nicolas (modifiable)."
+  },
+  "Eau (bouteilles 5 L)": {
+   "rayon": "Épicerie",
+   "achat": "bouteille 5 L",
+   "cond": 5,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.54,
+   "nut": null,
+   "role": "autre",
+   "conservation": {
+    "jours": 365,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Hors menu : moitié chacun (modifiable)."
+  },
+  "Citrons": {
+   "rayon": "Épicerie",
+   "achat": "pièce",
+   "cond": 1,
+   "vrac": 0,
+   "rend": 1,
+   "prix": null,
+   "nut": null,
+   "role": "autre",
+   "conservation": {
+    "jours": 14,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix à saisir. Poulet citronné, poisson."
+  },
+  "Sauce soja": {
+   "rayon": "Épicerie",
+   "achat": "flacon",
+   "cond": 1,
+   "vrac": 0,
+   "rend": 1,
+   "prix": null,
+   "nut": null,
+   "role": "autre",
+   "conservation": {
+    "jours": 365,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix à saisir. Partagé 50/50."
+  },
+  "Concentré de tomate": {
+   "rayon": "Épicerie",
+   "achat": "tube ou boîte",
+   "cond": 1,
+   "vrac": 0,
+   "rend": 1,
+   "prix": null,
+   "nut": null,
+   "role": "autre",
+   "conservation": {
+    "jours": 180,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix à saisir. Partagé 50/50."
+  },
+  "Moutarde / ketchup": {
+   "rayon": "Épicerie",
+   "achat": "flacon",
+   "cond": 1,
+   "vrac": 0,
+   "rend": 1,
+   "prix": null,
+   "nut": null,
+   "role": "autre",
+   "conservation": {
+    "jours": 180,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix à saisir. Burger du 4."
+  },
+  "Ail, gingembre, curcuma": {
+   "rayon": "Épicerie",
+   "achat": "si pas en stock",
+   "cond": 1,
+   "vrac": 0,
+   "rend": 1,
+   "prix": null,
+   "nut": null,
+   "role": "autre",
+   "conservation": {
+    "jours": 180,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix à saisir. Partagé 50/50."
+  },
+  "Levure boulangère": {
+   "rayon": "Épicerie",
+   "achat": "sachet",
+   "cond": 1,
+   "vrac": 0,
+   "rend": 1,
+   "prix": null,
+   "nut": null,
+   "role": "autre",
+   "conservation": {
+    "jours": 180,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix à saisir. Pizza du 11."
+  }
+ }
+}

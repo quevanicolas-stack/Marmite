@@ -1,0 +1,32 @@
+{
+ "version": 1,
+ "cycle": "mois",
+ "courses": {
+  "jours": [
+   3,
+   10,
+   17,
+   24
+  ],
+  "note": "Jours du mois, modifiables. Chaque course couvre jusqu'à la suivante ; la dernière couvre jusqu'à la première du mois suivant."
+ },
+ "quotas": {
+  "poisson": 8,
+  "plaisir": 6
+ },
+ "ecartMinJours": 5,
+ "inventaire": {
+  "avantChaqueCourse": true,
+  "verificationFacultative": true,
+  "verificationFraisParMois": 1,
+  "fraisMaxJours": 10
+ },
+ "claude": {
+  "planning": "un appel le jour du planning du mois, pour proposer des recettes nouvelles",
+  "jaiFaim": "bibliothèque locale par défaut ; « Nouveauté » appelle Claude à la demande"
+ },
+ "rappels": {
+  "preparerMoisJ": -3,
+  "coursesJ": -1
+ }
+}

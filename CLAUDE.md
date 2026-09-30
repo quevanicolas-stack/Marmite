@@ -80,11 +80,15 @@ Il contient 8 onglets et environ 3 860 formules. Il est généré par `python/bu
 ```bash
 pip install -r requirements.txt          # une fois ; en session web, ne pas lancer « playwright install » :
                                           # playwright 1.56 correspond au Chromium préinstallé (/opt/pw-browsers)
+# Archive d'octobre (ne sert plus qu'à reproduire octobre) :
 cd python && python3 build.py            # régénère l'Excel (si menu.py / adjust.py changent)
                                           # ouvrir puis réenregistrer l'Excel dans un tableur pour recalculer les formules
-python3 export_appdata.py                 # Excel + menu → donnees/appdata.json
-cd ../app && python3 construire.py        # template + données → app/marmite.html
-cd .. && python3 tests/test_ajustement_stock.py && python3 tests/test_assistant_personnes_theme.py
+python3 export_appdata.py                 # Excel + menu → donnees/appdata.json (archive, ne plus modifier)
+python3 decouper.py                       # migration faite une fois : appdata.json → blocs de donnees/
+                                          # (la relancer écrase les blocs : à éviter une fois qu'ils ont été modifiés)
+# Chaîne courante :
+cd ../app && python3 construire.py        # template + blocs de donnees/ → app/marmite.html
+cd .. && for t in tests/*.py; do python3 $t || break; done
 ```
 
 - Le code est un seul fichier HTML, en JavaScript sans framework ni outil de build.
@@ -185,7 +189,18 @@ Schéma version 2. Il est stocké dans `localStorage["marmite-nicolas"]` (le nom
 
 La fonction `charger()` convertit l'ancien format de la version 1, où tout était à plat et ne concernait que Nicolas.
 
-### Données du plan (`donnees/appdata.json`, injectées dans `DONNEES`)
+### Blocs de données (`donnees/`)
+
+Depuis le 30/09/2026, les données sont découpées en blocs, source de vérité pour l'app :
+
+- `catalogue.json` → `produits[aliment]` : `rayon`, `achat`, `cond`, `vrac`, `rend`, `prix`, `nut` (`[base, unité, kcal, protéines]` ou `null` pour les produits hors repas), `role` (`proteine`, `feculent`, `legume`, `matiere_grasse`, `autre`), `conservation` (`jours` après achat, `lieu`, `frais` si 10 jours ou moins, `estime:true` tant que Nico n'a pas corrigé), `note`. L'ordre suit la table nutritionnelle : l'app s'en sert pour l'affichage et la recherche d'aliments.
+- `recettes.json` → `recettes[]` : `id`, `nom`, `repas` (`pdj`, `dej`, `din`, `des`), `tags` (`poisson`, `plaisir`, `restes`), `source`, `portions` de référence par personne. Les 45 plats d'octobre forment la bibliothèque de départ ; les petits-déjeuners ont un `nomParPersonne`.
+- `mois/<aaaa-mm>.json` : `id`, `titre`, `debut`, `fin`, `jours`, `note`, `stockDepart`, `share`, `plan` (chaque repas porte l'`id` de sa `recette`), `courses`. Octobre est `2026-10.json`.
+- `reglages.json` : cycle mensuel, jours des 4 courses (3, 10, 17, 24, modifiables), quotas (8 poissons, 6 plaisirs), écart minimal de 5 jours entre deux mêmes plats, règles d'inventaire, place de Claude, rappels.
+
+`app/construire.py` prend le mois le plus récent et reconstitue la forme que l'app lit encore (ci-dessous), en ajoutant `mois`, `catalogue`, `recettes` et `reglages` dans `DONNEES`. `tests/test_donnees.py` vérifie que l'app reçoit exactement les données d'octobre d'origine.
+
+### Données du plan telles que l'app les lit (`DONNEES`, reconstituées par `construire.py`)
 
 - `nut[aliment]` : `[base, unité, kcal, protéines]` pour 39 aliments.
 - `cat[aliment]` : 47 produits. Pour chacun :
@@ -225,14 +240,17 @@ La fonction `charger()` convertit l'ancien format de la version 1, où tout éta
 
 ## 6. Prochaine étape : programmer le mois suivant
 
-Nico veut enchaîner sans tout régénérer en Python, et être prévenu avant la fin du stock. Rien n'est construit.
+Nico veut enchaîner sans tout régénérer en Python, et être prévenu avant la fin du stock. Seul le découpage des données est fait (voir « Avancement »).
 
 ### Décisions de Nico (30/09/2026)
 
 - **Cycle = mois calendaire.** Les 21 jours d'octobre étaient une exception : Nico reçoit 3 personnes du 21 au 31 octobre. Le premier mois construit par le moteur sera novembre.
-- **4 courses par mois.**
+- **4 courses par mois**, à des jours fixés dans `donnees/reglages.json` : la première le 3, puis 10, 17 et 24 par défaut. Chaque course couvre jusqu'à la suivante ; la dernière couvre jusqu'à la première du mois suivant.
+- **Quotas mensuels** : 8 repas poisson et 6 repas plaisir.
 - **Claude enrichit la bibliothèque de recettes, et n'intervient que le jour où l'on prépare le planning du mois.** Un seul appel par mois, pour économiser l'usage de Claude. Tous les calculs (portions, nutrition, coûts, courses, stock) sont faits par l'app.
-- **Inventaire validé avant chaque course.** L'app présente le stock estimé ; l'utilisateur choisit de le vérifier ligne à ligne ou de le valider tel quel. La liste de la course est calculée sur l'inventaire validé.
+- **Inventaire validé avant chaque course.** L'app présente le stock estimé ; l'utilisateur choisit de le vérifier ligne à ligne ou de le valider tel quel. La liste de la course est calculée sur l'inventaire validé. Garde-fou : une vérification des produits frais est imposée une fois par mois, sinon l'erreur du stock estimé s'accumule.
+- **« J'ai faim » et « Changer »** proposent deux voies : la bibliothèque, calculée en local sans Claude (par défaut), ou « Nouveauté », qui appelle Claude à la demande.
+- **Du 22 au 31 octobre** (3 invités) : en attente, rien n'est planifié pour l'instant.
 
 ### Architecture retenue (option hybride)
 
@@ -243,7 +261,7 @@ Nico veut enchaîner sans tout régénérer en Python, et être prévenu avant l
 2. **Moteur en JavaScript, sans IA.** Il compose le mois à partir de la bibliothèque : quotas de poisson et de repas plaisir, pas le même plat à moins de 5 jours, stock restant utilisé en premier, budget respecté.
 3. **Portions calculées.** Par personne : protéine réglée sur l'objectif de protéines, féculent sur la fourchette de kcal, légumes généreux. Objectifs recalculés avec les dernières pesées.
 4. **Courses calculées.** Chaque course couvre la période jusqu'à la suivante : besoins de la période − inventaire validé, arrondis aux conditionnements. Les produits qui se gardent (surgelés, secs, conserves) peuvent être avancés sur une course précédente si c'est plus économique ; le frais reste sur la course de sa semaine.
-5. **Un appel Claude par mois.** Le jour du planning, un seul `sample.json` envoie : la bibliothèque existante (noms seulement), le catalogue, les envies et les exclusions. Claude répond avec quelques recettes nouvelles au format de la bibliothèque. Nico valide ou écarte chacune, puis le moteur compose le mois sans Claude. Les appels suivants du mois sont bloqués.
+5. **Un appel Claude par mois.** Le jour du planning, un seul `sample.json` envoie : la bibliothèque existante (noms seulement), le catalogue, les envies et les exclusions. Claude répond avec quelques recettes nouvelles au format de la bibliothèque. Nico valide ou écarte chacune, puis le moteur compose le mois sans Claude. Le planning ne rappelle pas Claude dans le mois ; seul le bouton « Nouveauté » de « J'ai faim » peut l'appeler, à la demande.
 6. **Écran « Préparer le mois ».**
    1. Inventaire de départ (même logique que l'inventaire avant course).
    2. Réglages : mois, budget, quotas poisson et plaisir, recettes à écarter, dates des 4 courses.
@@ -252,12 +270,16 @@ Nico veut enchaîner sans tout régénérer en Python, et être prévenu avant l
    5. Validation : 4 listes de courses prévisionnelles, mois précédent archivé avec son bilan.
 7. **Rappels.** J-3 avant la fin du mois : « Prépare le mois suivant ». J-1 avant chaque course : « Valide l'inventaire, courses demain ». Bandeau et pastille sur l'onglet Courses ; pour une vraie sonnerie, un événement de calendrier (fichier .ics exportable).
 
+### Avancement
+
+1. Fait : découpage des données en blocs (`donnees/catalogue.json`, `recettes.json`, `mois/2026-10.json`, `reglages.json`), l'app inchangée.
+2. À faire : moteur de composition du mois, portions calculées, listes des 4 courses, écran « Préparer le mois », inventaire avant course, « J'ai faim » local, rappels.
+
 ### Points ouverts
 
-- **« J'ai faim » et « Changer »** appellent Claude à chaque demande, ce qui contredit la règle d'un seul appel par mois. Proposition : les faire passer sur un moteur local qui pioche dans la bibliothèque selon le stock réel. À confirmer avec Nico.
-- **Du 22 au 31 octobre** (3 invités), rien n'est planifié ni chiffré. À traiter hors moteur ou comme un mois partiel.
-- **Quotas mensuels** : 7 poissons et 3 plaisirs valaient pour 21 jours. Pour un mois, environ 10 poissons et 4 plaisirs (un par semaine) ; à confirmer.
-- **Dates des courses** : fixes (par exemple le 1er, le 8, le 15 et le 22) ou un jour de la semaine (le samedi).
+- **Du 1er au 2 novembre** : avant la première course du 3, ces deux jours vivent sur le stock restant, qui dépend de la période en attente du 22 au 31 octobre.
+- **Conservation** : les durées du catalogue sont des estimations (`estime:true`) à faire corriger par Nico ; elles décident de ce qui est frais et de la course où chaque produit est acheté.
+- **Repas plaisir** : 6 par mois, soit le double du rythme d'octobre (3 en 21 jours). La bibliothèque n'en compte que 3 (burger, pizza, barbecue) : il faudra en ajouter, sinon le même plat revient trop souvent.
 
 ### Contrainte technique
 
@@ -280,7 +302,7 @@ Les données sont dans un seul document `db`. Avec plusieurs mois et une bibliot
    - palette Fluent & Forward.
 6. **Ajustement ingrédient par ingrédient** et onglet de stock « À la maison ».
 7. **Réflexion sur le cycle suivant** (section 6).
-8. **Décisions du 30/09/2026** : cycle mensuel, 4 courses par mois, Claude limité à un appel par mois pour enrichir la bibliothèque, inventaire validé avant chaque course (vérification facultative). Repo rangé : le contenu des zips est versionné fichier par fichier.
+8. **Décisions du 30/09/2026** : cycle mensuel, 4 courses par mois, Claude limité à un appel par mois pour enrichir la bibliothèque, inventaire validé avant chaque course (vérification facultative). Repo rangé : le contenu des zips est versionné fichier par fichier. Puis : « J'ai faim » en deux voies (bibliothèque locale ou « Nouveauté » via Claude), période du 22 au 31 octobre en attente, quotas de 8 poissons et 6 plaisirs, jours de courses dans les réglages (le premier le 3), vérification mensuelle du frais acceptée. Données découpées en blocs.
 
 ## 8. Arborescence
 
@@ -288,16 +310,22 @@ Les données sont dans un seul document `db`. Avec plusieurs mois et une bibliot
 CLAUDE.md                          ce document
 requirements.txt                   dépendances Python (openpyxl, playwright)
 app/marmite_template.html          source de l'app (modifier ici)
-app/marmite.html                   app assemblée, identique à la version publiée
+app/marmite.html                   app assemblée (même comportement que la version publiée ; DONNEES contient en plus les blocs)
 app/construire.py                  template + données → marmite.html
-donnees/appdata.json               données du cycle d'octobre (plan, catalogue, courses)
+donnees/catalogue.json             produits : prix, nutrition, rôle, conservation
+donnees/recettes.json              bibliothèque de recettes (45 plats d'octobre au départ)
+donnees/mois/2026-10.json          le mois d'octobre : planning, courses, stock de départ
+donnees/reglages.json              jours des courses, quotas, inventaire, place de Claude
+donnees/appdata.json               archive d'octobre, source du découpage (ne plus modifier)
 python/data.py                     table nutritionnelle NUT
 python/menu.py                     menu des 21 jours (abréviations AB, petits-déjeuners, DAYS)
 python/adjust.py                   ajustements de portions par personne
 python/calc.py                     contrôle nutrition et totaux (python3 calc.py)
 python/build.py                    génération de l'Excel
 python/export_appdata.py           Excel + menu → donnees/appdata.json
+python/decouper.py                 migration appdata.json → blocs de donnees/ (faite une fois)
 excel/menu_octobre_nicolas_aurelie.xlsx
+tests/test_donnees.py              blocs de données cohérents, app nourrie à l'identique
 tests/test_ajustement_stock.py     ajustement d'un repas, retour au plan, stock
 tests/test_assistant_personnes_theme.py   Nicolas/Aurélie, thème, assistant simulé, remplacement à 2
 docs/prototype-beta-resume.md      résumé du prototype de l'app grand public
