@@ -26,7 +26,7 @@
   "jaiFaim": "bibliothèque locale par défaut ; « Nouveauté » appelle Claude à la demande"
  },
  "rappels": {
-  "preparerMoisJ": -3,
+  "preparerMoisJour": 30,
   "coursesJ": -1
  },
  "personnes": {

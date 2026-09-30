@@ -4618,8 +4618,8 @@
     },
     {
      "a": "Jambon",
-     "buy": 1,
-     "est": 5.62,
+     "buy": 150,
+     "est": 1.69,
      "needN": 0,
      "needA": 150
     },
@@ -4880,8 +4880,8 @@
     },
     {
      "a": "Jambon",
-     "buy": 1,
-     "est": 5.62,
+     "buy": 550,
+     "est": 6.18,
      "needN": 40,
      "needA": 510
     },
@@ -5097,5 +5097,8 @@
     }
    ]
   }
+ ],
+ "corrections": [
+  "30/09/2026 : jambon acheté au gramme (11,24 €/kg) au lieu du paquet de 500 g."
  ]
 }

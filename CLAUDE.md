@@ -89,7 +89,8 @@ python3 decouper.py                       # migration faite une fois : appdata.j
 # Chaîne courante :
 cd ../app && python3 construire.py        # template + blocs de donnees/ → app/marmite.html
 cd .. && for t in tests/*.py; do python3 $t || break; done && node tests/test_moteur.js
-node outils/proposer_mois.js 2026-11 [graine]   # proposition du moteur → donnees/propositions/2026-11.json + résumé
+node outils/proposer_mois.js 2026-11 [graine] [--jours N] [--invites N] [--budget €] [--debut aaaa-mm-jj]
+                                          # proposition du moteur → donnees/propositions/<id>.json + résumé
 ```
 
 - Le code est un seul fichier HTML, en JavaScript sans framework ni outil de build.
@@ -133,7 +134,7 @@ L'app reprend exactement la palette du site Fluent & Forward d'Aurélie :
 - **Planning** : calendrier du lundi au dimanche, qui commence un jeudi. Chaque case affiche les 4 barres de repas, les repères plaisir, poisson et courses, et le coût du jour. Une barre montre le nombre de repas suivis sur 84.
 - **Courses** : trois onglets.
   - **Course 1 / Course 2** : cases à cocher et prix payé. Un prix payé devient le prix unitaire du produit dans toute l'app. Magasin, totaux, part de la personne active.
-  - **À la maison** : stock estimé du foyer, trois colonnes (ce matin, le 21 au soir, écart avec le plan d'origine), ruptures en premier, bilan des ajustements.
+  - **À la maison** : stock estimé du foyer, trois colonnes (ce matin, le 21 au soir, écart avec le plan d'origine), ruptures en premier, bilan des ajustements. Chaque ligne en stock a une **poubelle** : on saisit la quantité jetée, elle sort du stock à partir de ce jour (jamais d'office), et la carte « À la poubelle » liste les pertes avec leur valeur et un bouton Annuler.
 - **Budget** : pour la personne active.
   - prévu face au budget, déjà consommé, reste à manger, part payée, économie face à la liste initiale ;
   - courbe cumulée sur 21 jours, tableau par course, prix payés face aux prix estimés.
@@ -174,7 +175,8 @@ Schéma version 2. Il est stocké dans `localStorage["marmite-nicolas"]` (le nom
     achats:   { "c1-Poulet": true },                 // articles cochés, par course
     payes:    { "c1-Poulet": 21.5 },                 // prix payés saisis
     prix:     { "Poulet": { prix: 10.75, date } },   // prix unitaire déduit (€/paquet, ou €/kg si vrac)
-    magasins: { 1: "Leclerc Saint-Pierre" }
+    magasins: { 1: "Leclerc Saint-Pierre" },
+    pertes:   [{ j: 3, a: "Jambon", q: 40, date: "2026-10-03" }]   // produits jetés (poubelle), j = jour du plan
   },
   personnes: {
     nicolas: {
@@ -252,6 +254,11 @@ Nico veut enchaîner sans tout régénérer en Python, et être prévenu avant l
 - **Inventaire validé avant chaque course.** L'app présente le stock estimé ; l'utilisateur choisit de le vérifier ligne à ligne ou de le valider tel quel. La liste de la course est calculée sur l'inventaire validé. Garde-fou : une vérification des produits frais est imposée une fois par mois, sinon l'erreur du stock estimé s'accumule.
 - **« J'ai faim » et « Changer »** proposent deux voies : la bibliothèque, calculée en local sans Claude (par défaut), ou « Nouveauté », qui appelle Claude à la demande.
 - **Du 22 au 31 octobre** (3 invités) : en attente, rien n'est planifié pour l'instant.
+- **Protéine animale à chaque déjeuner et dîner** (viande, poisson, charcuterie ; les œufs et les lentilles ne comptent pas). Aucun plat végétarien. Les petits-déjeuners ne sont pas concernés. Les 5 plats d'octobre sans viande ni poisson (omelettes, salades lentilles-œufs) sont écartés par le moteur.
+- **Aucune perte d'office.** Un produit non consommé reste en stock ; seule la poubelle de l'onglet « À la maison » le classe en perte.
+- **Jambon au gramme** (à la coupe), 11,24 €/kg déduits du paquet de 500 g à 5,62 € ; appliqué aussi à octobre (Course 1 : 150 g, Course 2 : 550 g).
+- **Préparation du mois suivant le 30** (le dernier jour en février). Les jours avant la première course du mois vivent sur le stock ; la difficulté ne concerne qu'octobre, à cause de la période en attente.
+- **Génération paramétrable** : nombre de jours, nombre d'invités et budget, qui peut changer d'un mois à l'autre.
 
 ### Architecture retenue (option hybride)
 
@@ -269,7 +276,7 @@ Nico veut enchaîner sans tout régénérer en Python, et être prévenu avant l
    3. Nouvelles recettes : l'appel Claude du mois, puis validation.
    4. Proposition : le mois s'affiche, avec échange de repas possible.
    5. Validation : 4 listes de courses prévisionnelles, mois précédent archivé avec son bilan.
-7. **Rappels.** J-3 avant la fin du mois : « Prépare le mois suivant ». J-1 avant chaque course : « Valide l'inventaire, courses demain ». Bandeau et pastille sur l'onglet Courses ; pour une vraie sonnerie, un événement de calendrier (fichier .ics exportable).
+7. **Rappels.** Le 30 : « Prépare le mois suivant ». J-1 avant chaque course : « Valide l'inventaire, courses demain ». Bandeau et pastille sur l'onglet Courses ; pour une vraie sonnerie, un événement de calendrier (fichier .ics exportable).
 
 ### Avancement
 
@@ -279,19 +286,21 @@ Nico veut enchaîner sans tout régénérer en Python, et être prévenu avant l
 
 ### Le moteur (`app/moteur.js`)
 
-`Moteur.composerMois({ catalogue, recettes, reglages, annee, mois, graine, stockDepart, profils?, poidsActuels?, exclure?, moisReference? })` renvoie `{ mois, bilan }`. `mois` a la forme de `donnees/mois/2026-10.json` ; le même objet sert sous Node (`module.exports`) et dans le navigateur (`Moteur` global).
+`Moteur.composerMois({ catalogue, recettes, reglages, annee + mois ou debut, jours?, invites?, budget?, quotas?, joursCourses?, graine, stockDepart, profils?, poidsActuels?, exclure?, moisReference? })` renvoie `{ mois, bilan }`. `mois` a la forme de `donnees/mois/2026-10.json` (plus `date` par jour, `invites`, `items.invites`, `needI`) ; le même objet sert sous Node (`module.exports`) et dans le navigateur (`Moteur` global).
 
-- **Calendrier** : jours du mois calendaire, courses aux jours des réglages. L'« âge » d'un jour = jours écoulés depuis la dernière course (avant la première course du mois : depuis la dernière du mois précédent).
+- **Période** : un mois calendaire par défaut, ou `debut` + `jours` (par exemple du 22 au 31 octobre). Courses aux jours du mois des réglages, ou aux dates `joursCourses`. Quotas des réglages pour un mois entier, au prorata sinon. L'« âge » d'un jour = jours écoulés depuis la dernière course. Avant la première course, le moteur privilégie les plats faisables avec le stock de départ.
+- **Invités** : `invites` convives en plus ; la portion d'un invité est la moyenne de Nicolas et d'Aurélie. Ils entrent dans les courses (`needI`) et dans le coût, pas dans `share`.
+- **Plats retenus** : déjeuners et dîners avec au moins un produit `animal` du catalogue.
 - **Composition** : les plaisirs d'abord (déjeuners du week-end, répartis sur le mois, glace en dessert), puis les poissons (répartis, en alternant déjeuner et dîner), puis le reste jour par jour. Chaque candidat reçoit un score : famille de plat déjà placée à moins de `ecartMinJours` exclue (les variantes d'un même plat, « Bœuf sauté asiatique, … », forment une famille) ; pénalités pour les produits frais au-delà de leur conservation, la même protéine ou le même féculent deux fois dans la journée, les répétitions, le coût ; bonus pour le stock de départ. Un tirage à graine départage : même graine, même mois. Les plats `restes` suivent leur plat d'origine (`suit`, `delaiMaxJours`). Desserts selon la répartition du mois de référence ; petits-déjeuners fixes.
 - **Portions** : par personne et par jour, protéines des plats principaux calées sur l'objectif (facteur 0,85 à 1,4), puis féculents calés sur le milieu de la fourchette de kcal (0,5 à 1,6) ; arrondis à 5 g ou à l'unité. `objectifs(profil, poids)` retire environ 14 kcal par kg perdu.
-- **Courses** : chaque course achète le besoin de sa période moins le stock, arrondi au conditionnement (vrac : 50 g bruts, rendement compris). Les restes de conditionnement passent à la période suivante, sauf le frais qui a dépassé sa conservation : il est compté en pertes.
-- **Budget** : celui du profil, prévu pour `budgetJours` jours, ramené à la durée du mois. Si la consommation le dépasse, le moteur recompose en pesant davantage le coût (6 passes au plus).
-- **Bilan** : nutrition moyenne, jours hors fourchette, quotas, coûts par course, pertes de frais, frais consommés au-delà de leur conservation (plats et petits-déjeuners à part), ce qu'il faut avant la première course, stock de fin de mois.
+- **Courses** : chaque course achète le besoin de sa période moins le stock, arrondi au conditionnement (vrac : `pasAchat` du produit, 50 g par défaut, 1 g pour le jambon ; rendement compris). Tous les restes passent à la période suivante ; le frais plus vieux que sa conservation estimée est seulement signalé (`fraisAVerifier`), pour l'inventaire.
+- **Budget** : celui saisi pour la période, sinon celui des profils (prévu pour `budgetJours` jours) ramené à la durée. Si les achats le dépassent, le moteur recompose en pesant davantage le coût (6 passes au plus).
+- **Bilan** : nutrition moyenne, jours hors fourchette, quotas obtenus et visés, coûts (consommation par convive, achats, budget, par course), frais à vérifier, frais consommés au-delà de leur conservation (plats et petits-déjeuners à part), ce qu'il faut avant la première course, stock de fin de période.
 
 ### Points ouverts
 
-- **Préparer le mois avant la dernière course, pas à J-3 de la fin.** La course du 24 doit acheter les 1er et 2 du mois suivant, dont le planning n'existe qu'une fois le mois préparé. Proposition : rappel « Prépare le mois suivant » la veille de la dernière course du mois.
-- **Conditionnements trop gros pour des courses hebdomadaires** : jambon en paquet de 500 g pour 210 g par semaine (290 g perdus chaque semaine), avocat compté à 350 g de chair, salade entière. Pertes estimées de novembre : environ 18 €.
+- **Conditionnements à confirmer** : avocat compté à 350 g de chair, salade entière (300 g), champignons en barquette de 250 g : leurs restes s'accumulent d'une semaine à l'autre.
+- **Bibliothèque réduite** par la règle de la protéine animale : 34 plats principaux (restes compris), dominés par le poulet ; 3 plats plaisir seulement (burger, pizza, barbecue) pour 6 repas plaisir par mois.
 - **Tomates, salade et champignons** dépassent leur conservation estimée en fin de semaine ; le petit-déjeuner d'Aurélie (tomate) et celui de Nicolas (banane) aussi.
 
 - **Du 1er au 2 novembre** : avant la première course du 3, ces deux jours vivent sur le stock restant, qui dépend de la période en attente du 22 au 31 octobre.
@@ -320,6 +329,7 @@ Les données sont dans un seul document `db`. Avec plusieurs mois et une bibliot
 6. **Ajustement ingrédient par ingrédient** et onglet de stock « À la maison ».
 7. **Réflexion sur le cycle suivant** (section 6).
 8. **Décisions du 30/09/2026** : cycle mensuel, 4 courses par mois, Claude limité à un appel par mois pour enrichir la bibliothèque, inventaire validé avant chaque course (vérification facultative). Repo rangé : le contenu des zips est versionné fichier par fichier. Puis : « J'ai faim » en deux voies (bibliothèque locale ou « Nouveauté » via Claude), période du 22 au 31 octobre en attente, quotas de 8 poissons et 6 plaisirs, jours de courses dans les réglages (le premier le 3), vérification mensuelle du frais acceptée. Données découpées en blocs.
+9. **Décisions du 30/09/2026, suite** : protéine animale à chaque déjeuner et dîner, aucune perte d'office (poubelle), jambon au gramme, préparation le 30, génération paramétrable (jours, invités, budget).
 
 ## 8. Arborescence
 
@@ -345,8 +355,9 @@ excel/menu_octobre_nicolas_aurelie.xlsx
 app/moteur.js                      moteur de composition d'un mois (planning, portions, courses, bilan)
 outils/proposer_mois.js            node outils/proposer_mois.js 2026-11 : proposition + résumé
 donnees/propositions/              propositions du moteur, en attente de validation
-tests/test_moteur.js               règles du mois (quotas, écart, courses, nutrition, graine, stock, objectifs)
+tests/test_moteur.js               règles du mois (quotas, écart, protéine animale, courses, nutrition, graine, stock, invités, période libre)
 tests/test_donnees.py              blocs de données cohérents, app nourrie à l'identique
+tests/test_poubelle.py             poubelle du stock, annulation, jambon au gramme
 tests/test_ajustement_stock.py     ajustement d'un repas, retour au plan, stock
 tests/test_assistant_personnes_theme.py   Nicolas/Aurélie, thème, assistant simulé, remplacement à 2
 docs/prototype-beta-resume.md      résumé du prototype de l'app grand public

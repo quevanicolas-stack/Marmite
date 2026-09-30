@@ -21,7 +21,8 @@
     "frais": false,
     "estime": true
    },
-   "note": "Congeler en portions d'un repas le jour de l'achat."
+   "note": "Congeler en portions d'un repas le jour de l'achat.",
+   "animal": true
   },
   "Bœuf": {
    "rayon": "Viande",
@@ -43,7 +44,8 @@
     "frais": false,
     "estime": true
    },
-   "note": "Congeler en portions."
+   "note": "Congeler en portions.",
+   "animal": true
   },
   "Lardons": {
    "rayon": "Viande",
@@ -65,15 +67,16 @@
     "frais": false,
     "estime": true
    },
-   "note": "Longue DLC sous vide, se congèle."
+   "note": "Longue DLC sous vide, se congèle.",
+   "animal": true
   },
   "Jambon": {
    "rayon": "Viande",
-   "achat": "paquet 500 g (hypothèse)",
-   "cond": 500,
-   "vrac": 0,
+   "achat": "à la coupe, au gramme",
+   "cond": 1,
+   "vrac": 1,
    "rend": 1,
-   "prix": 5.62,
+   "prix": 11.24,
    "nut": [
     100,
     "g",
@@ -87,7 +90,9 @@
     "frais": true,
     "estime": true
    },
-   "note": "2 à 3 jours une fois ouvert : préférer plusieurs petits paquets."
+   "note": "Au gramme près, à la coupe. 2 à 3 jours une fois ouvert.",
+   "animal": true,
+   "pasAchat": 1
   },
   "Poisson blanc": {
    "rayon": "Poisson",
@@ -109,7 +114,8 @@
     "frais": false,
     "estime": true
    },
-   "note": "Surgelé."
+   "note": "Surgelé.",
+   "animal": true
   },
   "Œufs": {
    "rayon": "Œufs et laitages",

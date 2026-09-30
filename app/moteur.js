@@ -1,5 +1,7 @@
 /* ============================================================
-   Marmite — moteur de composition d'un mois (sans IA)
+   Marmite — moteur de composition d'une période (sans IA)
+   Par défaut un mois calendaire ; on peut choisir la date de début, le nombre de jours,
+   le nombre d'invités et le budget.
    Entrées : catalogue, recettes, réglages, profils, stock de départ.
    Sortie : un mois au format de donnees/mois/<aaaa-mm>.json (plan, courses, share)
             + un bilan (nutrition, coûts, quotas, alertes).
@@ -11,19 +13,23 @@ const Moteur = (() => {
   const JOURS_SEM = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
   const MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
   const UNITES_ENTIERES = new Set(["Œufs", "Wraps", "Pains burger"]);
+  const JOUR_MS = 86400000;
 
   /* ---------- Outils ---------- */
-  // Générateur pseudo-aléatoire à graine : même graine, même mois.
+  // Générateur pseudo-aléatoire à graine : même graine, même planning.
   function hasard(graine) {
     let a = graine >>> 0;
     return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
   }
   const arrondi = (x, pas) => Math.round(x / pas) * pas;
   const r2 = x => Math.round(x * 100) / 100;
-  const dateUTC = (a, m, j) => new Date(Date.UTC(a, m - 1, j));
+  const dateISO = s => { const [a, m, j] = s.split("-").map(Number); return new Date(Date.UTC(a, m - 1, j)); };
   const iso = d => d.toISOString().slice(0, 10);
-  const nomJour = (a, m, j) => { const d = dateUTC(a, m, j); return `${JOURS_SEM[d.getUTCDay()]} ${j === 1 ? "1er" : j} ${MOIS[m - 1]}`; };
-  const joursDansMois = (a, m) => dateUTC(a, m + 1, 0).getUTCDate();
+  const plus = (d, n) => new Date(d.getTime() + n * JOUR_MS);
+  const joursDansMois = d => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
+  const jourMois = d => { const j = d.getUTCDate(); return j === 1 ? "1er" : String(j); };
+  const nomJour = d => `${JOURS_SEM[d.getUTCDay()]} ${jourMois(d)} ${MOIS[d.getUTCMonth()]}`;
+  const court = d => `${jourMois(d)} ${MOIS[d.getUTCMonth()]}`;
 
   /* ---------- Nutrition et prix ---------- */
   function nutrition(cat, a, q) {
@@ -41,6 +47,8 @@ const Moteur = (() => {
     return c.vrac ? c.prix / 1000 / (c.rend || 1) : c.prix / c.cond;
   }
   const coutItems = (cat, items) => items.reduce((s, [a, q]) => s + prixUnitaire(cat, a) * q, 0);
+  // Un plat principal doit contenir une protéine animale (viande, poisson, charcuterie ; les œufs ne comptent pas).
+  const aProteineAnimale = (cat, r) => r.portions.nicolas.some(([a]) => cat[a] && cat[a].animal);
 
   /* ---------- Objectifs ---------- */
   // Les besoins baissent avec le poids : environ 14 kcal par kg (métabolisme de base × activité légère).
@@ -52,31 +60,35 @@ const Moteur = (() => {
   }
 
   /* ---------- Calendrier et courses ---------- */
-  function calendrier(annee, mois, reglages) {
-    const n = joursDansMois(annee, mois);
-    const jc = reglages.courses.jours.filter(j => j >= 1 && j <= n).sort((x, y) => x - y);
+  // debut : Date (UTC) ; n : nombre de jours ; joursCourses : dates ISO imposées, sinon les jours du mois des réglages.
+  function calendrier(debut, n, reglages, joursCourses) {
+    const dates = []; for (let j = 1; j <= n; j++) dates.push(plus(debut, j - 1));
+    const estCourse = d => joursCourses ? joursCourses.includes(iso(d)) : reglages.courses.jours.includes(d.getUTCDate());
+    const jc = []; for (let j = 1; j <= n; j++) if (estCourse(dates[j - 1])) jc.push(j);
     // âge des produits frais au jour j : jours écoulés depuis la dernière course
-    // (avant la première course du mois : depuis la dernière du mois précédent)
-    const prec = mois === 1 ? [annee - 1, 12] : [annee, mois - 1];
-    const derniereAvant = reglages.courses.jours.filter(j => j <= joursDansMois(...prec)).slice(-1)[0];
+    // (avant la première course de la période : on remonte le calendrier des réglages)
     const age = j => {
       const c = jc.filter(x => x <= j).slice(-1)[0];
-      return c != null ? j - c : j + joursDansMois(...prec) - derniereAvant;
+      if (c != null) return j - c;
+      for (let k = 1; k <= 62; k++) if (reglages.courses.jours.includes(plus(dates[j - 1], -k).getUTCDate())) return k;
+      return 7;
     };
     const periodes = jc.map((c, i) => ({ id: i + 1, debut: c, fin: (jc[i + 1] || n + 1) - 1 }));
-    return { n, jc, age, periodes };
+    return { n, dates, jc, age, periodes };
   }
 
   /* ---------- Composition du planning ---------- */
   function composer(ctx) {
-    const { cat, recettes, reglages, annee, mois, cal, alea, poidsCout, exclure } = ctx;
+    const { cat, recettes, reglages, cal, alea, poidsCout, exclure, quotas } = ctx;
     const actives = recettes.filter(r => !exclure.has(r.id));
-    const plats = actives.filter(r => (r.repas.includes("dej") || r.repas.includes("din")) && !r.tags.includes("restes"));
-    const restes = actives.filter(r => r.tags.includes("restes") && r.suit);
+    const principaux = actives.filter(r => (r.repas.includes("dej") || r.repas.includes("din")) && aProteineAnimale(cat, r));
+    const plats = principaux.filter(r => !r.tags.includes("restes"));
+    const restes = principaux.filter(r => r.tags.includes("restes") && r.suit);
     const desserts = actives.filter(r => r.repas.includes("des"));
     const pdj = actives.find(r => r.repas.includes("pdj"));
     const ecart = reglages.ecartMinJours || 5;
     const N = cal.n;
+    const avantCourse = cal.jc.length ? cal.jc[0] - 1 : 0;
     const grille = {}; // "j-k" -> recette
     const place = (j, k, r) => { grille[`${j}-${k}`] = r; };
     const libre = (j, k) => j >= 1 && j <= N && !grille[`${j}-${k}`];
@@ -89,8 +101,10 @@ const Moteur = (() => {
       const it = r.portions.nicolas.filter(([a]) => cat[a] && cat[a].role === role).sort((x, y) => y[1] - x[1]);
       return it.length ? it[0][0] : null;
     };
-    // stock de départ encore disponible pour les plats (lentilles, farine…) : on le consomme en priorité
+    // stock de départ encore disponible : utilisé en priorité, et seul disponible avant la première course
+    const stockConnu = Object.keys(ctx.stockDepart).length > 0;
     const stockDispo = Object.assign({}, ctx.stockDepart);
+    const besoinRef = (r, a) => PERSONNES.reduce((s, p) => s + r.portions[p].filter(([x]) => x === a).reduce((t, [, q]) => t + q, 0), 0);
     const consommer = r => { for (const p of PERSONNES) for (const [a, q] of r.portions[p]) if (stockDispo[a] != null) stockDispo[a] -= q; };
 
     function score(r, j, k) {
@@ -108,6 +122,9 @@ const Moteur = (() => {
       s -= poidsCout * (coutRef(r) / coutMoyen - 1);
       // stock de départ : bonus si le plat l'utilise et qu'il en reste assez
       for (const [a, q] of r.portions.nicolas) if (stockDispo[a] != null && stockDispo[a] >= q * 2) s += 1.5;
+      // avant la première course, on vit sur le stock : chaque ingrédient manquant coûte cher
+      if (j <= avantCourse && stockConnu)
+        for (const [a] of r.portions.nicolas) if (!(stockDispo[a] >= besoinRef(r, a))) s -= 2;
       return s;
     }
     function meilleur(liste, j, k) {
@@ -125,18 +142,18 @@ const Moteur = (() => {
       }
     }
 
-    // 1. repas plaisir : déjeuners du week-end, répartis sur le mois
-    const nbPlaisir = reglages.quotas.plaisir, nbPoisson = reglages.quotas.poisson;
+    // 1. repas plaisir : déjeuners du week-end, répartis sur la période (hors jours avant la première course si possible)
     const weekends = [];
-    for (let j = 1; j <= N; j++) { const w = dateUTC(annee, mois, j).getUTCDay(); if (w === 0 || w === 6) weekends.push(j); }
-    const joursPlaisir = repartir(weekends, nbPlaisir, N);
+    for (let j = 1; j <= N; j++) { const w = cal.dates[j - 1].getUTCDay(); if (w === 0 || w === 6) weekends.push(j); }
+    const apres = weekends.filter(j => j > avantCourse);
+    const joursPlaisir = repartir(apres.length >= quotas.plaisir ? apres : weekends, quotas.plaisir, N);
     const plaisirs = plats.filter(r => r.tags.includes("plaisir"));
-    for (const j of joursPlaisir) { const r = meilleur(plaisirs, j, "dej") || meilleur(plaisirs.concat(plats), j, "dej"); if (r) placerAvecRestes(j, "dej", r); }
+    for (const j of joursPlaisir) { const r = meilleur(plaisirs, j, "dej") || meilleur(plats, j, "dej"); if (r) placerAvecRestes(j, "dej", r); }
 
     // 2. poisson : réparti régulièrement, en alternant déjeuner et dîner
     const poissons = plats.filter(r => r.tags.includes("poisson"));
-    for (let i = 0; i < nbPoisson; i++) {
-      let j = Math.min(N, Math.max(1, Math.round((i + 0.5) * N / nbPoisson)));
+    for (let i = 0; i < quotas.poisson; i++) {
+      let j = Math.min(N, Math.max(1, Math.round((i + 0.5) * N / quotas.poisson)));
       let k = i % 2 ? "dej" : "din";
       for (let d = 0; d < N && !libre(j, k); d++) { const alt = k === "dej" ? "din" : "dej"; if (libre(j, alt)) { k = alt; break; } j = j % N + 1; }
       const r = meilleur(poissons, j, k); if (r) placerAvecRestes(j, k, r);
@@ -150,7 +167,7 @@ const Moteur = (() => {
       if (r) placerAvecRestes(j, k, r);
     }
 
-    // 4. desserts : glace les jours plaisir, sinon la répartition d'octobre, fruits frais près des courses
+    // 4. desserts : glace les jours plaisir, sinon la répartition du mois de référence, fruits frais près des courses
     const poidsDes = {};
     for (const r of desserts) poidsDes[r.id] = r.frequenceReference || 1;
     const hors = desserts.filter(r => !/glace/i.test(r.nom || ""));
@@ -228,29 +245,40 @@ const Moteur = (() => {
       const cible = (obj.kcalMin + obj.kcalMax) / 2;
       echelle("feculent", Math.min(1.6, Math.max(0.5, 1 + (cible - t.kcal) / kFec)));
     }
-    // arrondis : unités entières, 5 g ou 5 ml sinon
-    for (const k of Object.keys(items)) items[k] = items[k].map(([a, q]) => [a, UNITES_ENTIERES.has(a) ? Math.max(1, Math.round(q)) : Math.max(5, arrondi(q, 5))]);
-    return items;
+    return arrondir(items);
+  }
+  // arrondis : unités entières, 5 g ou 5 ml sinon
+  function arrondir(items) {
+    const out = {};
+    for (const k of Object.keys(items)) out[k] = items[k].map(([a, q]) => [a, UNITES_ENTIERES.has(a) ? Math.max(1, Math.round(q)) : Math.max(5, arrondi(q, 5))]);
+    return out;
+  }
+  // Portion d'un invité : la moyenne de Nicolas et d'Aurélie, ingrédient par ingrédient.
+  function portionInvite(itN, itA) {
+    const q = {};
+    for (const [a, x] of itN) q[a] = (q[a] || 0) + x / 2;
+    for (const [a, x] of itA) q[a] = (q[a] || 0) + x / 2;
+    return Object.entries(q);
   }
 
   /* ---------- Courses ---------- */
   function listeCourses(ctx, plan) {
-    const { cat, reglages, annee, mois, cal } = ctx;
+    const { cat, reglages, cal, invites } = ctx;
     const N = cal.n;
-    // consommation par jour, par personne et par produit (repas + hors repas)
+    const QUI = invites > 0 ? PERSONNES.concat("invites") : PERSONNES;
+    // consommation par jour, par convive et par produit (repas + hors repas)
     const conso = [];
     for (let j = 1; j <= N; j++) {
-      const c = { nicolas: {}, aurelie: {} };
-      for (const m of plan[j - 1].meals) for (const p of PERSONNES) for (const [a, q] of m.items[p]) c[p][a] = (c[p][a] || 0) + q;
+      const c = { nicolas: {}, aurelie: {}, invites: {} };
+      for (const m of plan[j - 1].meals) for (const p of QUI) for (const [a, q] of m.items[p] || []) c[p][a] = (c[p][a] || 0) + q * (p === "invites" ? invites : 1);
       for (const h of reglages.horsRepas || []) for (const p of PERSONNES) if (h.parJour[p]) c[p][h.a] = (c[p][h.a] || 0) + h.parJour[p];
       conso.push(c);
     }
-    const besoin = (a, d1, d2, p) => { let s = 0; for (let j = d1; j <= d2; j++) { const c = conso[j - 1]; for (const pp of p ? [p] : PERSONNES) s += c[pp][a] || 0; } return s; };
-    const produits = [...new Set(conso.flatMap(c => PERSONNES.flatMap(p => Object.keys(c[p]))))];
+    const besoin = (a, d1, d2, p) => { let s = 0; for (let j = d1; j <= d2; j++) { const c = conso[j - 1]; for (const pp of p ? [p] : QUI) s += c[pp][a] || 0; } return s; };
+    const produits = [...new Set(conso.flatMap(c => QUI.flatMap(p => Object.keys(c[p]))))];
     const stock = {};
     for (const a of produits) stock[a] = ctx.stockDepart[a] || 0;
-    const manquesAvant = [];
-    const alertesRupture = [];
+    const manquesAvant = [], ruptures = [], fraisAVerifier = [];
 
     // avant la première course : on vit sur le stock
     const avant = cal.jc.length ? cal.jc[0] - 1 : N;
@@ -261,74 +289,86 @@ const Moteur = (() => {
     }
 
     const courses = [];
-    const pertes = [];
     for (const per of cal.periodes) {
       const items = [];
-      // frais restant de la période précédente : perdu s'il a dépassé sa conservation au jour de la course
+      // frais restant de la période précédente et plus vieux que sa conservation estimée :
+      // signalé pour l'inventaire, jamais compté en perte d'office (c'est l'utilisateur qui le jette ou non)
       if (per.id > 1) {
         const ecoule = per.debut - cal.periodes[per.id - 2].debut;
         for (const a of produits) {
           const c = cat[a];
-          if (c && c.conservation && c.conservation.frais && stock[a] > 0.5 && ecoule >= c.conservation.jours) {
-            pertes.push({ a, course: per.id, q: r2(stock[a]), cout: r2(stock[a] * prixUnitaire(cat, a)) });
-            stock[a] = 0;
-          }
+          if (c && c.conservation && c.conservation.frais && stock[a] > 0.5 && ecoule >= c.conservation.jours)
+            fraisAVerifier.push({ a, course: per.id, q: r2(stock[a]) });
         }
       }
       for (const a of produits) {
         const c = cat[a]; if (!c) continue;
-        // chaque course couvre sa période ; les restes de conditionnement passent à la suivante,
-        // ce qui étale la dépense sans rien acheter de plus sur le mois
+        // chaque course couvre sa période ; les restes passent à la suivante
         const b = besoin(a, per.debut, per.fin);
-        let manque = b - stock[a];
+        const manque = b - stock[a];
         let buy = 0, est = 0;
         if (manque > 1e-6) {
-          if (c.vrac) { buy = Math.ceil(manque / (c.rend || 1) / 50) * 50; est = buy / 1000 * (c.prix || 0); stock[a] += buy * (c.rend || 1); }
+          if (c.vrac) { const pas = c.pasAchat || 50; buy = Math.ceil(manque / (c.rend || 1) / pas - 1e-9) * pas; est = buy / 1000 * (c.prix || 0); stock[a] += buy * (c.rend || 1); }
           else { buy = Math.ceil(manque / c.cond - 1e-9); est = buy * (c.prix || 0); stock[a] += buy * c.cond; }
         }
-        const needN = besoin(a, per.debut, per.fin, "nicolas"), needA = besoin(a, per.debut, per.fin, "aurelie");
-        stock[a] -= needN + needA;
-        if (stock[a] < -1e-6) { alertesRupture.push({ a, course: per.id, q: r2(-stock[a]) }); stock[a] = 0; }
-        if (buy > 0) items.push({ a, buy, est: r2(est), needN: r2(needN), needA: r2(needA) });
+        const nd = {}; for (const p of QUI) nd[p] = besoin(a, per.debut, per.fin, p);
+        stock[a] -= b;
+        if (stock[a] < -1e-6) { ruptures.push({ a, course: per.id, q: r2(-stock[a]) }); stock[a] = 0; }
+        if (buy > 0) {
+          const it = { a, buy, est: r2(est), needN: r2(nd.nicolas), needA: r2(nd.aurelie) };
+          if (invites > 0) it.needI = r2(nd.invites);
+          items.push(it);
+        }
       }
-      const d1 = per.debut, d2 = per.fin;
+      const d1 = cal.dates[per.debut - 1], d2 = cal.dates[per.fin - 1];
       courses.push({
-        id: per.id, date: iso(dateUTC(annee, mois, d1)), jourPlan: d1, titre: `Course ${per.id}`,
-        jour: nomJour(annee, mois, d1), couvre: `du ${d1 === 1 ? "1er" : d1} au ${d2} ${MOIS[mois - 1]}`,
+        id: per.id, date: iso(d1), jourPlan: per.debut, titre: `Course ${per.id}`,
+        jour: nomJour(d1), couvre: `du ${court(d1)} au ${court(d2)}`,
         items: items.sort((x, y) => produits.indexOf(x.a) - produits.indexOf(y.a)),
       });
     }
     const stockFin = {};
     for (const a of produits) if (stock[a] > 0.5) stockFin[a] = r2(stock[a]);
-    return { courses, conso, manquesAvant, alertesRupture, stockFin, pertes };
+    return { courses, conso, manquesAvant, ruptures, stockFin, fraisAVerifier, QUI };
   }
 
   /* ---------- Point d'entrée ---------- */
+  // entrees : { catalogue, recettes, reglages, debut ("aaaa-mm-jj") ou annee + mois, jours?, invites?, budget?,
+  //             quotas?, joursCourses?, graine?, stockDepart?, profils?, poidsActuels?, exclure?, moisReference? }
   function composerMois(entrees) {
-    const { catalogue, recettes, reglages, annee, mois } = entrees;
+    const { catalogue, recettes, reglages } = entrees;
     const cat = catalogue;
+    const debut = entrees.debut ? dateISO(entrees.debut) : new Date(Date.UTC(entrees.annee, entrees.mois - 1, 1));
+    const moisEntier = debut.getUTCDate() === 1 && (entrees.jours == null || entrees.jours === joursDansMois(debut));
+    const n = entrees.jours || joursDansMois(debut);
+    const invites = Math.max(0, Math.round(entrees.invites || 0));
     const profils = {};
     for (const p of PERSONNES) {
       const base = Object.assign({}, reglages.personnes[p], (entrees.profils || {})[p] || {});
       profils[p] = Object.assign(base, objectifs(base, (entrees.poidsActuels || {})[p]));
     }
-    const cal = calendrier(annee, mois, reglages);
+    const cal = calendrier(debut, n, reglages, entrees.joursCourses);
     const exclure = new Set(entrees.exclure || []);
-    const budgetMois = PERSONNES.reduce((s, p) => s + profils[p].budget * cal.n / (profils[p].budgetJours || cal.n), 0);
+    // quotas : ceux des réglages pour un mois entier, au prorata sinon
+    const quotas = entrees.quotas || (moisEntier ? reglages.quotas
+      : { poisson: Math.round(reglages.quotas.poisson * n / joursDansMois(debut)), plaisir: Math.round(reglages.quotas.plaisir * n / joursDansMois(debut)) });
+    // budget des achats de la période : saisi, sinon celui des profils ramené à la durée (invités non compris)
+    const budget = entrees.budget != null ? entrees.budget
+      : PERSONNES.reduce((s, p) => s + profils[p].budget * n / (profils[p].budgetJours || n), 0);
 
-    // fréquence des desserts dans le mois de référence (octobre) : sert de répartition cible
+    // fréquence des desserts dans le mois de référence : sert de répartition cible
     const freq = {};
     for (const j of entrees.moisReference ? entrees.moisReference.plan : []) for (const m of j.meals) if (m.k === "des") freq[m.recette] = (freq[m.recette] || 0) + 1;
     const recs = recettes.map(r => Object.assign({}, r, { frequenceReference: freq[r.id] || 1 }));
 
-    // on recompose en donnant plus de poids au coût tant que le budget est dépassé
+    // on recompose en donnant plus de poids au coût tant que les achats dépassent le budget
     let res = null;
     for (let passe = 0; passe < 6; passe++) {
-      const ctx = { cat, recettes: recs, reglages, annee, mois, cal, exclure, stockDepart: entrees.stockDepart || {},
+      const ctx = { cat, recettes: recs, reglages, cal, exclure, quotas, invites, stockDepart: entrees.stockDepart || {},
         alea: hasard((entrees.graine || 1) + passe * 7919), poidsCout: 0.5 + passe * 0.8 };
       const { grille, joursPlaisir } = composer(ctx);
       const plan = [];
-      for (let j = 1; j <= cal.n; j++) {
+      for (let j = 1; j <= n; j++) {
         const parPersonne = {};
         for (const p of PERSONNES) {
           const repas = {};
@@ -337,29 +377,30 @@ const Moteur = (() => {
         }
         const meals = ["pdj", "dej", "din", "des"].filter(k => grille[`${j}-${k}`]).map(k => {
           const r = grille[`${j}-${k}`];
-          return { k, label: LABELS[k], plat: r.nomParPersonne || { nicolas: r.nom, aurelie: r.nom },
-            items: { nicolas: parPersonne.nicolas[k], aurelie: parPersonne.aurelie[k] }, recette: r.id };
+          const items = { nicolas: parPersonne.nicolas[k], aurelie: parPersonne.aurelie[k] };
+          if (invites > 0) items.invites = arrondir({ x: portionInvite(items.nicolas, items.aurelie) }).x;
+          return { k, label: LABELS[k], plat: r.nomParPersonne || { nicolas: r.nom, aurelie: r.nom }, items, recette: r.id };
         });
         const fish = meals.some(m => (grille[`${j}-${m.k}`].tags || []).includes("poisson"));
-        plan.push({ d: j, tag: joursPlaisir.includes(j) ? "plaisir" : (fish ? "poisson" : ""), fish, meals });
+        plan.push({ d: j, date: iso(cal.dates[j - 1]), tag: joursPlaisir.includes(j) ? "plaisir" : (fish ? "poisson" : ""), fish, meals });
       }
       const cr = listeCourses(ctx, plan);
-      const cout = { nicolas: 0, aurelie: 0 };
-      for (const c of cr.conso) for (const p of PERSONNES) for (const [a, q] of Object.entries(c[p])) cout[p] += prixUnitaire(cat, a) * q;
-      res = { ctx, plan, cr, cout, joursPlaisir };
-      if (cout.nicolas + cout.aurelie <= budgetMois) break;
+      const achats = cr.courses.reduce((s, c) => s + c.items.reduce((t, i) => t + i.est, 0), 0);
+      res = { ctx, plan, cr, joursPlaisir, achats };
+      if (achats <= budget) break;
     }
 
-    const { plan, cr, cout, joursPlaisir } = res;
-    // part de Nicolas dans la consommation de chaque produit
-    const share = {};
-    const tot = {};
+    const { plan, cr, joursPlaisir, achats } = res;
+    const cout = {};
+    for (const p of cr.QUI) cout[p] = 0;
+    for (const c of cr.conso) for (const p of cr.QUI) for (const [a, q] of Object.entries(c[p])) cout[p] += prixUnitaire(cat, a) * q;
+    // part de Nicolas dans la consommation du foyer (invités exclus) de chaque produit
+    const share = {}, tot = {};
     for (const c of cr.conso) for (const p of PERSONNES) for (const [a, q] of Object.entries(c[p])) { tot[a] = tot[a] || { nicolas: 0, aurelie: 0 }; tot[a][p] += q; }
     for (const [a, t] of Object.entries(tot)) share[a] = t.nicolas + t.aurelie ? Math.round(t.nicolas / (t.nicolas + t.aurelie) * 10000) / 10000 : 0.5;
 
     // bilan nutritionnel et alertes
-    const nut = {};
-    const horsFourchette = [];
+    const nut = {}, horsFourchette = [];
     for (const p of PERSONNES) {
       let k = 0, pr = 0;
       for (const j of plan) {
@@ -373,25 +414,27 @@ const Moteur = (() => {
     for (const j of plan) for (const m of j.meals) for (const a of new Set(m.items.nicolas.concat(m.items.aurelie).map(([x]) => x))) {
       const c = cat[a]; if (c && c.conservation && res.ctx.cal.age(j.d) >= c.conservation.jours) fraisTard.push({ d: j.d, k: m.k, a });
     }
-    const compte = tag => plan.reduce((s, j) => s + j.meals.filter(m => (m.k === "dej" || m.k === "din") && (recettes.find(r => r.id === m.recette).tags || []).includes(tag)).length, 0);
-    const [a0, m0] = [annee, mois];
+    const tagsDe = id => (recettes.find(r => r.id === id).tags || []);
+    const compte = tag => plan.reduce((s, j) => s + j.meals.filter(m => (m.k === "dej" || m.k === "din") && tagsDe(m.recette).includes(tag)).length, 0);
+    const fin = cal.dates[n - 1];
     const moisObj = {
-      version: 1, id: `${a0}-${String(m0).padStart(2, "0")}`, titre: `${MOIS[m0 - 1][0].toUpperCase()}${MOIS[m0 - 1].slice(1)} ${a0}`,
-      debut: iso(dateUTC(a0, m0, 1)), fin: iso(dateUTC(a0, m0, res.ctx.cal.n)), jours: res.ctx.cal.n,
+      version: 1,
+      id: moisEntier ? iso(debut).slice(0, 7) : `${iso(debut)}_${n}j`,
+      titre: moisEntier ? `${MOIS[debut.getUTCMonth()][0].toUpperCase()}${MOIS[debut.getUTCMonth()].slice(1)} ${debut.getUTCFullYear()}` : `Du ${court(debut)} au ${court(fin)} ${fin.getUTCFullYear()}`,
+      debut: iso(debut), fin: iso(fin), jours: n, invites,
       note: "Proposition du moteur.", stockDepart: entrees.stockDepart || {}, share, plan, courses: cr.courses,
     };
-    const achats = cr.courses.reduce((s, c) => s + c.items.reduce((t, i) => t + i.est, 0), 0);
     const bilan = {
       nutrition: nut,
-      quotas: { poisson: compte("poisson"), plaisir: compte("plaisir"), joursPlaisir },
-      cout: { consommation: { nicolas: r2(cout.nicolas), aurelie: r2(cout.aurelie) }, achats: r2(achats), budgetMois: r2(budgetMois),
+      quotas: { poisson: compte("poisson"), plaisir: compte("plaisir"), objectif: quotas, joursPlaisir },
+      cout: { consommation: Object.fromEntries(Object.entries(cout).map(([p, v]) => [p, r2(v)])), achats: r2(achats), budget: r2(budget),
               parCourse: cr.courses.map(c => ({ id: c.id, date: c.date, total: r2(c.items.reduce((t, i) => t + i.est, 0)), articles: c.items.length })) },
       manquesAvantPremiereCourse: cr.manquesAvant,
-      ruptures: cr.alertesRupture,
+      ruptures: cr.ruptures,
       // les petits-déjeuners sont fixes : leurs dépassements sont signalés à part
       fraisAuDelaConservation: fraisTard.filter(x => x.k !== "pdj"),
       fraisAuDelaPetitDejeuner: fraisTard.filter(x => x.k === "pdj"),
-      pertesFrais: cr.pertes,
+      fraisAVerifier: cr.fraisAVerifier,
       horsFourchette,
       stockFin: cr.stockFin,
       recettesUtilisees: [...new Set(plan.flatMap(j => j.meals.map(m => m.recette)))].length,
@@ -399,6 +442,6 @@ const Moteur = (() => {
     return { mois: moisObj, bilan };
   }
 
-  return { composerMois, objectifs, prixUnitaire, totaux, calendrier, portionsDuJour };
+  return { composerMois, objectifs, prixUnitaire, totaux, calendrier, portionsDuJour, aProteineAnimale };
 })();
 if (typeof module !== "undefined") module.exports = Moteur;

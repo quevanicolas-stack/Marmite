@@ -149,10 +149,18 @@ h3{ font-size:18px; font-weight:700; }
 .btns-ed .bouton{ padding:10px 16px; font-size:15px; }
 
 /* ---------- Stock ---------- */
-.stock-ligne{ display:grid; grid-template-columns:1fr auto auto auto; gap:10px; align-items:baseline; padding:9px 4px; border-bottom:1px solid var(--trait); font-variant-numeric:tabular-nums; }
+.stock-ligne{ display:grid; grid-template-columns:1fr auto auto auto 34px; gap:10px; align-items:baseline; padding:9px 4px; border-bottom:1px solid var(--trait); font-variant-numeric:tabular-nums; }
 .stock-ligne .n{ text-align:right; min-width:68px; }
 .stock-tete{ font-size:12px; font-weight:700; color:var(--brume); border-bottom:1px solid var(--trait); }
 .manque{ color:var(--alerte); font-weight:700; }
+.jeter{ width:34px; height:34px; border-radius:50%; border:1px solid var(--trait); background:var(--surface); padding:0; display:grid; place-items:center; color:var(--brume); align-self:center; }
+.jeter .ico{ width:17px; height:17px; }
+.jeter-form{ grid-column:1 / -1; display:flex; flex-wrap:wrap; gap:8px; align-items:center; background:var(--surface-2); border-radius:12px; padding:10px 12px; font-size:14px; }
+.jeter-form input{ width:90px; border:1px solid var(--trait); border-radius:10px; padding:6px 8px; background:var(--surface); font-size:15px; text-align:right; }
+.jeter-form .bouton{ padding:8px 14px; font-size:14px; }
+.pertes{ margin-top:18px; }
+.pertes li{ display:flex; justify-content:space-between; gap:10px; align-items:baseline; padding:6px 0; border-bottom:1px solid var(--trait); font-size:14px; }
+.pertes ul{ list-style:none; padding:0; margin:6px 0 0; }
 
 /* ---------- Boutons ---------- */
 .bouton{ display:inline-flex; align-items:center; justify-content:center; gap:8px; border:0; border-radius:14px; padding:13px 20px; font-weight:700; font-size:16px; background:var(--primaire); color:var(--sur-primaire); }
@@ -315,7 +323,7 @@ const HORS_REPAS = { nicolas: [ { a: "Café", q: 1000 }, { a: "Eau (bouteilles 5
 const UNITES_SPECIALES = { "Café": "g", "Eau (bouteilles 5 L)": "L" };
 const DEFAUT = {
   version: 2,
-  foyer: { achats: {}, payes: {}, prix: {}, magasins: {} },
+  foyer: { achats: {}, payes: {}, prix: {}, magasins: {}, pertes: [] },   // pertes : [{ j, a, q, date }] produits jetés
   personnes: {
     nicolas: { coches: {}, remplacements: {}, pesees: [], profil: { poids: 85, cible: 80, taille: 180, age: 38, budget: 180, reference: 208.94,
       kcalMin: 1850, kcalMax: 1950, prot: 110, eviter: ["fromage (sauf pizza, lasagnes, burger)", "poisson gras", "trop de laitages"] } },
@@ -349,6 +357,7 @@ const ICONES = {
   poisson: I('<path d="M3 12c3-5 9-6 13-3l5-3-1.5 6L21 18l-5-3c-4 3-10 2-13-3z"/><path d="M8 11h.01"/>'),
   panier: I('<path d="M4 9h16l-1.6 10a2 2 0 0 1-2 1.7H7.6a2 2 0 0 1-2-1.7z"/><path d="M8.5 9l3-5M15.5 9l-3-5"/>'),
   info: I('<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>'),
+  poubelle: I('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/>'),
   etincelle: I('<path d="M12 3l1.8 5.7L19.5 10l-5.7 1.8L12 17.5l-1.8-5.7L4.5 10l5.7-1.3z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>'),
   lune: I('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>'),
   soleil: I('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>')
@@ -438,6 +447,8 @@ function stockBrut(j, planSeul = false) {
   for (const c of DONNEES.courses) if (c.jourPlan <= j) for (const it of c.items) s[it.a] = (s[it.a] || 0) + quantiteUtile(it);
   for (let d = 1; d < j && d <= NB_JOURS; d++) for (const p of Object.keys(PERSONNES)) for (const k of CLES)
     for (const [a, q] of (planSeul ? repasPlan(d, k, p) : repasDe(d, k, p)).items) s[a] = (s[a] || 0) - q;
+  // produits jetés (poubelle de l'onglet « À la maison ») : retirés à partir du jour où ils l'ont été
+  if (!planSeul) for (const x of E.foyer.pertes || []) if (x.j <= j) s[x.a] = (s[x.a] || 0) - x.q;
   return s;
 }
 function stockAuDebut(j) {
@@ -672,10 +683,23 @@ function vueStock(seg) {
     <div><span class="chiffre">${adj}</span><span class="discret">repas ajustés ${de()} (${dk >= 0 ? "+" : "−"}${nb(Math.abs(dk))} kcal)</span></div>
   </div>
   <p class="discret petit">Stock estimé du foyer : achats des courses, moins ce que vous avez mangé selon le planning et vos ajustements. Écart = différence avec le planning d'origine en fin de cycle.</p>
-  <div class="stock-ligne stock-tete"><span>Aliment</span><span class="n">${planPasCommence() ? "Au 1er oct." : "Ce matin"}</span><span class="n">Le 21 au soir</span><span class="n">Écart</span></div>
+  <div class="stock-ligne stock-tete"><span>Aliment</span><span class="n">${planPasCommence() ? "Au 1er oct." : "Ce matin"}</span><span class="n">Le 21 au soir</span><span class="n">Écart</span><span></span></div>
   ${lignes.map(l => `<div class="stock-ligne"><span>${echap(l.a)}</span><span class="n">${quantite(l.a, l.n)}</span>
     <span class="n ${l.f < -0.5 ? "manque" : ""}">${l.f < -0.5 ? "manque " + quantite(l.a, -l.f) : quantite(l.a, Math.max(0, l.f))}</span>
-    <span class="n ${l.ec < -0.5 ? "surcout" : l.ec > 0.5 ? "eco" : "discret"}">${sg(l.ec, l.a)}</span></div>`).join("")}`;
+    <span class="n ${l.ec < -0.5 ? "surcout" : l.ec > 0.5 ? "eco" : "discret"}">${sg(l.ec, l.a)}</span>
+    ${l.n > 0.5 ? `<button class="jeter" data-jeter="${echap(l.a)}" aria-label="Jeter du stock : ${echap(l.a)}">${ICONES.poubelle}</button>` : "<span></span>"}
+    ${jeterSel === l.a ? `<div class="jeter-form"><label>Jeter <input id="jeter-q" type="number" inputmode="decimal" min="0" step="any" value="${Math.round(l.n * 10) / 10}"> ${uniteDe(l.a)}</label>
+      <button class="bouton" data-jeter-ok="${echap(l.a)}">Mettre à la poubelle</button><button class="bouton leger" data-jeter-annuler="1">Annuler</button></div>` : ""}</div>`).join("")}
+  ${vuePertes()}`;
+}
+let jeterSel = null;
+function vuePertes() {
+  const l = E.foyer.pertes || [];
+  if (!l.length) return "";
+  const total = l.reduce((s, x) => s + x.q * (prixUnitaire(x.a) || 0), 0);
+  return `<div class="carte pertes"><div class="sect-titre"><h3>À la poubelle</h3><span class="chiffre surcout">${eur(total)}</span></div>
+    <ul>${l.map((x, i) => `<li><span>${echap(x.a)} · ${quantite(x.a, x.q)} <span class="discret">${libelleJour(x.j).toLowerCase()}</span></span>
+      <button class="lien" data-perte-suppr="${i}">Annuler</button></li>`).join("")}</ul></div>`;
 }
 function vueCourses() {
   const seg = DONNEES.courses.map(x => `<button data-course="${x.id}" aria-pressed="${x.id === courseSel}">${x.titre}<span>${x.id === 1 ? "jeu. 1er oct." : "mar. 6 oct."}</span></button>`).join("")
@@ -996,7 +1020,19 @@ function action(b) {
   if (d.jour) { jourSel = +d.jour; edition = null; return rendre(); }
   if (d.voir) { jourSel = +d.voir; return aller("jour"); }
   if (d.coche) { const c = P().coches; c[d.coche] ? delete c[d.coche] : (c[d.coche] = true); sauver(); return rendre(); }
-  if (d.course) { courseSel = d.course === "stock" ? "stock" : +d.course; return rendre(); }
+  if (d.course) { courseSel = d.course === "stock" ? "stock" : +d.course; jeterSel = null; return rendre(); }
+  if (d.jeter) { jeterSel = jeterSel === d.jeter ? null : d.jeter; rendre(); const i = document.getElementById("jeter-q"); if (i) i.focus(); return; }
+  if (d.jeterAnnuler) { jeterSel = null; return rendre(); }
+  if (d.jeterOk) {
+    const q = parseFloat((document.getElementById("jeter-q") || {}).value);
+    if (q > 0) {
+      const j = planPasCommence() ? 1 : jourDuPlan();
+      E.foyer.pertes = (E.foyer.pertes || []).concat({ j, a: d.jeterOk, q, date: new Date().toISOString().slice(0, 10) });
+      sauver(); toast(d.jeterOk + " : " + quantite(d.jeterOk, q) + " à la poubelle");
+    }
+    jeterSel = null; return rendre();
+  }
+  if (d.perteSuppr) { E.foyer.pertes.splice(+d.perteSuppr, 1); sauver(); return rendre(); }
   if (d.achat) { const a = E.foyer.achats; a[d.achat] ? delete a[d.achat] : (a[d.achat] = true); sauver(); return rendre(); }
   if (d.ia) return ouvrirIA(d.ia);
   if (d.retour) { delete P().remplacements["d" + jourSel + "-" + d.retour]; sauver(); rendre(); return toast("Repas du plan rétabli"); }

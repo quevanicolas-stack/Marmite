@@ -52,6 +52,15 @@ def slug(s):
     return re.sub(r"[^a-z0-9]+", "-", s).strip("-")
 
 
+# Protéines animales : un plat principal doit en contenir une (les œufs ne comptent pas).
+ANIMAL = {"Poulet", "Bœuf", "Lardons", "Jambon", "Poisson blanc"}
+
+# Corrections de Nico (30/09/2026) appliquées au catalogue et au mois d'octobre.
+# Jambon acheté à la coupe, au gramme près : prix au kilo déduit du paquet de 500 g à 5,62 €.
+JAMBON = {"achat": "à la coupe, au gramme", "cond": 1, "vrac": 1, "rend": 1, "pasAchat": 1,
+          "prix": round(5.62 / 0.5, 2), "note": "Au gramme près, à la coupe. 2 à 3 jours une fois ouvert."}
+
+
 def catalogue():
     produits = {}
     # ordre de la table nutritionnelle d'abord : l'app s'en sert pour l'affichage et la recherche d'aliments
@@ -65,6 +74,9 @@ def catalogue():
             "conservation": {"jours": jours, "lieu": lieu, "frais": jours <= FRAIS_MAX_JOURS, "estime": True},
             "note": c["note"],
         }
+        if a in ANIMAL:
+            produits[a]["animal"] = True
+    produits["Jambon"].update(JAMBON)
     return {"version": 1, "produits": produits}
 
 
@@ -104,11 +116,18 @@ def recettes_et_plan():
 
 def mois(plan):
     stock = {a: c["stock"] for a, c in SRC["cat"].items() if c["stock"]}
+    courses = json.loads(json.dumps(SRC["courses"]))
+    for c in courses:  # jambon au gramme : on achète exactement le besoin de chaque course
+        for it in c["items"]:
+            if it["a"] == "Jambon":
+                it["buy"] = int(it["needN"] + it["needA"])
+                it["est"] = round(it["buy"] / 1000 * JAMBON["prix"], 2)
     return {
         "version": 1, "id": "2026-10", "titre": "Octobre 2026",
         "debut": "2026-10-01", "fin": "2026-10-21", "jours": len(plan),
         "note": "Cycle exceptionnel de 21 jours : 3 invités du 21 au 31 octobre (période en attente).",
-        "stockDepart": stock, "share": SRC["share"], "plan": plan, "courses": SRC["courses"],
+        "stockDepart": stock, "share": SRC["share"], "plan": plan, "courses": courses,
+        "corrections": ["30/09/2026 : jambon acheté au gramme (11,24 €/kg) au lieu du paquet de 500 g."],
     }
 
 
@@ -132,7 +151,8 @@ REGLAGES = {
         "planning": "un appel le jour du planning du mois, pour proposer des recettes nouvelles",
         "jaiFaim": "bibliothèque locale par défaut ; « Nouveauté » appelle Claude à la demande",
     },
-    "rappels": {"preparerMoisJ": -3, "coursesJ": -1},
+    # préparation du mois suivant le 30 (le dernier jour en février) ; rappel la veille de chaque course
+    "rappels": {"preparerMoisJour": 30, "coursesJ": -1},
     # Valeurs par défaut des profils (l'app garde les siennes dans le profil de chacun).
     # Le budget est celui d'un cycle de budgetJours jours : le moteur le ramène à la durée du mois.
     "personnes": {
