@@ -190,6 +190,24 @@ h3{ font-size:18px; font-weight:700; }
 .choix-plat .discret{ font-size:13px; }
 .choix-plat.actuel{ background:color-mix(in srgb, var(--or) 18%, var(--surface)); }
 .feuille-ia .puces{ margin:10px 0 0; }
+.gen-grille{ display:block; }
+.gen-col{ min-width:0; }
+.biblio, .sur-ordi{ display:none; }
+.gen-repas.cible{ background:color-mix(in srgb, var(--or) 30%, var(--surface)); outline:2px dashed var(--or); }
+.plein-ecran{ margin-top:8px; }
+@media (min-width:960px) and (hover:hover){
+  .gen-grille{ display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:18px; align-items:start; }
+  .sur-ordi{ display:inline; }
+  .biblio{ display:block; position:sticky; top:16px; max-height:calc(100vh - 32px); overflow:auto; background:var(--surface-2); border-radius:18px; padding:14px; margin-top:12px; }
+  .biblio input{ width:100%; border:1px solid var(--trait); border-radius:12px; padding:8px 10px; background:var(--surface); font-size:14px; }
+  .biblio .puces{ margin:8px 0; gap:6px; }
+  .biblio .puce{ font-size:13px; padding:4px 10px; }
+  .biblio-liste{ list-style:none; padding:0; margin:0; }
+  .biblio-plat{ display:flex; flex-direction:column; gap:1px; padding:8px 10px; margin:4px 0; border-radius:10px; background:var(--surface); border:1px solid var(--trait); cursor:grab; font-size:14px; }
+  .biblio-plat:active{ cursor:grabbing; }
+  .biblio-plat.glisse{ opacity:.5; }
+  .biblio-plat .discret{ font-size:12px; }
+}
 .courses-puces .puce span{ font-weight:500; margin-left:4px; }
 .article label.qte-achat{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:4px; font-size:13px; color:var(--brume); font-weight:500; }
 .article label.qte-achat input, .article label.qte-achat input:not(:placeholder-shown){ width:70px; border:1px solid var(--trait); border-radius:10px; padding:5px 8px; background:var(--surface); font-size:15px; font-weight:500; text-align:right; font-variant-numeric:tabular-nums; }
@@ -426,6 +444,8 @@ const ICONES = {
   poubelle: I('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/>'),
   etincelle: I('<path d="M12 3l1.8 5.7L19.5 10l-5.7 1.8L12 17.5l-1.8-5.7L4.5 10l5.7-1.3z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>'),
   lune: I('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>'),
+  plein: I('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>'),
+  reduire: I('<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>'),
   soleil: I('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>')
 };
 const LOGO = `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 14h22v6a8 8 0 0 1-8 8h-6a8 8 0 0 1-8-8z" fill="#1B6B4A"/><rect x="3" y="12" width="26" height="4" rx="2" fill="#C9A96E"/><path d="M11 9c0-2 2-2 2-4M16 9c0-2 2-2 2-4M21 9c0-2 2-2 2-4" stroke="#C9A96E" stroke-width="2" fill="none" stroke-linecap="round"/></svg>Marmite`;
@@ -482,6 +502,22 @@ function themeEffectif() {
   if (t === "light" || t === "dark") return t;
   return window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
+// Plein écran : l'app occupe tout l'écran et masque la barre de claude.ai (navigateurs d'ordinateur ;
+// les téléphones et certaines apps ne le permettent pas, le bouton n'apparaît alors pas).
+const pleinEcranPossible = () => !!(document.fullscreenEnabled && document.documentElement.requestFullscreen);
+function boutonPleinEcran() {
+  if (!pleinEcranPossible()) return "";
+  const actif = !!document.fullscreenElement;
+  return `<button class="theme plein-ecran" data-action="plein-ecran" aria-label="${actif ? "Quitter le plein écran" : "Plein écran"}">${actif ? ICONES.reduire : ICONES.plein}<span>${actif ? "Quitter le plein écran" : "Plein écran"}</span></button>`;
+}
+function basculerPleinEcran() {
+  const fin = () => rendreCadre();
+  try {
+    const r = document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+    if (r && r.then) r.then(fin, () => toast("Le plein écran n'est pas autorisé ici"));
+  } catch (e) { toast("Le plein écran n'est pas autorisé ici"); }
+}
+document.onfullscreenchange = () => rendreCadre();
 function boutonTheme() {
   const sombre = themeEffectif() === "dark";
   return `<button class="theme" data-action="theme" aria-label="${sombre ? "Passer en mode clair" : "Passer en mode sombre"}">${sombre ? ICONES.soleil : ICONES.lune}<span>${sombre ? "Clair" : "Sombre"}</span></button>`;
@@ -660,7 +696,7 @@ function rendreCadre() {
   document.getElementById("marque-haut").innerHTML = LOGO;
   document.getElementById("qui-rail").innerHTML = boutonsQui();
   document.getElementById("qui-haut").innerHTML = boutonsQui();
-  document.getElementById("theme-rail").innerHTML = boutonTheme();
+  document.getElementById("theme-rail").innerHTML = boutonTheme() + boutonPleinEcran();
   document.getElementById("theme-haut").innerHTML = boutonTheme();
 }
 function rendre() {
@@ -885,10 +921,49 @@ function rouvrirMois(id) {
   E.mois = a.mois; delete E.archives[id];
   gen = null; activerMois(); sauver(); toast(a.titre + " rouvert");
 }
+// Menu de la proposition + bibliothèque à glisser sur un repas (colonne de droite, écrans larges)
+let biblio = { q: "", filtre: "tous" };
+function blocMenu(plan, j0) { return `<div class="gen-grille"><div class="gen-col">${listeMenu(plan, j0)}</div>${panneauBiblio()}</div>`; }
+function recettesBiblio() {
+  const q = biblio.q.trim().toLowerCase(), f = biblio.filtre;
+  return DONNEES.recettes.filter(r => {
+    const principal = r.repas.includes("dej") || r.repas.includes("din"), dessert = r.repas.includes("des");
+    if (!principal && !dessert) return false;
+    if (principal && !r.portions.nicolas.some(([a]) => DONNEES.catalogue[a] && DONNEES.catalogue[a].animal)) return false;
+    if (f === "dessert" && !dessert) return false;
+    if (f !== "tous" && f !== "dessert" && !principal) return false;
+    if (f === "poisson" && !r.tags.includes("poisson")) return false;
+    if (f === "plaisir" && !r.tags.includes("plaisir")) return false;
+    if (f === "viande" && r.tags.includes("poisson")) return false;
+    return !q || (r.nom || "").toLowerCase().includes(q);
+  }).sort((a, b) => (a.nom || "").localeCompare(b.nom || "", "fr"));
+}
+function listeBiblio() {
+  const l = recettesBiblio();
+  if (!l.length) return `<li class="discret petit" style="padding:10px 0">Aucun plat ne correspond.</li>`;
+  return l.map(r => { const cout = ["nicolas", "aurelie"].reduce((s, p) => s + r.portions[p].reduce((t, [a, x]) => t + (prixUnitaire(a) || 0) * x, 0), 0);
+    return `<li class="biblio-plat" draggable="true" data-drag-id="${echap(r.id)}" title="Glisser sur un repas"><b>${echap(r.nom || r.id)}</b>
+      <span class="discret">${[r.repas.includes("des") ? "dessert" : "", r.tags.includes("poisson") ? "poisson" : "", r.tags.includes("plaisir") ? "plaisir" : "", "≈ " + eur(cout) + " à deux"].filter(Boolean).join(" · ")}</span></li>`; }).join("");
+}
+function panneauBiblio() {
+  return `<aside class="biblio" aria-label="Bibliothèque de plats">
+    <h3>Bibliothèque</h3><p class="discret petit" style="margin:2px 0 8px">Glisse un plat sur un repas du planning pour le remplacer.</p>
+    <input id="biblio-q" type="search" data-biblio-q="1" value="${echap(biblio.q)}" placeholder="Chercher un plat" autocomplete="off" aria-label="Chercher un plat">
+    <div class="puces" role="group" aria-label="Filtrer">${[["tous", "Tous"], ["viande", "Viande"], ["poisson", "Poisson"], ["plaisir", "Plaisir"], ["dessert", "Desserts"]]
+      .map(([v, l]) => `<button class="puce" data-biblio-filtre="${v}" aria-pressed="${biblio.filtre === v}">${l}</button>`).join("")}</div>
+    <ul class="biblio-liste" id="biblio-liste">${listeBiblio()}</ul></aside>`;
+}
+// Dépôt d'un plat de la bibliothèque sur un repas : un dessert va sur un dessert, un plat sur midi ou soir
+function deposer(cle, id) {
+  const k = cle.split("-")[1], r = DONNEES.recettes.find(x => x.id === id); if (!r || !gen || !gen.res) return;
+  const principal = r.repas.includes("dej") || r.repas.includes("din");
+  if (k === "des" ? !r.repas.includes("des") : !principal) return toast(k === "des" ? "Glisse un dessert sur un dessert" : "Glisse un plat sur le midi ou le soir");
+  choix = { cle }; remplacerRepas(id);
+}
 function listeMenu(plan, j0) {
   const repas = (j, k, cls) => { const m = j.meals.find(x => x.k === k); if (!m) return "";
     return `<button class="gen-repas ${cls}" data-changer="${j.d}-${k}" aria-label="Changer : ${LABEL_REPAS[k]}, ${echap(m.plat.nicolas)}"><span class="gen-k">${LABEL_REPAS[k]}</span>${echap(m.plat.nicolas)}</button>`; };
-  return `<p class="petit discret" style="margin:12px 0 0">Touche un repas pour le remplacer par un plat de la bibliothèque : les quantités et les courses se recalculent.</p>
+  return `<p class="petit discret" style="margin:12px 0 0">Touche un repas pour le remplacer par un plat de la bibliothèque<span class="sur-ordi"> (ou glisse un plat de la bibliothèque sur le repas)</span> : les quantités et les courses se recalculent.</p>
     <ul class="gen-liste">${plan.map(j => {
     const d = j.date ? dateLocale(j.date) : dateDuJour(j.d + j0 - 1);
     return `<li><span class="gen-jour">${cap(d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric" }))}${j.tag === "plaisir" ? " " + ICONES.etoile : ""}${j.fish ? " " + ICONES.poisson : ""}</span>
@@ -975,7 +1050,7 @@ function carteMois() {
       <h3 style="margin-top:14px">À acheter chaque semaine</h3>
       <table class="tab"><thead><tr><th>Course</th><th class="n">Articles</th><th class="n">Total</th></tr></thead><tbody>${semaines}</tbody></table>
       ${manques.length ? `<p class="petit" style="margin:8px 0 0"><b>Avant la première course</b> (il n'en restera pas assez à la maison) : ${manques.map(x => echap(x.a) + " " + quantite(x.a, x.q)).join(", ")}.</p>` : ""}
-      ${listeMenu(r.mois.plan, 1)}
+      ${blocMenu(r.mois.plan, 1)}
       ${gen.confirmer ? `<p class="petit" style="margin:0 0 8px"><b>${echap(r.mois.titre)} devient le mois affiché.</b> ${echap(MOIS_TITRE)} est archivé avec ses coches et ses prix payés ; on peut le rouvrir.</p>
         <div class="btns-ed"><button class="bouton" data-generer="valider-oui">Oui, passer à ${echap(r.mois.titre.toLowerCase())}</button><button class="bouton leger" data-generer="valider-non">Pas encore</button></div>`
       : `<div class="btns-ed"><button class="bouton" data-generer="valider">Valider ce mois</button><button class="bouton leger" data-generer="autre">Une autre idée, chef</button><button class="bouton leger" data-generer="fermer">Fermer</button></div>`}`;
@@ -1009,7 +1084,7 @@ function carteGeneration() {
         <div><span class="chiffre">${nb(n.aurelie.kcalMoyen)}</span><span class="discret">kcal/j Aurélie · ${n.aurelie.protMoyen} g prot.</span></div>
       </div>
       ${manques.length ? `<p class="petit" style="margin:10px 0 0"><b>À acheter avant la prochaine course :</b> ${manques.map(x => echap(x.a) + " " + quantite(x.a, x.q)).join(", ")}.</p>` : `<p class="petit eco" style="margin:10px 0 0">Tout ce qu'il faut avant la prochaine course est à la maison.</p>`}
-      ${listeMenu(r.mois.plan, j0)}
+      ${blocMenu(r.mois.plan, j0)}
       <div class="btns-ed"><button class="bouton" data-generer="appliquer">Appliquer ce planning</button><button class="bouton leger" data-generer="autre">Une autre idée, chef</button><button class="bouton leger" data-generer="fermer">Fermer</button></div>`;
   }
   return `<section class="carte generation"><div class="sect-titre"><h3>Refaire le planning selon le stock</h3></div>${etat}
@@ -1536,7 +1611,7 @@ function choisir(i) {
 }
 
 /* ---------- Retours visuels ---------- */
-function toast(t) { const d = document.createElement("div"); d.className = "toast"; d.setAttribute("role", "status"); d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2200); }
+function toast(t) { document.querySelectorAll(".toast").forEach(x => x.remove()); const d = document.createElement("div"); d.className = "toast"; d.setAttribute("role", "status"); d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2200); }
 
 /* ---------- Événements ---------- */
 function memeItems(a, b) {
@@ -1602,6 +1677,7 @@ function action(b) {
     if (d.generer === "annuler") { annulerGeneration(); return rendre(); }
   }
   if (d.changer) { choix = { cle: d.changer, filtre: "tous", q: "" }; rendreChoix(); const i = document.getElementById("choix-q"); if (i && window.matchMedia && matchMedia("(min-width:700px)").matches) i.focus(); return; }
+  if (d.biblioFiltre) { biblio.filtre = d.biblioFiltre; document.querySelectorAll("[data-biblio-filtre]").forEach(x => x.setAttribute("aria-pressed", x.dataset.biblioFiltre === biblio.filtre)); const l = document.getElementById("biblio-liste"); if (l) l.innerHTML = listeBiblio(); return; }
   if (d.choixFiltre) { choix.filtre = d.choixFiltre; rendreChoix(); return; }
   if (d.choixId) return remplacerRepas(d.choixId);
   if (d.choixFermer) return fermerIA();
@@ -1636,6 +1712,7 @@ function action(b) {
       rendre(); if (ia) rendreIA(); return;
     }
     case "fermer": return fermerIA();
+    case "plein-ecran": return basculerPleinEcran();
     case "proposer": return proposer();
     case "relancer": ia.etat = "form"; ia.propositions = []; return rendreIA();
     case "moins": lireForm(); ia.convives = Math.max(1, ia.convives - 1); return rendreIA();
@@ -1664,12 +1741,28 @@ document.onclick = e => {
   // liste de courses : toucher n'importe où sur la ligne coche l'article (sauf le champ « Prix payé »)
   const art = e.target.closest(".article"); if (art && !e.target.closest(".saisie")) { const c = art.querySelector("button.check"); if (c) action(c); }
 };
+document.ondragstart = e => {
+  const t = e.target.closest && e.target.closest("[data-drag-id]"); if (!t) return;
+  e.dataTransfer.setData("text/plain", t.dataset.dragId); e.dataTransfer.effectAllowed = "copy"; t.classList.add("glisse");
+};
+document.ondragover = e => {
+  const c = e.target.closest && e.target.closest("[data-changer]"); if (!c) return;
+  e.preventDefault(); e.dataTransfer.dropEffect = "copy";
+  if (!c.classList.contains("cible")) { document.querySelectorAll(".cible").forEach(x => x.classList.remove("cible")); c.classList.add("cible"); }
+};
+document.ondragleave = e => { const c = e.target.closest && e.target.closest("[data-changer]"); if (c && !c.contains(e.relatedTarget)) c.classList.remove("cible"); };
+document.ondrop = e => {
+  const c = e.target.closest && e.target.closest("[data-changer]"); if (!c) return;
+  e.preventDefault(); const id = e.dataTransfer.getData("text/plain"); if (id) deposer(c.dataset.changer, id);
+};
+document.ondragend = () => document.querySelectorAll(".cible, .glisse").forEach(x => x.classList.remove("cible", "glisse"));
 document.onkeydown = e => {
   if (e.key === "Escape" && (ia || choix)) return fermerIA();
   const t = e.target; if ((e.key === " " || e.key === "Enter") && t.classList && t.classList.contains("interrupteur")) { e.preventDefault(); action(t); }
 };
 document.oninput = e => {
   const t = e.target;
+  if (t.dataset.biblioQ != null) { biblio.q = t.value; const l = document.getElementById("biblio-liste"); if (l) l.innerHTML = listeBiblio(); return; }
   if (t.dataset.choixQ != null && choix) { choix.q = t.value; const l = document.getElementById("choix-liste"); if (l) l.innerHTML = listeChoix(); return; } if (t.dataset.edQ == null || !edition) return;
   const v = parseFloat(t.value); edition.items[+t.dataset.edQ][1] = isNaN(v) ? 0 : Math.max(0, v);
   const inf = document.getElementById("ed-infos"); if (inf) inf.innerHTML = infosEdition();
