@@ -133,7 +133,7 @@ L'app reprend exactement la palette du site Fluent & Forward d'Aurélie :
   - à l'enregistrement, le repas passe en `ajuste:true`. Si les quantités redeviennent celles du plan, l'ajustement est supprimé.
 - **Planning** : calendrier du lundi au dimanche, qui commence un jeudi. Chaque case affiche les 4 barres de repas, les repères plaisir, poisson et courses, et le coût du jour. Une barre montre le nombre de repas suivis sur 84.
 - **Courses** : quatre onglets.
-  - **Course 1 / Course 2** : cases à cocher (toucher n'importe où sur la ligne coche ou décoche, sauf le champ de prix) et prix payé, tapé directement dans le champ de chaque ligne (l'estimation sert d'indication ; saisir un prix coche l'article). Sous les totaux, la **projection du cycle** : prix payés + courses à venir aux derniers prix validés, face au budget du foyer (somme des budgets des profils). Un prix payé devient le prix unitaire du produit dans toute l'app. Magasin, totaux, part de la personne active.
+  - **Course 1 / Course 2** : cases à cocher (toucher n'importe où sur la ligne coche ou décoche, sauf le champ de prix) et prix payé, tapé directement dans le champ de chaque ligne (l'estimation sert d'indication ; saisir un prix coche l'article). Sous les totaux : la **consommation prévue du foyer** (somme des `totalPrevu`, aux derniers prix validés) face au budget du foyer (somme des budgets des profils), et les achats du cycle (payés + à venir). **Dès que la consommation prévue dépasse le budget**, un panneau propose, sur ce qu'il reste à acheter : **Retirer** une ligne (hors protéines, féculents et hors repas), **Changer des aliments** (échanges `substituts` du catalogue, quantité équivalente en protéines pour une protéine, en kcal pour un féculent, même poids sinon ; seuls les échanges qui font gagner plus de 0,30 € sont proposés), ou **Accepter** le dépassement. Un choix s'applique tout de suite à la liste (`itemsCourse`) et aux repas de la période de la course à partir d'aujourd'hui, pour les deux personnes (remplacements `ajuste:true, modif:id`) ; « Annuler » rétablit l'état d'avant. Un dépassement accepté ne repropose rien tant qu'il ne grandit pas de plus de 1 €. Le même panneau apparaît en haut de l'onglet Budget. Un prix payé devient le prix unitaire du produit dans toute l'app. Magasin, totaux, part de la personne active.
   - **À la maison** : stock estimé du foyer, trois colonnes (ce matin, le 21 au soir, écart avec le plan d'origine), ruptures en premier, bilan des ajustements. Chaque ligne en stock a une **poubelle** : on saisit la quantité jetée, elle sort du stock à partir de ce jour (jamais d'office), et la carte « À la poubelle » liste les pertes avec leur valeur et un bouton Annuler.
   - **Prix** : le prix de chaque produit, par rayon (au conditionnement, ou au kilo pour le vrac), modifiable. Un prix modifié (`source:"saisi"`) ou déduit d'un prix payé (`source:"paye"`) va dans `foyer.prix` et remplace celui du catalogue partout ; « Rétablir » revient au prix d'origine. Les produits aux prix estimés portent l'étiquette « estimé ».
 - **Budget** : pour la personne active.
@@ -177,7 +177,9 @@ Schéma version 2. Il est stocké dans `localStorage["marmite-nicolas"]` (le nom
     payes:    { "c1-Poulet": 21.5 },                 // prix payés saisis
     prix:     { "Poulet": { prix: 10.75, date, source } },   // prix au paquet (ou €/kg en vrac), source "paye" ou "saisi"
     magasins: { 1: "Leclerc Saint-Pierre" },
-    pertes:   [{ j: 3, a: "Jambon", q: 40, date: "2026-10-03" }]   // produits jetés (poubelle), j = jour du plan
+    pertes:   [{ j: 3, a: "Jambon", q: 40, date: "2026-10-03" }],  // produits jetés (poubelle), j = jour du plan
+    modifs:   [{ id, type: "retrait" | "substitution", cid, a, b, f, gain, date, avant }],  // choix face à un dépassement
+    depassementAccepte: 12.5                                    // dépassement accepté (€)
   },
   personnes: {
     nicolas: {
@@ -262,6 +264,7 @@ Nico veut enchaîner sans tout régénérer en Python, et être prévenu avant l
 - **Jambon au gramme** (à la coupe), 11,24 €/kg déduits du paquet de 500 g à 5,62 € ; appliqué aussi à octobre (Course 1 : 150 g, Course 2 : 550 g).
 - **Préparation du mois suivant le 30** (le dernier jour en février). Les jours avant la première course du mois vivent sur le stock ; la difficulté ne concerne qu'octobre, à cause de la période en attente.
 - **Génération paramétrable** : nombre de jours, nombre d'invités et budget, qui peut changer d'un mois à l'autre.
+- **Dépassement du budget** : le choix est proposé au moment où il apparaît (retirer, changer des aliments ou accepter), dès octobre.
 - **Porc réintégré** (il avait été retiré de la liste d'octobre). Plats ajoutés par Nico : saucisses grillées-frites-haricots verts et steak frites (classés plaisir), hachis parmentier bœuf-porc, cassoulet aux pommes de terre, riz mexicain (poulet ou bœuf, chorizo, haricots rouges, poivrons). Nouveaux produits : saucisses de porc, porc haché, chorizo, haricots rouges et blancs en conserve, avec des prix estimés (`prixEstime:true`) qui se corrigent au premier prix payé.
 
 ### Architecture retenue (option hybride)
@@ -337,7 +340,7 @@ Les données sont dans un seul document `db`. Avec plusieurs mois et une bibliot
 6. **Ajustement ingrédient par ingrédient** et onglet de stock « À la maison ».
 7. **Réflexion sur le cycle suivant** (section 6).
 8. **Décisions du 30/09/2026** : cycle mensuel, 4 courses par mois, Claude limité à un appel par mois pour enrichir la bibliothèque, inventaire validé avant chaque course (vérification facultative). Repo rangé : le contenu des zips est versionné fichier par fichier. Puis : « J'ai faim » en deux voies (bibliothèque locale ou « Nouveauté » via Claude), période du 22 au 31 octobre en attente, quotas de 8 poissons et 6 plaisirs, jours de courses dans les réglages (le premier le 3), vérification mensuelle du frais acceptée. Données découpées en blocs.
-9. **Décisions du 30/09/2026, suite** : protéine animale à chaque déjeuner et dîner, aucune perte d'office (poubelle), jambon au gramme, préparation le 30, génération paramétrable (jours, invités, budget). Puis : porc réintégré, 6 plats ajoutés (saucisses-frites, steak frites, hachis parmentier bœuf-porc, cassoulet, riz mexicain poulet ou bœuf), ligne de courses cochable en entier, onglet « Prix » pour modifier les prix, prix modifiable directement sur la ligne de course, projection du cycle, réajustement du budget par le moteur après chaque course.
+9. **Décisions du 30/09/2026, suite** : protéine animale à chaque déjeuner et dîner, aucune perte d'office (poubelle), jambon au gramme, préparation le 30, génération paramétrable (jours, invités, budget). Puis : porc réintégré, 6 plats ajoutés (saucisses-frites, steak frites, hachis parmentier bœuf-porc, cassoulet, riz mexicain poulet ou bœuf), ligne de courses cochable en entier, onglet « Prix » pour modifier les prix, prix modifiable directement sur la ligne de course, projection du cycle, réajustement du budget par le moteur après chaque course. Puis : face à un dépassement, choix proposé sur le moment (retirer, changer des aliments, accepter), appliqué dès octobre ; app republiée.
 
 ## 8. Arborescence
 
@@ -365,6 +368,7 @@ outils/proposer_mois.js            node outils/proposer_mois.js 2026-11 : propos
 donnees/propositions/              propositions du moteur, en attente de validation
 tests/test_moteur.js               règles du mois (quotas, écart, protéine animale, courses, nutrition, graine, stock, invités, période libre)
 tests/test_donnees.py              blocs de données cohérents, app nourrie à l'identique
+tests/test_depassement.py          panneau de dépassement : échange, retrait, annulation, acceptation
 tests/test_prix.py                 onglet Prix, prix tapé sur la ligne de course, projection du cycle, pas de débordement à 360 px
 tests/test_poubelle.py             case cochée en touchant la ligne, poubelle du stock, annulation, jambon au gramme
 tests/test_ajustement_stock.py     ajustement d'un repas, retour au plan, stock

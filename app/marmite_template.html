@@ -162,6 +162,13 @@ h3{ font-size:18px; font-weight:700; }
 .pertes{ margin-top:18px; }
 .pertes li{ display:flex; justify-content:space-between; gap:10px; align-items:baseline; padding:6px 0; border-bottom:1px solid var(--trait); font-size:14px; }
 .pertes ul{ list-style:none; padding:0; margin:6px 0 0; }
+.depasse{ margin-top:12px; border:2px solid color-mix(in srgb, var(--alerte) 40%, transparent); }
+.depasse ul{ list-style:none; padding:0; margin:4px 0 12px; }
+.depasse li{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid var(--trait); font-size:14px; }
+.depasse li > span{ min-width:0; }
+.depasse li .discret{ display:block; font-size:12px; }
+.depasse li .bouton{ padding:8px 12px; font-size:14px; flex:none; }
+.depasse .modifs{ margin-top:12px; }
 
 /* ---------- Boutons ---------- */
 .bouton{ display:inline-flex; align-items:center; justify-content:center; gap:8px; border:0; border-radius:14px; padding:13px 20px; font-weight:700; font-size:16px; background:var(--primaire); color:var(--sur-primaire); }
@@ -336,7 +343,7 @@ const HORS_REPAS = { nicolas: [ { a: "Café", q: 1000 }, { a: "Eau (bouteilles 5
 const UNITES_SPECIALES = { "Café": "g", "Eau (bouteilles 5 L)": "L" };
 const DEFAUT = {
   version: 2,
-  foyer: { achats: {}, payes: {}, prix: {}, magasins: {}, pertes: [] },   // pertes : [{ j, a, q, date }] produits jetés
+  foyer: { achats: {}, payes: {}, prix: {}, magasins: {}, pertes: [], modifs: [], depassementAccepte: 0 },   // pertes : produits jetés ; modifs : retraits et échanges décidés face à un dépassement
   personnes: {
     nicolas: { coches: {}, remplacements: {}, pesees: [], profil: { poids: 85, cible: 80, taille: 180, age: 38, budget: 180, reference: 208.94,
       kcalMin: 1850, kcalMax: 1950, prot: 110, eviter: ["fromage (sauf pizza, lasagnes, burger)", "poisson gras", "trop de laitages"] } },
@@ -457,7 +464,7 @@ function quantiteUtile(it) { const c = DONNEES.cat[it.a]; return c.vrac ? it.buy
 function stockBrut(j, planSeul = false) {
   const s = {};
   for (const [a, c] of Object.entries(DONNEES.cat)) if (c.stock) s[a] = c.stock;
-  for (const c of DONNEES.courses) if (c.jourPlan <= j) for (const it of c.items) s[it.a] = (s[it.a] || 0) + quantiteUtile(it);
+  for (const c of DONNEES.courses) if (c.jourPlan <= j) for (const it of (planSeul ? c.items : itemsCourse(c))) s[it.a] = (s[it.a] || 0) + quantiteUtile(it);
   for (let d = 1; d < j && d <= NB_JOURS; d++) for (const p of Object.keys(PERSONNES)) for (const k of CLES)
     for (const [a, q] of (planSeul ? repasPlan(d, k, p) : repasDe(d, k, p)).items) s[a] = (s[a] || 0) - q;
   // produits jetés (poubelle de l'onglet « À la maison ») : retirés à partir du jour où ils l'ont été
@@ -475,16 +482,33 @@ function texteAchat(it) { const c = DONNEES.cat[it.a]; return c.vrac ? quantite(
 function est0(it) { const c = DONNEES.cat[it.a]; if (!c || c.prix == null) return null; return c.vrac ? it.buy / 1000 * c.prix : it.buy * c.prix; }
 function estimationLigne(it) { const c = fiche(it.a); if (!c || c.prix == null) return null; return c.vrac ? it.buy / 1000 * c.prix : it.buy * c.prix; }
 function cleArticle(cid, a) { return "c" + cid + "-" + a; }
+// clé d'une ligne : un produit de remplacement garde la trace de celui qu'il remplace (« Courgettes~Poivrons »)
+function cleLigne(cid, it) { return cleArticle(cid, it.remplace ? it.a + "~" + it.remplace : it.a); }
+// Articles d'une course après les décisions prises face à un dépassement (retraits, échanges)
+function itemsCourse(c) {
+  const out = [];
+  for (const it of c.items) {
+    const m = (E.foyer.modifs || []).find(x => x.cid === c.id && x.a === it.a);
+    if (!m) out.push(it); else if (m.type === "substitution") out.push(ligneSubstitut(it, m));
+  }
+  return out;
+}
+function ligneSubstitut(it, m) {
+  const c = DONNEES.cat[m.b], needN = it.needN * m.f, needA = it.needA * m.f, need = needN + needA;
+  const buy = c.vrac ? Math.ceil(need / (c.rend || 1) / 50) * 50 : Math.max(1, Math.ceil(need / c.cond - 1e-9));
+  return { a: m.b, buy, needN, needA, remplace: it.a };
+}
 function part(a, p = actif) { const s = DONNEES.share[a]; const n = s == null ? 0.5 : s; return p === "nicolas" ? n : 1 - n; }
 function bilanCourse(cid, p = actif) {
   const c = DONNEES.courses.find(x => x.id === cid);
   let est = 0, maPart = 0, paye = 0, partPaye = 0, faits = 0;
-  for (const it of c.items) {
+  const items = itemsCourse(c);
+  for (const it of items) {
     const e = estimationLigne(it) || 0; est += e; maPart += e * part(it.a, p);
-    const k = cleArticle(cid, it.a); if (E.foyer.achats[k]) faits++;
+    const k = cleLigne(cid, it); if (E.foyer.achats[k]) faits++;
     const v = E.foyer.payes[k]; if (v != null && v !== "") { paye += +v; partPaye += (+v) * part(it.a, p); }
   }
-  return { est, maPart, paye, partPaye, faits, total: c.items.length };
+  return { est, maPart, paye, partPaye, faits, total: items.length };
 }
 
 /* ---------- Sauvegarde : compte Claude puis appareil ---------- */
@@ -743,17 +767,116 @@ function vuePrix(seg) {
 // Projection des courses du cycle : prix payés quand ils sont saisis, sinon estimation aux derniers prix validés.
 function projectionFoyer() {
   let paye = 0, avenir = 0;
-  for (const c of DONNEES.courses) for (const it of c.items) {
-    const v = E.foyer.payes[cleArticle(c.id, it.a)];
+  for (const c of DONNEES.courses) for (const it of itemsCourse(c)) {
+    const v = E.foyer.payes[cleLigne(c.id, it)];
     if (v != null && v !== "") paye += +v; else avenir += estimationLigne(it) || 0;
   }
   const budget = Object.keys(PERSONNES).reduce((s, p) => s + (+E.personnes[p].profil.budget || 0), 0);
   return { paye, avenir, total: paye + avenir, budget };
 }
+// Dépassement du foyer : ce qui sera mangé sur le cycle (aux derniers prix validés) face à la somme des budgets.
+// Les achats peuvent dépasser un peu la consommation : ce qui reste en stock sert au cycle suivant.
+function depassementFoyer() {
+  const conso = Object.keys(PERSONNES).reduce((s, p) => s + totalPrevu(p), 0);
+  const x = projectionFoyer();
+  return { conso, budget: x.budget, ecart: conso - x.budget, achats: x.total, paye: x.paye, avenir: x.avenir };
+}
 function ligneProjection() {
-  const x = projectionFoyer(), ecart = x.budget - x.total;
-  return `<p class="petit" style="margin:10px 0 0">Projection du cycle : <b class="${ecart < 0 ? "surcout" : "eco"}">${eur(x.total)}</b>
-    <span class="discret">(${eur(x.paye)} payés + ${eur(x.avenir)} à venir aux derniers prix) pour un budget foyer de ${eur(x.budget)}, ${ecart < 0 ? "dépassé de " + eur(-ecart) : "reste " + eur(ecart)}.</span></p>`;
+  const d = depassementFoyer();
+  return `<p class="petit" style="margin:10px 0 0">Consommation prévue du foyer : <b class="${d.ecart > 0 ? "surcout" : "eco"}">${eur(d.conso)}</b>
+    <span class="discret">pour un budget de ${eur(d.budget)}, ${d.ecart > 0 ? "dépassé de " + eur(d.ecart) : "reste " + eur(-d.ecart)}.
+    Achats du cycle : ${eur(d.paye)} payés + ${eur(d.avenir)} à venir aux derniers prix (${eur(d.achats)}).</span></p>${panneauDepassement()}`;
+}
+
+/* ---------- Dépassement : retirer, changer des aliments ou accepter ---------- */
+function jourActuel() { return planPasCommence() ? 1 : jourDuPlan(); }
+function finPeriode(c) { const n = DONNEES.courses.find(x => x.jourPlan > c.jourPlan); return n ? n.jourPlan - 1 : NB_JOURS; }
+// lignes encore à acheter : pas cochées, dans une course dont la période n'est pas finie
+function lignesAAcheter() {
+  const out = [];
+  for (const c of DONNEES.courses) {
+    if (finPeriode(c) < jourActuel()) continue;
+    for (const it of itemsCourse(c)) if (!it.remplace && !E.foyer.achats[cleLigne(c.id, it)]) out.push({ c, it });
+  }
+  return out;
+}
+const HORS_REPAS_NOMS = new Set(Object.values(HORS_REPAS).flat().map(h => h.a));
+const roleDe = a => ((DONNEES.catalogue || {})[a] || {}).role || "autre";
+// quantité de b qui remplace q de a : mêmes protéines pour une protéine, mêmes kcal pour un féculent, même poids sinon
+function facteurEchange(a, b) {
+  const na = DONNEES.nut[a], nb2 = DONNEES.nut[b]; if (!na || !nb2) return 1;
+  const r = roleDe(a), i = r === "proteine" ? 3 : r === "feculent" ? 2 : -1;
+  if (i < 0 || !nb2[i]) return 1;
+  return Math.round((na[i] / na[0]) / (nb2[i] / nb2[0]) * 100) / 100;
+}
+function repasTouches(c, a) {
+  let n = 0; const d0 = Math.max(c.jourPlan, jourActuel()), d1 = finPeriode(c);
+  for (let d = d0; d <= d1; d++) for (const k of CLES) for (const p of Object.keys(PERSONNES)) if (repasDe(d, k, p).items.some(([x]) => x === a)) n++;
+  return n;
+}
+function propositions() {
+  const retraits = [], echanges = [];
+  for (const { c, it } of lignesAAcheter()) {
+    const est = estimationLigne(it); if (!est) continue;
+    const r = roleDe(it.a);
+    if (r !== "proteine" && r !== "feculent" && !HORS_REPAS_NOMS.has(it.a))
+      retraits.push({ c, it, gain: est, repas: repasTouches(c, it.a) });
+    for (const b of ((DONNEES.catalogue || {})[it.a] || {}).substituts || []) {
+      if (!DONNEES.cat[b] || DONNEES.cat[b].prix == null && !E.foyer.prix[b]) continue;
+      const f = facteurEchange(it.a, b), l = ligneSubstitut(it, { b, f }), gain = est - (estimationLigne(l) || 0);
+      if (gain > 0.3) echanges.push({ c, it, b, f, gain, repas: repasTouches(c, it.a) });
+    }
+  }
+  const tri = l => l.sort((x, y) => y.gain - x.gain);
+  // un seul échange par ligne : le plus avantageux
+  const vus = new Set();
+  return { retraits: tri(retraits).slice(0, 5), echanges: tri(echanges).filter(e => { const k = e.c.id + e.it.a; if (vus.has(k)) return false; vus.add(k); return true; }).slice(0, 5) };
+}
+function panneauDepassement() {
+  const d = depassementFoyer(), modifs = E.foyer.modifs || [];
+  const liste = modifs.length ? `<div class="modifs"><b>Décisions prises</b><ul>${modifs.map((m, i) => `<li><span>${m.type === "retrait" ? "Retiré : " + echap(m.a) : echap(m.a) + " → " + echap(m.b)} <span class="discret">(${DONNEES.courses.find(c => c.id === m.cid).titre}, ${eur(m.gain)} en moins)</span></span>
+    <button class="lien" data-modif-annuler="${i}">Annuler</button></li>`).join("")}</ul></div>` : "";
+  if (d.ecart <= 0.5 || d.ecart <= (E.foyer.depassementAccepte || 0) + 1) return liste ? `<div class="carte depasse">${liste}</div>` : "";
+  const pr = propositions();
+  const ligne = (x, type) => `<li><span><b>${type === "retrait" ? "Retirer " + echap(x.it.a) : echap(x.it.a) + " → " + echap(x.b)}</b>
+      <span class="discret">${x.c.titre}${x.repas ? ", " + x.repas + " repas concerné" + (x.repas > 1 ? "s" : "") : ""}${type === "echange" && x.f !== 1 ? ", " + nb(x.f, 2).replace(/,?0+$/, "") + " g pour 1 g" : ""}</span></span>
+      <button class="bouton leger" data-modif="${type}" data-cid="${x.c.id}" data-a="${echap(x.it.a)}" ${type === "echange" ? `data-b="${echap(x.b)}" data-f="${x.f}"` : ""}>−${eur(x.gain)}</button></li>`;
+  return `<div class="carte depasse" role="region" aria-label="Budget dépassé">
+    <div class="sect-titre"><h3>Budget dépassé de ${eur(d.ecart)}</h3></div>
+    <p class="discret petit" style="margin:4px 0 8px">Que fait-on ? Chaque choix s'applique tout de suite aux repas concernés (à partir d'aujourd'hui) et à la liste.</p>
+    ${pr.retraits.length ? `<b>Retirer</b><ul>${pr.retraits.map(x => ligne(x, "retrait")).join("")}</ul>` : ""}
+    ${pr.echanges.length ? `<b>Changer des aliments</b><ul>${pr.echanges.map(x => ligne(x, "echange")).join("")}</ul>` : ""}
+    ${!pr.retraits.length && !pr.echanges.length ? `<p class="petit">Plus rien à retirer ni à échanger dans ce qu'il reste à acheter.</p>` : ""}
+    <button class="bouton or" data-accepter="${Math.round(d.ecart * 100) / 100}">Accepter le dépassement de ${eur(d.ecart)}</button>
+    ${liste}</div>`;
+}
+// Applique un retrait ou un échange aux repas de la période de la course (dès aujourd'hui), pour les deux personnes.
+function appliquerModif(m) {
+  const c = DONNEES.courses.find(x => x.id === m.cid), d0 = Math.max(c.jourPlan, jourActuel()), d1 = finPeriode(c);
+  m.avant = {};
+  for (const p of Object.keys(PERSONNES)) {
+    m.avant[p] = {};
+    for (let d = d0; d <= d1; d++) for (const k of CLES) {
+      const r = repasDe(d, k, p); if (!r.items.some(([x]) => x === m.a)) continue;
+      const cle = "d" + d + "-" + k, ancien = P(p).remplacements[cle];
+      m.avant[p][cle] = ancien ? structuredClone(ancien) : null;
+      let items = r.items.map(([a, q]) => [a, q]);
+      if (m.type === "retrait") items = items.filter(([a]) => a !== m.a);
+      else {
+        const q = items.filter(([a]) => a === m.a).reduce((s, [, x]) => s + x, 0), qb = UNITES_SPECIALES[m.b] || ["Œufs", "Wraps", "Pains burger"].includes(m.b) ? Math.max(1, Math.round(q * m.f)) : Math.round(q * m.f / 5) * 5;
+        items = items.filter(([a]) => a !== m.a);
+        const i = items.findIndex(([a]) => a === m.b); if (i >= 0) items[i][1] += qb; else items.push([m.b, qb]);
+      }
+      P(p).remplacements[cle] = { ...(ancien || {}), k, label: r.label, plat: r.plat, items, ajuste: true, modif: m.id };
+    }
+  }
+}
+function annulerModif(i) {
+  const m = E.foyer.modifs[i];
+  for (const p of Object.keys(m.avant || {})) for (const [cle, v] of Object.entries(m.avant[p])) {
+    if (v) P(p).remplacements[cle] = v; else delete P(p).remplacements[cle];
+  }
+  E.foyer.modifs.splice(i, 1);
 }
 function vueCourses() {
   const seg = DONNEES.courses.map(x => `<button data-course="${x.id}" aria-pressed="${x.id === courseSel}">${x.titre}<span>${x.id === 1 ? "jeu. 1er oct." : "mar. 6 oct."}</span></button>`).join("")
@@ -763,15 +886,15 @@ function vueCourses() {
   if (courseSel === "prix") return vuePrix(seg);
   const c = DONNEES.courses.find(x => x.id === courseSel), b = bilanCourse(courseSel);
   const groupes = {};
-  for (const it of c.items) (groupes[DONNEES.cat[it.a].cat] = groupes[DONNEES.cat[it.a].cat] || []).push(it);
+  for (const it of itemsCourse(c)) (groupes[DONNEES.cat[it.a].cat] = groupes[DONNEES.cat[it.a].cat] || []).push(it);
   let liste = "";
   for (const [cat, items] of Object.entries(groupes)) {
     liste += `<h3 class="cat-titre">${echap(cat)}</h3>`;
     for (const it of items) {
-      const k = cleArticle(courseSel, it.a), fait = !!E.foyer.achats[k], est = estimationLigne(it), v = E.foyer.payes[k];
+      const k = cleLigne(courseSel, it), fait = !!E.foyer.achats[k], est = estimationLigne(it), v = E.foyer.payes[k];
       liste += `<div class="article ${fait ? "achete" : ""}">
         <button class="check" data-achat="${echap(k)}" aria-pressed="${fait}" aria-label="${echap(it.a)} acheté">${ICONES.coche}</button>
-        <div><div class="nom">${echap(it.a)}</div><div class="detail">${echap(texteAchat(it))}</div></div>
+        <div><div class="nom">${echap(it.a)}</div><div class="detail">${echap(texteAchat(it))}${it.remplace ? " · remplace " + echap(it.remplace) : ""}</div></div>
         <div class="prix"><label class="saisie"><input type="number" inputmode="decimal" step="0.01" min="0" data-paye="${echap(k)}" data-art="${echap(it.a)}" data-buy="${it.buy}"
             value="${v != null ? v : ""}" placeholder="${est != null ? nb(est, 2) : "prix ?"}" aria-label="Prix payé pour ${echap(it.a)} (estimé ${est == null ? "inconnu" : eur(est)})"> €</label>
           <span>${v != null ? "estimé " + (est0(it) == null ? "—" : eur(est0(it))) : "part " + de() + " " + (est == null ? "—" : eur(est * part(it.a)))}</span></div>
@@ -817,8 +940,8 @@ function vueBudget() {
     <text x="${pad}" y="${H - 6}" style="font:12px var(--texte);fill:var(--brume)">1er oct.</text>
     <text x="${W - pad}" y="${H - 6}" text-anchor="end" style="font:12px var(--texte);fill:var(--brume)">21 oct.</text></svg>`;
   const ecarts = [];
-  for (const c of DONNEES.courses) for (const it of c.items) {
-    const v = E.foyer.payes[cleArticle(c.id, it.a)]; if (v == null || v === "") continue;
+  for (const c of DONNEES.courses) for (const it of itemsCourse(c)) {
+    const v = E.foyer.payes[cleLigne(c.id, it)]; if (v == null || v === "") continue;
     const base = DONNEES.cat[it.a]; if (base.prix == null) continue;
     const estBase = base.vrac ? it.buy / 1000 * base.prix : it.buy * base.prix;
     ecarts.push({ a: it.a, c: c.titre, est: estBase, paye: +v, part: part(it.a) });
@@ -829,6 +952,7 @@ function vueBudget() {
     : `<tr><td colspan="4" class="discret">Aucun prix saisi pour l'instant. Note les prix dans Courses pour suivre les vraies économies.</td></tr>`;
   return `<h1>Budget ${de()}</h1>
   <p class="discret" style="margin:6px 0 0">Sa part du 1er au 21 octobre : ce qui est mangé, au prix réel dès qu'il est noté.</p>
+  ${panneauDepassement()}
   <section class="carte pot">
     <div class="sect-titre" style="flex-wrap:wrap"><h2>${eur(prevu)} prévus</h2><span class="${depasse ? "surcout" : "eco"}">${depasse ? "Au-dessus du budget de " + eur(prevu - budget) : "Sous le budget de " + eur(budget - prevu)}</span></div>
     <div class="pot-barre"><i style="width:${Math.min(prevu / maxi, 1) * 100}%;background:${depasse ? "var(--alerte)" : "var(--or)"}"></i><b style="left:calc(${Math.min(budget / maxi, 1) * 100}% - 2px)"></b></div>
@@ -1079,6 +1203,18 @@ function action(b) {
   if (d.voir) { jourSel = +d.voir; return aller("jour"); }
   if (d.coche) { const c = P().coches; c[d.coche] ? delete c[d.coche] : (c[d.coche] = true); sauver(); return rendre(); }
   if (d.course) { courseSel = d.course === "stock" || d.course === "prix" ? d.course : +d.course; jeterSel = null; return rendre(); }
+  if (d.modif) {
+    const m = { id: Date.now(), type: d.modif === "retrait" ? "retrait" : "substitution", cid: +d.cid, a: d.a, date: new Date().toISOString().slice(0, 10) };
+    const c = DONNEES.courses.find(x => x.id === m.cid), it = c.items.find(x => x.a === m.a);
+    if (m.type === "substitution") { m.b = d.b; m.f = +d.f; }
+    m.gain = Math.round(((estimationLigne(it) || 0) - (m.type === "retrait" ? 0 : estimationLigne(ligneSubstitut(it, m)) || 0)) * 100) / 100;
+    E.foyer.modifs = (E.foyer.modifs || []).concat(m);
+    appliquerModif(m); sauver();
+    toast(m.type === "retrait" ? m.a + " retiré" : m.a + " remplacé par " + m.b);
+    return rendre();
+  }
+  if (d.modifAnnuler) { annulerModif(+d.modifAnnuler); sauver(); return rendre(); }
+  if (d.accepter) { E.foyer.depassementAccepte = +d.accepter; sauver(); toast("Dépassement accepté"); return rendre(); }
   if (d.prixReset) { delete E.foyer.prix[d.prixReset]; sauver(); toast(d.prixReset + " : prix d'origine rétabli"); return rendre(); }
   if (d.jeter) { jeterSel = jeterSel === d.jeter ? null : d.jeter; rendre(); const i = document.getElementById("jeter-q"); if (i) i.focus(); return; }
   if (d.jeterAnnuler) { jeterSel = null; return rendre(); }

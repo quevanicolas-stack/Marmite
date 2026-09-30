@@ -62,7 +62,7 @@ async def main():
         autres = await pg.evaluate("DONNEES.courses.filter(c => c.id !== 2).flatMap(c => c.items).filter(i => i.a === 'Bœuf').reduce((s, i) => s + i.buy, 0)")
         attendu = 5 + autres * 5 / it["buy"]
         verif(abs(proj1 - proj0 - attendu) < 0.02, f"projection : {proj0:.2f} → {proj1:.2f}, +{attendu:.2f} € attendus")
-        verif("Projection du cycle" in await pg.inner_text("main"), "ligne de projection absente")
+        verif("Consommation prévue du foyer" in await pg.inner_text("main"), "ligne de projection absente")
         await pg.screenshot(path="/tmp/marmite_course_prix.png")
         # pas de défilement horizontal sur téléphone, dans aucun onglet des courses
         await pg.set_viewport_size({"width": 360, "height": 800})

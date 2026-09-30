@@ -22,7 +22,10 @@
     "estime": true
    },
    "note": "Congeler en portions d'un repas le jour de l'achat.",
-   "animal": true
+   "animal": true,
+   "substituts": [
+    "Poisson blanc"
+   ]
   },
   "Bœuf": {
    "rayon": "Viande",
@@ -45,7 +48,10 @@
     "estime": true
    },
    "note": "Congeler en portions.",
-   "animal": true
+   "animal": true,
+   "substituts": [
+    "Porc haché"
+   ]
   },
   "Lardons": {
    "rayon": "Viande",
@@ -203,7 +209,10 @@
     "frais": false,
     "estime": true
    },
-   "note": ""
+   "note": "",
+   "substituts": [
+    "Mozzarella râpée"
+   ]
   },
   "Riz (sec)": {
    "rayon": "Féculents",
@@ -269,7 +278,10 @@
     "frais": false,
     "estime": true
    },
-   "note": ""
+   "note": "",
+   "substituts": [
+    "Pâtes (sèches)"
+   ]
   },
   "Flocons d'avoine": {
    "rayon": "Féculents",
@@ -335,7 +347,10 @@
     "frais": true,
     "estime": true
    },
-   "note": "Hors frigo, 1 à 2 semaines."
+   "note": "Hors frigo, 1 à 2 semaines.",
+   "substituts": [
+    "Pommes de terre"
+   ]
   },
   "Wraps": {
    "rayon": "Féculents",
@@ -445,7 +460,11 @@
     "frais": false,
     "estime": true
    },
-   "note": "Surgelés."
+   "note": "Surgelés.",
+   "substituts": [
+    "Carottes",
+    "Courgettes"
+   ]
   },
   "Tomates": {
    "rayon": "Légumes",
@@ -489,7 +508,11 @@
     "frais": true,
     "estime": true
    },
-   "note": "13,98 €/kg. 1 à 2 semaines au frigo, se congèlent crus en lanières."
+   "note": "13,98 €/kg. 1 à 2 semaines au frigo, se congèlent crus en lanières.",
+   "substituts": [
+    "Courgettes",
+    "Carottes"
+   ]
   },
   "Carottes": {
    "rayon": "Légumes",
@@ -533,7 +556,10 @@
     "frais": true,
     "estime": true
    },
-   "note": "Celles du barbecue du 18 risquent de ne pas tenir : prendre les plus fermes."
+   "note": "Celles du barbecue du 18 risquent de ne pas tenir : prendre les plus fermes.",
+   "substituts": [
+    "Courgettes"
+   ]
   },
   "Champignons": {
    "rayon": "Légumes",
@@ -555,7 +581,10 @@
     "frais": true,
     "estime": true
    },
-   "note": "Risque : 3 à 5 jours. Pour les repas après le 11, champignons en conserve ou surgelés."
+   "note": "Risque : 3 à 5 jours. Pour les repas après le 11, champignons en conserve ou surgelés.",
+   "substituts": [
+    "Courgettes"
+   ]
   },
   "Salade": {
    "rayon": "Légumes",
@@ -643,7 +672,11 @@
     "frais": true,
     "estime": true
    },
-   "note": "Choisir 3 stades de maturité : un mûr pour le 11-12, deux fermes pour le 17-18."
+   "note": "Choisir 3 stades de maturité : un mûr pour le 11-12, deux fermes pour le 17-18.",
+   "substituts": [
+    "Tomates",
+    "Carottes"
+   ]
   },
   "Bananes": {
    "rayon": "Fruits",
@@ -687,7 +720,11 @@
     "frais": true,
     "estime": true
    },
-   "note": "Celle du 14 : la prendre ferme."
+   "note": "Celle du 14 : la prendre ferme.",
+   "substituts": [
+    "Pommes",
+    "Bananes"
+   ]
   },
   "Ananas": {
    "rayon": "Fruits",
@@ -709,7 +746,11 @@
     "frais": true,
     "estime": true
    },
-   "note": "Mangés les 9 et 10 : pas de souci."
+   "note": "Mangés les 9 et 10 : pas de souci.",
+   "substituts": [
+    "Pommes",
+    "Bananes"
+   ]
   },
   "Pommes": {
    "rayon": "Fruits",
@@ -775,7 +816,10 @@
     "frais": false,
     "estime": true
    },
-   "note": "Congélateur."
+   "note": "Congélateur.",
+   "substituts": [
+    "Yaourt nature"
+   ]
   },
   "Chocolat noir": {
    "rayon": "Desserts",
@@ -887,7 +931,10 @@
    },
    "note": "Congeler par repas le jour de l'achat. Prix estimé le 30/09/2026 : se corrige au premier prix payé.",
    "prixEstime": true,
-   "animal": true
+   "animal": true,
+   "substituts": [
+    "Lardons"
+   ]
   },
   "Porc haché": {
    "rayon": "Viande",
@@ -935,7 +982,10 @@
    },
    "note": "Se garde longtemps fermé. Prix estimé le 30/09/2026 : se corrige au premier prix payé.",
    "prixEstime": true,
-   "animal": true
+   "animal": true,
+   "substituts": [
+    "Lardons"
+   ]
   },
   "Haricots rouges (égouttés)": {
    "rayon": "Féculents",
