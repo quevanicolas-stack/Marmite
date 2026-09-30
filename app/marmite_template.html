@@ -177,6 +177,19 @@ h3{ font-size:18px; font-weight:700; }
 .gen-liste li{ display:grid; grid-template-columns:110px minmax(0,1fr); gap:10px; padding:8px 0; border-bottom:1px solid var(--trait); font-size:14px; }
 .gen-jour{ font-weight:700; color:var(--titre-c); display:flex; gap:4px; align-items:flex-start; flex-wrap:wrap; }
 .gen-jour .ico{ width:14px; height:14px; color:var(--or); }
+.gen-repas-col{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.gen-repas{ display:block; width:100%; text-align:left; border:0; background:none; padding:5px 8px; margin:0 -8px; border-radius:10px; font-size:14px; line-height:1.35; color:var(--encre); }
+.gen-repas:hover, .gen-repas:focus-visible{ background:var(--surface-2); }
+.gen-repas.fort{ font-weight:700; }
+.gen-repas.discret{ color:var(--brume); }
+.gen-k{ display:block; font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--brume); }
+.choix-liste{ list-style:none; padding:0; margin:12px 0 0; }
+.choix-liste li + li{ border-top:1px solid var(--trait); }
+.choix-plat{ display:flex; flex-direction:column; gap:2px; width:100%; text-align:left; border:0; background:none; padding:10px 6px; border-radius:10px; font-size:15px; color:var(--encre); }
+.choix-plat:hover, .choix-plat:focus-visible{ background:var(--surface-2); }
+.choix-plat .discret{ font-size:13px; }
+.choix-plat.actuel{ background:color-mix(in srgb, var(--or) 18%, var(--surface)); }
+.feuille-ia .puces{ margin:10px 0 0; }
 .courses-puces .puce span{ font-weight:500; margin-left:4px; }
 .article label.qte-achat{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:4px; font-size:13px; color:var(--brume); font-weight:500; }
 .article label.qte-achat input, .article label.qte-achat input:not(:placeholder-shown){ width:70px; border:1px solid var(--trait); border-radius:10px; padding:5px 8px; background:var(--surface); font-size:15px; font-weight:500; text-align:right; font-variant-numeric:tabular-nums; }
@@ -587,6 +600,9 @@ function bilanCourse(cid, p = actif) {
 let minuterie = null, enCours = false, encore = false;
 function charger(obj) {
   if (!obj || typeof obj !== "object") return;
+  // copie profonde : les données du compte en ligne peuvent arriver verrouillées en écriture ; sans copie,
+  // cocher une case ou saisir un prix échouait sans bruit (c'était le bug des cases qui ne se cochaient pas)
+  obj = JSON.parse(JSON.stringify(obj));
   if (!obj.version) { // migration depuis la première version (Nicolas seul)
     const n = E.personnes.nicolas;
     if (obj.coches) n.coches = obj.coches;
@@ -771,16 +787,20 @@ function genererMenu(j0, graine, invites, budget) {
   }
   const profils = {}, poidsActuels = {};
   for (const p of Object.keys(PERSONNES)) { profils[p] = { ...P(p).profil, budgetJours: NB_JOURS }; poidsActuels[p] = dernierPoids(p); }
-  const res = Moteur.composerMois({
+  const entrees = {
     catalogue: Moteur.avecPrix(DONNEES.catalogue, E.foyer.prix), recettes: DONNEES.recettes, reglages: DONNEES.reglages,
     debut: iso(dateDuJour(j0)), jours: NB_JOURS - j0 + 1, joursCourses, stockDepart: stock, historique,
     profils, poidsActuels, invites, budget: budget || undefined, graine, moisReference: { plan: PLAN },
     poidsStock: 3, penaliteManque: 1,
-  });
+  };
+  const res = Moteur.composerMois(entrees);
+  Object.assign(res, { entrees, stock, gardees });
+  return completerStock(res);
+}
+function completerStock(res) {
   const utilises = new Set(res.mois.plan.flatMap(j => j.meals.flatMap(m => m.items.nicolas.map(([a]) => a))));
-  res.stockUtilise = Object.keys(stock).filter(a => utilises.has(a) && DONNEES.nut[a]);
-  res.stockTotal = Object.keys(stock).filter(a => DONNEES.nut[a]);
-  res.gardees = gardees;
+  res.stockUtilise = Object.keys(res.stock).filter(a => utilises.has(a) && DONNEES.nut[a]);
+  res.stockTotal = Object.keys(res.stock).filter(a => DONNEES.nut[a]);
   return res;
 }
 const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -833,11 +853,12 @@ function genererMoisSuivant() {
   for (const [a, q] of Object.entries(sr)) if (q > 0.5) stock[a] = Math.round(q * 10) / 10;
   const profils = {}, poidsActuels = {};
   for (const p of Object.keys(PERSONNES)) { profils[p] = { ...P(p).profil, budgetJours: 21 }; poidsActuels[p] = dernierPoids(p); }
-  return Moteur.composerMois({
+  const entrees = {
     catalogue: Moteur.avecPrix(DONNEES.catalogue, E.foyer.prix), recettes: DONNEES.recettes, reglages: DONNEES.reglages,
     debut: gen.debut, jours: gen.jours, invites: gen.invites, budget: gen.budget, graine: gen.graine,
     stockDepart: stock, profils, poidsActuels, moisReference: { plan: PLAN },
-  });
+  };
+  const res = Moteur.composerMois(entrees); res.entrees = entrees; return res;
 }
 function archiverMoisActif() {
   const foyer = {}, personnes = {};
@@ -865,10 +886,72 @@ function rouvrirMois(id) {
   gen = null; activerMois(); sauver(); toast(a.titre + " rouvert");
 }
 function listeMenu(plan, j0) {
-  return `<ul class="gen-liste">${plan.map(j => { const g2 = k => { const m = j.meals.find(x => x.k === k); return m ? echap(m.plat.nicolas) : "—"; };
+  const repas = (j, k, cls) => { const m = j.meals.find(x => x.k === k); if (!m) return "";
+    return `<button class="gen-repas ${cls}" data-changer="${j.d}-${k}" aria-label="Changer : ${LABEL_REPAS[k]}, ${echap(m.plat.nicolas)}"><span class="gen-k">${LABEL_REPAS[k]}</span>${echap(m.plat.nicolas)}</button>`; };
+  return `<p class="petit discret" style="margin:12px 0 0">Touche un repas pour le remplacer par un plat de la bibliothèque : les quantités et les courses se recalculent.</p>
+    <ul class="gen-liste">${plan.map(j => {
     const d = j.date ? dateLocale(j.date) : dateDuJour(j.d + j0 - 1);
     return `<li><span class="gen-jour">${cap(d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric" }))}${j.tag === "plaisir" ? " " + ICONES.etoile : ""}${j.fish ? " " + ICONES.poisson : ""}</span>
-      <span><b>${g2("dej")}</b><br>${g2("din")}<br><span class="discret">${g2("des")}</span></span></li>`; }).join("")}</ul>`;
+      <span class="gen-repas-col">${repas(j, "dej", "fort")}${repas(j, "din", "")}${repas(j, "des", "discret")}</span></li>`; }).join("")}</ul>`;
+}
+const LABEL_REPAS = { pdj: "Petit-déj.", dej: "Midi", din: "Soir", des: "Dessert" };
+
+/* ---------- Changer un repas de la proposition : bibliothèque filtrée ---------- */
+let choix = null;   // { cle: "j-k", filtre, q }
+const familleDe = r => (r.nom || r.id).split(/[,(+]/)[0].trim().toLowerCase();
+function candidatsChoix() {
+  const [j, k] = choix.cle.split("-"), d = +j, plan = gen.res.mois.plan;
+  const estPrincipal = k === "dej" || k === "din";
+  let l = DONNEES.recettes.filter(r => r.repas.includes(k) || (estPrincipal && (r.repas.includes("dej") || r.repas.includes("din"))));
+  if (estPrincipal) l = l.filter(r => r.portions.nicolas.some(([a]) => DONNEES.catalogue[a] && DONNEES.catalogue[a].animal));
+  const f = choix.filtre, q = choix.q.trim().toLowerCase();
+  if (f === "poisson") l = l.filter(r => r.tags.includes("poisson"));
+  if (f === "plaisir") l = l.filter(r => r.tags.includes("plaisir"));
+  if (f === "viande") l = l.filter(r => !r.tags.includes("poisson"));
+  if (q) l = l.filter(r => (r.nom || "").toLowerCase().includes(q));
+  // même famille de plat déjà prévue à moins de 5 jours : signalé, pas interdit
+  const ecart = DONNEES.reglages.ecartMinJours || 5, proches = {};
+  for (const jj of plan) for (const m of jj.meals) {
+    if (`${jj.d}-${m.k}` === choix.cle || !(m.k === "dej" || m.k === "din") || Math.abs(jj.d - d) >= ecart) continue;
+    const r = DONNEES.recettes.find(x => x.id === m.recette); if (r) (proches[familleDe(r)] = proches[familleDe(r)] || []).push(jj.d);
+  }
+  return l.map(r => ({ r, proche: estPrincipal ? proches[familleDe(r)] : null,
+    cout: ["nicolas", "aurelie"].reduce((s, p) => s + r.portions[p].reduce((t, [a, x]) => t + (prixUnitaire(a) || 0) * x, 0), 0) }))
+    .sort((a, b) => (!!a.proche - !!b.proche) || (a.r.nom || "").localeCompare(b.r.nom || "", "fr"));
+}
+function listeChoix() {
+  const [j, k] = choix.cle.split("-"), actuel = gen.res.mois.plan.find(x => x.d === +j).meals.find(m => m.k === k).recette;
+  const l = candidatsChoix();
+  if (!l.length) return `<li class="discret petit" style="padding:12px 0">Aucun plat ne correspond.</li>`;
+  const dateDe = jj => { const x = gen.res.mois.plan.find(y => y.d === jj); return x && x.date ? dateLocale(x.date).getDate() : jj; };
+  return l.map(({ r, proche, cout }) => `<li><button class="choix-plat ${r.id === actuel ? "actuel" : ""}" data-choix-id="${echap(r.id)}">
+    <b>${echap(r.nom || r.id)}</b>
+    <span class="discret">${[r.tags.includes("poisson") ? "poisson" : "", r.tags.includes("plaisir") ? "plaisir" : "", "≈ " + eur(cout) + " à deux",
+      r.id === actuel ? "prévu" : "", proche ? "déjà le " + proche.map(dateDe).join(" et le ") : ""].filter(Boolean).join(" · ")}</span></button></li>`).join("");
+}
+function rendreChoix() {
+  const c = document.getElementById("couche"); if (!choix) { c.innerHTML = ""; return; }
+  const [j, k] = choix.cle.split("-"), jour = gen.res.mois.plan.find(x => x.d === +j), m = jour.meals.find(x => x.k === k);
+  const d = jour.date ? dateLocale(jour.date) : dateDuJour(+j + (gen.j0 || 1) - 1);
+  const filtres = k === "des" ? "" : `<div class="puces" role="group" aria-label="Filtrer">${[["tous", "Tous"], ["viande", "Viande"], ["poisson", "Poisson"], ["plaisir", "Plaisir"]]
+    .map(([v, l]) => `<button class="puce" data-choix-filtre="${v}" aria-pressed="${choix.filtre === v}">${l}</button>`).join("")}</div>`;
+  c.innerHTML = `<div class="voile"><div class="feuille-ia" role="dialog" aria-modal="true" aria-labelledby="titre-choix">
+    <div class="tete"><div><p class="discret petit" style="margin:0">${cap(d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }))}</p>
+      <h2 id="titre-choix">Changer le ${m.label.toLowerCase()}</h2><p class="discret petit" style="margin:4px 0 0">Prévu : ${echap(m.plat.nicolas)}</p></div>
+      <button class="rond" data-choix-fermer="1" aria-label="Fermer">×</button></div>
+    <label class="champ">Chercher un plat<input id="choix-q" type="search" data-choix-q="1" value="${echap(choix.q)}" placeholder="poulet, pizza, poisson…" autocomplete="off"></label>
+    ${filtres}
+    <ul class="choix-liste" id="choix-liste">${listeChoix()}</ul></div></div>`;
+}
+function remplacerRepas(id) {
+  const old = gen.res, g = Moteur.grilleDuMois(old.mois);
+  g[choix.cle] = id;
+  const res = Moteur.composerMois({ ...old.entrees, grilleImposee: g });
+  res.entrees = old.entrees;
+  if (old.stock) { Object.assign(res, { stock: old.stock, gardees: old.gardees }); completerStock(res); }
+  gen.res = res; gen.confirmer = false;
+  const r = DONNEES.recettes.find(x => x.id === id);
+  choix = null; rendreChoix(); rendre(); toast("Repas changé : " + (r.nom || id));
 }
 function carteMois() {
   const archives = Object.entries(E.archives || {});
@@ -1321,7 +1404,7 @@ function ouvrirIA(k) {
     budgetActif: false, budget: Math.max(0.5, Math.round(s.cout * 100) / 100 || 2), kcal: s.kcal, prot: s.prot, etat: "form", propositions: [], erreur: "" };
   rendreIA();
 }
-function fermerIA() { ia = null; document.getElementById("couche").innerHTML = ""; }
+function fermerIA() { ia = null; choix = null; document.getElementById("couche").innerHTML = ""; }
 function lireForm() {
   const bi = document.getElementById("ia-budget"), ti = document.getElementById("ia-temps");
   if (bi) { const v = parseFloat(bi.value); if (!isNaN(v) && v > 0) ia.budget = v; }
@@ -1518,6 +1601,10 @@ function action(b) {
     if (d.generer === "fermer") { gen = null; return rendre(); }
     if (d.generer === "annuler") { annulerGeneration(); return rendre(); }
   }
+  if (d.changer) { choix = { cle: d.changer, filtre: "tous", q: "" }; rendreChoix(); const i = document.getElementById("choix-q"); if (i && window.matchMedia && matchMedia("(min-width:700px)").matches) i.focus(); return; }
+  if (d.choixFiltre) { choix.filtre = d.choixFiltre; rendreChoix(); return; }
+  if (d.choixId) return remplacerRepas(d.choixId);
+  if (d.choixFermer) return fermerIA();
   if (d.rouvrir) { rouvrirMois(d.rouvrir); return rendre(); }
   if (d.modifAnnuler) { annulerModif(+d.modifAnnuler); sauver(); return rendre(); }
   if (d.accepter) { E.foyer.depassementAccepte = +d.accepter; sauver(); toast("Dépassement accepté"); return rendre(); }
@@ -1578,11 +1665,12 @@ document.onclick = e => {
   const art = e.target.closest(".article"); if (art && !e.target.closest(".saisie")) { const c = art.querySelector("button.check"); if (c) action(c); }
 };
 document.onkeydown = e => {
-  if (e.key === "Escape" && ia) return fermerIA();
+  if (e.key === "Escape" && (ia || choix)) return fermerIA();
   const t = e.target; if ((e.key === " " || e.key === "Enter") && t.classList && t.classList.contains("interrupteur")) { e.preventDefault(); action(t); }
 };
 document.oninput = e => {
-  const t = e.target; if (t.dataset.edQ == null || !edition) return;
+  const t = e.target;
+  if (t.dataset.choixQ != null && choix) { choix.q = t.value; const l = document.getElementById("choix-liste"); if (l) l.innerHTML = listeChoix(); return; } if (t.dataset.edQ == null || !edition) return;
   const v = parseFloat(t.value); edition.items[+t.dataset.edQ][1] = isNaN(v) ? 0 : Math.max(0, v);
   const inf = document.getElementById("ed-infos"); if (inf) inf.innerHTML = infosEdition();
 };

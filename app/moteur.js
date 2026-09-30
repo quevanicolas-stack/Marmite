@@ -197,6 +197,20 @@ const Moteur = (() => {
     return { grille, joursPlaisir };
   }
 
+  // Grille « jour-repas » → recette, à partir d'identifiants ; les jours plaisir sont ceux d'un plat plaisir.
+  function grilleDepuis(ids, recettes) {
+    const grille = {}, joursPlaisir = [];
+    for (const [cle, id] of Object.entries(ids)) {
+      const r = recettes.find(x => x.id === id); if (!r) continue;
+      grille[cle] = r;
+      const [j, k] = cle.split("-");
+      if ((k === "dej" || k === "din") && (r.tags || []).includes("plaisir") && !joursPlaisir.includes(+j)) joursPlaisir.push(+j);
+    }
+    return { grille, joursPlaisir: joursPlaisir.sort((a, b) => a - b) };
+  }
+  // Grille d'un mois déjà composé (pour la modifier puis la recalculer).
+  const grilleDuMois = mois => Object.fromEntries(mois.plan.flatMap(j => j.meals.map(m => [`${j.d}-${m.k}`, m.recette])));
+
   // Choisit n jours dans la liste en maximisant l'écart entre eux.
   function repartir(candidats, n, N) {
     if (candidats.length <= n) return candidats.slice();
@@ -369,13 +383,14 @@ const Moteur = (() => {
 
     // on recompose en donnant plus de poids au coût tant que les achats dépassent le budget (6 passes au plus)
     let res = null;
-    const passes = entrees.passes || 6, pasCout = entrees.pasCout || 0.8;
+    // grille imposée (un repas changé à la main) : on garde tous les plats, on recalcule portions, courses et bilan
+    const passes = entrees.grilleImposee ? 1 : entrees.passes || 6, pasCout = entrees.pasCout || 0.8;
     for (let passe = 0; passe < passes; passe++) {
       const historique = (entrees.historique || []).map(h => ({ j: Math.round((dateISO(h.date) - debut) / JOUR_MS) + 1, recette: h.recette }));
       const ctx = { cat, recettes: recs, reglages, cal, exclure, quotas, invites, historique, stockDepart: entrees.stockDepart || {},
         poidsStock: entrees.poidsStock, penaliteManque: entrees.penaliteManque || 0,
         alea: hasard((entrees.graine || 1) + passe * 7919), poidsCout: 0.5 + passe * pasCout };
-      const { grille, joursPlaisir } = composer(ctx);
+      const { grille, joursPlaisir } = entrees.grilleImposee ? grilleDepuis(entrees.grilleImposee, recs) : composer(ctx);
       const plan = [];
       for (let j = 1; j <= n; j++) {
         const parPersonne = {};
@@ -538,6 +553,6 @@ const Moteur = (() => {
     return listeCourses({ cat: e.catalogue, reglages: e.reglages, cal, invites: e.invites || 0, stockDepart: e.stockDepart || {} }, e.plan);
   }
 
-  return { composerMois, reajuster, coursesPour, avecPrix, objectifs, prixUnitaire, totaux, calendrier, portionsDuJour, aProteineAnimale };
+  return { composerMois, reajuster, coursesPour, grilleDuMois, avecPrix, objectifs, prixUnitaire, totaux, calendrier, portionsDuJour, aProteineAnimale };
 })();
 if (typeof module !== "undefined") module.exports = Moteur;

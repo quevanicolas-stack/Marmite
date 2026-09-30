@@ -28,6 +28,28 @@ async def main():
         verif("À acheter chaque semaine" in texte and "Course 4" in texte, "tableau des courses par semaine absent")
         await pg.screenshot(path="/tmp/marmite_mois.png", full_page=True)
 
+        # changer un repas : toucher le déjeuner du 5, chercher, filtrer, choisir steak frites
+        avant = await pg.evaluate("Moteur.grilleDuMois(gen.res.mois)")
+        await pg.click("button[data-changer='5-dej']")
+        verif("Changer le déjeuner" in await pg.inner_text("#couche"), "feuille de choix absente")
+        await pg.click("button[data-choix-filtre='plaisir']")
+        noms = await pg.locator(".choix-plat b").all_inner_texts()
+        verif(noms and all(n in ("Burger maison, potatoes au four, crudités", "Pizza maison bœuf, poivrons, champignons + salade", "Barbecue bœuf-poulet, pommes de terre, légumes grillés", "Steak frites + salade", "Saucisses grillées, frites au four, haricots verts") for n in noms), f"filtre plaisir : {noms}")
+        await pg.fill("#choix-q", "steak"); await pg.dispatch_event("#choix-q", "input")
+        verif(await pg.locator(".choix-plat").count() == 1, "recherche « steak » : un seul plat attendu")
+        await pg.click("button[data-choix-id='steak-frites-salade']")
+        apres = await pg.evaluate("Moteur.grilleDuMois(gen.res.mois)")
+        verif(apres["5-dej"] == "steak-frites-salade", "repas non remplacé")
+        verif(all(apres[c] == v for c, v in avant.items() if c != "5-dej"), "d'autres repas ont changé")
+        verif(await pg.evaluate("gen.res.mois.courses.some(c => c.items.some(i => i.a === 'Bœuf'))"), "courses non recalculées")
+        verif(await pg.evaluate("document.getElementById('couche').innerHTML === ''"), "feuille de choix restée ouverte")
+        verif("Steak frites + salade" in await pg.inner_text(".gen-liste"), "le planning affiché ne montre pas le nouveau plat")
+        # le dessert se change aussi
+        await pg.click("button[data-changer='6-des']")
+        verif(await pg.locator("button[data-choix-filtre]").count() == 0, "pas de filtres viande/poisson pour un dessert")
+        await pg.click("button[data-choix-id='glace']")
+        verif(await pg.evaluate("Moteur.grilleDuMois(gen.res.mois)['6-des']") == "glace", "dessert non remplacé")
+
         # budget plus serré : le chef recompose moins cher (ou le dit)
         await pg.fill("#mois-budget", "420"); await pg.dispatch_event("#mois-budget", "change")
         await pg.click("button[data-generer='calculer']")
