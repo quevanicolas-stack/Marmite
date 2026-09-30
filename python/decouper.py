@@ -93,6 +93,12 @@ def recettes_et_plan():
                 index[cle] = rid
             jour["meals"].append(dict(m, recette=index[cle]))
         plan.append(jour)
+    # plats de restes : cuisinés avec le surplus d'un autre plat, placés juste après lui
+    suites = {"lasagnes-restes-du-samedi-salade": ("lasagnes-boeuf-courgettes-salade", 2),
+              "salade-des-restes-du-barbecue-poulet-avocat-pommes-de-terre": ("barbecue-boeuf-poulet-pommes-de-terre-legumes-grilles", 0)}
+    for r in recettes:
+        if r["id"] in suites:
+            r["suit"], r["delaiMaxJours"] = suites[r["id"]]
     return {"version": 1, "recettes": recettes}, plan
 
 
@@ -127,6 +133,17 @@ REGLAGES = {
         "jaiFaim": "bibliothèque locale par défaut ; « Nouveauté » appelle Claude à la demande",
     },
     "rappels": {"preparerMoisJ": -3, "coursesJ": -1},
+    # Valeurs par défaut des profils (l'app garde les siennes dans le profil de chacun).
+    # Le budget est celui d'un cycle de budgetJours jours : le moteur le ramène à la durée du mois.
+    "personnes": {
+        "nicolas": {"poids": 85, "kcalMin": 1850, "kcalMax": 1950, "prot": 110, "budget": 180, "budgetJours": 21},
+        "aurelie": {"poids": 70, "kcalMin": 1350, "kcalMax": 1450, "prot": 85, "budget": 170, "budgetJours": 21},
+    },
+    # Dépenses hors repas (quantité par jour, dans l'unité du catalogue : g pour le café, litres pour l'eau)
+    "horsRepas": [
+        {"a": "Café", "parJour": {"nicolas": round(1000 / 21, 1)}},
+        {"a": "Eau (bouteilles 5 L)", "parJour": {"nicolas": 2, "aurelie": 2}},
+    ],
 }
 
 

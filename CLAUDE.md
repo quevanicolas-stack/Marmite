@@ -88,7 +88,8 @@ python3 decouper.py                       # migration faite une fois : appdata.j
                                           # (la relancer écrase les blocs : à éviter une fois qu'ils ont été modifiés)
 # Chaîne courante :
 cd ../app && python3 construire.py        # template + blocs de donnees/ → app/marmite.html
-cd .. && for t in tests/*.py; do python3 $t || break; done
+cd .. && for t in tests/*.py; do python3 $t || break; done && node tests/test_moteur.js
+node outils/proposer_mois.js 2026-11 [graine]   # proposition du moteur → donnees/propositions/2026-11.json + résumé
 ```
 
 - Le code est un seul fichier HTML, en JavaScript sans framework ni outil de build.
@@ -273,9 +274,25 @@ Nico veut enchaîner sans tout régénérer en Python, et être prévenu avant l
 ### Avancement
 
 1. Fait : découpage des données en blocs (`donnees/catalogue.json`, `recettes.json`, `mois/2026-10.json`, `reglages.json`), l'app inchangée.
-2. À faire : moteur de composition du mois, portions calculées, listes des 4 courses, écran « Préparer le mois », inventaire avant course, « J'ai faim » local, rappels.
+2. Fait : moteur `app/moteur.js`, sans écran (voir « Le moteur » ci-dessous), testé par `tests/test_moteur.js`. Propositions générées par `outils/proposer_mois.js` dans `donnees/propositions/`, jamais dans `donnees/mois/` (l'app prendrait le mois le plus récent).
+3. À faire : branchement dans l'app (NB_JOURS et les 2 courses sont codés en dur dans le template), écran « Préparer le mois », inventaire avant course, appel Claude du planning, « J'ai faim » local, rappels.
+
+### Le moteur (`app/moteur.js`)
+
+`Moteur.composerMois({ catalogue, recettes, reglages, annee, mois, graine, stockDepart, profils?, poidsActuels?, exclure?, moisReference? })` renvoie `{ mois, bilan }`. `mois` a la forme de `donnees/mois/2026-10.json` ; le même objet sert sous Node (`module.exports`) et dans le navigateur (`Moteur` global).
+
+- **Calendrier** : jours du mois calendaire, courses aux jours des réglages. L'« âge » d'un jour = jours écoulés depuis la dernière course (avant la première course du mois : depuis la dernière du mois précédent).
+- **Composition** : les plaisirs d'abord (déjeuners du week-end, répartis sur le mois, glace en dessert), puis les poissons (répartis, en alternant déjeuner et dîner), puis le reste jour par jour. Chaque candidat reçoit un score : famille de plat déjà placée à moins de `ecartMinJours` exclue (les variantes d'un même plat, « Bœuf sauté asiatique, … », forment une famille) ; pénalités pour les produits frais au-delà de leur conservation, la même protéine ou le même féculent deux fois dans la journée, les répétitions, le coût ; bonus pour le stock de départ. Un tirage à graine départage : même graine, même mois. Les plats `restes` suivent leur plat d'origine (`suit`, `delaiMaxJours`). Desserts selon la répartition du mois de référence ; petits-déjeuners fixes.
+- **Portions** : par personne et par jour, protéines des plats principaux calées sur l'objectif (facteur 0,85 à 1,4), puis féculents calés sur le milieu de la fourchette de kcal (0,5 à 1,6) ; arrondis à 5 g ou à l'unité. `objectifs(profil, poids)` retire environ 14 kcal par kg perdu.
+- **Courses** : chaque course achète le besoin de sa période moins le stock, arrondi au conditionnement (vrac : 50 g bruts, rendement compris). Les restes de conditionnement passent à la période suivante, sauf le frais qui a dépassé sa conservation : il est compté en pertes.
+- **Budget** : celui du profil, prévu pour `budgetJours` jours, ramené à la durée du mois. Si la consommation le dépasse, le moteur recompose en pesant davantage le coût (6 passes au plus).
+- **Bilan** : nutrition moyenne, jours hors fourchette, quotas, coûts par course, pertes de frais, frais consommés au-delà de leur conservation (plats et petits-déjeuners à part), ce qu'il faut avant la première course, stock de fin de mois.
 
 ### Points ouverts
+
+- **Préparer le mois avant la dernière course, pas à J-3 de la fin.** La course du 24 doit acheter les 1er et 2 du mois suivant, dont le planning n'existe qu'une fois le mois préparé. Proposition : rappel « Prépare le mois suivant » la veille de la dernière course du mois.
+- **Conditionnements trop gros pour des courses hebdomadaires** : jambon en paquet de 500 g pour 210 g par semaine (290 g perdus chaque semaine), avocat compté à 350 g de chair, salade entière. Pertes estimées de novembre : environ 18 €.
+- **Tomates, salade et champignons** dépassent leur conservation estimée en fin de semaine ; le petit-déjeuner d'Aurélie (tomate) et celui de Nicolas (banane) aussi.
 
 - **Du 1er au 2 novembre** : avant la première course du 3, ces deux jours vivent sur le stock restant, qui dépend de la période en attente du 22 au 31 octobre.
 - **Conservation** : les durées du catalogue sont des estimations (`estime:true`) à faire corriger par Nico ; elles décident de ce qui est frais et de la course où chaque produit est acheté.
@@ -325,6 +342,10 @@ python/build.py                    génération de l'Excel
 python/export_appdata.py           Excel + menu → donnees/appdata.json
 python/decouper.py                 migration appdata.json → blocs de donnees/ (faite une fois)
 excel/menu_octobre_nicolas_aurelie.xlsx
+app/moteur.js                      moteur de composition d'un mois (planning, portions, courses, bilan)
+outils/proposer_mois.js            node outils/proposer_mois.js 2026-11 : proposition + résumé
+donnees/propositions/              propositions du moteur, en attente de validation
+tests/test_moteur.js               règles du mois (quotas, écart, courses, nutrition, graine, stock, objectifs)
 tests/test_donnees.py              blocs de données cohérents, app nourrie à l'identique
 tests/test_ajustement_stock.py     ajustement d'un repas, retour au plan, stock
 tests/test_assistant_personnes_theme.py   Nicolas/Aurélie, thème, assistant simulé, remplacement à 2

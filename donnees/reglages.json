@@ -28,5 +28,38 @@
  "rappels": {
   "preparerMoisJ": -3,
   "coursesJ": -1
- }
+ },
+ "personnes": {
+  "nicolas": {
+   "poids": 85,
+   "kcalMin": 1850,
+   "kcalMax": 1950,
+   "prot": 110,
+   "budget": 180,
+   "budgetJours": 21
+  },
+  "aurelie": {
+   "poids": 70,
+   "kcalMin": 1350,
+   "kcalMax": 1450,
+   "prot": 85,
+   "budget": 170,
+   "budgetJours": 21
+  }
+ },
+ "horsRepas": [
+  {
+   "a": "Café",
+   "parJour": {
+    "nicolas": 47.6
+   }
+  },
+  {
+   "a": "Eau (bouteilles 5 L)",
+   "parJour": {
+    "nicolas": 2,
+    "aurelie": 2
+   }
+  }
+ ]
 }

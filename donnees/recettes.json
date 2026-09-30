@@ -1821,7 +1821,9 @@
       60.0
      ]
     ]
-   }
+   },
+   "suit": "lasagnes-boeuf-courgettes-salade",
+   "delaiMaxJours": 2
   },
   {
    "id": "curry-poulet-courgettes-riz",
@@ -2505,7 +2507,9 @@
       6.0
      ]
     ]
-   }
+   },
+   "suit": "barbecue-boeuf-poulet-pommes-de-terre-legumes-grilles",
+   "delaiMaxJours": 0
   },
   {
    "id": "poisson-grille-champignons-pommes-de-terre-tomates",
