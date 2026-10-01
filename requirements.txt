@@ -1,0 +1,3 @@
+openpyxl
+# aligné sur le Chromium préinstallé des sessions Claude Code web (/opt/pw-browsers)
+playwright==1.56.0

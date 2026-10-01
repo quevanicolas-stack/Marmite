@@ -1,0 +1,1818 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Marmite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<script>
+/* Thème choisi sur cet appareil, appliqué avant l'affichage */
+try { const t = localStorage.getItem("marmite-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+<style>
+/* ---------- Palette Fluent & Forward ---------- */
+:root{
+  --vert:#1B6B4A; --profond:#10382A; --or:#C9A96E; --sable:#E8DDD0; --creme:#FAF7F2; --encre-ff:#2C1810;
+  --fond:var(--creme); --surface:#FFFFFF; --surface-2:#F2EBE0; --trait:#E8DDD0; --encre:var(--encre-ff); --brume:#7A6A5E;
+  --primaire:var(--vert); --sur-primaire:#FAF7F2; --accent:var(--or); --titre-c:var(--profond);
+  --c-pdj:#C9A96E; --c-dej:#1B6B4A; --c-din:#5E9C7F; --c-des:#9C7A45;
+  --alerte:#A2412B; --ok:#1B6B4A; --ombre:0 1px 0 rgba(44,24,16,.06);
+  --titre:"Plus Jakarta Sans", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --texte:"DM Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --fond:#10382A; --surface:#15432F; --surface-2:#1C5039; --trait:#2A614A; --encre:#FAF7F2; --brume:#CDBFAE;
+    --primaire:#C9A96E; --sur-primaire:#10382A; --titre-c:#FAF7F2;
+    --c-pdj:#C9A96E; --c-dej:#6FB896; --c-din:#A8D5BF; --c-des:#E3C893;
+    --alerte:#F0A089; --ok:#8FD1AF; --ombre:0 1px 0 rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --fond:#10382A; --surface:#15432F; --surface-2:#1C5039; --trait:#2A614A; --encre:#FAF7F2; --brume:#CDBFAE;
+  --primaire:#C9A96E; --sur-primaire:#10382A; --titre-c:#FAF7F2;
+  --c-pdj:#C9A96E; --c-dej:#6FB896; --c-din:#A8D5BF; --c-des:#E3C893;
+  --alerte:#F0A089; --ok:#8FD1AF; --ombre:0 1px 0 rgba(0,0,0,.25);
+}
+html{ scroll-padding-top:env(safe-area-inset-top,0px); height:100%; }
+*,*::before,*::after{ box-sizing:border-box; }
+body{ margin:0; min-height:100%; background:var(--fond); color:var(--encre); font:16px/1.5 var(--texte); -webkit-font-smoothing:antialiased; transition:background .25s; }
+button,input,select{ font:inherit; color:inherit; }
+button{ cursor:pointer; }
+:focus-visible{ outline:3px solid var(--or); outline-offset:2px; border-radius:6px; }
+svg{ max-width:100%; }
+.ico{ width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; flex:none; }
+
+/* ---------- Mise en page ---------- */
+.app{ display:grid; min-height:100vh; }
+.app > div, main{ min-width:0; }
+.rail{ display:none; }
+.hautbar{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 18px 0; max-width:760px; margin:0 auto; }
+main{ padding:14px 18px 110px; max-width:760px; width:100%; margin:0 auto; }
+.barre{ position:fixed; left:0; right:0; bottom:0; z-index:20; background:var(--surface); border-top:1px solid var(--trait);
+  display:grid; grid-template-columns:repeat(5,1fr); padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px)); }
+.barre button,.rail .nav button{ background:none; border:0; display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 2px;
+  font-size:12px; font-weight:700; color:var(--brume); border-radius:12px; }
+.barre button[aria-current="page"],.rail .nav button[aria-current="page"]{ color:var(--titre-c); }
+.barre button[aria-current="page"] .ico{ stroke:var(--or); }
+@media (min-width:960px){
+  .app{ grid-template-columns:232px 1fr; }
+  .barre,.hautbar{ display:none; }
+  .rail{ display:flex; flex-direction:column; gap:18px; position:sticky; top:0; height:100vh; padding:28px 16px; background:var(--surface); border-right:1px solid var(--trait); }
+  .rail .nav{ display:flex; flex-direction:column; gap:4px; }
+  .rail .nav button{ flex-direction:row; gap:12px; font-size:15px; padding:10px 12px; justify-content:flex-start; }
+  .rail .nav button[aria-current="page"]{ background:var(--surface-2); }
+  .rail .bas{ margin-top:auto; }
+  main{ padding:34px 40px 60px; max-width:1060px; }
+}
+.marque{ font-family:var(--titre); font-weight:800; font-size:22px; letter-spacing:-.02em; color:var(--titre-c); display:flex; align-items:center; gap:8px; }
+.marque svg{ width:28px; height:28px; flex:none; }
+@media (max-width:400px){ .hautbar{ padding:12px 16px 0; gap:6px; } .hautbar .marque{ font-size:18px; gap:5px; } .hautbar .marque svg{ width:22px; height:22px; } .qui button{ padding:6px 9px; font-size:13px; } .hautbar .theme{ padding:7px 9px; } }
+.qui{ display:grid; grid-template-columns:1fr 1fr; background:var(--surface-2); border-radius:999px; padding:3px; }
+.qui button{ border:0; background:none; border-radius:999px; padding:6px 12px; font-weight:700; font-size:14px; color:var(--brume); }
+.qui button[aria-pressed="true"]{ background:var(--primaire); color:var(--sur-primaire); }
+.theme{ display:inline-flex; align-items:center; gap:8px; border:1px solid var(--trait); background:var(--surface); border-radius:999px; padding:7px 12px; font-weight:700; font-size:14px; }
+.theme .ico{ width:18px; height:18px; }
+.hautbar .theme span{ display:none; }
+@media (min-width:420px){ .hautbar .theme span{ display:inline; } }
+
+/* ---------- Typographie ---------- */
+h1,h2,h3{ font-family:var(--titre); letter-spacing:-.015em; margin:0; color:var(--titre-c); }
+h1{ font-size:clamp(28px,6vw,40px); font-weight:800; line-height:1.05; }
+h2{ font-size:22px; font-weight:700; }
+h3{ font-size:18px; font-weight:700; }
+.discret{ color:var(--brume); }
+.petit{ font-size:14px; }
+.chiffre{ font-family:var(--titre); font-weight:700; font-variant-numeric:tabular-nums; }
+
+/* ---------- En-tête du jour ---------- */
+.entete{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin:8px 0 6px; }
+.nav-jour{ display:flex; gap:6px; }
+.rond{ width:42px; height:42px; border-radius:50%; border:1px solid var(--trait); background:var(--surface); display:grid; place-items:center; padding:0; }
+.rond:disabled{ opacity:.4; cursor:default; }
+.bandeau{ margin:10px 0 0; padding:10px 14px; border-radius:14px; background:var(--surface-2); font-size:14px; display:flex; gap:10px; align-items:center; }
+.bandeau .ico{ width:20px; height:20px; color:var(--or); }
+
+/* ---------- L'assiette ---------- */
+.jour-grille{ display:grid; gap:18px; margin-top:18px; }
+@media (min-width:960px){ .jour-grille{ grid-template-columns:340px 1fr; align-items:start; } .assiette-bloc{ position:sticky; top:34px; } }
+.assiette-bloc{ background:var(--surface); border-radius:28px; padding:22px 20px 18px; box-shadow:var(--ombre); }
+.assiette{ display:block; width:min(280px,78vw); height:auto; margin:0 auto; }
+.assiette .arc{ transition:stroke-opacity .5s ease, stroke-width .5s ease; }
+@media (prefers-reduced-motion:reduce){ .assiette .arc, body{ transition:none; } }
+.jauges{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
+.jauge{ text-align:center; }
+.jauge .chiffre{ font-size:22px; display:block; line-height:1.1; }
+.jauge .discret{ font-size:12px; }
+.barre-prog{ height:6px; border-radius:6px; background:var(--surface-2); overflow:hidden; margin-top:6px; }
+.barre-prog i{ display:block; height:100%; border-radius:6px; }
+
+/* ---------- Repas ---------- */
+.repas{ background:var(--surface); border-radius:18px; padding:16px 16px 12px 22px; position:relative; box-shadow:var(--ombre); }
+.repas + .repas{ margin-top:12px; }
+.repas::before{ content:""; position:absolute; left:0; top:14px; bottom:14px; width:6px; border-radius:0 6px 6px 0; background:var(--couleur); }
+.repas.fait{ background:color-mix(in srgb, var(--couleur) 12%, var(--surface)); }
+.repas-type{ font-size:13px; font-weight:700; color:var(--brume); }
+.repas h3{ margin-top:2px; }
+.pastille{ display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:700; padding:2px 8px; border-radius:999px; background:var(--surface-2); color:var(--titre-c); margin-top:6px; }
+.pastille .ico{ width:13px; height:13px; }
+.ingredients{ list-style:none; padding:0; margin:10px 0 8px; display:grid; grid-template-columns:1fr auto; column-gap:14px; row-gap:3px; font-size:15px; }
+.ingredients li{ display:contents; }
+.ingredients .q{ text-align:right; font-variant-numeric:tabular-nums; color:var(--brume); }
+.repas-pied{ display:flex; align-items:center; justify-content:space-between; gap:8px; border-top:1px dashed var(--trait); padding-top:10px; flex-wrap:wrap; }
+.repas-pied .infos{ display:flex; gap:14px; font-size:14px; }
+.repas-pied .infos b{ font-family:var(--titre); }
+.coche{ display:inline-flex; align-items:center; gap:8px; border:2px solid var(--couleur); background:transparent; border-radius:999px; padding:6px 14px 6px 8px; font-weight:700; font-size:14px; }
+.coche .case{ width:22px; height:22px; border-radius:50%; border:2px solid var(--couleur); display:grid; place-items:center; }
+.coche .case .ico{ width:14px; height:14px; opacity:0; stroke-width:3; }
+.coche[aria-pressed="true"]{ background:var(--couleur); color:var(--surface); }
+.coche[aria-pressed="true"] .case{ background:var(--surface); border-color:var(--surface); }
+.coche[aria-pressed="true"] .case .ico{ opacity:1; stroke:var(--couleur); }
+.lien{ background:none; border:0; color:var(--titre-c); text-decoration:underline; text-decoration-color:var(--or); text-underline-offset:3px; font-weight:700; padding:6px 4px; font-size:14px; }
+
+/* ---------- Ajustement d'un repas ---------- */
+.repas.edition{ outline:2px solid var(--or); }
+.lignes-ed{ list-style:none; padding:0; margin:10px 0 6px; display:grid; gap:6px; }
+.lignes-ed li{ display:grid; grid-template-columns:1fr auto auto; gap:8px; align-items:center; }
+.lignes-ed .nom-ed{ font-size:15px; }
+.lignes-ed .ecart{ display:block; font-size:12px; color:var(--brume); }
+.qte{ display:flex; align-items:center; gap:4px; }
+.qte button,.suppr{ width:34px; height:34px; border-radius:50%; border:1px solid var(--trait); background:var(--surface); font-weight:700; font-size:18px; padding:0; line-height:1; }
+.qte input{ width:64px; text-align:right; border:1px solid var(--trait); border-radius:10px; padding:6px 6px; background:var(--surface); font-size:15px; font-variant-numeric:tabular-nums; }
+.qte .u{ font-size:13px; color:var(--brume); width:34px; }
+.suppr{ color:var(--alerte); }
+.ajout-ed{ display:grid; grid-template-columns:1fr auto; gap:8px; margin:8px 0 10px; }
+.ajout-ed select{ border:1px solid var(--trait); background:var(--surface); border-radius:12px; padding:9px 10px; font-size:15px; color:var(--encre); }
+.btns-ed{ display:flex; gap:8px; flex-wrap:wrap; }
+.btns-ed .bouton{ padding:10px 16px; font-size:15px; }
+
+/* ---------- Stock ---------- */
+.stock-ligne{ display:grid; grid-template-columns:minmax(0,1fr) auto auto 34px; gap:8px; align-items:baseline; padding:9px 4px; border-bottom:1px solid var(--trait); font-variant-numeric:tabular-nums; }
+.stock-ligne .n{ text-align:right; min-width:68px; }
+.stock-tete{ font-size:12px; font-weight:700; color:var(--brume); border-bottom:1px solid var(--trait); }
+.manque{ color:var(--alerte); font-weight:700; }
+.jeter{ width:34px; height:34px; border-radius:50%; border:1px solid var(--trait); background:var(--surface); padding:0; display:grid; place-items:center; color:var(--brume); align-self:center; }
+.jeter .ico{ width:17px; height:17px; }
+.jeter-form{ grid-column:1 / -1; display:flex; flex-wrap:wrap; gap:8px; align-items:center; background:var(--surface-2); border-radius:12px; padding:10px 12px; font-size:14px; }
+.jeter-form input{ width:90px; border:1px solid var(--trait); border-radius:10px; padding:6px 8px; background:var(--surface); font-size:15px; text-align:right; }
+.jeter-form .bouton{ padding:8px 14px; font-size:14px; }
+.pertes{ margin-top:18px; }
+.pertes li{ display:flex; justify-content:space-between; gap:10px; align-items:baseline; padding:6px 0; border-bottom:1px solid var(--trait); font-size:14px; }
+.pertes ul{ list-style:none; padding:0; margin:6px 0 0; }
+.depasse{ margin-top:12px; border:2px solid color-mix(in srgb, var(--alerte) 40%, transparent); }
+.depasse ul{ list-style:none; padding:0; margin:4px 0 12px; }
+.depasse li{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid var(--trait); font-size:14px; }
+.depasse li > span{ min-width:0; }
+.depasse li .discret{ display:block; font-size:12px; }
+.depasse li .bouton{ padding:8px 12px; font-size:14px; flex:none; }
+.depasse .modifs{ margin-top:12px; }
+.courses-puces{ margin:0 0 4px; }
+.generation{ margin-top:16px; }
+.generation .bouton .ico{ width:20px; height:20px; }
+.gen-liste{ list-style:none; padding:0; margin:12px 0; max-height:420px; overflow:auto; border-top:1px solid var(--trait); }
+.gen-liste li{ display:grid; grid-template-columns:110px minmax(0,1fr); gap:10px; padding:8px 0; border-bottom:1px solid var(--trait); font-size:14px; }
+.gen-jour{ font-weight:700; color:var(--titre-c); display:flex; gap:4px; align-items:flex-start; flex-wrap:wrap; }
+.gen-jour .ico{ width:14px; height:14px; color:var(--or); }
+.gen-repas-col{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.gen-repas{ display:block; width:100%; text-align:left; border:0; background:none; padding:5px 8px; margin:0 -8px; border-radius:10px; font-size:14px; line-height:1.35; color:var(--encre); }
+.gen-repas:hover, .gen-repas:focus-visible{ background:var(--surface-2); }
+.gen-repas.fort{ font-weight:700; }
+.gen-repas.discret{ color:var(--brume); }
+.gen-k{ display:block; font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--brume); }
+.choix-liste{ list-style:none; padding:0; margin:12px 0 0; }
+.choix-liste li + li{ border-top:1px solid var(--trait); }
+.choix-plat{ display:flex; flex-direction:column; gap:2px; width:100%; text-align:left; border:0; background:none; padding:10px 6px; border-radius:10px; font-size:15px; color:var(--encre); }
+.choix-plat:hover, .choix-plat:focus-visible{ background:var(--surface-2); }
+.choix-plat .discret{ font-size:13px; }
+.choix-plat.actuel{ background:color-mix(in srgb, var(--or) 18%, var(--surface)); }
+.feuille-ia .puces{ margin:10px 0 0; }
+.gen-grille{ display:block; }
+.gen-col{ min-width:0; }
+.biblio, .sur-ordi{ display:none; }
+.gen-repas.cible{ background:color-mix(in srgb, var(--or) 30%, var(--surface)); outline:2px dashed var(--or); }
+.plein-ecran{ margin-top:8px; }
+@media (min-width:960px) and (hover:hover){
+  .gen-grille{ display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:18px; align-items:start; }
+  .sur-ordi{ display:inline; }
+  .biblio{ display:block; position:sticky; top:16px; max-height:calc(100vh - 32px); overflow:auto; background:var(--surface-2); border-radius:18px; padding:14px; margin-top:12px; }
+  .biblio input{ width:100%; border:1px solid var(--trait); border-radius:12px; padding:8px 10px; background:var(--surface); font-size:14px; }
+  .biblio .puces{ margin:8px 0; gap:6px; }
+  .biblio .puce{ font-size:13px; padding:4px 10px; }
+  .biblio-liste{ list-style:none; padding:0; margin:0; }
+  .biblio-plat{ display:flex; flex-direction:column; gap:1px; padding:8px 10px; margin:4px 0; border-radius:10px; background:var(--surface); border:1px solid var(--trait); cursor:grab; font-size:14px; }
+  .biblio-plat:active{ cursor:grabbing; }
+  .biblio-plat.glisse{ opacity:.5; }
+  .biblio-plat .discret{ font-size:12px; }
+}
+.courses-puces .puce span{ font-weight:500; margin-left:4px; }
+.article label.qte-achat{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:4px; font-size:13px; color:var(--brume); font-weight:500; }
+.article label.qte-achat input, .article label.qte-achat input:not(:placeholder-shown){ width:70px; border:1px solid var(--trait); border-radius:10px; padding:5px 8px; background:var(--surface); font-size:15px; font-weight:500; text-align:right; font-variant-numeric:tabular-nums; }
+
+/* ---------- Boutons ---------- */
+.bouton{ display:inline-flex; align-items:center; justify-content:center; gap:8px; border:0; border-radius:14px; padding:13px 20px; font-weight:700; font-size:16px; background:var(--primaire); color:var(--sur-primaire); }
+.bouton.or{ background:var(--or); color:#2C1810; }
+.bouton.plein{ width:100%; }
+.bouton.leger{ background:var(--surface-2); color:var(--titre-c); }
+.bouton:disabled{ opacity:.5; cursor:default; }
+.faim{ margin-top:18px; width:100%; justify-content:space-between; padding:18px 20px; border-radius:20px; font-size:18px; font-family:var(--titre); text-align:left; }
+.faim small{ display:block; font-family:var(--texte); font-weight:500; font-size:13px; opacity:.85; }
+.faim .ico{ width:30px; height:30px; }
+
+/* ---------- Planning ---------- */
+.cal{ display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px; margin-top:16px; }
+.cal .jsem{ text-align:center; font-size:12px; font-weight:700; color:var(--brume); }
+.case-j{ min-width:0; overflow:hidden; color:var(--encre); background:var(--surface); border:1px solid var(--trait); border-radius:14px; min-height:78px; padding:7px 4px; display:flex; flex-direction:column; align-items:center; gap:5px; }
+.case-j.vide{ background:transparent; border-color:transparent; }
+.case-j .num{ font-family:var(--titre); font-weight:700; font-size:18px; line-height:1; }
+.case-j .barres{ display:flex; gap:2px; }
+.case-j .barres i{ width:8px; height:5px; border-radius:3px; border:1.5px solid var(--c); }
+.case-j .barres i.ok{ background:var(--c); }
+.case-j .marques{ display:flex; gap:3px; height:14px; color:var(--or); }
+.case-j .marques .ico{ width:14px; height:14px; }
+.case-j .cout{ font-size:11px; white-space:nowrap; letter-spacing:-.02em; color:var(--brume); font-variant-numeric:tabular-nums; }
+.case-j[aria-current="date"]{ border:2px solid var(--or); }
+.case-j.passe{ background:var(--surface-2); }
+.legende{ display:flex; flex-wrap:wrap; gap:14px; margin-top:14px; font-size:13px; color:var(--brume); }
+.legende span{ display:inline-flex; align-items:center; gap:6px; }
+.legende .ico{ width:15px; height:15px; color:var(--or); }
+.progress-plan{ margin-top:16px; background:var(--surface); border-radius:18px; padding:16px; }
+
+/* ---------- Courses ---------- */
+.segments{ display:grid; grid-template-columns:repeat(var(--n,3),1fr); background:var(--surface-2); border-radius:16px; padding:4px; margin:16px 0; }
+.segments button{ border:0; background:none; border-radius:12px; padding:10px 8px; font-weight:700; text-align:left; line-height:1.25; min-width:0; overflow-wrap:anywhere; }
+.segments button span{ display:block; font-weight:500; font-size:13px; color:var(--brume); }
+.segments button[aria-pressed="true"]{ background:var(--surface); box-shadow:var(--ombre); }
+@media (max-width:420px){ .segments button{ padding:9px 6px; font-size:14px; } .segments button span{ font-size:12px; } }
+.prix-ligne{ display:grid; grid-template-columns:1fr auto; gap:6px 12px; align-items:center; padding:10px 4px; border-bottom:1px solid var(--trait); }
+.prix-ligne .nom{ font-weight:700; }
+.prix-ligne .detail{ font-size:13px; color:var(--brume); }
+.prix-ligne .saisie-prix{ display:flex; align-items:center; gap:6px; font-size:13px; color:var(--brume); white-space:nowrap; }
+.prix-ligne input{ width:84px; border:1px solid var(--trait); border-radius:10px; padding:6px 8px; background:var(--surface); font-size:15px; text-align:right; }
+.prix-ligne input.modifie{ border-color:var(--or); border-width:2px; }
+.prix-ligne .lien{ padding:0 2px; font-size:13px; }
+.etiq-estime{ display:inline-block; font-size:11px; font-weight:700; padding:1px 7px; border-radius:999px; background:color-mix(in srgb, var(--or) 25%, var(--surface)); color:var(--titre-c); margin-left:6px; vertical-align:1px; }
+.totaux{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.totaux div{ background:var(--surface); border-radius:16px; padding:12px; }
+.totaux .chiffre{ font-size:20px; display:block; }
+.totaux .discret{ font-size:12px; }
+.champ{ display:flex; flex-direction:column; gap:4px; font-size:13px; font-weight:700; color:var(--brume); }
+.champ input,.champ select{ border:1px solid var(--trait); background:var(--surface); border-radius:12px; padding:10px 12px; font-size:16px; color:var(--encre); font-weight:500; }
+.cat-titre{ font-family:var(--titre); font-weight:700; font-size:16px; margin:22px 0 6px; color:var(--titre-c); }
+.article{ display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:12px; align-items:center; padding:10px 4px; border-bottom:1px solid var(--trait); cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.article .saisie{ cursor:default; }
+.article .check{ width:28px; height:28px; border-radius:9px; border:2px solid var(--vert); background:var(--surface); display:grid; place-items:center; padding:0; }
+:root[data-theme="dark"] .article .check{ border-color:var(--or); }
+.article .check .ico{ width:16px; height:16px; opacity:0; stroke:var(--surface); stroke-width:3; }
+.article .check[aria-pressed="true"]{ background:var(--vert); }
+.article .check[aria-pressed="true"] .ico{ opacity:1; }
+.article .nom{ font-weight:700; }
+.article.achete .nom{ text-decoration:line-through; text-decoration-color:var(--brume); }
+.article .detail{ font-size:13px; color:var(--brume); }
+.article .prix{ text-align:right; font-variant-numeric:tabular-nums; font-weight:700; }
+.article .prix span{ display:block; font-weight:500; font-size:12px; color:var(--brume); }
+.article .saisie{ display:inline-flex; gap:4px; align-items:center; font-size:14px; font-weight:700; }
+.article .saisie input{ width:78px; border:1px solid var(--trait); border-radius:10px; padding:6px 8px; background:var(--surface); font-size:15px; font-weight:700; text-align:right; font-variant-numeric:tabular-nums; }
+.article .saisie input:not(:placeholder-shown){ border-color:var(--or); border-width:2px; }
+
+/* ---------- Budget ---------- */
+.carte{ background:var(--surface); border-radius:22px; padding:18px; box-shadow:var(--ombre); }
+.carte + .carte{ margin-top:14px; }
+.pot{ margin-top:16px; }
+.pot-barre{ position:relative; height:26px; border-radius:13px; background:var(--surface-2); overflow:hidden; margin:14px 0 8px; }
+.pot-barre i{ position:absolute; left:0; top:0; bottom:0; border-radius:13px; }
+.pot-barre b{ position:absolute; top:-4px; bottom:-4px; width:3px; background:var(--encre); border-radius:2px; }
+.stats{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:14px; }
+@media (min-width:640px){ .stats{ grid-template-columns:repeat(4,1fr); } }
+.stats div{ background:var(--surface-2); border-radius:16px; padding:12px; }
+.stats .chiffre{ font-size:20px; display:block; }
+.stats .discret{ font-size:12px; }
+.courbe{ width:100%; height:auto; display:block; margin-top:10px; }
+table.tab{ width:100%; border-collapse:collapse; font-size:14px; margin-top:8px; }
+table.tab th{ text-align:left; font-weight:700; color:var(--brume); font-size:12px; padding:6px 4px; border-bottom:1px solid var(--trait); }
+table.tab td{ padding:8px 4px; border-bottom:1px solid var(--trait); font-variant-numeric:tabular-nums; }
+table.tab .n{ text-align:right; }
+.eco{ color:var(--ok); font-weight:700; }
+.surcout{ color:var(--alerte); font-weight:700; }
+
+/* ---------- Profil ---------- */
+.grille-2{ display:grid; gap:12px; margin-top:16px; }
+.grille-2 .carte{ margin-top:0; }
+@media (min-width:640px){ .grille-2{ grid-template-columns:1fr 1fr; } }
+.puces{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.puce{ display:inline-flex; align-items:center; gap:6px; border:1px solid var(--trait); background:var(--surface); border-radius:999px; padding:6px 12px; font-size:14px; font-weight:700; }
+.puce[aria-pressed="true"]{ background:var(--primaire); border-color:var(--primaire); color:var(--sur-primaire); }
+.puce button{ border:0; background:none; padding:0 0 0 2px; font-weight:700; color:var(--brume); }
+.ligne-saisie{ display:flex; gap:8px; margin-top:10px; align-items:flex-end; min-width:0; }
+.ligne-saisie .champ{ min-width:0; }
+.ligne-saisie .champ{ flex:1; }
+.etat-sync{ display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:700; }
+.etat-sync i{ width:9px; height:9px; border-radius:50%; background:var(--or); }
+.etat-sync.ok i{ background:var(--ok); }
+
+/* ---------- Le chef ---------- */
+.voile{ position:fixed; inset:0; background:rgba(16,56,42,.55); z-index:40; display:flex; align-items:flex-end; justify-content:center; }
+.feuille-ia{ background:var(--fond); width:100%; max-width:660px; max-height:92vh; overflow:auto; border-radius:26px 26px 0 0; padding:20px 18px calc(24px + env(safe-area-inset-bottom,0px)); }
+@media (min-width:700px){ .voile{ align-items:center; } .feuille-ia{ border-radius:26px; } }
+.feuille-ia .tete{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:12px; }
+.form-ia{ display:grid; gap:16px; }
+.form-ia .rangee{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.compteur{ display:flex; align-items:center; gap:10px; }
+.compteur button{ width:40px; height:40px; border-radius:50%; border:1px solid var(--trait); background:var(--surface); font-size:20px; font-weight:700; padding:0; }
+.compteur output{ font-family:var(--titre); font-weight:800; font-size:24px; min-width:28px; text-align:center; }
+.interrupteur{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--surface); border-radius:14px; padding:12px 14px; cursor:pointer; }
+.interrupteur b{ display:block; font-size:15px; }
+.interrupteur small{ color:var(--brume); font-size:13px; }
+.interrupteur .bascule{ width:46px; height:28px; border-radius:14px; background:var(--trait); position:relative; flex:none; transition:background .2s; }
+.interrupteur .bascule::after{ content:""; position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%; background:var(--surface); transition:left .2s; box-shadow:0 1px 2px rgba(0,0,0,.2); }
+.interrupteur[aria-checked="true"] .bascule{ background:var(--vert); }
+:root[data-theme="dark"] .interrupteur[aria-checked="true"] .bascule{ background:var(--or); }
+.interrupteur[aria-checked="true"] .bascule::after{ left:21px; }
+.attente{ display:flex; align-items:center; gap:12px; padding:18px; background:var(--surface); border-radius:18px; margin-top:14px; }
+.attente svg{ width:44px; height:44px; flex:none; }
+.attente .vapeur{ animation:vapeur 1.6s ease-in-out infinite; }
+.attente .vapeur:nth-child(2){ animation-delay:.3s; } .attente .vapeur:nth-child(3){ animation-delay:.6s; }
+@keyframes vapeur{ 0%{ opacity:0; transform:translateY(4px);} 50%{opacity:1;} 100%{ opacity:0; transform:translateY(-6px);} }
+@media (prefers-reduced-motion:reduce){ .attente .vapeur{ animation:none; } }
+.propo{ background:var(--surface); border-radius:18px; padding:16px; margin-top:12px; border:2px solid transparent; }
+.propo.alerte{ border-color:color-mix(in srgb, var(--alerte) 45%, transparent); }
+.propo .chiffres{ display:flex; flex-wrap:wrap; gap:14px; font-size:14px; margin:8px 0; }
+.propo .chiffres b{ font-family:var(--titre); }
+.propo ol{ margin:8px 0 12px; padding-left:20px; font-size:14px; }
+.etiquette{ display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:700; border-radius:999px; padding:3px 10px; }
+.etiquette.stock{ background:color-mix(in srgb, var(--ok) 16%, var(--surface)); color:var(--ok); }
+.etiquette.achat{ background:color-mix(in srgb, var(--or) 25%, var(--surface)); color:var(--titre-c); }
+.etiquette.manque{ background:color-mix(in srgb, var(--alerte) 15%, var(--surface)); color:var(--alerte); }
+.erreur{ background:color-mix(in srgb, var(--alerte) 12%, var(--surface)); border-radius:14px; padding:12px 14px; margin-top:12px; font-size:14px; }
+.toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:calc(90px + env(safe-area-inset-bottom,0px)); background:var(--primaire); color:var(--sur-primaire); padding:10px 16px; border-radius:12px; font-weight:700; font-size:14px; z-index:50; }
+@media (min-width:960px){ .toast{ bottom:30px; } }
+.sect-titre{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="marque" id="marque-rail"></div>
+    <div id="qui-rail"></div>
+    <nav class="nav" id="nav-rail" aria-label="Navigation principale"></nav>
+    <div class="bas" id="theme-rail"></div>
+  </aside>
+  <div>
+    <header class="hautbar"><div class="marque" id="marque-haut"></div><div style="display:flex;gap:8px;align-items:center"><div id="qui-haut"></div><div id="theme-haut"></div></div></header>
+    <main id="vue" tabindex="-1"></main>
+  </div>
+</div>
+<nav class="barre" id="nav-barre" aria-label="Navigation principale"></nav>
+<div id="couche"></div>
+
+<script>
+/* Moteur de composition (app/moteur.js), injecté par construire.py */
+__MOTEUR__
+</script>
+<script>
+/* ============================================================
+   Marmite — planning repas, courses et budget de Nicolas et Aurélie
+   Plan du 1er au 21 octobre 2026 intégré ci-dessous.
+   ============================================================ */
+const DONNEES = __DATA__;
+
+/* ---------- Mois actif ----------
+   Octobre vient des données de la page ; un mois préparé par le chef est enregistré dans E.mois (compte en ligne).
+   Tout ce qui dépend du mois passe par ces variables, remises à jour par activerMois(). */
+let DEBUT = new Date(2026, 9, 1), NB_JOURS = 21, PLAN = DONNEES.plan, BASE_COURSES = DONNEES.courses, SHARE = DONNEES.share, INVITES = 0;
+let STOCK_DEPART = Object.fromEntries(Object.entries(DONNEES.cat).filter(([, c]) => c.stock).map(([a, c]) => [a, c.stock]));
+let MOIS_ID = DONNEES.mois ? DONNEES.mois.id : "2026-10", MOIS_TITRE = DONNEES.mois ? DONNEES.mois.titre : "Octobre 2026";
+const dateLocale = s => { const [a, m, j] = s.split("-").map(Number); return new Date(a, m - 1, j); };
+function activerMois() {
+  const m = E.mois, avant = MOIS_ID;
+  if (m) {
+    DEBUT = dateLocale(m.debut); NB_JOURS = m.jours; PLAN = m.plan; BASE_COURSES = m.courses; SHARE = m.share || {};
+    STOCK_DEPART = m.stockDepart || {}; INVITES = m.invites || 0; MOIS_ID = m.id; MOIS_TITRE = m.titre;
+  } else {
+    DEBUT = new Date(2026, 9, 1); NB_JOURS = DONNEES.plan.length; PLAN = DONNEES.plan; BASE_COURSES = DONNEES.courses; SHARE = DONNEES.share; INVITES = 0;
+    STOCK_DEPART = Object.fromEntries(Object.entries(DONNEES.cat).filter(([, c]) => c.stock).map(([a, c]) => [a, c.stock]));
+    MOIS_ID = DONNEES.mois ? DONNEES.mois.id : "2026-10"; MOIS_TITRE = DONNEES.mois ? DONNEES.mois.titre : "Octobre 2026";
+  }
+  if (avant !== MOIS_ID && typeof jourSel !== "undefined") { jourSel = jourDuPlan(); courseSel = courseDuJour(); gen = null; }
+}
+/* ---------- Constantes ---------- */
+const CLES = ["pdj", "dej", "din", "des"];
+const COULEUR = { pdj: "var(--c-pdj)", dej: "var(--c-dej)", din: "var(--c-din)", des: "var(--c-des)" };
+const PERSONNES = { nicolas: { nom: "Nicolas", autre: "aurelie" }, aurelie: { nom: "Aurélie", autre: "nicolas" } };
+const HORS_REPAS = { nicolas: [ { a: "Café", q: 1000 }, { a: "Eau (bouteilles 5 L)", q: 42 } ], aurelie: [ { a: "Eau (bouteilles 5 L)", q: 42 } ] };
+const UNITES_SPECIALES = { "Café": "g", "Eau (bouteilles 5 L)": "L" };
+const DEFAUT = {
+  version: 2,
+  foyer: { achats: {}, payes: {}, prix: {}, magasins: {}, pertes: [], modifs: [], depassementAccepte: 0, quantites: {}, generation: null },   // quantites : quantité achetée modifiée, par ligne   // pertes : produits jetés ; modifs : retraits et échanges décidés face à un dépassement
+  personnes: {
+    nicolas: { coches: {}, remplacements: {}, pesees: [], profil: { poids: 85, cible: 80, taille: 180, age: 38, budget: 180, reference: 208.94,
+      kcalMin: 1850, kcalMax: 1950, prot: 110, eviter: ["fromage (sauf pizza, lasagnes, burger)", "poisson gras", "trop de laitages"] } },
+    aurelie: { coches: {}, remplacements: {}, pesees: [], profil: { poids: 70, cible: 60, taille: 160, age: 31, budget: 170, reference: 208.94,
+      kcalMin: 1350, kcalMax: 1450, prot: 85, eviter: [] } }
+  }
+};
+
+/* ---------- État ---------- */
+let E = structuredClone(DEFAUT);
+let actif = "nicolas";
+let gen = null;   // proposition du chef en cours, pas encore appliquée : { mode: "stock" | "mois", … }
+try { const a = localStorage.getItem("marmite-actif"); if (PERSONNES[a]) actif = a; } catch (e) {}
+let vue = "jour";
+let jourSel = jourDuPlan();
+let courseSel = courseDuJour();
+let sync = "local";
+let refDoc = null;
+
+/* ---------- Icônes (tracé type Lucide) ---------- */
+const I = (d, cls = "ico") => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
+const ICONES = {
+  jour: I('<circle cx="12" cy="13" r="8"/><circle cx="12" cy="13" r="4"/><path d="M5 3v3M19 3v3"/>'),
+  planning: I('<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>'),
+  courses: I('<path d="M4 8h16l-1.5 11a2 2 0 0 1-2 1.7h-9a2 2 0 0 1-2-1.7z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>'),
+  budget: I('<path d="M4 12h16v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M3 12h18M9 8c0-1.5 1.5-1.5 1.5-3M13.5 8c0-1.5 1.5-1.5 1.5-3"/>'),
+  profil: I('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'),
+  gauche: I('<path d="M15 5l-7 7 7 7"/>'),
+  droite: I('<path d="M9 5l7 7-7 7"/>'),
+  coche: I('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),
+  etoile: I('<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.4 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/>'),
+  poisson: I('<path d="M3 12c3-5 9-6 13-3l5-3-1.5 6L21 18l-5-3c-4 3-10 2-13-3z"/><path d="M8 11h.01"/>'),
+  panier: I('<path d="M4 9h16l-1.6 10a2 2 0 0 1-2 1.7H7.6a2 2 0 0 1-2-1.7z"/><path d="M8.5 9l3-5M15.5 9l-3-5"/>'),
+  info: I('<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>'),
+  poubelle: I('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/>'),
+  etincelle: I('<path d="M12 3l1.8 5.7L19.5 10l-5.7 1.8L12 17.5l-1.8-5.7L4.5 10l5.7-1.3z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>'),
+  lune: I('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>'),
+  plein: I('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>'),
+  reduire: I('<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>'),
+  soleil: I('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>')
+};
+const LOGO = `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 14h22v6a8 8 0 0 1-8 8h-6a8 8 0 0 1-8-8z" fill="#1B6B4A"/><rect x="3" y="12" width="26" height="4" rx="2" fill="#C9A96E"/><path d="M11 9c0-2 2-2 2-4M16 9c0-2 2-2 2-4M21 9c0-2 2-2 2-4" stroke="#C9A96E" stroke-width="2" fill="none" stroke-linecap="round"/></svg>Marmite`;
+const VUES = [ ["jour", "Aujourd'hui"], ["planning", "Planning"], ["courses", "Courses"], ["budget", "Budget"], ["profil", "Profil"] ];
+
+/* ---------- Outils de format ---------- */
+const eur = n => (n == null || isNaN(n)) ? "—" : n.toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
+const nb = (n, d = 0) => (n == null || isNaN(n)) ? "—" : n.toLocaleString("fr-FR", { minimumFractionDigits: d, maximumFractionDigits: d });
+const echap = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const nom = (p = actif) => PERSONNES[p].nom;
+const de = (p = actif) => /^[AEÉIOU]/i.test(nom(p)) ? "d'" + nom(p) : "de " + nom(p);
+function dateDuJour(j) { return new Date(DEBUT.getFullYear(), DEBUT.getMonth(), DEBUT.getDate() + j - 1); }
+const jourMoisCourt = j => { const d = dateDuJour(j); return (d.getDate() === 1 ? "1er" : d.getDate()) + " " + d.toLocaleDateString("fr-FR", { month: "long" }); };
+function libelleJour(j) {
+  const t = dateDuJour(j).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+  return cap(t.replace(/^(\S+) 1 /, "$1 1er "));
+}
+// course en cours : la dernière dont le jour est passé (la première avant le début du plan)
+// Courses du cycle : celles des données, ou, après « Générer le menu selon le stock », les courses gardées
+// (déjà commencées) suivies des courses recalculées par le moteur.
+function COURSES() {
+  const g = E.foyer.generation;
+  if (!g) return BASE_COURSES;
+  // courses gardées ; celles déjà passées au moment de refaire le planning ne gardent que les articles cochés
+  // (le reste n'a pas été trouvé en rayon ou a été laissé volontairement)
+  return BASE_COURSES.filter(c => g.gardees.includes(c.id))
+    .map(c => c.jourPlan <= (g.jourRefait || 0) ? { ...c, items: c.items.filter(it => E.foyer.achats[cleArticle(c.id, it.a)]) } : c)
+    .concat(g.courses);
+}
+function courseDuJour() { const j = planPasCommence() ? 1 : jourDuPlan(); let id = COURSES()[0].id; for (const c of COURSES()) if (c.jourPlan <= j) id = c.id; return id; }
+const dateCourte = iso => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" }).replace(/^(\S+) 1 /, "$1 1er ");
+function jourDuPlan() {
+  const n = new Date(), t = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+  return Math.min(Math.max(Math.floor((t - DEBUT) / 864e5) + 1, 1), NB_JOURS);
+}
+function planPasCommence() { return new Date() < DEBUT; }
+function uniteDe(a) { if (UNITES_SPECIALES[a]) return UNITES_SPECIALES[a]; const n = DONNEES.nut[a]; return n ? n[1] : "g"; }
+function quantite(a, q) {
+  const u = uniteDe(a), r = Math.round(q * 10) / 10;
+  if (a === "Œufs") return nb(r, r % 1 ? 1 : 0) + (r > 1 ? " œufs" : " œuf");
+  if (a === "Wraps") return nb(r, r % 1 ? 1 : 0) + (r > 1 ? " wraps" : " wrap");
+  if (a === "Pains burger") return nb(r, r % 1 ? 1 : 0) + (r > 1 ? " pains" : " pain");
+  if (u === "g") return q >= 1000 ? nb(q / 1000, 2) + " kg" : nb(q) + " g";
+  if (u === "ml") return q >= 1000 ? nb(q / 1000, 2) + " L" : nb(q) + " ml";
+  if (u === "L") return nb(q) + " L";
+  return nb(r, r % 1 ? 1 : 0) + " " + u;
+}
+const P = (p = actif) => E.personnes[p];
+
+/* ---------- Thème clair / sombre ---------- */
+function themeEffectif() {
+  const t = document.documentElement.dataset.theme;
+  if (t === "light" || t === "dark") return t;
+  return window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+// Plein écran : l'app occupe tout l'écran et masque la barre de claude.ai (navigateurs d'ordinateur ;
+// les téléphones et certaines apps ne le permettent pas, le bouton n'apparaît alors pas).
+const pleinEcranPossible = () => !!(document.fullscreenEnabled && document.documentElement.requestFullscreen);
+function boutonPleinEcran() {
+  if (!pleinEcranPossible()) return "";
+  const actif = !!document.fullscreenElement;
+  return `<button class="theme plein-ecran" data-action="plein-ecran" aria-label="${actif ? "Quitter le plein écran" : "Plein écran"}">${actif ? ICONES.reduire : ICONES.plein}<span>${actif ? "Quitter le plein écran" : "Plein écran"}</span></button>`;
+}
+function basculerPleinEcran() {
+  const fin = () => rendreCadre();
+  try {
+    const r = document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+    if (r && r.then) r.then(fin, () => toast("Le plein écran n'est pas autorisé ici"));
+  } catch (e) { toast("Le plein écran n'est pas autorisé ici"); }
+}
+document.onfullscreenchange = () => rendreCadre();
+function boutonTheme() {
+  const sombre = themeEffectif() === "dark";
+  return `<button class="theme" data-action="theme" aria-label="${sombre ? "Passer en mode clair" : "Passer en mode sombre"}">${sombre ? ICONES.soleil : ICONES.lune}<span>${sombre ? "Clair" : "Sombre"}</span></button>`;
+}
+
+/* ---------- Prix, nutrition, coûts ---------- */
+function fiche(a) { const c = DONNEES.cat[a]; if (!c) return null; const p = E.foyer.prix[a]; return p ? { ...c, prix: p.prix } : c; }
+function prixUnitaire(a) { const c = fiche(a); if (!c || c.prix == null) return null; return c.vrac ? c.prix / 1000 / (c.rend || 1) : c.prix / c.cond; }
+function nutrition(a, q) { const n = DONNEES.nut[a]; if (!n) return null; return { kcal: q / n[0] * n[2], prot: q / n[0] * n[3] }; }
+function repasPlan(j, k, p = actif) {
+  const m = PLAN[j - 1].meals.find(x => x.k === k);
+  return { k, label: m.label, plat: m.plat[p], items: m.items[p] };
+}
+function repasDe(j, k, p = actif) {
+  const r = P(p).remplacements["d" + j + "-" + k];
+  return r || repasPlan(j, k, p);
+}
+function statsRepas(m) {
+  let kcal = 0, prot = 0, cout = 0, inconnu = false;
+  for (const [a, q] of m.items) {
+    const n = nutrition(a, q); if (n) { kcal += n.kcal; prot += n.prot; }
+    const pu = prixUnitaire(a); if (pu == null) inconnu = true; else cout += pu * q;
+  }
+  return { kcal, prot, cout, inconnu };
+}
+function horsRepasJour(p = actif) { return (DONNEES.reglages.horsRepas || []).reduce((s, h) => s + (prixUnitaire(h.a) || 0) * (h.parJour[p] || 0), 0); }
+function statsJour(j, p = actif) {
+  const r = { kcal: 0, prot: 0, cout: 0, kcalFait: 0, coutFait: 0, faits: 0 };
+  for (const k of CLES) {
+    const s = statsRepas(repasDe(j, k, p)), f = !!P(p).coches["d" + j + "-" + k];
+    r.kcal += s.kcal; r.prot += s.prot; r.cout += s.cout;
+    if (f) { r.kcalFait += s.kcal; r.coutFait += s.cout; r.faits++; }
+  }
+  return r;
+}
+function totalPrevu(p = actif) { let t = 0; for (let j = 1; j <= NB_JOURS; j++) t += statsJour(j, p).cout; return t + horsRepasJour(p) * NB_JOURS; }
+
+/* ---------- Stock estimé du foyer ---------- */
+function quantiteUtile(it) { const c = DONNEES.cat[it.a]; return c.vrac ? it.buy * (c.rend || 1) : it.buy * c.cond; }
+// Stock au matin du jour j (j = 22 : fin du cycle). planSeul = sans les ajustements ni remplacements.
+function stockBrut(j, planSeul = false) {
+  const s = {};
+  Object.assign(s, STOCK_DEPART);
+  for (const c of COURSES()) if (c.jourPlan <= j) for (const it of (planSeul ? c.items : itemsCourse(c))) s[it.a] = (s[it.a] || 0) + quantiteUtile(it);
+  for (let d = 1; d < j && d <= NB_JOURS; d++) for (const p of Object.keys(PERSONNES)) for (const k of CLES)
+    for (const [a, q] of (planSeul ? repasPlan(d, k, p) : repasDe(d, k, p)).items) s[a] = (s[a] || 0) - q;
+  retirerInvites(s, j);
+  // produits jetés (poubelle de l'onglet « À la maison ») : retirés à partir du jour où ils l'ont été
+  if (!planSeul) for (const x of E.foyer.pertes || []) if (x.j <= j) s[x.a] = (s[x.a] || 0) - x.q;
+  return s;
+}
+// Stock réel au matin du jour j : stock de départ + articles cochés (quantité achetée) − repas des jours passés − poubelle.
+// Un article non coché n'est pas à la maison.
+function stockReel(j) {
+  const s = {};
+  Object.assign(s, STOCK_DEPART);
+  for (const c of COURSES()) for (const it of itemsCourse(c)) if (E.foyer.achats[cleLigne(c.id, it)]) s[it.a] = (s[it.a] || 0) + quantiteUtile(it);
+  for (let d = 1; d < j && d <= NB_JOURS; d++) for (const p of Object.keys(PERSONNES)) for (const k of CLES)
+    for (const [a, q] of repasDe(d, k, p).items) s[a] = (s[a] || 0) - q;
+  retirerInvites(s, j);
+  for (const x of E.foyer.pertes || []) if (x.j <= j) s[x.a] = (s[x.a] || 0) - x.q;
+  return s;
+}
+// invités du mois (préparé avec des invités) : leurs portions sortent aussi du stock
+function retirerInvites(s, j) {
+  if (!INVITES) return;
+  for (let d = 1; d < j && d <= NB_JOURS; d++) for (const m of PLAN[d - 1].meals) for (const [a, q] of (m.items.invites || [])) s[a] = (s[a] || 0) - q * INVITES;
+}
+function stockAuDebut(j) {
+  const s = stockBrut(j);
+  for (const a of Object.keys(s)) if (s[a] <= 0.5) delete s[a];
+  return s;
+}
+
+/* ---------- Courses ---------- */
+function texteAchat(it) { const c = DONNEES.cat[it.a]; return c.vrac ? quantite(it.a, it.buy) + " en vrac" : it.buy + " × " + c.achat; }
+function est0(it) { const c = DONNEES.cat[it.a]; if (!c || c.prix == null) return null; return c.vrac ? it.buy / 1000 * c.prix : it.buy * c.prix; }
+function estimationLigne(it) { const c = fiche(it.a); if (!c || c.prix == null) return null; return c.vrac ? it.buy / 1000 * c.prix : it.buy * c.prix; }
+function cleArticle(cid, a) { return "c" + cid + "-" + a; }
+// clé d'une ligne : un produit de remplacement garde la trace de celui qu'il remplace (« Courgettes~Poivrons »)
+function cleLigne(cid, it) { return cleArticle(cid, it.remplace ? it.a + "~" + it.remplace : it.a); }
+// Articles d'une course après les décisions prises face à un dépassement (retraits, échanges)
+function itemsCourse(c) {
+  const out = [];
+  for (const it of c.items) {
+    const m = (E.foyer.modifs || []).find(x => x.cid === c.id && x.a === it.a);
+    const l = !m ? it : m.type === "substitution" ? ligneSubstitut(it, m) : null;
+    if (!l) continue;
+    // quantité achetée modifiée sur la ligne (dans l'unité d'achat : conditionnements, ou grammes en vrac)
+    const q = (E.foyer.quantites || {})[cleLigne(c.id, l)];
+    out.push(q != null ? { ...l, prevu: l.buy, buy: q } : l);
+  }
+  return out;
+}
+// montant d'une ligne : prix payé s'il est tapé, sinon prix du moment × quantité achetée
+function montantLigne(cid, it) { const v = E.foyer.payes[cleLigne(cid, it)]; return v != null && v !== "" ? +v : (estimationLigne(it) || 0); }
+function ligneSubstitut(it, m) {
+  const c = DONNEES.cat[m.b], needN = it.needN * m.f, needA = it.needA * m.f, need = needN + needA;
+  const buy = c.vrac ? Math.ceil(need / (c.rend || 1) / 50) * 50 : Math.max(1, Math.ceil(need / c.cond - 1e-9));
+  return { a: m.b, buy, needN, needA, remplace: it.a };
+}
+function part(a, p = actif) { const s = SHARE[a]; const n = s == null ? 0.5 : s; return p === "nicolas" ? n : 1 - n; }
+function bilanCourse(cid, p = actif) {
+  const c = COURSES().find(x => x.id === cid);
+  let est = 0, maPart = 0, paye = 0, partPaye = 0, faits = 0;
+  // une case cochée vaut prix validé : le montant de la ligne devient réel (payé)
+  const items = itemsCourse(c);
+  for (const it of items) {
+    const e = montantLigne(cid, it); est += e; maPart += e * part(it.a, p);
+    if (E.foyer.achats[cleLigne(cid, it)]) { faits++; paye += e; partPaye += e * part(it.a, p); }
+  }
+  return { est, maPart, paye, partPaye, avenir: est - paye, faits, total: items.length };
+}
+
+/* ---------- Sauvegarde : compte en ligne puis appareil ---------- */
+let minuterie = null, enCours = false, encore = false;
+function charger(obj) {
+  if (!obj || typeof obj !== "object") return;
+  // copie profonde : les données du compte en ligne peuvent arriver verrouillées en écriture ; sans copie,
+  // cocher une case ou saisir un prix échouait sans bruit (c'était le bug des cases qui ne se cochaient pas)
+  obj = JSON.parse(JSON.stringify(obj));
+  if (!obj.version) { // migration depuis la première version (Nicolas seul)
+    const n = E.personnes.nicolas;
+    if (obj.coches) n.coches = obj.coches;
+    if (obj.remplacements) n.remplacements = obj.remplacements;
+    if (obj.pesees) n.pesees = obj.pesees;
+    if (obj.profil) n.profil = { ...n.profil, ...obj.profil };
+    for (const k of ["achats", "payes", "prix", "magasins"]) if (obj[k]) E.foyer[k] = obj[k];
+    return;
+  }
+  E.foyer = { ...structuredClone(DEFAUT.foyer), ...(obj.foyer || {}) };
+  E.mois = obj.mois || null; E.archives = obj.archives || {};
+  for (const p of Object.keys(PERSONNES)) {
+    const src = (obj.personnes || {})[p] || {}, d = structuredClone(DEFAUT.personnes[p]);
+    E.personnes[p] = { ...d, ...src, profil: { ...d.profil, ...(src.profil || {}) } };
+  }
+  activerMois();
+}
+try { const l = localStorage.getItem("marmite-nicolas"); if (l) charger(JSON.parse(l)); } catch (e) {}
+function sauver() {
+  try { localStorage.setItem("marmite-nicolas", JSON.stringify(E)); } catch (e) {}
+  clearTimeout(minuterie); minuterie = setTimeout(envoyer, 800);
+}
+async function envoyer() {
+  if (!refDoc) return;
+  if (enCours) { encore = true; return; }
+  enCours = true;
+  try { await refDoc.set(JSON.parse(JSON.stringify(E))); sync = "compte"; } catch (e) { sync = "hors-ligne"; }
+  enCours = false;
+  if (encore) { encore = false; envoyer(); }
+}
+async function brancherCompte() {
+  if (!window.claude || !window.claude.use) return;
+  try {
+    const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+    if (!db || !user) return;
+    const id = await user.id(); if (!id) return;
+    refDoc = db.doc("data/users/" + id + "/marmite");
+    const snap = await refDoc.get();
+    if (snap.exists) { charger(snap.data()); try { localStorage.setItem("marmite-nicolas", JSON.stringify(E)); } catch (e) {} }
+    E.version = 2;
+    await refDoc.set(JSON.parse(JSON.stringify(E)));
+    sync = "compte"; rendre();
+  } catch (e) { sync = "hors-ligne"; rendre(); }
+}
+
+/* ---------- Rendu général ---------- */
+function boutonsQui() {
+  return `<div class="qui" role="group" aria-label="Programme affiché">${Object.keys(PERSONNES).map(p => `<button data-personne="${p}" aria-pressed="${p === actif}">${nom(p)}</button>`).join("")}</div>`;
+}
+function rendreCadre() {
+  const nav = VUES.map(([k, l]) => `<button data-vue="${k}" ${vue === k ? 'aria-current="page"' : ""}>${ICONES[k]}<span>${l}</span></button>`).join("");
+  document.getElementById("nav-rail").innerHTML = nav;
+  document.getElementById("nav-barre").innerHTML = nav;
+  document.getElementById("marque-rail").innerHTML = LOGO;
+  document.getElementById("marque-haut").innerHTML = LOGO;
+  document.getElementById("qui-rail").innerHTML = boutonsQui();
+  document.getElementById("qui-haut").innerHTML = boutonsQui();
+  document.getElementById("theme-rail").innerHTML = boutonTheme() + boutonPleinEcran();
+  document.getElementById("theme-haut").innerHTML = boutonTheme();
+}
+function rendre() {
+  rendreCadre();
+  document.getElementById("vue").innerHTML = { jour: vueJour, planning: vuePlanning, courses: vueCourses, budget: vueBudget, profil: vueProfil }[vue]();
+}
+function aller(k) { vue = k; edition = null; rendre(); document.getElementById("vue").focus({ preventScroll: true }); window.scrollTo(0, 0); }
+
+/* ---------- Vue : jour ---------- */
+function assietteSVG(j) {
+  const R = 100, C = 2 * Math.PI * R, ecart = 5;
+  const parts = CLES.map(k => ({ k, s: statsRepas(repasDe(j, k)), f: !!P().coches["d" + j + "-" + k] }));
+  const tot = parts.reduce((s, x) => s + x.s.kcal, 0) || 1;
+  let off = 0, arcs = "";
+  for (const x of parts) {
+    const len = Math.max(C * x.s.kcal / tot - ecart, 2);
+    arcs += `<circle class="arc" cx="130" cy="130" r="${R}" fill="none" style="stroke:${COULEUR[x.k]}" stroke-width="${x.f ? 30 : 22}" stroke-opacity="${x.f ? 1 : .3}" stroke-dasharray="${len} ${C}" stroke-dashoffset="${-off}" transform="rotate(-90 130 130)"/>`;
+    off += C * x.s.kcal / tot;
+  }
+  const st = statsJour(j);
+  return `<svg class="assiette" viewBox="0 0 260 260" role="img" aria-label="Assiette du jour : ${nb(st.kcalFait)} kcal mangées sur ${nb(st.kcal)} prévues">
+    <circle cx="130" cy="130" r="122" style="fill:var(--surface-2)"/><circle cx="130" cy="130" r="78" style="fill:var(--surface)"/>${arcs}
+    <text x="130" y="122" text-anchor="middle" style="font:800 40px var(--titre);fill:var(--titre-c)">${nb(st.kcalFait)}</text>
+    <text x="130" y="146" text-anchor="middle" style="font:14px var(--texte);fill:var(--brume)">sur ${nb(st.kcal)} kcal</text>
+    <text x="130" y="170" text-anchor="middle" style="font:700 14px var(--texte);fill:var(--or)">${st.faits}/4 repas</text></svg>`;
+}
+function vueJour() {
+  const j = jourSel, jour = PLAN[j - 1], st = statsJour(j), pr = P().profil;
+  let b = "";
+  if (planPasCommence() && j === 1) b += `<p class="bandeau">${ICONES.info}Le planning démarre le ${libelleJour(1).toLowerCase()}. Voici la première journée.</p>`;
+  for (const c of COURSES()) if (c.jourPlan === j) b += `<p class="bandeau">${ICONES.panier}${c.titre} aujourd'hui : ce qu'il faut ${c.couvre}.</p>`;
+  if (jour.tag === "plaisir") b += `<p class="bandeau">${ICONES.etoile}Jour plaisir : le déjeuner est le repas plaisir de la semaine.</p>`;
+  const kp = Math.min(st.kcal / pr.kcalMax, 1) * 100, pp = Math.min(st.prot / pr.prot, 1) * 100;
+  return `<div class="entete"><div><p class="discret petit" style="margin:0">Programme ${de()}, jour ${j} sur ${NB_JOURS}</p><h1>${libelleJour(j)}</h1></div>
+    <div class="nav-jour"><button class="rond" data-jour="${j - 1}" ${j <= 1 ? "disabled" : ""} aria-label="Jour précédent">${ICONES.gauche}</button>
+      <button class="rond" data-jour="${j + 1}" ${j >= NB_JOURS ? "disabled" : ""} aria-label="Jour suivant">${ICONES.droite}</button></div></div>
+  ${b}
+  <div class="jour-grille">
+    <section class="assiette-bloc" aria-label="Bilan du jour">${assietteSVG(j)}
+      <div class="jauges">
+        <div class="jauge"><span class="chiffre">${nb(st.kcal)}</span><span class="discret">kcal prévues</span><div class="barre-prog"><i style="width:${kp}%;background:var(--c-pdj)"></i></div></div>
+        <div class="jauge"><span class="chiffre">${nb(st.prot)} g</span><span class="discret">protéines</span><div class="barre-prog"><i style="width:${pp}%;background:var(--c-dej)"></i></div></div>
+        <div class="jauge"><span class="chiffre">${eur(st.cout)}</span><span class="discret">repas du jour</span><div class="barre-prog"><i style="width:100%;background:var(--c-din)"></i></div></div>
+      </div>
+      <p class="discret petit" style="margin:12px 0 0;text-align:center">Hors repas (café, eau) : ${eur(horsRepasJour())} par jour. Objectif : ${nb(pr.kcalMin)} à ${nb(pr.kcalMax)} kcal, ${nb(pr.prot)} g de protéines.</p>
+    </section>
+    <section aria-label="Repas du jour">${CLES.map(k => ticketRepas(j, k)).join("")}
+      <button class="bouton or faim" data-ia="faim"><span>J'ai faim, demandez au chef<small>Le chef part de ce qu'il y a à la maison</small></span>${ICONES.etincelle}</button>
+    </section>
+  </div>`;
+}
+function ecartTexte(m, j, k) {
+  const a = statsRepas(m), b = statsRepas(repasPlan(j, k)), dk = a.kcal - b.kcal, dc = a.cout - b.cout;
+  const sg = x => (x >= 0 ? "+" : "−");
+  return `${sg(dk)}${nb(Math.abs(dk))} kcal, ${sg(dc)}${eur(Math.abs(dc))}`;
+}
+let edition = null; // { j, k, items } : repas en cours d'ajustement
+const PAS = u => u === "ml" ? 10 : u === "unité" ? 1 : 5;
+function optionsAjout() {
+  const g = {};
+  for (const a of Object.keys(DONNEES.nut)) { const c = DONNEES.cat[a]; if (!c) continue; (g[c.cat] = g[c.cat] || []).push(a); }
+  return Object.entries(g).map(([cat, l]) => `<optgroup label="${echap(cat)}">${l.sort((x, y) => x.localeCompare(y, "fr")).map(a => `<option>${echap(a)}</option>`).join("")}</optgroup>`).join("");
+}
+function infosEdition() {
+  const s = statsRepas({ items: edition.items.filter(([, q]) => q > 0) }), b = statsRepas(repasPlan(edition.j, edition.k));
+  const dk = s.kcal - b.kcal;
+  return `<span><b>${nb(s.kcal)}</b> kcal</span><span><b>${nb(s.prot)}</b> g prot.</span><span><b>${eur(s.cout)}</b></span><span class="discret">plan ${dk >= 0 ? "+" : "−"}${nb(Math.abs(dk))} kcal</span>`;
+}
+function ticketEdition(j, k) {
+  const m = repasDe(j, k), plan = repasPlan(j, k), qPlan = Object.fromEntries(plan.items);
+  const lignes = edition.items.map(([a, q], i) => {
+    const u = uniteDe(a), ref = qPlan[a];
+    const ec = ref == null ? "absent du plan" : q === ref ? "comme prévu" : "prévu " + quantite(a, ref);
+    return `<li><span class="nom-ed">${echap(a)}<span class="ecart">${ec}</span></span>
+      <span class="qte"><button data-ed="moins" data-i="${i}" aria-label="Moins de ${echap(a)}">−</button>
+        <input type="number" inputmode="decimal" min="0" step="${PAS(u)}" value="${Math.round(q * 10) / 10}" data-ed-q="${i}" aria-label="Quantité de ${echap(a)}">
+        <span class="u">${u === "unité" ? "u." : u}</span>
+        <button data-ed="plus" data-i="${i}" aria-label="Plus de ${echap(a)}">+</button></span>
+      <button class="suppr" data-ed="suppr" data-i="${i}" aria-label="Retirer ${echap(a)}">×</button></li>`;
+  }).join("");
+  return `<article class="repas edition" id="t-${k}" style="--couleur:${COULEUR[k]}">
+    <div class="repas-type">${m.label}, ce que tu as vraiment mangé</div><h3>${echap(m.plat)}</h3>
+    <ul class="lignes-ed">${lignes}</ul>
+    <div class="ajout-ed"><select id="ed-ajout" aria-label="Ingrédient à ajouter">${optionsAjout()}</select><button class="bouton leger" data-ed="ajouter">Ajouter</button></div>
+    <div class="repas-pied"><div class="infos" id="ed-infos">${infosEdition()}</div>
+      <div class="btns-ed"><button class="bouton leger" data-ed="annuler">Annuler</button><button class="bouton" data-ed="enregistrer">Enregistrer</button></div></div>
+  </article>`;
+}
+function ticketRepas(j, k) {
+  if (edition && edition.j === j && edition.k === k) return ticketEdition(j, k);
+  const m = repasDe(j, k), s = statsRepas(m), cle = "d" + j + "-" + k, fait = !!P().coches[cle], remp = !!P().remplacements[cle];
+  return `<article class="repas ${fait ? "fait" : ""}" id="t-${k}" style="--couleur:${COULEUR[k]}">
+    <div class="repas-type">${m.label}</div><h3>${echap(m.plat)}</h3>
+    ${m.ia ? `<span class="pastille">${ICONES.etincelle}Proposé par le chef${m.convives > 1 ? ", pour " + m.convives : ""}</span> ` : ""}
+    ${m.ajuste ? `<span class="pastille">Ajusté : ${ecartTexte(m, j, k)} par rapport au plan</span>` : ""}
+    <ul class="ingredients">${m.items.map(([a, q]) => `<li><span>${echap(a)}</span><span class="q">${quantite(a, q)}</span></li>`).join("")}</ul>
+    <div class="repas-pied">
+      <div class="infos"><span><b>${nb(s.kcal)}</b> kcal</span><span><b>${nb(s.prot)}</b> g prot.</span><span><b>${eur(s.cout)}</b>${s.inconnu ? " + ?" : ""}</span></div>
+      <div><button class="lien" data-ed="ouvrir" data-k="${k}">Ajuster</button><button class="lien" data-ia="${k}">${m.ia ? "Autre idée" : "Changer"}</button>
+        ${remp ? `<button class="lien" data-retour="${k}">Revenir au plan</button>` : ""}
+        <button class="coche" data-coche="${cle}" aria-pressed="${fait}"><span class="case">${ICONES.coche}</span>${fait ? "Fait" : "Je l'ai fait"}</button></div>
+    </div></article>`;
+}
+
+/* ---------- Vue : planning ---------- */
+/* ---------- Générer le menu selon le stock ---------- */
+const dernierPoids = p => { const l = [...P(p).pesees].sort((a, b) => a.date.localeCompare(b.date)); return l.length ? l[l.length - 1].kg : null; };
+// premier jour qu'on peut encore changer : aujourd'hui si aucun repas n'est coché, sinon demain
+function premierJourLibre() {
+  const j = jourActuel();
+  return Object.keys(PERSONNES).some(p => CLES.some(k => P(p).coches["d" + j + "-" + k])) ? Math.min(j + 1, NB_JOURS) : j;
+}
+function genererMenu(j0, graine, invites, budget) {
+  const stock = {}, sr = stockReel(j0);
+  for (const [a, q] of Object.entries(sr)) if (q > 0.5) stock[a] = Math.round(q * 10) / 10;
+  // une course dont un article est déjà coché est gardée telle quelle ; les suivantes sont recalculées
+  const base = BASE_COURSES, commencees = base.filter(c => itemsCourse(c).some(it => E.foyer.achats[cleLigne(c.id, it)])).map(c => c.id);
+  const gardees = base.filter(c => c.jourPlan < j0 || commencees.includes(c.id)).map(c => c.id);
+  const joursCourses = base.filter(c => !gardees.includes(c.id)).map(c => c.date);
+  const historique = [];
+  for (let d = Math.max(1, j0 - 5); d < j0; d++) for (const k of ["dej", "din"]) {
+    const r = repasDe(d, k, "nicolas"), m = PLAN[d - 1].meals.find(x => x.k === k);
+    historique.push({ date: PLAN[d - 1].date || iso(dateDuJour(d)), recette: r.recette || m.recette });
+  }
+  const profils = {}, poidsActuels = {};
+  for (const p of Object.keys(PERSONNES)) { profils[p] = { ...P(p).profil, budgetJours: NB_JOURS }; poidsActuels[p] = dernierPoids(p); }
+  const entrees = {
+    catalogue: Moteur.avecPrix(DONNEES.catalogue, E.foyer.prix), recettes: DONNEES.recettes, reglages: DONNEES.reglages,
+    debut: iso(dateDuJour(j0)), jours: NB_JOURS - j0 + 1, joursCourses, stockDepart: stock, historique,
+    profils, poidsActuels, invites, budget: budget || undefined, graine, moisReference: { plan: PLAN },
+    poidsStock: 3, penaliteManque: 1,
+  };
+  const res = Moteur.composerMois(entrees);
+  Object.assign(res, { entrees, stock, gardees });
+  return completerStock(res);
+}
+function completerStock(res) {
+  const utilises = new Set(res.mois.plan.flatMap(j => j.meals.flatMap(m => m.items.nicolas.map(([a]) => a))));
+  res.stockUtilise = Object.keys(res.stock).filter(a => utilises.has(a) && DONNEES.nut[a]);
+  res.stockTotal = Object.keys(res.stock).filter(a => DONNEES.nut[a]);
+  return res;
+}
+const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+function appliquerGeneration() {
+  const { j0, res } = gen, avant = {};
+  for (const p of Object.keys(PERSONNES)) {
+    avant[p] = {};
+    for (let d = j0; d <= NB_JOURS; d++) for (const k of CLES) {
+      const cle = "d" + d + "-" + k; avant[p][cle] = P(p).remplacements[cle] ? structuredClone(P(p).remplacements[cle]) : null;
+    }
+    for (const j of res.mois.plan) for (const m of j.meals) {
+      const d = j.d + j0 - 1;
+      P(p).remplacements["d" + d + "-" + m.k] = { k: m.k, label: m.label, plat: m.plat[p], items: m.items[p], recette: m.recette, genere: true };
+    }
+  }
+  const gardees = res.gardees, decale = j0 - 1;
+  const courses = res.mois.courses.map((c, i) => ({ ...c, id: gardees.length + i + 1, titre: "Course " + (gardees.length + i + 1), jourPlan: c.jourPlan + decale }));
+  // les décisions prises sur les courses recalculées n'ont plus d'objet : on les met de côté avec l'état d'avant
+  const modifsAvant = (E.foyer.modifs || []).filter(m => !gardees.includes(m.cid));
+  E.foyer.modifs = (E.foyer.modifs || []).filter(m => gardees.includes(m.cid));
+  E.foyer.generation = { depuis: j0, jourRefait: jourActuel(), date: iso(new Date()), graine: gen.graine, invites: gen.invites, gardees, courses, avant, modifsAvant, precedente: E.foyer.generation || null };
+  if (typeof courseSel === "number" && !COURSES().some(c => c.id === courseSel)) courseSel = courseDuJour();
+  gen = null; sauver(); toast("Nouveau planning à partir du " + libelleJour(j0).toLowerCase());
+}
+function annulerGeneration() {
+  const g = E.foyer.generation; if (!g) return;
+  for (const p of Object.keys(g.avant)) for (const [cle, v] of Object.entries(g.avant[p])) { if (v) P(p).remplacements[cle] = v; else delete P(p).remplacements[cle]; }
+  E.foyer.modifs = (E.foyer.modifs || []).concat(g.modifsAvant || []);
+  E.foyer.generation = g.precedente || null;
+  if (typeof courseSel === "number" && !COURSES().some(c => c.id === courseSel)) courseSel = courseDuJour();
+  sauver(); toast("Planning d'avant rétabli");
+}
+/* ---------- Préparer le mois : planning et listes de la semaine, pour le budget du mois ---------- */
+const CLES_MOIS = ["achats", "payes", "magasins", "pertes", "modifs", "depassementAccepte", "quantites", "generation"];
+function moisSuivants() {
+  const fin = dateDuJour(NB_JOURS), out = [];
+  for (let i = 1; i <= 3; i++) out.push(new Date(fin.getFullYear(), fin.getMonth() + i, 1));
+  return out;
+}
+const joursDuMois = d => new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+function ouvrirPreparation() {
+  const d = moisSuivants()[0], n = joursDuMois(d);
+  const ref = Object.keys(PERSONNES).reduce((s, p) => s + (+E.personnes[p].profil.budget || 0), 0);
+  gen = { mode: "mois", debut: iso(d), jours: n, invites: 0, budget: Math.round(E.mois && E.mois.budget ? E.mois.budget : ref * n / 21), graine: 1, res: null };
+  gen.res = genererMoisSuivant();
+}
+function genererMoisSuivant() {
+  // stock de départ : ce qu'il restera à la maison à la fin du mois en cours
+  const stock = {}, sr = stockReel(NB_JOURS + 1);
+  for (const [a, q] of Object.entries(sr)) if (q > 0.5) stock[a] = Math.round(q * 10) / 10;
+  const profils = {}, poidsActuels = {};
+  for (const p of Object.keys(PERSONNES)) { profils[p] = { ...P(p).profil, budgetJours: 21 }; poidsActuels[p] = dernierPoids(p); }
+  const entrees = {
+    catalogue: Moteur.avecPrix(DONNEES.catalogue, E.foyer.prix), recettes: DONNEES.recettes, reglages: DONNEES.reglages,
+    debut: gen.debut, jours: gen.jours, invites: gen.invites, budget: gen.budget, graine: gen.graine,
+    stockDepart: stock, profils, poidsActuels, moisReference: { plan: PLAN },
+  };
+  const res = Moteur.composerMois(entrees); res.entrees = entrees; return res;
+}
+function archiverMoisActif() {
+  const foyer = {}, personnes = {};
+  for (const k of CLES_MOIS) foyer[k] = E.foyer[k];
+  for (const p of Object.keys(PERSONNES)) personnes[p] = { coches: P(p).coches, remplacements: P(p).remplacements };
+  E.archives = E.archives || {};
+  E.archives[MOIS_ID] = { titre: MOIS_TITRE, date: iso(new Date()), foyer, personnes, mois: E.mois || null };
+}
+function validerMois() {
+  const m = gen.res.mois;
+  archiverMoisActif();
+  for (const k of CLES_MOIS) E.foyer[k] = structuredClone(DEFAUT.foyer[k]);
+  for (const p of Object.keys(PERSONNES)) { P(p).coches = {}; P(p).remplacements = {}; }
+  E.mois = { id: m.id, titre: m.titre, debut: m.debut, jours: m.jours, invites: m.invites || 0, plan: m.plan, courses: m.courses,
+    share: m.share, stockDepart: m.stockDepart, budget: gen.budget, graine: gen.graine, date: iso(new Date()) };
+  const titre = m.titre; gen = null; activerMois(); sauver(); toast(titre + " est prêt");
+}
+// Rouvrir un mois archivé : le mois affiché est archivé à son tour.
+function rouvrirMois(id) {
+  const a = E.archives[id]; if (!a) return;
+  archiverMoisActif();
+  for (const k of CLES_MOIS) E.foyer[k] = a.foyer[k] != null ? a.foyer[k] : structuredClone(DEFAUT.foyer[k]);
+  for (const p of Object.keys(PERSONNES)) { P(p).coches = (a.personnes[p] || {}).coches || {}; P(p).remplacements = (a.personnes[p] || {}).remplacements || {}; }
+  E.mois = a.mois; delete E.archives[id];
+  gen = null; activerMois(); sauver(); toast(a.titre + " rouvert");
+}
+// Menu de la proposition + bibliothèque à glisser sur un repas (colonne de droite, écrans larges)
+let biblio = { q: "", filtre: "tous" };
+function blocMenu(plan, j0) { return `<div class="gen-grille"><div class="gen-col">${listeMenu(plan, j0)}</div>${panneauBiblio()}</div>`; }
+function recettesBiblio() {
+  const q = biblio.q.trim().toLowerCase(), f = biblio.filtre;
+  return DONNEES.recettes.filter(r => {
+    const principal = r.repas.includes("dej") || r.repas.includes("din"), dessert = r.repas.includes("des");
+    if (!principal && !dessert) return false;
+    if (principal && !r.portions.nicolas.some(([a]) => DONNEES.catalogue[a] && DONNEES.catalogue[a].animal)) return false;
+    if (f === "dessert" && !dessert) return false;
+    if (f !== "tous" && f !== "dessert" && !principal) return false;
+    if (f === "poisson" && !r.tags.includes("poisson")) return false;
+    if (f === "plaisir" && !r.tags.includes("plaisir")) return false;
+    if (f === "viande" && r.tags.includes("poisson")) return false;
+    return !q || (r.nom || "").toLowerCase().includes(q);
+  }).sort((a, b) => (a.nom || "").localeCompare(b.nom || "", "fr"));
+}
+function listeBiblio() {
+  const l = recettesBiblio();
+  if (!l.length) return `<li class="discret petit" style="padding:10px 0">Aucun plat ne correspond.</li>`;
+  return l.map(r => { const cout = ["nicolas", "aurelie"].reduce((s, p) => s + r.portions[p].reduce((t, [a, x]) => t + (prixUnitaire(a) || 0) * x, 0), 0);
+    return `<li class="biblio-plat" draggable="true" data-drag-id="${echap(r.id)}" title="Glisser sur un repas"><b>${echap(r.nom || r.id)}</b>
+      <span class="discret">${[r.repas.includes("des") ? "dessert" : "", r.tags.includes("poisson") ? "poisson" : "", r.tags.includes("plaisir") ? "plaisir" : "", "≈ " + eur(cout) + " à deux"].filter(Boolean).join(" · ")}</span></li>`; }).join("");
+}
+function panneauBiblio() {
+  return `<aside class="biblio" aria-label="Bibliothèque de plats">
+    <h3>Bibliothèque</h3><p class="discret petit" style="margin:2px 0 8px">Glisse un plat sur un repas du planning pour le remplacer.</p>
+    <input id="biblio-q" type="search" data-biblio-q="1" value="${echap(biblio.q)}" placeholder="Chercher un plat" autocomplete="off" aria-label="Chercher un plat">
+    <div class="puces" role="group" aria-label="Filtrer">${[["tous", "Tous"], ["viande", "Viande"], ["poisson", "Poisson"], ["plaisir", "Plaisir"], ["dessert", "Desserts"]]
+      .map(([v, l]) => `<button class="puce" data-biblio-filtre="${v}" aria-pressed="${biblio.filtre === v}">${l}</button>`).join("")}</div>
+    <ul class="biblio-liste" id="biblio-liste">${listeBiblio()}</ul></aside>`;
+}
+// Dépôt d'un plat de la bibliothèque sur un repas : un dessert va sur un dessert, un plat sur midi ou soir
+function deposer(cle, id) {
+  const k = cle.split("-")[1], r = DONNEES.recettes.find(x => x.id === id); if (!r || !gen || !gen.res) return;
+  const principal = r.repas.includes("dej") || r.repas.includes("din");
+  if (k === "des" ? !r.repas.includes("des") : !principal) return toast(k === "des" ? "Glisse un dessert sur un dessert" : "Glisse un plat sur le midi ou le soir");
+  choix = { cle }; remplacerRepas(id);
+}
+function listeMenu(plan, j0) {
+  const repas = (j, k, cls) => { const m = j.meals.find(x => x.k === k); if (!m) return "";
+    return `<button class="gen-repas ${cls}" data-changer="${j.d}-${k}" aria-label="Changer : ${LABEL_REPAS[k]}, ${echap(m.plat.nicolas)}"><span class="gen-k">${LABEL_REPAS[k]}</span>${echap(m.plat.nicolas)}</button>`; };
+  return `<p class="petit discret" style="margin:12px 0 0">Touche un repas pour le remplacer par un plat de la bibliothèque<span class="sur-ordi"> (ou glisse un plat de la bibliothèque sur le repas)</span> : les quantités et les courses se recalculent.</p>
+    <ul class="gen-liste">${plan.map(j => {
+    const d = j.date ? dateLocale(j.date) : dateDuJour(j.d + j0 - 1);
+    return `<li><span class="gen-jour">${cap(d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric" }))}${j.tag === "plaisir" ? " " + ICONES.etoile : ""}${j.fish ? " " + ICONES.poisson : ""}</span>
+      <span class="gen-repas-col">${repas(j, "dej", "fort")}${repas(j, "din", "")}${repas(j, "des", "discret")}</span></li>`; }).join("")}</ul>`;
+}
+const LABEL_REPAS = { pdj: "Petit-déj.", dej: "Midi", din: "Soir", des: "Dessert" };
+
+/* ---------- Changer un repas de la proposition : bibliothèque filtrée ---------- */
+let choix = null;   // { cle: "j-k", filtre, q }
+const familleDe = r => (r.nom || r.id).split(/[,(+]/)[0].trim().toLowerCase();
+function candidatsChoix() {
+  const [j, k] = choix.cle.split("-"), d = +j, plan = gen.res.mois.plan;
+  const estPrincipal = k === "dej" || k === "din";
+  let l = DONNEES.recettes.filter(r => r.repas.includes(k) || (estPrincipal && (r.repas.includes("dej") || r.repas.includes("din"))));
+  if (estPrincipal) l = l.filter(r => r.portions.nicolas.some(([a]) => DONNEES.catalogue[a] && DONNEES.catalogue[a].animal));
+  const f = choix.filtre, q = choix.q.trim().toLowerCase();
+  if (f === "poisson") l = l.filter(r => r.tags.includes("poisson"));
+  if (f === "plaisir") l = l.filter(r => r.tags.includes("plaisir"));
+  if (f === "viande") l = l.filter(r => !r.tags.includes("poisson"));
+  if (q) l = l.filter(r => (r.nom || "").toLowerCase().includes(q));
+  // même famille de plat déjà prévue à moins de 5 jours : signalé, pas interdit
+  const ecart = DONNEES.reglages.ecartMinJours || 5, proches = {};
+  for (const jj of plan) for (const m of jj.meals) {
+    if (`${jj.d}-${m.k}` === choix.cle || !(m.k === "dej" || m.k === "din") || Math.abs(jj.d - d) >= ecart) continue;
+    const r = DONNEES.recettes.find(x => x.id === m.recette); if (r) (proches[familleDe(r)] = proches[familleDe(r)] || []).push(jj.d);
+  }
+  return l.map(r => ({ r, proche: estPrincipal ? proches[familleDe(r)] : null,
+    cout: ["nicolas", "aurelie"].reduce((s, p) => s + r.portions[p].reduce((t, [a, x]) => t + (prixUnitaire(a) || 0) * x, 0), 0) }))
+    .sort((a, b) => (!!a.proche - !!b.proche) || (a.r.nom || "").localeCompare(b.r.nom || "", "fr"));
+}
+function listeChoix() {
+  const [j, k] = choix.cle.split("-"), actuel = gen.res.mois.plan.find(x => x.d === +j).meals.find(m => m.k === k).recette;
+  const l = candidatsChoix();
+  if (!l.length) return `<li class="discret petit" style="padding:12px 0">Aucun plat ne correspond.</li>`;
+  const dateDe = jj => { const x = gen.res.mois.plan.find(y => y.d === jj); return x && x.date ? dateLocale(x.date).getDate() : jj; };
+  return l.map(({ r, proche, cout }) => `<li><button class="choix-plat ${r.id === actuel ? "actuel" : ""}" data-choix-id="${echap(r.id)}">
+    <b>${echap(r.nom || r.id)}</b>
+    <span class="discret">${[r.tags.includes("poisson") ? "poisson" : "", r.tags.includes("plaisir") ? "plaisir" : "", "≈ " + eur(cout) + " à deux",
+      r.id === actuel ? "prévu" : "", proche ? "déjà le " + proche.map(dateDe).join(" et le ") : ""].filter(Boolean).join(" · ")}</span></button></li>`).join("");
+}
+function rendreChoix() {
+  const c = document.getElementById("couche"); if (!choix) { c.innerHTML = ""; return; }
+  const [j, k] = choix.cle.split("-"), jour = gen.res.mois.plan.find(x => x.d === +j), m = jour.meals.find(x => x.k === k);
+  const d = jour.date ? dateLocale(jour.date) : dateDuJour(+j + (gen.j0 || 1) - 1);
+  const filtres = k === "des" ? "" : `<div class="puces" role="group" aria-label="Filtrer">${[["tous", "Tous"], ["viande", "Viande"], ["poisson", "Poisson"], ["plaisir", "Plaisir"]]
+    .map(([v, l]) => `<button class="puce" data-choix-filtre="${v}" aria-pressed="${choix.filtre === v}">${l}</button>`).join("")}</div>`;
+  c.innerHTML = `<div class="voile"><div class="feuille-ia" role="dialog" aria-modal="true" aria-labelledby="titre-choix">
+    <div class="tete"><div><p class="discret petit" style="margin:0">${cap(d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }))}</p>
+      <h2 id="titre-choix">Changer le ${m.label.toLowerCase()}</h2><p class="discret petit" style="margin:4px 0 0">Prévu : ${echap(m.plat.nicolas)}</p></div>
+      <button class="rond" data-choix-fermer="1" aria-label="Fermer">×</button></div>
+    <label class="champ">Chercher un plat<input id="choix-q" type="search" data-choix-q="1" value="${echap(choix.q)}" placeholder="poulet, pizza, poisson…" autocomplete="off"></label>
+    ${filtres}
+    <ul class="choix-liste" id="choix-liste">${listeChoix()}</ul></div></div>`;
+}
+function remplacerRepas(id) {
+  const old = gen.res, g = Moteur.grilleDuMois(old.mois);
+  g[choix.cle] = id;
+  const res = Moteur.composerMois({ ...old.entrees, grilleImposee: g });
+  res.entrees = old.entrees;
+  if (old.stock) { Object.assign(res, { stock: old.stock, gardees: old.gardees }); completerStock(res); }
+  gen.res = res; gen.confirmer = false;
+  const r = DONNEES.recettes.find(x => x.id === id);
+  choix = null; rendreChoix(); rendre(); toast("Repas changé : " + (r.nom || id));
+}
+function carteMois() {
+  const archives = Object.entries(E.archives || {});
+  const lienArchives = archives.length ? `<p class="petit discret" style="margin:8px 0 0">Mois archivés : ${archives.map(([id, a]) => `${echap(a.titre)} <button class="lien" data-rouvrir="${echap(id)}">Rouvrir</button>`).join(" · ")}</p>` : "";
+  if (!gen || gen.mode !== "mois") return `<section class="carte generation"><div class="sect-titre"><h3>Le chef prépare votre mois</h3></div>
+    <p class="discret petit" style="margin:4px 0 10px">En début de mois : le chef compose le planning du mois et vous dit quoi acheter chaque semaine, pour le budget choisi. Il part de ce qu'il restera à la maison à la fin de ${echap(MOIS_TITRE.toLowerCase())}.</p>
+    <button class="bouton plein" data-generer="mois">${ICONES.etincelle}Préparer le mois suivant</button>${lienArchives}</section>`;
+  const r = gen.res, options = moisSuivants().map(d => `<option value="${iso(d)}" ${iso(d) === gen.debut ? "selected" : ""}>${cap(d.toLocaleDateString("fr-FR", { month: "long", year: "numeric" }))}</option>`).join("");
+  let corps = "";
+  if (r) {
+    const b = r.bilan, n = b.nutrition, depasse = b.cout.achats > gen.budget + 0.5, nbSem = r.mois.courses.length || 1;
+    const semaines = r.mois.courses.map(c => { const t = c.items.reduce((x, i) => x + (i.est || 0), 0);
+      return `<tr><td><b>${c.titre}</b><br><span class="discret petit">${cap(c.jour)}, ${c.couvre}</span></td><td class="n">${c.items.length}</td><td class="n ${t > gen.budget / nbSem + 0.5 ? "surcout" : ""}">${eur(t)}</td></tr>`; }).join("");
+    const manques = b.manquesAvantPremiereCourse.filter(x => DONNEES.nut[x.a]);
+    corps = `<div class="stats">
+        <div><span class="chiffre ${depasse ? "surcout" : "eco"}">${eur(b.cout.achats)}</span><span class="discret">courses du mois pour ${eur(gen.budget)}</span></div>
+        <div><span class="chiffre">${b.quotas.poisson} · ${b.quotas.plaisir}</span><span class="discret">repas poisson · plaisir</span></div>
+        <div><span class="chiffre">${nb(n.nicolas.kcalMoyen)}</span><span class="discret">kcal/j Nicolas · ${n.nicolas.protMoyen} g prot.</span></div>
+        <div><span class="chiffre">${nb(n.aurelie.kcalMoyen)}</span><span class="discret">kcal/j Aurélie · ${n.aurelie.protMoyen} g prot.</span></div></div>
+      ${depasse ? `<p class="petit surcout" style="margin:10px 0 0">Le chef n'arrive pas sous ${eur(gen.budget)} sans trop répéter les mêmes plats : il dépasse de ${eur(b.cout.achats - gen.budget)}. Vous pourrez retirer ou changer des aliments pendant les courses.</p>` : ""}
+      <h3 style="margin-top:14px">À acheter chaque semaine</h3>
+      <table class="tab"><thead><tr><th>Course</th><th class="n">Articles</th><th class="n">Total</th></tr></thead><tbody>${semaines}</tbody></table>
+      ${manques.length ? `<p class="petit" style="margin:8px 0 0"><b>Avant la première course</b> (il n'en restera pas assez à la maison) : ${manques.map(x => echap(x.a) + " " + quantite(x.a, x.q)).join(", ")}.</p>` : ""}
+      ${blocMenu(r.mois.plan, 1)}
+      ${gen.confirmer ? `<p class="petit" style="margin:0 0 8px"><b>${echap(r.mois.titre)} devient le mois affiché.</b> ${echap(MOIS_TITRE)} est archivé avec ses coches et ses prix payés ; on peut le rouvrir.</p>
+        <div class="btns-ed"><button class="bouton" data-generer="valider-oui">Oui, passer à ${echap(r.mois.titre.toLowerCase())}</button><button class="bouton leger" data-generer="valider-non">Pas encore</button></div>`
+      : `<div class="btns-ed"><button class="bouton" data-generer="valider">Valider ce mois</button><button class="bouton leger" data-generer="autre">Une autre idée, chef</button><button class="bouton leger" data-generer="fermer">Fermer</button></div>`}`;
+  }
+  return `<section class="carte generation"><div class="sect-titre"><h3>Le chef prépare votre mois</h3></div>
+    <div class="form-ia" style="gap:10px;margin-top:8px">
+      <div class="rangee"><label class="champ">Mois<select id="mois-debut" data-gen="debut">${options}</select></label>
+        <label class="champ">Nombre de jours<input id="mois-jours" type="number" min="1" max="31" step="1" data-gen="jours" value="${gen.jours}"></label></div>
+      <div class="rangee"><label class="champ">Budget du mois (€)<input id="mois-budget" type="number" min="0" step="1" inputmode="decimal" data-gen="budget" value="${gen.budget}"></label>
+        <label class="champ">Invités en plus<input id="mois-invites" type="number" min="0" max="12" step="1" data-gen="invites" value="${gen.invites}"></label></div>
+      <button class="bouton or plein" data-generer="calculer">${r ? "Relancer le chef" : "Proposer le mois"}</button>
+    </div>${corps}</section>`;
+}
+function carteGeneration() {
+  const g = E.foyer.generation;
+  const etat = g ? `<p class="petit" style="margin:6px 0 10px">Planning refait le ${new Date(g.date + "T12:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}, à partir du ${libelleJour(g.depuis).toLowerCase()}. <button class="lien" data-generer="annuler">Revenir au planning d'avant</button></p>` : "";
+  if (!gen || gen.mode !== "stock") return `<section class="carte generation"><div class="sect-titre"><h3>Refaire le planning selon le stock</h3></div>
+    <p class="discret petit" style="margin:4px 0 10px">En cours de mois, si des aliments ont disparu ou n'ont pas pu être achetés (rayon vide, budget) : le chef recompose les repas à venir avec ce qu'il y a vraiment à la maison, et recalcule les courses suivantes. Les articles non cochés d'une course passée sortent de la liste.</p>
+    ${etat}<button class="bouton plein" data-generer="ouvrir">${ICONES.etincelle}Demander au chef un planning selon le stock</button></section>`;
+  const j0 = gen.j0, options = [];
+  for (let d = jourActuel(); d <= NB_JOURS; d++) options.push(`<option value="${d}" ${d === j0 ? "selected" : ""}>${libelleJour(d)}</option>`);
+  const r = gen.res;
+  let corps = "";
+  if (r) {
+    const b = r.bilan, n = b.nutrition;
+    const manques = b.manquesAvantPremiereCourse.filter(x => DONNEES.nut[x.a]);
+    corps = `<div class="stats">
+        <div><span class="chiffre">${r.stockUtilise.length}/${r.stockTotal.length}</span><span class="discret">produits du stock utilisés</span></div>
+        <div><span class="chiffre">${eur(b.cout.achats)}</span><span class="discret">courses à venir (${r.mois.courses.length})</span></div>
+        <div><span class="chiffre">${nb(n.nicolas.kcalMoyen)}</span><span class="discret">kcal/j Nicolas · ${n.nicolas.protMoyen} g prot.</span></div>
+        <div><span class="chiffre">${nb(n.aurelie.kcalMoyen)}</span><span class="discret">kcal/j Aurélie · ${n.aurelie.protMoyen} g prot.</span></div>
+      </div>
+      ${manques.length ? `<p class="petit" style="margin:10px 0 0"><b>À acheter avant la prochaine course :</b> ${manques.map(x => echap(x.a) + " " + quantite(x.a, x.q)).join(", ")}.</p>` : `<p class="petit eco" style="margin:10px 0 0">Tout ce qu'il faut avant la prochaine course est à la maison.</p>`}
+      ${blocMenu(r.mois.plan, j0)}
+      <div class="btns-ed"><button class="bouton" data-generer="appliquer">Appliquer ce planning</button><button class="bouton leger" data-generer="autre">Une autre idée, chef</button><button class="bouton leger" data-generer="fermer">Fermer</button></div>`;
+  }
+  return `<section class="carte generation"><div class="sect-titre"><h3>Refaire le planning selon le stock</h3></div>${etat}
+    <div class="form-ia" style="gap:10px;margin-top:8px">
+      <label class="champ">À partir du<select id="gen-j0" data-gen="j0">${options.join("")}</select></label>
+      <div class="rangee"><label class="champ">Invités en plus<input id="gen-invites" type="number" min="0" max="12" step="1" data-gen="invites" value="${gen.invites}"></label>
+        <label class="champ">Budget des courses (facultatif)<input id="gen-budget" type="number" min="0" step="1" inputmode="decimal" data-gen="budget" value="${gen.budget || ""}" placeholder="€"></label></div>
+      <button class="bouton or plein" data-generer="calculer">${r ? "Relancer le chef" : "Proposer un planning"}</button>
+    </div>${corps}</section>`;
+}
+function vuePlanning() {
+  const auj = jourDuPlan(), commence = !planPasCommence();
+  let cases = ["lun.", "mar.", "mer.", "jeu.", "ven.", "sam.", "dim."].map(d => `<div class="jsem">${d}</div>`).join("");
+  const decal = (dateDuJour(1).getDay() + 6) % 7;
+  for (let i = 0; i < decal; i++) cases += `<div class="case-j vide" aria-hidden="true"></div>`;
+  let faits = 0;
+  for (let j = 1; j <= NB_JOURS; j++) {
+    const jour = PLAN[j - 1], st = statsJour(j); faits += st.faits;
+    const barres = CLES.map(k => `<i style="--c:${COULEUR[k]}" class="${P().coches["d" + j + "-" + k] ? "ok" : ""}"></i>`).join("");
+    const marques = (jour.tag === "plaisir" ? ICONES.etoile : "") + (jour.fish ? ICONES.poisson : "") + (COURSES().some(c => c.jourPlan === j) ? ICONES.panier : "");
+    cases += `<button class="case-j ${commence && j < auj ? "passe" : ""}" data-voir="${j}" ${commence && j === auj ? 'aria-current="date"' : ""} aria-label="${libelleJour(j)} : ${st.faits} repas sur 4 faits">
+      <span class="num">${j}</span><span class="barres">${barres}</span><span class="marques">${marques}</span><span class="cout">${eur(st.cout)}</span></button>`;
+  }
+  const total = NB_JOURS * 4;
+  return `<h1>Planning ${de()}</h1>
+  <p class="discret" style="margin:6px 0 0">${MOIS_TITRE} : du ${libelleJour(1).toLowerCase()} au ${libelleJour(NB_JOURS).toLowerCase()}. Touche un jour pour voir ses repas.</p>
+  <div class="progress-plan"><div class="sect-titre"><h3>Repas suivis</h3><span class="chiffre" style="font-size:22px">${faits}/${total}</span></div>
+    <div class="barre-prog" style="height:10px"><i style="width:${faits / total * 100}%;background:var(--c-dej)"></i></div></div>
+  <div class="cal">${cases}</div>
+  <div class="legende"><span>${ICONES.etoile}Repas plaisir</span><span>${ICONES.poisson}Poisson</span><span>${ICONES.panier}Jour de courses</span></div>
+  ${carteMois()}
+  ${carteGeneration()}`;
+}
+
+/* ---------- Vue : courses ---------- */
+function vueStock(seg) {
+  const jNow = planPasCommence() ? 1 : jourDuPlan();
+  const now = stockReel(jNow), fin = stockBrut(NB_JOURS + 1);
+  const alim = Object.keys(DONNEES.nut).filter(a => DONNEES.cat[a] && (now[a] > 0.5 || fin[a] != null));
+  let manques = 0, valeur = 0;
+  const lignes = alim.map(a => {
+    const n = Math.max(0, now[a] || 0), f = fin[a] || 0;
+    if (f < -0.5) manques++; valeur += n * (prixUnitaire(a) || 0);
+    return { a, n, f };
+  }).sort((x, y) => (x.f < -0.5 ? x.f : 0) - (y.f < -0.5 ? y.f : 0) || (y.n > 0.5) - (x.n > 0.5) || x.a.localeCompare(y.a, "fr"));
+  const aujourdhui = cap(new Date().toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" }).replace(/^(\S+) 1 /, "$1 1er "));
+  let adj = 0, dk = 0, dc = 0;
+  for (let j = 1; j <= NB_JOURS; j++) for (const k of CLES) { const r = P().remplacements["d" + j + "-" + k]; if (r && r.ajuste) { adj++; const x = statsRepas(r), y = statsRepas(repasPlan(j, k)); dk += x.kcal - y.kcal; dc += x.cout - y.cout; } }
+  return `<h1>Courses du foyer</h1>
+  <div class="segments" role="group" aria-label="Choisir la liste">${seg}</div>
+  <div class="totaux">
+    <div><span class="chiffre ${manques ? "surcout" : "eco"}">${manques}</span><span class="discret">aliment${manques > 1 ? "s" : ""} en rupture avant le ${dateDuJour(NB_JOURS).getDate()}</span></div>
+    <div><span class="chiffre">${eur(valeur)}</span><span class="discret">à la maison aujourd'hui</span></div>
+    <div><span class="chiffre">${adj}</span><span class="discret">repas ajustés ${de()} (${dk >= 0 ? "+" : "−"}${nb(Math.abs(dk))} kcal)</span></div>
+  </div>
+  <p class="discret petit">Ce qu'il reste à la maison aujourd'hui : articles cochés aux courses, moins les repas des jours passés et la poubelle. La dernière colonne prévoit la fin du cycle avec toutes les courses de la liste.</p>
+  <div class="stock-ligne stock-tete"><span>Aliment</span><span class="n">${aujourdhui}</span><span class="n">Le ${dateDuJour(NB_JOURS).getDate()} au soir</span><span></span></div>
+  ${lignes.map(l => `<div class="stock-ligne"><span>${echap(l.a)}</span><span class="n">${quantite(l.a, l.n)}</span>
+    <span class="n ${l.f < -0.5 ? "manque" : ""}">${l.f < -0.5 ? "manque " + quantite(l.a, -l.f) : quantite(l.a, Math.max(0, l.f))}</span>
+    ${l.n > 0.5 ? `<button class="jeter" data-jeter="${echap(l.a)}" aria-label="Jeter du stock : ${echap(l.a)}">${ICONES.poubelle}</button>` : "<span></span>"}
+    ${jeterSel === l.a ? `<div class="jeter-form"><label>Jeter <input id="jeter-q" type="number" inputmode="decimal" min="0" step="any" value="${Math.round(l.n * 10) / 10}"> ${uniteDe(l.a)}</label>
+      <button class="bouton" data-jeter-ok="${echap(l.a)}">Mettre à la poubelle</button><button class="bouton leger" data-jeter-annuler="1">Annuler</button></div>` : ""}</div>`).join("")}
+  ${vuePertes()}`;
+}
+let jeterSel = null;
+function vuePertes() {
+  const l = E.foyer.pertes || [];
+  if (!l.length) return "";
+  const total = l.reduce((s, x) => s + x.q * (prixUnitaire(x.a) || 0), 0);
+  return `<div class="carte pertes"><div class="sect-titre"><h3>À la poubelle</h3><span class="chiffre surcout">${eur(total)}</span></div>
+    <ul>${l.map((x, i) => `<li><span>${echap(x.a)} · ${quantite(x.a, x.q)} <span class="discret">${libelleJour(x.j).toLowerCase()}</span></span>
+      <button class="lien" data-perte-suppr="${i}">Annuler</button></li>`).join("")}</ul></div>`;
+}
+// Onglet « Prix » : prix de chaque produit, modifiable. Un prix saisi (ou payé) remplace celui du catalogue partout.
+function vuePrix(seg) {
+  const groupes = {};
+  for (const [a, c] of Object.entries(DONNEES.cat)) { if (c.cat === "Déjà en stock") continue; (groupes[c.cat] = groupes[c.cat] || []).push(a); }
+  const date = s => new Date(s + "T12:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
+  let liste = "", modifies = 0;
+  for (const [rayon, alim] of Object.entries(groupes)) {
+    liste += `<h3 class="cat-titre">${echap(rayon)}</h3>`;
+    for (const a of alim) {
+      const c = DONNEES.cat[a], p = E.foyer.prix[a], cat = (DONNEES.catalogue || {})[a] || {};
+      if (p) modifies++;
+      const unite = c.vrac ? "€/kg" : "€";
+      const pour = c.vrac ? (c.rend && c.rend < 1 ? `au kilo brut (rendement ${nb(c.rend * 100)} %)` : "au kilo") : c.achat;
+      const origine = p ? `${p.source === "paye" ? "d'après le prix payé" : "modifié"} le ${date(p.date)} · catalogue ${c.prix == null ? "sans prix" : nb(c.prix, 2) + " " + unite}` : (c.prix == null ? "pas encore de prix" : "");
+      liste += `<div class="prix-ligne"><div><div class="nom">${echap(a)}${!p && cat.prixEstime ? '<span class="etiq-estime">estimé</span>' : ""}</div>
+        <div class="detail">${echap(pour)}${origine ? " · " + echap(origine) : ""}${p ? ` · <button class="lien" data-prix-reset="${echap(a)}">Rétablir</button>` : ""}</div></div>
+        <label class="saisie-prix"><input type="number" inputmode="decimal" step="0.01" min="0" data-prix-a="${echap(a)}" class="${p ? "modifie" : ""}"
+          value="${p ? p.prix : (c.prix == null ? "" : c.prix)}" placeholder="0,00" aria-label="Prix de ${echap(a)} en ${unite}"> ${unite}</label></div>`;
+    }
+  }
+  return `<h1>Courses du foyer</h1>
+  <div class="segments" role="group" aria-label="Choisir la liste">${seg}</div>
+  <p class="discret petit">Prix au conditionnement, ou au kilo pour le vrac. Un prix modifié ici, ou déduit d'un prix payé, remplace le prix d'origine dans toute l'app : courses, budget, coût des repas et propositions du chef.${modifies ? ` ${modifies} prix modifié${modifies > 1 ? "s" : ""}.` : ""}</p>
+  ${liste}`;
+}
+// Projection des courses du cycle : prix payés quand ils sont saisis, sinon estimation aux derniers prix validés.
+function projectionFoyer() {
+  let paye = 0, avenir = 0;
+  for (const c of COURSES()) { const b = bilanCourse(c.id); paye += b.paye; avenir += b.avenir; }
+  const budget = budgetFoyer();
+  return { paye, avenir, total: paye + avenir, budget };
+}
+// Budget du foyer : celui choisi pour le mois préparé par le chef, sinon la somme des budgets des profils.
+// La part d'une personne suit le rapport de son budget de profil.
+function budgetFoyer() { return E.mois && E.mois.budget ? +E.mois.budget : Object.keys(PERSONNES).reduce((s, p) => s + (+E.personnes[p].profil.budget || 0), 0); }
+function budgetPersonne(p = actif) {
+  const b = +E.personnes[p].profil.budget || 0; if (!(E.mois && E.mois.budget)) return b;
+  const tot = Object.keys(PERSONNES).reduce((s, q) => s + (+E.personnes[q].profil.budget || 0), 0);
+  return tot ? E.mois.budget * b / tot : E.mois.budget / 2;
+}
+// Dépassement du foyer : ce qui sera mangé sur le cycle (aux derniers prix validés) face à la somme des budgets.
+// Les achats peuvent dépasser un peu la consommation : ce qui reste en stock sert au cycle suivant.
+function depassementFoyer() {
+  const conso = Object.keys(PERSONNES).reduce((s, p) => s + totalPrevu(p), 0);
+  const x = projectionFoyer();
+  return { conso, budget: x.budget, ecart: conso - x.budget, achats: x.total, paye: x.paye, avenir: x.avenir };
+}
+function ligneProjection() {
+  const d = depassementFoyer();
+  return `<p class="petit" style="margin:10px 0 0">Consommation prévue du foyer : <b class="${d.ecart > 0 ? "surcout" : "eco"}">${eur(d.conso)}</b>
+    <span class="discret">pour un budget de ${eur(d.budget)}, ${d.ecart > 0 ? "dépassé de " + eur(d.ecart) : "reste " + eur(-d.ecart)}.
+    Achats du cycle : ${eur(d.paye)} payés + ${eur(d.avenir)} à venir aux derniers prix (${eur(d.achats)}).</span></p>${panneauDepassement()}`;
+}
+
+/* ---------- Dépassement : retirer, changer des aliments ou accepter ---------- */
+function jourActuel() { return planPasCommence() ? 1 : jourDuPlan(); }
+function finPeriode(c) { const n = COURSES().find(x => x.jourPlan > c.jourPlan); return n ? n.jourPlan - 1 : NB_JOURS; }
+// lignes encore à acheter : pas cochées, dans une course dont la période n'est pas finie
+function lignesAAcheter() {
+  const out = [];
+  for (const c of COURSES()) {
+    if (finPeriode(c) < jourActuel()) continue;
+    for (const it of itemsCourse(c)) if (!it.remplace && !E.foyer.achats[cleLigne(c.id, it)]) out.push({ c, it });
+  }
+  return out;
+}
+const HORS_REPAS_NOMS = new Set((DONNEES.reglages.horsRepas || []).map(h => h.a));
+const roleDe = a => ((DONNEES.catalogue || {})[a] || {}).role || "autre";
+// quantité de b qui remplace q de a : mêmes protéines pour une protéine, mêmes kcal pour un féculent, même poids sinon
+function facteurEchange(a, b) {
+  const na = DONNEES.nut[a], nb2 = DONNEES.nut[b]; if (!na || !nb2) return 1;
+  const r = roleDe(a), i = r === "proteine" ? 3 : r === "feculent" ? 2 : -1;
+  if (i < 0 || !nb2[i]) return 1;
+  return Math.round((na[i] / na[0]) / (nb2[i] / nb2[0]) * 100) / 100;
+}
+function repasTouches(c, a) {
+  let n = 0; const d0 = Math.max(c.jourPlan, jourActuel()), d1 = finPeriode(c);
+  for (let d = d0; d <= d1; d++) for (const k of CLES) for (const p of Object.keys(PERSONNES)) if (repasDe(d, k, p).items.some(([x]) => x === a)) n++;
+  return n;
+}
+function propositions() {
+  const retraits = [], echanges = [];
+  for (const { c, it } of lignesAAcheter()) {
+    const est = estimationLigne(it); if (!est) continue;
+    const r = roleDe(it.a);
+    if (r !== "proteine" && r !== "feculent" && !HORS_REPAS_NOMS.has(it.a))
+      retraits.push({ c, it, gain: est, repas: repasTouches(c, it.a) });
+    for (const b of ((DONNEES.catalogue || {})[it.a] || {}).substituts || []) {
+      if (!DONNEES.cat[b] || DONNEES.cat[b].prix == null && !E.foyer.prix[b]) continue;
+      const f = facteurEchange(it.a, b), l = ligneSubstitut(it, { b, f }), gain = est - (estimationLigne(l) || 0);
+      if (gain > 0.3) echanges.push({ c, it, b, f, gain, repas: repasTouches(c, it.a) });
+    }
+  }
+  const tri = l => l.sort((x, y) => y.gain - x.gain);
+  // un seul échange par ligne : le plus avantageux
+  const vus = new Set();
+  return { retraits: tri(retraits).slice(0, 5), echanges: tri(echanges).filter(e => { const k = e.c.id + e.it.a; if (vus.has(k)) return false; vus.add(k); return true; }).slice(0, 5) };
+}
+function panneauDepassement() {
+  const d = depassementFoyer(), modifs = E.foyer.modifs || [];
+  const liste = modifs.length ? `<div class="modifs"><b>Décisions prises</b><ul>${modifs.map((m, i) => `<li><span>${m.type === "retrait" ? "Retiré : " + echap(m.a) : echap(m.a) + " → " + echap(m.b)} <span class="discret">(${COURSES().find(c => c.id === m.cid).titre}, ${eur(m.gain)} en moins)</span></span>
+    <button class="lien" data-modif-annuler="${i}">Annuler</button></li>`).join("")}</ul></div>` : "";
+  if (d.ecart <= 0.5 || d.ecart <= (E.foyer.depassementAccepte || 0) + 1) return liste ? `<div class="carte depasse">${liste}</div>` : "";
+  const pr = propositions();
+  const ligne = (x, type) => `<li><span><b>${type === "retrait" ? "Retirer " + echap(x.it.a) : echap(x.it.a) + " → " + echap(x.b)}</b>
+      <span class="discret">${x.c.titre}${x.repas ? ", " + x.repas + " repas concerné" + (x.repas > 1 ? "s" : "") : ""}${type === "echange" && x.f !== 1 ? ", " + nb(x.f, 2).replace(/,?0+$/, "") + " g pour 1 g" : ""}</span></span>
+      <button class="bouton leger" data-modif="${type}" data-cid="${x.c.id}" data-a="${echap(x.it.a)}" ${type === "echange" ? `data-b="${echap(x.b)}" data-f="${x.f}"` : ""}>−${eur(x.gain)}</button></li>`;
+  return `<div class="carte depasse" role="region" aria-label="Budget dépassé">
+    <div class="sect-titre"><h3>Budget dépassé de ${eur(d.ecart)}</h3></div>
+    <p class="discret petit" style="margin:4px 0 8px">Que fait-on ? Chaque choix s'applique tout de suite aux repas concernés (à partir d'aujourd'hui) et à la liste.</p>
+    ${pr.retraits.length ? `<b>Retirer</b><ul>${pr.retraits.map(x => ligne(x, "retrait")).join("")}</ul>` : ""}
+    ${pr.echanges.length ? `<b>Changer des aliments</b><ul>${pr.echanges.map(x => ligne(x, "echange")).join("")}</ul>` : ""}
+    ${!pr.retraits.length && !pr.echanges.length ? `<p class="petit">Plus rien à retirer ni à échanger dans ce qu'il reste à acheter.</p>` : ""}
+    <button class="bouton or" data-accepter="${Math.round(d.ecart * 100) / 100}">Accepter le dépassement de ${eur(d.ecart)}</button>
+    ${liste}</div>`;
+}
+// Applique un retrait ou un échange aux repas de la période de la course (dès aujourd'hui), pour les deux personnes.
+function appliquerModif(m) {
+  const c = COURSES().find(x => x.id === m.cid), d0 = Math.max(c.jourPlan, jourActuel()), d1 = finPeriode(c);
+  m.avant = {};
+  for (const p of Object.keys(PERSONNES)) {
+    m.avant[p] = {};
+    for (let d = d0; d <= d1; d++) for (const k of CLES) {
+      const r = repasDe(d, k, p); if (!r.items.some(([x]) => x === m.a)) continue;
+      const cle = "d" + d + "-" + k, ancien = P(p).remplacements[cle];
+      m.avant[p][cle] = ancien ? structuredClone(ancien) : null;
+      let items = r.items.map(([a, q]) => [a, q]);
+      if (m.type === "retrait") items = items.filter(([a]) => a !== m.a);
+      else {
+        const q = items.filter(([a]) => a === m.a).reduce((s, [, x]) => s + x, 0), qb = UNITES_SPECIALES[m.b] || ["Œufs", "Wraps", "Pains burger"].includes(m.b) ? Math.max(1, Math.round(q * m.f)) : Math.round(q * m.f / 5) * 5;
+        items = items.filter(([a]) => a !== m.a);
+        const i = items.findIndex(([a]) => a === m.b); if (i >= 0) items[i][1] += qb; else items.push([m.b, qb]);
+      }
+      P(p).remplacements[cle] = { ...(ancien || {}), k, label: r.label, plat: r.plat, items, ajuste: true, modif: m.id };
+    }
+  }
+}
+function annulerModif(i) {
+  const m = E.foyer.modifs[i];
+  for (const p of Object.keys(m.avant || {})) for (const [cle, v] of Object.entries(m.avant[p])) {
+    if (v) P(p).remplacements[cle] = v; else delete P(p).remplacements[cle];
+  }
+  E.foyer.modifs.splice(i, 1);
+}
+function vueCourses() {
+  const enListe = typeof courseSel === "number";
+  const seg = `<button data-course="${enListe ? courseSel : courseDuJour()}" aria-pressed="${enListe}">Listes<span>${COURSES().length} courses</span></button>`
+    + `<button data-course="stock" aria-pressed="${courseSel === "stock"}">À la maison<span>ce qu'il reste</span></button>`
+    + `<button data-course="prix" aria-pressed="${courseSel === "prix"}">Prix<span>à modifier</span></button>`;
+  if (courseSel === "stock") return vueStock(seg);
+  if (courseSel === "prix") return vuePrix(seg);
+  const c = COURSES().find(x => x.id === courseSel), b = bilanCourse(courseSel);
+  const groupes = {};
+  for (const it of itemsCourse(c)) (groupes[DONNEES.cat[it.a].cat] = groupes[DONNEES.cat[it.a].cat] || []).push(it);
+  const puces = `<div class="puces courses-puces" role="group" aria-label="Choisir la course">${COURSES().map(x => { const bx = bilanCourse(x.id);
+    return `<button class="puce" data-course="${x.id}" aria-pressed="${x.id === courseSel}">${x.titre} · ${dateCourte(x.date)}<span class="discret">${bx.faits}/${bx.total}</span></button>`; }).join("")}</div>`;
+  let liste = "";
+  for (const [cat, items] of Object.entries(groupes)) {
+    liste += `<h3 class="cat-titre">${echap(cat)}</h3>`;
+    for (const it of items) {
+      const k = cleLigne(courseSel, it), fait = !!E.foyer.achats[k], est = estimationLigne(it), v = E.foyer.payes[k];
+      liste += `<div class="article ${fait ? "achete" : ""}">
+        <button class="check" data-achat="${echap(k)}" aria-pressed="${fait}" aria-label="${echap(it.a)} acheté">${ICONES.coche}</button>
+        <div><div class="nom">${echap(it.a)}</div>
+          <div class="detail">Besoin ${quantite(it.a, it.needN + it.needA + (it.needI || 0))}${it.remplace ? " · remplace " + echap(it.remplace) : ""}</div>
+          <label class="saisie qte-achat">Acheté <input type="number" inputmode="decimal" min="0" step="${DONNEES.cat[it.a].vrac ? 10 : 1}" data-qte="${echap(k)}" data-art="${echap(it.a)}" data-prevu="${it.prevu != null ? it.prevu : it.buy}" value="${it.buy}" aria-label="Quantité achetée de ${echap(it.a)}">
+            ${DONNEES.cat[it.a].vrac ? "g" : "× " + echap(DONNEES.cat[it.a].achat)}</label></div>
+        <div class="prix"><label class="saisie"><input type="number" inputmode="decimal" step="0.01" min="0" data-paye="${echap(k)}" data-art="${echap(it.a)}" data-buy="${it.buy}"
+            value="${v != null ? v : ""}" placeholder="${est != null ? nb(est, 2) : "prix ?"}" aria-label="Prix payé pour ${echap(it.a)} (estimé ${est == null ? "inconnu" : eur(est)})"> €</label>
+          <span>${v != null ? "estimé " + (est0(it) == null ? "—" : eur(est0(it))) : "part " + de() + " " + (est == null ? "—" : eur(est * part(it.a)))}</span></div>
+      </div>`;
+    }
+  }
+  return `<h1>Courses du foyer</h1>
+  <div class="segments" role="group" aria-label="Choisir la liste">${seg}</div>
+  ${puces}
+  <p class="discret petit" style="margin:4px 0 12px">${cap(c.jour)}, ${c.couvre}.</p>
+  <div class="totaux">
+    <div><span class="chiffre">${eur(b.paye)}</span><span class="discret">payé (cochés)</span></div>
+    <div><span class="chiffre">${eur(b.avenir)}</span><span class="discret">reste à acheter</span></div>
+    <div><span class="chiffre" style="color:var(--or)">${eur(b.maPart)}</span><span class="discret">part ${de()}</span></div>
+  </div>
+  ${ligneProjection()}
+  <div class="ligne-saisie"><label class="champ">Magasin<input type="text" data-magasin="${courseSel}" value="${echap(E.foyer.magasins[courseSel] || "")}" placeholder="Ex. Leclerc Saint-Pierre"></label>
+    <p class="discret petit" style="margin:0 0 10px">${b.faits}/${b.total} articles</p></div>
+  <p class="discret petit">Coche un article quand il est dans le panier : son prix est validé et compte dans le réel. Corrige la quantité achetée si besoin (le besoin de la période est indiqué), et le prix s'il n'est pas celui affiché : il remplace l'ancien partout.</p>
+  ${liste}`;
+}
+
+/* ---------- Vue : budget ---------- */
+// Budget du foyer : ce qui est payé (cochés) et ce qui reste à acheter, avec la part de la personne active.
+function carteFoyer() {
+  const d = depassementFoyer(), bl = COURSES().map(c => bilanCourse(c.id));
+  const paye = bl.reduce((s, b) => s + b.paye, 0), avenir = bl.reduce((s, b) => s + b.avenir, 0);
+  const maPart = bl.reduce((s, b) => s + b.maPart, 0), partPaye = bl.reduce((s, b) => s + b.partPaye, 0);
+  const total = paye + avenir, maxi = Math.max(d.budget, total) || 1, depasse = total > d.budget;
+  return `<section class="carte pot">
+    <div class="sect-titre" style="flex-wrap:wrap"><h2>Budget du foyer : ${eur(d.budget)}</h2><span class="${depasse ? "surcout" : "eco"}">${depasse ? "Courses au-dessus de " + eur(total - d.budget) : "Reste " + eur(d.budget - total)}</span></div>
+    ${depasse && d.ecart <= 0 ? `<p class="discret petit" style="margin:4px 0 0">Ce qui sera mangé (${eur(d.conso)}) reste sous le budget : le surplus des courses reste en stock pour la suite.</p>` : ""}<div style="display:none"></div>
+    <div class="pot-barre"><i style="width:${Math.min(paye / maxi, 1) * 100}%;background:var(--vert)"></i><i style="left:${Math.min(paye / maxi, 1) * 100}%;width:${Math.min(avenir / maxi, 1 - Math.min(paye / maxi, 1)) * 100}%;background:var(--or);opacity:.55;border-radius:0 13px 13px 0"></i><b style="left:calc(${Math.min(d.budget / maxi, 1) * 100}% - 2px)"></b></div>
+    <p class="discret petit" style="margin:0">Vert : payé (articles cochés). Or : reste à acheter aux derniers prix. Trait : budget du foyer (somme des budgets de Nicolas et d'Aurélie).</p>
+    <div class="stats">
+      <div><span class="chiffre">${eur(paye)}</span><span class="discret">payé · part ${de()} ${eur(partPaye)}</span></div>
+      <div><span class="chiffre">${eur(avenir)}</span><span class="discret">reste à acheter · part ${eur(maPart - partPaye)}</span></div>
+      <div><span class="chiffre">${eur(total)}</span><span class="discret">courses du cycle · part ${eur(maPart)}</span></div>
+      <div><span class="chiffre ${d.ecart > 0 ? "surcout" : "eco"}">${eur(d.conso)}</span><span class="discret">consommation prévue du foyer</span></div>
+    </div></section>`;
+}
+function vueBudget() {
+  const pr = P().profil, prevu = totalPrevu(), budget = budgetPersonne(), ref = E.mois ? 0 : +pr.reference || 0;
+  const auj = planPasCommence() ? 0 : jourDuPlan();
+  let consomme = 0; for (let j = 1; j <= NB_JOURS; j++) consomme += statsJour(j).coutFait;
+  consomme += horsRepasJour() * auj;
+  const bilans = COURSES().map(c => ({ c, b: bilanCourse(c.id) })), partPaye = bilans.reduce((s, x) => s + x.b.partPaye, 0);
+  const depasse = prevu > budget, maxi = Math.max(budget, prevu) || 1;
+  const W = Math.round(Math.min(Math.max(window.innerWidth - 90, 300), 860)), H = 200, pad = 28, top = maxi * 1.05;
+  let cum = 0; const pts = [], ptsF = [];
+  for (let j = 1; j <= NB_JOURS; j++) {
+    const s = statsJour(j); cum += s.cout + horsRepasJour();
+    const x = pad + (j - 1) / (NB_JOURS - 1) * (W - 2 * pad), y = H - pad - cum / top * (H - 2 * pad);
+    pts.push([x, y]); if (s.faits === 4) ptsF.push([x, y]);
+  }
+  const yB = H - pad - budget / top * (H - 2 * pad);
+  const courbe = `<svg class="courbe" viewBox="0 0 ${W} ${H}" role="img" aria-label="Dépense prévue cumulée comparée au budget">
+    <line x1="${pad}" y1="${H - pad}" x2="${W - pad}" y2="${yB}" style="stroke:var(--brume)" stroke-width="2" stroke-dasharray="6 6"/>
+    <polyline points="${pts.map(q => q.join(",")).join(" ")}" fill="none" style="stroke:var(--c-dej)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+    ${ptsF.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" style="fill:var(--or)"/>`).join("")}
+    <text x="${W - pad}" y="${yB - 8}" text-anchor="end" style="font:13px var(--texte);fill:var(--brume)">Budget ${eur(budget)}</text>
+    <text x="${pad}" y="${H - 6}" style="font:12px var(--texte);fill:var(--brume)">${dateCourte(iso(dateDuJour(1))).replace(/^\S+ /, "")}</text>
+    <text x="${W - pad}" y="${H - 6}" text-anchor="end" style="font:12px var(--texte);fill:var(--brume)">${dateCourte(iso(dateDuJour(NB_JOURS))).replace(/^\S+ /, "")}</text></svg>`;
+  const ecarts = [];
+  for (const c of COURSES()) for (const it of itemsCourse(c)) {
+    const v = E.foyer.payes[cleLigne(c.id, it)]; if (v == null || v === "") continue;
+    const base = DONNEES.cat[it.a]; if (base.prix == null) continue;
+    const estBase = base.vrac ? it.buy / 1000 * base.prix : it.buy * base.prix;
+    ecarts.push({ a: it.a, c: c.titre, est: estBase, paye: +v, part: part(it.a) });
+  }
+  const ecoReelle = ecarts.reduce((s, e) => s + (e.est - e.paye) * e.part, 0);
+  const lignes = ecarts.length ? ecarts.map(e => { const d = (e.est - e.paye) * e.part;
+    return `<tr><td>${echap(e.a)}<br><span class="discret petit">${e.c}</span></td><td class="n">${eur(e.est)}</td><td class="n">${eur(e.paye)}</td><td class="n ${d >= 0 ? "eco" : "surcout"}">${d >= 0 ? "−" : "+"}${eur(Math.abs(d))}</td></tr>`; }).join("")
+    : `<tr><td colspan="4" class="discret">Aucun prix saisi pour l'instant. Note les prix dans Courses pour suivre les vraies économies.</td></tr>`;
+  return `<h1>Budget</h1>
+  ${carteFoyer()}
+  ${panneauDepassement()}
+  <h2 style="margin-top:22px">Part ${de()}</h2>
+  <p class="discret" style="margin:6px 0 0">Ce que ${nom()} mange du ${jourMoisCourt(1)} au ${jourMoisCourt(NB_JOURS)}, au prix validé dès que l'article est coché.</p>
+  <section class="carte pot">
+    <div class="sect-titre" style="flex-wrap:wrap"><h2>${eur(prevu)} prévus</h2><span class="${depasse ? "surcout" : "eco"}">${depasse ? "Au-dessus du budget de " + eur(prevu - budget) : "Sous le budget de " + eur(budget - prevu)}</span></div>
+    <div class="pot-barre"><i style="width:${Math.min(prevu / maxi, 1) * 100}%;background:${depasse ? "var(--alerte)" : "var(--or)"}"></i><b style="left:calc(${Math.min(budget / maxi, 1) * 100}% - 2px)"></b></div>
+    <p class="discret petit" style="margin:0">${E.mois ? "Sa part du budget du mois (" + eur(budgetFoyer()) + ")" : "Budget fixé : " + eur(budget) + ", modifiable dans Profil"}</p>
+    <div class="stats">
+      <div><span class="chiffre">${eur(consomme)}</span><span class="discret">déjà consommé</span></div>
+      <div><span class="chiffre">${eur(prevu - consomme)}</span><span class="discret">reste à manger</span></div>
+      <div><span class="chiffre">${eur(partPaye)}</span><span class="discret">sa part payée</span></div>
+      <div><span class="chiffre eco">${eur(ref - prevu)}</span><span class="discret">économisé vs liste initiale</span></div>
+    </div></section>
+  <section class="carte"><h3>Dépense prévue jour après jour</h3>${courbe}
+    <p class="discret petit" style="margin:4px 0 0">Ligne verte : dépense cumulée. Pointillés : budget réparti sur ${NB_JOURS} jours. Point doré : journée entièrement suivie.</p></section>
+  <section class="carte"><h3>Par course</h3>
+    <table class="tab"><thead><tr><th>Course</th><th class="n">Sa part</th><th class="n">Dont payé</th></tr></thead><tbody>
+      ${bilans.map(({ c, b }) => `<tr><td>${c.titre}<br><span class="discret petit">${c.jour}</span></td><td class="n">${eur(b.maPart)}</td><td class="n">${eur(b.partPaye)}</td></tr>`).join("")}
+    </tbody></table></section>
+  <section class="carte"><div class="sect-titre"><h3>Prix payés vs estimés</h3><span class="${ecoReelle >= 0 ? "eco" : "surcout"}">${ecoReelle >= 0 ? "−" : "+"}${eur(Math.abs(ecoReelle))} sur sa part</span></div>
+    <table class="tab"><thead><tr><th>Produit</th><th class="n">Estimé</th><th class="n">Payé</th><th class="n">Sa part</th></tr></thead><tbody>${lignes}</tbody></table></section>`;
+}
+
+/* ---------- Vue : profil ---------- */
+function vueProfil() {
+  const pr = P().profil, pes = [...P().pesees].sort((a, b) => a.date.localeCompare(b.date));
+  const actuel = pes.length ? pes[pes.length - 1].kg : +pr.poids, reste = actuel - pr.cible, depart = +pr.poids;
+  const pct = Math.max(0, Math.min(1, (depart - actuel) / Math.max(depart - pr.cible, 0.1))) * 100;
+  let spark = "";
+  if (pes.length >= 2) {
+    const W = 300, H = 70, ks = pes.map(x => x.kg), mn = Math.min(...ks, pr.cible) - .5, mx = Math.max(...ks) + .5;
+    const pts = pes.map((x, i) => [8 + i / (pes.length - 1) * (W - 16), 6 + (mx - x.kg) / (mx - mn) * (H - 12)]);
+    spark = `<svg viewBox="0 0 ${W} ${H}" class="courbe" role="img" aria-label="Évolution du poids"><polyline points="${pts.map(q => q.join(",")).join(" ")}" fill="none" style="stroke:var(--c-dej)" stroke-width="3" stroke-linejoin="round"/>${pts.map(q => `<circle cx="${q[0]}" cy="${q[1]}" r="3.5" style="fill:var(--or)"/>`).join("")}</svg>`;
+  }
+  const dernieres = pes.slice(-5).reverse().map(x => `<tr><td>${new Date(x.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}</td><td class="n">${nb(x.kg, 1)} kg</td></tr>`).join("");
+  const eviter = pr.eviter.map((e, i) => `<span class="puce">${echap(e)}<button data-retirer="${i}" aria-label="Retirer ${echap(e)}">×</button></span>`).join("") || `<span class="discret petit">Rien pour l'instant.</span>`;
+  return `<h1>Profil ${de()}</h1>
+  <div class="grille-2">
+    <section class="carte"><h3>Poids</h3>
+      <p style="margin:8px 0 0"><span class="chiffre" style="font-size:34px">${nb(actuel, 1)} kg</span> <span class="discret">objectif ${nb(pr.cible, 0)} kg</span></p>
+      <div class="barre-prog" style="height:10px;margin-top:10px"><i style="width:${pct}%;background:var(--c-dej)"></i></div>
+      <p class="discret petit" style="margin:6px 0 0">${reste > 0 ? "Encore " + nb(reste, 1) + " kg" : "Objectif atteint"}, départ à ${nb(depart, 1)} kg</p>
+      ${spark}
+      <div class="ligne-saisie"><label class="champ">Pesée du jour (kg)<input type="number" inputmode="decimal" step="0.1" min="30" max="250" id="pesee" placeholder="${nb(actuel, 1)}"></label>
+        <button class="bouton" data-action="pesee">Enregistrer</button></div>
+      ${dernieres ? `<table class="tab">${dernieres}</table>` : ""}</section>
+    <section class="carte"><h3>Budget</h3>
+      <div class="form-ia" style="margin-top:10px">
+        <label class="champ">Budget de référence pour 21 jours (€)<input type="number" inputmode="decimal" step="1" min="0" data-profil="budget" value="${pr.budget}"></label>
+        <label class="champ">Sa part de la liste initiale (€)<input type="number" inputmode="decimal" step="0.01" min="0" data-profil="reference" value="${pr.reference}"></label>
+      </div><p class="discret petit">La liste initiale sert de point de comparaison pour calculer les économies.</p></section>
+    <section class="carte"><h3>Objectifs du jour</h3>
+      <div class="form-ia" style="margin-top:10px">
+        <div class="rangee"><label class="champ">kcal mini<input type="number" data-profil="kcalMin" value="${pr.kcalMin}"></label>
+          <label class="champ">kcal maxi<input type="number" data-profil="kcalMax" value="${pr.kcalMax}"></label></div>
+        <label class="champ">Protéines (g)<input type="number" data-profil="prot" value="${pr.prot}"></label>
+        <div class="rangee"><label class="champ">Poids de départ (kg)<input type="number" step="0.1" data-profil="poids" value="${pr.poids}"></label>
+          <label class="champ">Objectif (kg)<input type="number" step="0.1" data-profil="cible" value="${pr.cible}"></label></div>
+      </div></section>
+    <section class="carte"><h3>Ce que le chef doit éviter</h3>
+      <div class="puces">${eviter}</div>
+      <div class="ligne-saisie"><label class="champ">Ajouter<input type="text" id="ajout-eviter" placeholder="Ex. coriandre"></label><button class="bouton leger" data-action="eviter">Ajouter</button></div></section>
+  </div>
+  <section class="carte" style="margin-top:14px"><h3>Données</h3>
+    <p style="margin:8px 0"><span class="etat-sync ${sync === "compte" ? "ok" : ""}"><i></i>${sync === "compte" ? "Enregistrées sur ton compte : les mêmes sur téléphone, tablette et ordinateur." : "Enregistrées sur cet appareil uniquement."}</span></p>
+    <button class="bouton leger" data-action="reset">Remettre à zéro le suivi ${de()}</button></section>`;
+}
+
+/* ---------- Le chef : « J'ai faim » et « Changer » ---------- */
+let ia = null;
+function creneauMaintenant() { const h = new Date().getHours(); return h < 10 ? "pdj" : h < 15 ? "dej" : h < 17 ? "des" : "din"; }
+function ouvrirIA(k) {
+  const j = k === "faim" && !planPasCommence() ? jourDuPlan() : jourSel, cible = k === "faim" ? creneauMaintenant() : k;
+  const s = statsRepas(repasDe(j, cible));
+  ia = { j, k: cible, envie: "Surprends-moi", temps: "30 min", convives: 1, avecAutre: true, acheter: false,
+    budgetActif: false, budget: Math.max(0.5, Math.round(s.cout * 100) / 100 || 2), kcal: s.kcal, prot: s.prot, etat: "form", propositions: [], erreur: "" };
+  rendreIA();
+}
+function fermerIA() { ia = null; choix = null; document.getElementById("couche").innerHTML = ""; }
+function lireForm() {
+  const bi = document.getElementById("ia-budget"), ti = document.getElementById("ia-temps");
+  if (bi) { const v = parseFloat(bi.value); if (!isNaN(v) && v > 0) ia.budget = v; }
+  if (ti) ia.temps = ti.value;
+}
+function interrupteur(action, actifOn, titre, detail) {
+  return `<div class="interrupteur" role="switch" tabindex="0" aria-checked="${actifOn}" data-action="${action}"><div><b>${titre}</b><small>${detail}</small></div><span class="bascule" aria-hidden="true"></span></div>`;
+}
+function rendreIA() {
+  const c = document.getElementById("couche"); if (!ia) { c.innerHTML = ""; return; }
+  const m = repasDe(ia.j, ia.k), autre = PERSONNES[actif].autre;
+  const envies = ["Rapide", "Réconfortant", "Léger", "Créole", "Plaisir", "Surprends-moi"].map(e => `<button class="puce" data-envie="${e}" aria-pressed="${ia.envie === e}">${e}</button>`).join("");
+  const temps = ["15 min", "30 min", "45 min", "1 h"].map(t => `<option ${ia.temps === t ? "selected" : ""}>${t}</option>`).join("");
+  let corps = "";
+  if (ia.etat === "attente") corps = `<div class="attente" role="status"><svg viewBox="0 0 44 44" aria-hidden="true"><path class="vapeur" d="M15 14c0-3 3-3 3-6" stroke="#C9A96E" stroke-width="2.4" fill="none" stroke-linecap="round"/><path class="vapeur" d="M22 14c0-3 3-3 3-6" stroke="#C9A96E" stroke-width="2.4" fill="none" stroke-linecap="round"/><path class="vapeur" d="M29 14c0-3 3-3 3-6" stroke="#C9A96E" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M8 20h28v8a10 10 0 0 1-10 10h-8A10 10 0 0 1 8 28z" fill="#1B6B4A"/><rect x="5" y="17" width="34" height="5" rx="2.5" fill="#C9A96E"/></svg><div><b>Le chef prépare votre menu…</b><div class="discret petit">Compte 10 à 30 secondes.</div></div></div>`;
+  if (ia.erreur) corps += `<p class="erreur" role="alert">${echap(ia.erreur)}</p>`;
+  if (ia.etat === "resultats") corps += ia.propositions.map((p, i) => {
+    const hb = ia.budgetActif && p.parPers > ia.budget + 0.005;
+    const etat = p.manques.length ? (ia.acheter ? `<span class="etiquette achat">À acheter : ${p.manques.map(x => echap(x.a) + " " + quantite(x.a, x.q)).join(", ")}${p.coutAchats ? " (~" + eur(p.coutAchats) + ")" : ""}</span>`
+      : `<span class="etiquette manque">Il manque : ${p.manques.map(x => echap(x.a) + " " + quantite(x.a, x.q)).join(", ")}</span>`) : `<span class="etiquette stock">Tout est à la maison</span>`;
+    return `<article class="propo ${hb || (!ia.acheter && p.manques.length) ? "alerte" : ""}"><h3>${echap(p.nom)}</h3>
+      <p class="discret petit" style="margin:4px 0 8px">${echap(p.pourquoi)}</p>${etat}
+      <div class="chiffres"><span><b>${eur(p.cout)}</b> au total</span>${ia.convives > 1 ? `<span><b>${eur(p.parPers)}</b> par pers.</span>` : ""}<span><b>${nb(p.kcalPers)}</b> kcal par pers.</span><span><b>${nb(p.protPers)}</b> g prot.</span><span><b>${p.temps || "?"}</b> min</span></div>
+      ${hb ? `<p class="surcout petit" style="margin:0 0 6px">Au-dessus du budget de ${eur(ia.budget)} par personne.</p>` : ""}
+      <ul class="ingredients">${p.items.map(([a, q]) => `<li><span>${echap(a)}</span><span class="q">${quantite(a, q)}</span></li>`).join("")}
+        ${p.horsListe.map(h => `<li><span>${echap(h.nom)} <span class="discret petit">(hors liste)</span></span><span class="q">${echap(h.txt)}</span></li>`).join("")}</ul>
+      ${p.etapes.length ? `<ol>${p.etapes.map(e => `<li>${echap(e)}</li>`).join("")}</ol>` : ""}
+      <button class="bouton plein" data-choisir="${i}">Choisir ce plat</button></article>`;
+  }).join("") + `<button class="bouton leger plein" style="margin-top:12px" data-action="relancer">Changer les critères</button>`;
+  const form = ia.etat === "resultats" ? "" : `<div class="form-ia">
+    <div><div class="champ">Envie</div><div class="puces">${envies}</div></div>
+    <div class="rangee">
+      <div><div class="champ">Nombre de personnes</div><div class="compteur"><button data-action="moins" aria-label="Une personne de moins">−</button><output>${ia.convives}</output><button data-action="plus" aria-label="Une personne de plus">+</button></div></div>
+      <label class="champ">Temps<select id="ia-temps">${temps}</select></label></div>
+    ${ia.convives > 1 ? interrupteur("avec-autre", ia.avecAutre, nom(autre) + " mange avec nous", "Son repas du planning sera remplacé aussi") : ""}
+    ${interrupteur("acheter", ia.acheter, "OK pour acheter des produits en plus", "Sinon, le chef n'utilise que ce qu'il y a à la maison")}
+    ${interrupteur("budget", ia.budgetActif, "Fixer un budget maximum", "Facultatif : le chef part d'abord du stock")}
+    ${ia.budgetActif ? `<label class="champ">Budget max par personne (€)<input id="ia-budget" type="number" inputmode="decimal" step="0.1" min="0.2" value="${ia.budget}"></label>` : ""}
+    <button class="bouton or plein" data-action="proposer" ${ia.etat === "attente" ? "disabled" : ""}>${ICONES.etincelle}Proposer 3 plats</button>
+  </div>`;
+  c.innerHTML = `<div class="voile"><div class="feuille-ia" role="dialog" aria-modal="true" aria-labelledby="titre-ia">
+    <div class="tete"><div><p class="discret petit" style="margin:0">${m.label} ${de()}, ${libelleJour(ia.j).toLowerCase()}</p><h2 id="titre-ia">Demandez au chef</h2>
+      <p class="discret petit" style="margin:4px 0 0">Prévu : ${echap(m.plat)} (${eur(statsRepas(m).cout)}, ${nb(ia.kcal)} kcal)</p></div>
+      <button class="rond" data-action="fermer" aria-label="Fermer">×</button></div>
+    ${form}${corps}</div></div>`;
+}
+function personnesIncluses() { return ia.convives > 1 && ia.avecAutre ? [actif, PERSONNES[actif].autre] : [actif]; }
+function stockPourIA() {
+  const s = stockAuDebut(ia.j);
+  for (const p of personnesIncluses()) for (const [a, q] of repasDe(ia.j, ia.k, p).items) s[a] = (s[a] || 0) + q; // le repas remplacé libère ses ingrédients
+  return s;
+}
+function prixTexte(a) {
+  const pu = prixUnitaire(a), u = uniteDe(a); if (pu == null) return "prix inconnu";
+  if (pu === 0 && STOCK_DEPART[a]) return "déjà payé";
+  return u === "unité" ? nb(pu, 2) + " €/unité" : u === "ml" ? nb(pu * 1000, 2) + " €/L" : nb(pu * 1000, 2) + " €/kg";
+}
+function consigne() {
+  const pr = P().profil, m = repasDe(ia.j, ia.k), stock = stockPourIA(), inclus = personnesIncluses();
+  const eviter = [...new Set(inclus.flatMap(p => P(p).profil.eviter))];
+  const connus = Object.keys(DONNEES.nut).filter(a => DONNEES.cat[a]);
+  const enStock = connus.filter(a => stock[a] > 0).map(a => `- ${a} | ${quantite(a, stock[a])} | ${prixTexte(a)}`).join("\n");
+  const autres = connus.filter(a => !(stock[a] > 0)).map(a => `- ${a} | ${prixTexte(a)}`).join("\n");
+  return `Tu aides ${nom()}, ${pr.age} ans, ${pr.taille} cm, qui veut passer de ${pr.poids} à ${pr.cible} kg (sport 2 fois par semaine). Le foyer vit à La Réunion.
+Propose exactement 3 plats pour remplacer le ${m.label.toLowerCase()} du ${libelleJour(ia.j).toLowerCase()} (prévu : ${m.plat}), pour ${ia.convives} personne${ia.convives > 1 ? "s" : ""}.
+Règle numéro 1 : partir de ce qu'il y a déjà à la maison (stock ci-dessous, quantités disponibles pour tout le foyer, sans les dépasser).
+${ia.acheter ? "Acheter quelques produits en plus est autorisé s'ils améliorent nettement le plat : garde-les peu nombreux, avec le nom exact de la liste des autres produits quand c'est possible." : "Aucun achat : utilise uniquement le stock ci-dessous. Sel, poivre, ail, épices et herbes sont toujours disponibles."}
+Portion de ${nom()} : environ ${Math.round(ia.kcal)} kcal (plus ou moins 15 %) et au moins ${Math.round(Math.max(ia.prot, 5))} g de protéines. Les autres convives ont des portions comparables.
+${ia.budgetActif ? `Budget maximum : ${ia.budget.toFixed(2)} € par personne, calculé avec les prix indiqués.` : "Pas de budget imposé, mais reste économe."}
+Temps de préparation et cuisson : ${ia.temps} maximum. Envie : ${ia.envie}.
+À éviter : ${eviter.length ? eviter.join(", ") : "rien de particulier"}.
+Varie les 3 propositions (pas trois variantes du même plat).
+Stock à la maison (nom exact | quantité disponible | prix) :
+${enStock || "- (stock vide)"}
+${ia.acheter ? "Autres produits achetables (nom exact | prix) :\n" + autres : ""}
+Quantités pour l'ensemble des ${ia.convives} personne${ia.convives > 1 ? "s" : ""} : grammes pour les aliments crus ou secs, ml pour les liquides, nombre pour Œufs, Wraps et Pains burger. Ne mets pas sel, poivre, ail, épices et herbes dans la liste.
+Réponds uniquement avec un objet JSON, sans texte autour :
+{"plats":[{"nom":"...","pourquoi":"une phrase courte","temps_min":25,"ingredients":[{"aliment":"Poulet","quantite":300}],"etapes":["étape courte","..."]}]}`;
+}
+function trouverAliment(n0) {
+  const n = String(n0 || "").trim().toLowerCase(), cles = Object.keys(DONNEES.nut);
+  const base = a => a.toLowerCase().replace(/ \(.*\)$/, "");
+  return cles.find(a => a.toLowerCase() === n) || cles.find(a => base(a) === n) || cles.find(a => base(a) === n + "s" || base(a) === n + "x")
+    || cles.find(a => n.startsWith(base(a) + " ")) || cles.find(a => base(a).startsWith(n + " "));
+}
+async function proposer() {
+  lireForm(); ia.etat = "attente"; ia.erreur = ""; rendreIA();
+  let sample = null;
+  try { sample = window.claude && window.claude.use ? await window.claude.use("sample") : null; } catch (e) { sample = null; }
+  if (!sample) { ia.etat = "form"; ia.erreur = "Le chef n'est disponible que dans l'app Marmite en ligne."; return rendreIA(); }
+  try {
+    const rep = await sample.json(consigne(), { modelTier: "default", cache: false });
+    const stock = stockPourIA();
+    ia.propositions = ((rep && rep.plats) || []).slice(0, 3).map(p => {
+      const items = [], horsListe = [], manques = []; let coutAchats = 0;
+      for (const ing of (p.ingredients || [])) {
+        const a = trouverAliment(ing.aliment), q = +ing.quantite || 0;
+        if (a && q > 0) {
+          items.push([a, q]);
+          const m = q - (stock[a] || 0);
+          if (m > 0.5) { manques.push({ a, q: m }); const pu = prixUnitaire(a); if (pu != null) coutAchats += pu * m; }
+        } else if (ing.aliment) horsListe.push({ nom: ing.aliment, txt: q ? nb(q) : "" });
+      }
+      const st = statsRepas({ items }), N = ia.convives;
+      return { nom: p.nom || "Plat", pourquoi: p.pourquoi || "", temps: p.temps_min, etapes: (p.etapes || []).slice(0, 8), items, horsListe, manques, coutAchats,
+        cout: st.cout, parPers: st.cout / N, kcalPers: st.kcal / N, protPers: st.prot / N };
+    }).sort((x, y) => x.manques.length - y.manques.length);
+    if (!ia.propositions.length) throw { code: "vide" };
+    ia.etat = "resultats";
+  } catch (e) {
+    ia.etat = "form";
+    ia.erreur = e && e.code === "not_granted" ? "Le chef n'a pas été autorisé. Rouvre la page pour accepter."
+      : e && e.code === "rate_limited" ? "Trop de demandes d'affilée. Réessaie dans une minute."
+      : e && e.code === "invalid_json" ? "La réponse du chef était illisible. Relance la demande."
+      : "Le chef n'a pas pu répondre pour le moment. Relance la demande.";
+  }
+  if (ia) rendreIA();
+}
+function choisir(i) {
+  const p = ia.propositions[i], inclus = personnesIncluses(), N = ia.convives;
+  const poids = {}; for (const q of inclus) poids[q] = statsRepas(repasDe(ia.j, ia.k, q)).kcal || 1;
+  const moyen = Object.values(poids).reduce((s, v) => s + v, 0) / inclus.length;
+  const totalPoids = Object.values(poids).reduce((s, v) => s + v, 0) + (N - inclus.length) * moyen;
+  for (const q of inclus) {
+    const f = poids[q] / totalPoids, ref = repasDe(ia.j, ia.k, q);
+    E.personnes[q].remplacements["d" + ia.j + "-" + ia.k] = { k: ia.k, label: ref.label, plat: p.nom, convives: N, items: p.items.map(([a, qq]) => [a, Math.round(qq * f * 10) / 10]), ia: true };
+  }
+  sauver(); fermerIA(); rendre(); toast(inclus.length > 1 ? "Repas remplacé pour vous deux" : "Repas remplacé");
+}
+
+/* ---------- Retours visuels ---------- */
+function toast(t) { document.querySelectorAll(".toast").forEach(x => x.remove()); const d = document.createElement("div"); d.className = "toast"; d.setAttribute("role", "status"); d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2200); }
+
+/* ---------- Événements ---------- */
+function memeItems(a, b) {
+  if (a.length !== b.length) return false;
+  const mb = Object.fromEntries(b); return a.every(([x, q]) => mb[x] != null && Math.abs(mb[x] - q) < 0.05);
+}
+function actionEdition(d) {
+  if (d.ed === "ouvrir") { edition = { j: jourSel, k: d.k, items: repasDe(jourSel, d.k).items.map(([a, q]) => [a, q]) }; return rendre(); }
+  if (!edition) return;
+  const i = +d.i, it = edition.items[i];
+  switch (d.ed) {
+    case "moins": it[1] = Math.max(0, Math.round((it[1] - PAS(uniteDe(it[0]))) * 10) / 10); break;
+    case "plus": it[1] = Math.round((it[1] + PAS(uniteDe(it[0]))) * 10) / 10; break;
+    case "suppr": edition.items.splice(i, 1); break;
+    case "ajouter": {
+      const a = document.getElementById("ed-ajout").value, u = uniteDe(a);
+      const ex = edition.items.find(x => x[0] === a);
+      if (ex) ex[1] += PAS(u); else edition.items.push([a, u === "unité" ? 1 : u === "ml" ? 100 : 50]);
+      break;
+    }
+    case "annuler": edition = null; return rendre();
+    case "enregistrer": {
+      const { j, k } = edition, items = edition.items.filter(([, q]) => q > 0), cle = "d" + j + "-" + k;
+      const ancien = P().remplacements[cle], plan = repasPlan(j, k);
+      if (!(ancien && ancien.ia) && memeItems(items, plan.items)) delete P().remplacements[cle];
+      else P().remplacements[cle] = { k, label: plan.label, plat: ancien ? ancien.plat : plan.plat, convives: ancien ? ancien.convives : 1,
+        ia: !!(ancien && ancien.ia), ajuste: true, items };
+      edition = null; sauver(); rendre(); return toast("Repas ajusté");
+    }
+  }
+  const el = document.getElementById("t-" + edition.k); if (el) el.outerHTML = ticketEdition(edition.j, edition.k);
+}
+function action(b) {
+  const d = b.dataset;
+  if (d.ed) return actionEdition(d);
+  if (d.vue) return aller(d.vue);
+  if (d.personne) { actif = d.personne; edition = null; try { localStorage.setItem("marmite-actif", actif); } catch (e) {} return rendre(); }
+  if (d.jour) { jourSel = +d.jour; edition = null; return rendre(); }
+  if (d.voir) { jourSel = +d.voir; return aller("jour"); }
+  if (d.coche) { const c = P().coches; c[d.coche] ? delete c[d.coche] : (c[d.coche] = true); sauver(); return rendre(); }
+  if (d.course) { courseSel = d.course === "stock" || d.course === "prix" ? d.course : +d.course; jeterSel = null; return rendre(); }
+  if (d.modif) {
+    const m = { id: Date.now(), type: d.modif === "retrait" ? "retrait" : "substitution", cid: +d.cid, a: d.a, date: new Date().toISOString().slice(0, 10) };
+    const c = COURSES().find(x => x.id === m.cid), it = c.items.find(x => x.a === m.a);
+    if (m.type === "substitution") { m.b = d.b; m.f = +d.f; }
+    m.gain = Math.round(((estimationLigne(it) || 0) - (m.type === "retrait" ? 0 : estimationLigne(ligneSubstitut(it, m)) || 0)) * 100) / 100;
+    E.foyer.modifs = (E.foyer.modifs || []).concat(m);
+    appliquerModif(m); sauver();
+    toast(m.type === "retrait" ? m.a + " retiré" : m.a + " remplacé par " + m.b);
+    return rendre();
+  }
+  if (d.generer) {
+    const refaire = () => { gen.res = gen.mode === "mois" ? genererMoisSuivant() : genererMenu(gen.j0, gen.graine, gen.invites, gen.budget); };
+    if (d.generer === "ouvrir") { gen = { mode: "stock", j0: premierJourLibre(), graine: 1, invites: 0, budget: null, res: null }; refaire(); return rendre(); }
+    if (d.generer === "mois") { ouvrirPreparation(); return rendre(); }
+    if (d.generer === "calculer") { gen.confirmer = false; refaire(); return rendre(); }
+    if (d.generer === "autre") { gen.graine++; gen.confirmer = false; refaire(); return rendre(); }
+    if (d.generer === "valider") { gen.confirmer = true; return rendre(); }
+    if (d.generer === "valider-non") { gen.confirmer = false; return rendre(); }
+    if (d.generer === "valider-oui") { validerMois(); return rendre(); }
+    if (d.generer === "appliquer") { appliquerGeneration(); return rendre(); }
+    if (d.generer === "fermer") { gen = null; return rendre(); }
+    if (d.generer === "annuler") { annulerGeneration(); return rendre(); }
+  }
+  if (d.changer) { choix = { cle: d.changer, filtre: "tous", q: "" }; rendreChoix(); const i = document.getElementById("choix-q"); if (i && window.matchMedia && matchMedia("(min-width:700px)").matches) i.focus(); return; }
+  if (d.biblioFiltre) { biblio.filtre = d.biblioFiltre; document.querySelectorAll("[data-biblio-filtre]").forEach(x => x.setAttribute("aria-pressed", x.dataset.biblioFiltre === biblio.filtre)); const l = document.getElementById("biblio-liste"); if (l) l.innerHTML = listeBiblio(); return; }
+  if (d.choixFiltre) { choix.filtre = d.choixFiltre; rendreChoix(); return; }
+  if (d.choixId) return remplacerRepas(d.choixId);
+  if (d.choixFermer) return fermerIA();
+  if (d.rouvrir) { rouvrirMois(d.rouvrir); return rendre(); }
+  if (d.modifAnnuler) { annulerModif(+d.modifAnnuler); sauver(); return rendre(); }
+  if (d.accepter) { E.foyer.depassementAccepte = +d.accepter; sauver(); toast("Dépassement accepté"); return rendre(); }
+  if (d.prixReset) { delete E.foyer.prix[d.prixReset]; sauver(); toast(d.prixReset + " : prix d'origine rétabli"); return rendre(); }
+  if (d.jeter) { jeterSel = jeterSel === d.jeter ? null : d.jeter; rendre(); const i = document.getElementById("jeter-q"); if (i) i.focus(); return; }
+  if (d.jeterAnnuler) { jeterSel = null; return rendre(); }
+  if (d.jeterOk) {
+    const q = parseFloat((document.getElementById("jeter-q") || {}).value);
+    if (q > 0) {
+      const j = planPasCommence() ? 1 : jourDuPlan();
+      E.foyer.pertes = (E.foyer.pertes || []).concat({ j, a: d.jeterOk, q, date: new Date().toISOString().slice(0, 10) });
+      sauver(); toast(d.jeterOk + " : " + quantite(d.jeterOk, q) + " à la poubelle");
+    }
+    jeterSel = null; return rendre();
+  }
+  if (d.perteSuppr) { E.foyer.pertes.splice(+d.perteSuppr, 1); sauver(); return rendre(); }
+  if (d.achat) {
+    const a = E.foyer.achats; a[d.achat] ? delete a[d.achat] : (a[d.achat] = true); sauver(); return rendre();
+  }
+  if (d.ia) return ouvrirIA(d.ia);
+  if (d.retour) { delete P().remplacements["d" + jourSel + "-" + d.retour]; sauver(); rendre(); return toast("Repas du plan rétabli"); }
+  if (d.envie) { lireForm(); ia.envie = d.envie; return rendreIA(); }
+  if (d.choisir) return choisir(+d.choisir);
+  if (d.retirer) { P().profil.eviter.splice(+d.retirer, 1); sauver(); return rendre(); }
+  switch (d.action) {
+    case "theme": {
+      const t = themeEffectif() === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = t; try { localStorage.setItem("marmite-theme", t); } catch (e) {}
+      rendre(); if (ia) rendreIA(); return;
+    }
+    case "fermer": return fermerIA();
+    case "plein-ecran": return basculerPleinEcran();
+    case "proposer": return proposer();
+    case "relancer": ia.etat = "form"; ia.propositions = []; return rendreIA();
+    case "moins": lireForm(); ia.convives = Math.max(1, ia.convives - 1); return rendreIA();
+    case "plus": lireForm(); ia.convives = Math.min(12, ia.convives + 1); return rendreIA();
+    case "avec-autre": lireForm(); ia.avecAutre = !ia.avecAutre; return rendreIA();
+    case "acheter": lireForm(); ia.acheter = !ia.acheter; return rendreIA();
+    case "budget": lireForm(); ia.budgetActif = !ia.budgetActif; return rendreIA();
+    case "pesee": {
+      const v = parseFloat(document.getElementById("pesee").value);
+      if (isNaN(v) || v < 30 || v > 250) return toast("Poids non valide");
+      const auj = new Date().toISOString().slice(0, 10);
+      P().pesees = P().pesees.filter(x => x.date !== auj).concat([{ date: auj, kg: v }]); sauver(); rendre(); return toast("Pesée enregistrée");
+    }
+    case "eviter": { const v = document.getElementById("ajout-eviter").value.trim(); if (!v) return; P().profil.eviter.push(v); sauver(); return rendre(); }
+    case "reset":
+      if (confirm("Effacer les coches, remplacements et pesées " + de() + " ?")) { E.personnes[actif] = structuredClone(DEFAUT.personnes[actif]); sauver(); rendre(); toast("Suivi remis à zéro"); }
+      return;
+  }
+}
+// Écouteurs posés par affectation (document.onclick…) : si le viewer remet la page à jour sans la recharger,
+// ils sont remplacés au lieu d'être doublés (un toucher cochait puis décochait aussitôt).
+document.onclick = e => {
+  if (e.__marmite) return; e.__marmite = true;   // un même clic n'est traité qu'une fois, quel que soit le nombre d'écouteurs
+  const v = e.target.closest(".voile"); if (v && e.target === v) return fermerIA();
+  const b = e.target.closest("button, .interrupteur"); if (b) return action(b);
+  // liste de courses : toucher n'importe où sur la ligne coche l'article (sauf le champ « Prix payé »)
+  const art = e.target.closest(".article"); if (art && !e.target.closest(".saisie")) { const c = art.querySelector("button.check"); if (c) action(c); }
+};
+document.ondragstart = e => {
+  const t = e.target.closest && e.target.closest("[data-drag-id]"); if (!t) return;
+  e.dataTransfer.setData("text/plain", t.dataset.dragId); e.dataTransfer.effectAllowed = "copy"; t.classList.add("glisse");
+};
+document.ondragover = e => {
+  const c = e.target.closest && e.target.closest("[data-changer]"); if (!c) return;
+  e.preventDefault(); e.dataTransfer.dropEffect = "copy";
+  if (!c.classList.contains("cible")) { document.querySelectorAll(".cible").forEach(x => x.classList.remove("cible")); c.classList.add("cible"); }
+};
+document.ondragleave = e => { const c = e.target.closest && e.target.closest("[data-changer]"); if (c && !c.contains(e.relatedTarget)) c.classList.remove("cible"); };
+document.ondrop = e => {
+  const c = e.target.closest && e.target.closest("[data-changer]"); if (!c) return;
+  e.preventDefault(); const id = e.dataTransfer.getData("text/plain"); if (id) deposer(c.dataset.changer, id);
+};
+document.ondragend = () => document.querySelectorAll(".cible, .glisse").forEach(x => x.classList.remove("cible", "glisse"));
+document.onkeydown = e => {
+  if (e.key === "Escape" && (ia || choix)) return fermerIA();
+  const t = e.target; if ((e.key === " " || e.key === "Enter") && t.classList && t.classList.contains("interrupteur")) { e.preventDefault(); action(t); }
+};
+document.oninput = e => {
+  const t = e.target;
+  if (t.dataset.biblioQ != null) { biblio.q = t.value; const l = document.getElementById("biblio-liste"); if (l) l.innerHTML = listeBiblio(); return; }
+  if (t.dataset.choixQ != null && choix) { choix.q = t.value; const l = document.getElementById("choix-liste"); if (l) l.innerHTML = listeChoix(); return; } if (t.dataset.edQ == null || !edition) return;
+  const v = parseFloat(t.value); edition.items[+t.dataset.edQ][1] = isNaN(v) ? 0 : Math.max(0, v);
+  const inf = document.getElementById("ed-infos"); if (inf) inf.innerHTML = infosEdition();
+};
+document.onchange = e => {
+  const t = e.target, d = t.dataset;
+  if (d.paye) {
+    const v = t.value === "" ? null : Math.max(0, parseFloat(t.value));
+    if (v == null || isNaN(v)) delete E.foyer.payes[d.paye];
+    else {
+      E.foyer.payes[d.paye] = Math.round(v * 100) / 100;
+      E.foyer.achats[d.paye] = true;   // un prix payé vaut article dans le panier
+      const c = DONNEES.cat[d.art], buy = +d.buy;
+      if (c && buy > 0) E.foyer.prix[d.art] = { prix: c.vrac ? v / (buy / 1000) : v / buy, date: new Date().toISOString().slice(0, 10), source: "paye" };
+    }
+    sauver(); return rendre();
+  }
+  if (d.gen && gen) {
+    const v = parseFloat(t.value);
+    if (d.gen === "j0") gen.j0 = +t.value;
+    if (d.gen === "debut") { gen.debut = t.value; gen.jours = joursDuMois(dateLocale(t.value)); }
+    if (d.gen === "jours") gen.jours = isNaN(v) ? gen.jours : Math.max(1, Math.min(31, Math.round(v)));
+    if (d.gen === "invites") gen.invites = isNaN(v) ? 0 : Math.max(0, Math.min(12, Math.round(v)));
+    if (d.gen === "budget") gen.budget = isNaN(v) || v <= 0 ? (gen.mode === "mois" ? gen.budget : null) : v;
+    gen.res = null; return rendre();
+  }
+  if (d.qte) {
+    const v = parseFloat(t.value), prevu = +d.prevu, Q = E.foyer.quantites = E.foyer.quantites || {};
+    if (isNaN(v) || v < 0 || Math.abs(v - prevu) < 1e-9) delete Q[d.qte]; else Q[d.qte] = v;
+    // un prix payé déjà tapé reste le montant payé ; le prix unitaire suit la nouvelle quantité
+    const pay = E.foyer.payes[d.qte], c = DONNEES.cat[d.art], q = Q[d.qte] != null ? Q[d.qte] : prevu;
+    if (pay != null && c && q > 0) E.foyer.prix[d.art] = { prix: c.vrac ? pay / (q / 1000) : pay / q, date: new Date().toISOString().slice(0, 10), source: "paye" };
+    sauver(); return rendre();
+  }
+  if (d.prixA != null) {
+    const v = t.value === "" ? null : parseFloat(t.value.replace(",", "."));
+    if (v == null || isNaN(v) || v < 0) delete E.foyer.prix[d.prixA];
+    else E.foyer.prix[d.prixA] = { prix: Math.round(v * 100) / 100, date: new Date().toISOString().slice(0, 10), source: "saisi" };
+    sauver(); return rendre();
+  }
+  if (d.magasin) { E.foyer.magasins[d.magasin] = t.value.trim(); return sauver(); }
+  if (d.profil) { const v = parseFloat(t.value); if (!isNaN(v)) { P().profil[d.profil] = v; sauver(); rendre(); } }
+};
+let minuterieTaille = null;
+window.onresize = () => { if (vue !== "budget") return; clearTimeout(minuterieTaille); minuterieTaille = setTimeout(rendre, 200); };
+if (window.matchMedia) matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => rendreCadre());
+
+/* ---------- Démarrage ---------- */
+rendre();
+brancherCompte();
+</script>
+</body>
+</html>

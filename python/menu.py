@@ -1,0 +1,85 @@
+from data import NUT
+AB = {'P':'Poulet','B':'Bœuf','LA':'Lardons','J':'Jambon','F':'Poisson blanc','O':'Œufs','L':'Lait',
+'MZ':'Mozzarella râpée','CH':'Cheddar','R':'Riz (sec)','PA':'Pâtes (sèches)','LS':'Pâtes à lasagnes (sèches)',
+'AV':"Flocons d'avoine",'PT':'Pommes de terre','PD':'Patates douces','W':'Wraps','PB':'Pains burger',
+'PC':'Pain complet','CO':'Courgettes','HV':'Haricots verts','TO':'Tomates','PO':'Poivrons','CA':'Carottes',
+'AU':'Aubergines','CM':'Champignons','SA':'Salade','OI':'Oignons','MA':'Maïs','AC':'Avocat (chair)',
+'BA':'Bananes','MG':'Mangue','AN':'Ananas','PM':'Pommes','YA':'Yaourt nature','GL':'Glace','CN':'Chocolat noir',
+'LE':'Lentilles (égouttées)','HU':'Huile','FA':'Farine'}
+
+def d(s):
+    out={}
+    for part in s.split():
+        k,v=part.split('=')
+        out[AB[k]]=float(v)
+    return out
+
+BK_N = "L=250 BA=100 AV=65 O=1"
+BK_A = "O=2 J=30 TO=80 PC=40 PM=150"
+
+# (jour, déjeuner(plat, N, A), dîner(plat, N, A), dessert(plat, N, A), tag)
+DAYS = [
+ (1, ("Poulet rôti, pommes de terre, haricots verts","P=150 PT=300 HV=250 HU=10","P=120 PT=150 HV=300 HU=7"),
+     ("Poisson blanc, patate douce, poêlée courgettes-poivrons","F=150 PD=250 CO=170 PO=50 OI=20 HU=10","F=125 PD=120 CO=200 PO=60 OI=20 HU=7"),
+     ("Yaourt + chocolat","YA=125 CN=10","YA=100 CN=10"), ""),
+ (2, ("Carry poulet-lentilles, riz, carottes râpées","P=100 LE=140 R=50 TO=120 OI=40 CA=80 HU=10","P=80 LE=120 R=20 TO=150 OI=40 CA=100 HU=7"),
+     ("Omelette paysanne (pommes de terre, courgettes) + salade-tomate","O=3 PT=250 CO=150 TO=100 SA=40 OI=20 HU=8","O=2 PT=100 CO=170 TO=130 SA=60 OI=20 HU=6"),
+     ("Ananas","AN=110","AN=90"), ""),
+ (3, ("Salade tiède lentilles, œufs durs, pommes de terre, tomates","LE=150 O=2 PT=200 TO=150 OI=30 HU=10","LE=120 O=2 PT=80 TO=180 OI=30 HU=7"),
+     ("Bœuf sauté asiatique, riz, poivrons-carottes","B=130 R=85 PO=60 CA=80 OI=30 HU=10","B=100 R=40 PO=80 CA=100 OI=30 HU=7"),
+     ("Ananas","AN=110","AN=90"), ""),
+ (4, ("Burger maison, potatoes au four, crudités","B=150 PB=1 CH=20 TO=60 SA=30 OI=20 PT=250 HU=8","B=120 PB=1 CH=15 TO=80 SA=40 OI=20 PT=120 HU=5"),
+     ("Salade poulet, avocat, tomate, maïs","P=130 AC=80 TO=120 MA=40 SA=40 HU=8","P=100 AC=60 TO=150 MA=30 SA=60 HU=6"),
+     ("Glace","GL=75","GL=55"), "PLAISIR"),
+ (5, ("Poulet citronné, patate douce, haricots verts","P=150 PD=250 HV=250 HU=10","P=120 PD=120 HV=300 HU=7"),
+     ("Salade poulet froid, avocat, carottes râpées, pommes de terre","P=130 AC=80 CA=100 TO=80 PT=200 HU=8","P=100 AC=60 CA=120 TO=100 PT=80 HU=6"),
+     ("Yaourt + chocolat","YA=125 CN=10","YA=100 CN=10"), ""),
+ (6, ("Poulet basquaise (poivrons, tomates), riz","P=150 PO=70 TO=120 OI=30 R=85 HU=10","P=120 PO=90 TO=150 OI=30 R=40 HU=7"),
+     ("Pâtes poulet-champignons-courgettes","P=120 PA=105 CM=80 CO=120 HU=10","P=90 PA=60 CM=80 CO=150 HU=7"),
+     ("Chocolat","CN=15","CN=10"), ""),
+ (7, ("Poisson blanc au citron, patate douce, haricots verts","F=150 PD=250 HV=250 HU=10","F=125 PD=120 HV=300 HU=7"),
+     ("Poulet ratatouille, pommes de terre","P=150 AU=100 CO=100 PO=40 TO=100 OI=30 PT=250 HU=12","P=120 AU=120 CO=120 PO=50 TO=120 OI=30 PT=120 HU=8"),
+     ("Mangue","MG=100","MG=80"), "POISSON"),
+ (8, ("Poulet rôti, pommes de terre, salade-tomate","P=150 PT=300 SA=40 TO=150 HU=10","P=120 PT=150 SA=60 TO=180 HU=7"),
+     ("Poisson en papillote, carottes-champignons, pommes de terre","F=150 CA=120 CM=80 OI=40 TO=60 PT=250 HU=8","F=125 CA=150 CM=100 OI=40 TO=60 PT=120 HU=6"),
+     ("Yaourt + chocolat","YA=125 CN=10","YA=100 CN=10"), ""),
+ (9, ("Rougail poulet-lentilles, riz, haricots verts","P=100 LE=140 R=50 TO=150 OI=40 HV=150 HU=10","P=80 LE=120 R=20 TO=180 OI=40 HV=200 HU=7"),
+     ("Quiche légère lardons-courgettes (pâte maison) + salade-tomate","O=2 LA=60 L=100 FA=60 HU=12 CO=150 OI=20 SA=40 TO=100","O=2 LA=40 L=100 FA=35 HU=7 CO=150 OI=20 SA=60 TO=130"),
+     ("Ananas","AN=110","AN=90"), ""),
+ (10, ("Lasagnes bœuf-courgettes + salade","B=110 LS=65 CO=100 TO=150 OI=20 MZ=30 L=80 FA=8 HU=8 SA=40","B=85 LS=45 CO=120 TO=150 OI=20 MZ=25 L=60 FA=6 HU=6 SA=60"),
+      ("Salade lentilles, œufs durs, carottes, pommes de terre","LE=150 O=2 CA=80 TO=150 OI=30 PT=200 HU=10","LE=120 O=2 CA=100 TO=180 OI=30 PT=80 HU=7"),
+      ("Ananas","AN=110","AN=90"), ""),
+ (11, ("Pizza maison bœuf, poivrons, champignons + salade","FA=100 HU=10 B=90 MZ=50 TO=160 PO=50 CM=50 OI=20 SA=30","FA=65 HU=7 B=70 MZ=35 TO=180 PO=60 CM=50 OI=20 SA=50"),
+      ("Salade poulet, avocat, tomate, maïs","P=130 AC=80 TO=120 MA=40 CA=60 HU=8","P=100 AC=60 TO=150 MA=30 CA=80 HU=6"),
+      ("Glace","GL=75","GL=55"), "PLAISIR"),
+ (12, ("Poulet barbecue, patate douce, salade-avocat","P=150 PD=250 AC=80 SA=40 TO=120 HU=8","P=120 PD=120 AC=60 SA=60 TO=150 HU=6"),
+      ("Lasagnes (restes du samedi) + salade","B=110 LS=65 CO=100 TO=150 OI=20 MZ=30 L=80 FA=8 HU=8 SA=40","B=85 LS=45 CO=120 TO=150 OI=20 MZ=25 L=60 FA=6 HU=6 SA=60"),
+      ("Yaourt + chocolat","YA=125 CN=10","YA=100 CN=10"), ""),
+ (13, ("Curry poulet-courgettes, riz","P=150 CO=150 TO=80 OI=30 R=85 HU=10","P=120 CO=180 TO=100 OI=30 R=40 HU=7"),
+      ("Fajitas poulet (wraps, poivrons, cheddar)","P=130 W=2 PO=60 OI=30 TO=60 CH=15 HU=8","P=100 W=1 PO=80 OI=30 TO=80 CH=10 HU=6"),
+      ("Chocolat","CN=15","CN=10"), ""),
+ (14, ("Poisson créole, riz, haricots verts","F=150 TO=150 OI=40 R=85 HV=150 HU=10","F=125 TO=180 OI=40 R=40 HV=200 HU=7"),
+      ("Pâtes poulet, tomate, courgettes","P=120 PA=105 TO=100 CO=120 HU=10","P=90 PA=60 TO=120 CO=150 HU=7"),
+      ("Mangue","MG=100","MG=80"), "POISSON"),
+ (15, ("Poulet rôti, pommes de terre, haricots verts","P=150 PT=300 HV=250 HU=10","P=120 PT=150 HV=300 HU=7"),
+      ("Bœuf sauté asiatique, riz, légumes","B=130 R=85 PO=50 CA=80 CO=60 OI=30 HU=10","B=100 R=40 PO=60 CA=100 CO=80 OI=30 HU=7"),
+      ("Yaourt + chocolat","YA=125 CN=10","YA=100 CN=10"), ""),
+ (16, ("Carry poulet-lentilles, riz, carottes râpées","P=100 LE=140 R=50 TO=120 OI=40 CA=80 HU=10","P=80 LE=120 R=20 TO=150 OI=40 CA=100 HU=7"),
+      ("Carbonara légère (lardons, jambon, œuf, champignons, courgettes)","PA=105 LA=60 J=40 O=1 CM=60 CO=120 HU=5","PA=60 LA=40 J=30 O=1 CM=60 CO=150 HU=3"),
+      ("Chocolat","CN=15","CN=10"), ""),
+ (17, ("Salade lentilles, œufs durs, tomates, pommes de terre","LE=150 O=2 TO=150 OI=30 PT=200 HU=10","LE=120 O=2 TO=180 OI=30 PT=80 HU=7"),
+      ("Tacos bœuf (wraps, tomate, avocat, cheddar)","B=120 W=2 TO=80 AC=70 OI=20 SA=30 CH=15 HU=6","B=95 W=1 TO=100 AC=50 OI=20 SA=40 CH=10 HU=4"),
+      ("Yaourt + chocolat","YA=125 CN=10","YA=100 CN=10"), ""),
+ (18, ("Barbecue bœuf-poulet, pommes de terre, légumes grillés","B=100 P=100 PT=250 CO=120 AU=110 OI=20 HU=12","B=80 P=80 PT=120 CO=150 AU=140 OI=20 HU=8"),
+      ("Salade des restes du barbecue (poulet), avocat, pommes de terre","P=110 AC=80 TO=120 SA=40 CA=60 PT=200 HU=8","P=90 AC=60 TO=150 SA=60 CA=80 PT=80 HU=6"),
+      ("Glace","GL=75","GL=55"), "PLAISIR"),
+ (19, ("Poulet citronné, patate douce, haricots verts","P=150 PD=250 HV=250 HU=10","P=120 PD=120 HV=300 HU=7"),
+      ("Poisson grillé, champignons, pommes de terre, tomates","F=150 CM=80 PT=250 TO=100 HU=10","F=125 CM=100 PT=120 TO=120 HU=7"),
+      ("Yaourt + chocolat","YA=125 CN=10","YA=100 CN=10"), ""),
+ (20, ("Poisson blanc, riz, poêlée de courgettes","F=150 R=85 CO=180 TO=60 HU=10","F=125 R=40 CO=220 TO=80 HU=7"),
+      ("Poulet basquaise, pommes de terre","P=150 PO=60 TO=120 OI=30 PT=300 HU=10","P=120 PO=80 TO=150 OI=30 PT=150 HU=7"),
+      ("Chocolat","CN=15","CN=10"), "POISSON"),
+ (21, ("Omelette aux légumes, pommes de terre, salade","O=3 PT=250 CO=150 TO=100 SA=40 OI=20 HU=8","O=2 PT=100 CO=170 TO=130 SA=60 OI=20 HU=6"),
+      ("Poisson blanc, patate douce, haricots verts","F=150 PD=250 HV=250 HU=10","F=125 PD=120 HV=300 HU=7"),
+      ("Yaourt + chocolat","YA=125 CN=10","YA=100 CN=10"), ""),
+]

@@ -1,0 +1,7980 @@
+{
+ "mois": {
+  "version": 1,
+  "id": "2026-11",
+  "titre": "Novembre 2026",
+  "debut": "2026-11-01",
+  "fin": "2026-11-30",
+  "jours": 30,
+  "invites": 0,
+  "note": "Proposition du moteur.",
+  "stockDepart": {},
+  "share": {
+   "Lait": 0.9299,
+   "Bananes": 1,
+   "Flocons d'avoine": 1,
+   "Œufs": 0.3611,
+   "Bœuf": 0.5731,
+   "Riz (sec)": 0.6366,
+   "Poivrons": 0.4396,
+   "Carottes": 0.4426,
+   "Oignons": 0.5,
+   "Huile": 0.6343,
+   "Poulet": 0.5788,
+   "Pommes de terre": 0.6503,
+   "Haricots verts": 0.4545,
+   "Yaourt nature": 0.5,
+   "Chocolat noir": 0.5362,
+   "Café": 1,
+   "Eau (bouteilles 5 L)": 0.5,
+   "Jambon": 0.1166,
+   "Tomates": 0.3586,
+   "Pain complet": 0,
+   "Pommes": 0,
+   "Lentilles (égouttées)": 0.5688,
+   "Poisson blanc": 0.5729,
+   "Patates douces": 0.6244,
+   "Pâtes (sèches)": 0.6111,
+   "Lardons": 0.619,
+   "Champignons": 0.4783,
+   "Courgettes": 0.455,
+   "Porc haché": 0.5741,
+   "Salade": 0.4037,
+   "Ananas": 0.55,
+   "Farine": 0.625,
+   "Mangue": 0.5556,
+   "Avocat (chair)": 0.5741,
+   "Maïs": 0.5714,
+   "Glace": 0.5769,
+   "Saucisses (porc)": 0.578,
+   "Haricots blancs (égouttés)": 0.6222,
+   "Chorizo": 0.6,
+   "Haricots rouges (égouttés)": 0.5625,
+   "Wraps": 0.625,
+   "Cheddar": 0.5909,
+   "Pâtes à lasagnes (sèches)": 0.5814,
+   "Mozzarella râpée": 0.5455,
+   "Aubergines": 0.4468,
+   "Pains burger": 0.5
+  },
+  "plan": [
+   {
+    "d": 1,
+    "date": "2026-11-01",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Bœuf sauté asiatique, riz, poivrons-carottes",
+       "aurelie": "Bœuf sauté asiatique, riz, poivrons-carottes"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Bœuf",
+         130
+        ],
+        [
+         "Riz (sec)",
+         80
+        ],
+        [
+         "Poivrons",
+         60
+        ],
+        [
+         "Carottes",
+         80
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Bœuf",
+         100
+        ],
+        [
+         "Riz (sec)",
+         45
+        ],
+        [
+         "Poivrons",
+         80
+        ],
+        [
+         "Carottes",
+         100
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "boeuf-saute-asiatique-riz-poivrons-carottes"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Poulet rôti, pommes de terre, haricots verts",
+       "aurelie": "Poulet rôti, pommes de terre, haricots verts"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         150
+        ],
+        [
+         "Pommes de terre",
+         340
+        ],
+        [
+         "Haricots verts",
+         250
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         120
+        ],
+        [
+         "Pommes de terre",
+         175
+        ],
+        [
+         "Haricots verts",
+         280
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "poulet-roti-pommes-de-terre-haricots-verts"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Yaourt + chocolat",
+       "aurelie": "Yaourt + chocolat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ]
+      },
+      "recette": "yaourt-chocolat"
+     }
+    ]
+   },
+   {
+    "d": 2,
+    "date": "2026-11-02",
+    "tag": "poisson",
+    "fish": true,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Carry poulet-lentilles, riz, carottes râpées",
+       "aurelie": "Carry poulet-lentilles, riz, carottes râpées"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         120
+        ],
+        [
+         "Lentilles (égouttées)",
+         165
+        ],
+        [
+         "Riz (sec)",
+         60
+        ],
+        [
+         "Tomates",
+         120
+        ],
+        [
+         "Oignons",
+         40
+        ],
+        [
+         "Carottes",
+         80
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         80
+        ],
+        [
+         "Lentilles (égouttées)",
+         120
+        ],
+        [
+         "Riz (sec)",
+         30
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Oignons",
+         40
+        ],
+        [
+         "Carottes",
+         100
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "carry-poulet-lentilles-riz-carottes-rapees"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Poisson blanc au citron, patate douce, haricots verts",
+       "aurelie": "Poisson blanc au citron, patate douce, haricots verts"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poisson blanc",
+         180
+        ],
+        [
+         "Patates douces",
+         345
+        ],
+        [
+         "Haricots verts",
+         250
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poisson blanc",
+         125
+        ],
+        [
+         "Patates douces",
+         225
+        ],
+        [
+         "Haricots verts",
+         280
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "poisson-blanc-au-citron-patate-douce-haricots-verts"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Chocolat",
+       "aurelie": "Chocolat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Chocolat noir",
+         15
+        ]
+       ],
+       "aurelie": [
+        [
+         "Chocolat noir",
+         10
+        ]
+       ]
+      },
+      "recette": "chocolat"
+     }
+    ]
+   },
+   {
+    "d": 3,
+    "date": "2026-11-03",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Carbonara légère (lardons, jambon, œuf, champignons, courgettes)",
+       "aurelie": "Carbonara légère (lardons, jambon, œuf, champignons, courgettes)"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Pâtes (sèches)",
+         85
+        ],
+        [
+         "Lardons",
+         70
+        ],
+        [
+         "Jambon",
+         45
+        ],
+        [
+         "Œufs",
+         1
+        ],
+        [
+         "Champignons",
+         60
+        ],
+        [
+         "Courgettes",
+         120
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ],
+       "aurelie": [
+        [
+         "Pâtes (sèches)",
+         65
+        ],
+        [
+         "Lardons",
+         45
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Œufs",
+         1
+        ],
+        [
+         "Champignons",
+         60
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "carbonara-legere-lardons-jambon-oeuf-champignons-courgettes"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Hachis parmentier bœuf-porc + salade",
+       "aurelie": "Hachis parmentier bœuf-porc + salade"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Bœuf",
+         85
+        ],
+        [
+         "Porc haché",
+         85
+        ],
+        [
+         "Pommes de terre",
+         245
+        ],
+        [
+         "Lait",
+         50
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Huile",
+         5
+        ],
+        [
+         "Salade",
+         40
+        ]
+       ],
+       "aurelie": [
+        [
+         "Bœuf",
+         60
+        ],
+        [
+         "Porc haché",
+         60
+        ],
+        [
+         "Pommes de terre",
+         160
+        ],
+        [
+         "Lait",
+         40
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Huile",
+         5
+        ],
+        [
+         "Salade",
+         60
+        ]
+       ]
+      },
+      "recette": "hachis-parmentier-boeuf-porc-salade"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Ananas",
+       "aurelie": "Ananas"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Ananas",
+         110
+        ]
+       ],
+       "aurelie": [
+        [
+         "Ananas",
+         90
+        ]
+       ]
+      },
+      "recette": "ananas"
+     }
+    ]
+   },
+   {
+    "d": 4,
+    "date": "2026-11-04",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Quiche légère lardons-courgettes (pâte maison) + salade-tomate",
+       "aurelie": "Quiche légère lardons-courgettes (pâte maison) + salade-tomate"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Lardons",
+         60
+        ],
+        [
+         "Lait",
+         100
+        ],
+        [
+         "Farine",
+         45
+        ],
+        [
+         "Huile",
+         10
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Salade",
+         40
+        ],
+        [
+         "Tomates",
+         100
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Lardons",
+         40
+        ],
+        [
+         "Lait",
+         100
+        ],
+        [
+         "Farine",
+         20
+        ],
+        [
+         "Huile",
+         5
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Salade",
+         60
+        ],
+        [
+         "Tomates",
+         130
+        ]
+       ]
+      },
+      "recette": "quiche-legere-lardons-courgettes-pate-maison-salade-tomate"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Pâtes poulet-champignons-courgettes",
+       "aurelie": "Pâtes poulet-champignons-courgettes"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         120
+        ],
+        [
+         "Pâtes (sèches)",
+         75
+        ],
+        [
+         "Champignons",
+         80
+        ],
+        [
+         "Courgettes",
+         120
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         90
+        ],
+        [
+         "Pâtes (sèches)",
+         35
+        ],
+        [
+         "Champignons",
+         80
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "pates-poulet-champignons-courgettes"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Yaourt + chocolat",
+       "aurelie": "Yaourt + chocolat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ]
+      },
+      "recette": "yaourt-chocolat"
+     }
+    ]
+   },
+   {
+    "d": 5,
+    "date": "2026-11-05",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Pâtes poulet, tomate, courgettes",
+       "aurelie": "Pâtes poulet, tomate, courgettes"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         120
+        ],
+        [
+         "Pâtes (sèches)",
+         115
+        ],
+        [
+         "Tomates",
+         100
+        ],
+        [
+         "Courgettes",
+         120
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         90
+        ],
+        [
+         "Pâtes (sèches)",
+         75
+        ],
+        [
+         "Tomates",
+         120
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "pates-poulet-tomate-courgettes"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Rougail poulet-lentilles, riz, haricots verts",
+       "aurelie": "Rougail poulet-lentilles, riz, haricots verts"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         100
+        ],
+        [
+         "Lentilles (égouttées)",
+         140
+        ],
+        [
+         "Riz (sec)",
+         55
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Oignons",
+         40
+        ],
+        [
+         "Haricots verts",
+         150
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         80
+        ],
+        [
+         "Lentilles (égouttées)",
+         120
+        ],
+        [
+         "Riz (sec)",
+         25
+        ],
+        [
+         "Tomates",
+         180
+        ],
+        [
+         "Oignons",
+         40
+        ],
+        [
+         "Haricots verts",
+         200
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "rougail-poulet-lentilles-riz-haricots-verts"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Mangue",
+       "aurelie": "Mangue"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Mangue",
+         100
+        ]
+       ],
+       "aurelie": [
+        [
+         "Mangue",
+         80
+        ]
+       ]
+      },
+      "recette": "mangue"
+     }
+    ]
+   },
+   {
+    "d": 6,
+    "date": "2026-11-06",
+    "tag": "poisson",
+    "fish": true,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Poisson en papillote, carottes-champignons, pommes de terre",
+       "aurelie": "Poisson en papillote, carottes-champignons, pommes de terre"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poisson blanc",
+         150
+        ],
+        [
+         "Carottes",
+         120
+        ],
+        [
+         "Champignons",
+         80
+        ],
+        [
+         "Oignons",
+         40
+        ],
+        [
+         "Tomates",
+         60
+        ],
+        [
+         "Pommes de terre",
+         350
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poisson blanc",
+         125
+        ],
+        [
+         "Carottes",
+         150
+        ],
+        [
+         "Champignons",
+         100
+        ],
+        [
+         "Oignons",
+         40
+        ],
+        [
+         "Tomates",
+         60
+        ],
+        [
+         "Pommes de terre",
+         180
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "poisson-en-papillote-carottes-champignons-pommes-de-terre"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Curry poulet-courgettes, riz",
+       "aurelie": "Curry poulet-courgettes, riz"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         150
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Riz (sec)",
+         100
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         120
+        ],
+        [
+         "Courgettes",
+         180
+        ],
+        [
+         "Tomates",
+         100
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Riz (sec)",
+         55
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "curry-poulet-courgettes-riz"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Yaourt + chocolat",
+       "aurelie": "Yaourt + chocolat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ]
+      },
+      "recette": "yaourt-chocolat"
+     }
+    ]
+   },
+   {
+    "d": 7,
+    "date": "2026-11-07",
+    "tag": "plaisir",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Steak frites + salade",
+       "aurelie": "Steak frites + salade"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Bœuf",
+         175
+        ],
+        [
+         "Pommes de terre",
+         525
+        ],
+        [
+         "Salade",
+         40
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Bœuf",
+         125
+        ],
+        [
+         "Pommes de terre",
+         270
+        ],
+        [
+         "Salade",
+         60
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ]
+      },
+      "recette": "steak-frites-salade"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Salade poulet, avocat, tomate, maïs",
+       "aurelie": "Salade poulet, avocat, tomate, maïs"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         150
+        ],
+        [
+         "Avocat (chair)",
+         80
+        ],
+        [
+         "Tomates",
+         120
+        ],
+        [
+         "Maïs",
+         40
+        ],
+        [
+         "Salade",
+         40
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         105
+        ],
+        [
+         "Avocat (chair)",
+         60
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Maïs",
+         30
+        ],
+        [
+         "Salade",
+         60
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "salade-poulet-avocat-tomate-mais"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Glace",
+       "aurelie": "Glace"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Glace",
+         75
+        ]
+       ],
+       "aurelie": [
+        [
+         "Glace",
+         55
+        ]
+       ]
+      },
+      "recette": "glace"
+     }
+    ]
+   },
+   {
+    "d": 8,
+    "date": "2026-11-08",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Cassoulet aux pommes de terre",
+       "aurelie": "Cassoulet aux pommes de terre"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Saucisses (porc)",
+         135
+        ],
+        [
+         "Lardons",
+         35
+        ],
+        [
+         "Haricots blancs (égouttés)",
+         65
+        ],
+        [
+         "Pommes de terre",
+         85
+        ],
+        [
+         "Tomates",
+         100
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Carottes",
+         60
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ],
+       "aurelie": [
+        [
+         "Saucisses (porc)",
+         100
+        ],
+        [
+         "Lardons",
+         20
+        ],
+        [
+         "Haricots blancs (égouttés)",
+         45
+        ],
+        [
+         "Pommes de terre",
+         45
+        ],
+        [
+         "Tomates",
+         130
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Carottes",
+         80
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "cassoulet-pommes-de-terre"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Riz mexicain (bœuf, chorizo, haricots rouges, poivrons)",
+       "aurelie": "Riz mexicain (bœuf, chorizo, haricots rouges, poivrons)"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Bœuf",
+         135
+        ],
+        [
+         "Chorizo",
+         30
+        ],
+        [
+         "Riz (sec)",
+         40
+        ],
+        [
+         "Haricots rouges (égouttés)",
+         45
+        ],
+        [
+         "Poivrons",
+         70
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Bœuf",
+         95
+        ],
+        [
+         "Chorizo",
+         20
+        ],
+        [
+         "Riz (sec)",
+         20
+        ],
+        [
+         "Haricots rouges (égouttés)",
+         35
+        ],
+        [
+         "Poivrons",
+         90
+        ],
+        [
+         "Tomates",
+         100
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "riz-mexicain-boeuf"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Ananas",
+       "aurelie": "Ananas"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Ananas",
+         110
+        ]
+       ],
+       "aurelie": [
+        [
+         "Ananas",
+         90
+        ]
+       ]
+      },
+      "recette": "ananas"
+     }
+    ]
+   },
+   {
+    "d": 9,
+    "date": "2026-11-09",
+    "tag": "poisson",
+    "fish": true,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Poulet citronné, patate douce, haricots verts",
+       "aurelie": "Poulet citronné, patate douce, haricots verts"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         170
+        ],
+        [
+         "Patates douces",
+         350
+        ],
+        [
+         "Haricots verts",
+         250
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         120
+        ],
+        [
+         "Patates douces",
+         220
+        ],
+        [
+         "Haricots verts",
+         280
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "poulet-citronne-patate-douce-haricots-verts"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Poisson blanc, riz, poêlée de courgettes",
+       "aurelie": "Poisson blanc, riz, poêlée de courgettes"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poisson blanc",
+         170
+        ],
+        [
+         "Riz (sec)",
+         100
+        ],
+        [
+         "Courgettes",
+         180
+        ],
+        [
+         "Tomates",
+         60
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poisson blanc",
+         125
+        ],
+        [
+         "Riz (sec)",
+         70
+        ],
+        [
+         "Courgettes",
+         220
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "poisson-blanc-riz-poelee-de-courgettes"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Chocolat",
+       "aurelie": "Chocolat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Chocolat noir",
+         15
+        ]
+       ],
+       "aurelie": [
+        [
+         "Chocolat noir",
+         10
+        ]
+       ]
+      },
+      "recette": "chocolat"
+     }
+    ]
+   },
+   {
+    "d": 10,
+    "date": "2026-11-10",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Salade poulet froid, avocat, carottes râpées, pommes de terre",
+       "aurelie": "Salade poulet froid, avocat, carottes râpées, pommes de terre"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         145
+        ],
+        [
+         "Avocat (chair)",
+         80
+        ],
+        [
+         "Carottes",
+         100
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pommes de terre",
+         140
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         100
+        ],
+        [
+         "Avocat (chair)",
+         60
+        ],
+        [
+         "Carottes",
+         120
+        ],
+        [
+         "Tomates",
+         100
+        ],
+        [
+         "Pommes de terre",
+         45
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "salade-poulet-froid-avocat-carottes-rapees-pommes-de-terre"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Quiche légère lardons-courgettes (pâte maison) + salade-tomate",
+       "aurelie": "Quiche légère lardons-courgettes (pâte maison) + salade-tomate"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Lardons",
+         65
+        ],
+        [
+         "Lait",
+         100
+        ],
+        [
+         "Farine",
+         35
+        ],
+        [
+         "Huile",
+         10
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Salade",
+         40
+        ],
+        [
+         "Tomates",
+         100
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Lardons",
+         40
+        ],
+        [
+         "Lait",
+         100
+        ],
+        [
+         "Farine",
+         20
+        ],
+        [
+         "Huile",
+         5
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Salade",
+         60
+        ],
+        [
+         "Tomates",
+         130
+        ]
+       ]
+      },
+      "recette": "quiche-legere-lardons-courgettes-pate-maison-salade-tomate"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Yaourt + chocolat",
+       "aurelie": "Yaourt + chocolat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ]
+      },
+      "recette": "yaourt-chocolat"
+     }
+    ]
+   },
+   {
+    "d": 11,
+    "date": "2026-11-11",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Carry poulet-lentilles, riz, carottes râpées",
+       "aurelie": "Carry poulet-lentilles, riz, carottes râpées"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         110
+        ],
+        [
+         "Lentilles (égouttées)",
+         155
+        ],
+        [
+         "Riz (sec)",
+         40
+        ],
+        [
+         "Tomates",
+         120
+        ],
+        [
+         "Oignons",
+         40
+        ],
+        [
+         "Carottes",
+         80
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         80
+        ],
+        [
+         "Lentilles (égouttées)",
+         120
+        ],
+        [
+         "Riz (sec)",
+         20
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Oignons",
+         40
+        ],
+        [
+         "Carottes",
+         100
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "carry-poulet-lentilles-riz-carottes-rapees"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Carbonara légère (lardons, jambon, œuf, champignons, courgettes)",
+       "aurelie": "Carbonara légère (lardons, jambon, œuf, champignons, courgettes)"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Pâtes (sèches)",
+         85
+        ],
+        [
+         "Lardons",
+         65
+        ],
+        [
+         "Jambon",
+         45
+        ],
+        [
+         "Œufs",
+         1
+        ],
+        [
+         "Champignons",
+         60
+        ],
+        [
+         "Courgettes",
+         120
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ],
+       "aurelie": [
+        [
+         "Pâtes (sèches)",
+         60
+        ],
+        [
+         "Lardons",
+         40
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Œufs",
+         1
+        ],
+        [
+         "Champignons",
+         60
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "carbonara-legere-lardons-jambon-oeuf-champignons-courgettes"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Chocolat",
+       "aurelie": "Chocolat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Chocolat noir",
+         15
+        ]
+       ],
+       "aurelie": [
+        [
+         "Chocolat noir",
+         10
+        ]
+       ]
+      },
+      "recette": "chocolat"
+     }
+    ]
+   },
+   {
+    "d": 12,
+    "date": "2026-11-12",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Tacos bœuf (wraps, tomate, avocat, cheddar)",
+       "aurelie": "Tacos bœuf (wraps, tomate, avocat, cheddar)"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Bœuf",
+         120
+        ],
+        [
+         "Wraps",
+         1
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Avocat (chair)",
+         70
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Salade",
+         30
+        ],
+        [
+         "Cheddar",
+         15
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ],
+       "aurelie": [
+        [
+         "Bœuf",
+         95
+        ],
+        [
+         "Wraps",
+         1
+        ],
+        [
+         "Tomates",
+         100
+        ],
+        [
+         "Avocat (chair)",
+         50
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Salade",
+         40
+        ],
+        [
+         "Cheddar",
+         10
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "tacos-boeuf-wraps-tomate-avocat-cheddar"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Pâtes poulet-champignons-courgettes",
+       "aurelie": "Pâtes poulet-champignons-courgettes"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         120
+        ],
+        [
+         "Pâtes (sèches)",
+         75
+        ],
+        [
+         "Champignons",
+         80
+        ],
+        [
+         "Courgettes",
+         120
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         90
+        ],
+        [
+         "Pâtes (sèches)",
+         50
+        ],
+        [
+         "Champignons",
+         80
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "pates-poulet-champignons-courgettes"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Yaourt + chocolat",
+       "aurelie": "Yaourt + chocolat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ]
+      },
+      "recette": "yaourt-chocolat"
+     }
+    ]
+   },
+   {
+    "d": 13,
+    "date": "2026-11-13",
+    "tag": "poisson",
+    "fish": true,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Poisson grillé, champignons, pommes de terre, tomates",
+       "aurelie": "Poisson grillé, champignons, pommes de terre, tomates"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poisson blanc",
+         170
+        ],
+        [
+         "Champignons",
+         80
+        ],
+        [
+         "Pommes de terre",
+         375
+        ],
+        [
+         "Tomates",
+         100
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poisson blanc",
+         125
+        ],
+        [
+         "Champignons",
+         100
+        ],
+        [
+         "Pommes de terre",
+         200
+        ],
+        [
+         "Tomates",
+         120
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "poisson-grille-champignons-pommes-de-terre-tomates"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Lasagnes bœuf-courgettes + salade",
+       "aurelie": "Lasagnes bœuf-courgettes + salade"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Bœuf",
+         125
+        ],
+        [
+         "Pâtes à lasagnes (sèches)",
+         80
+        ],
+        [
+         "Courgettes",
+         100
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Mozzarella râpée",
+         30
+        ],
+        [
+         "Lait",
+         80
+        ],
+        [
+         "Farine",
+         10
+        ],
+        [
+         "Huile",
+         10
+        ],
+        [
+         "Salade",
+         40
+        ]
+       ],
+       "aurelie": [
+        [
+         "Bœuf",
+         85
+        ],
+        [
+         "Pâtes à lasagnes (sèches)",
+         65
+        ],
+        [
+         "Courgettes",
+         120
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Mozzarella râpée",
+         25
+        ],
+        [
+         "Lait",
+         60
+        ],
+        [
+         "Farine",
+         10
+        ],
+        [
+         "Huile",
+         5
+        ],
+        [
+         "Salade",
+         60
+        ]
+       ]
+      },
+      "recette": "lasagnes-boeuf-courgettes-salade"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Ananas",
+       "aurelie": "Ananas"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Ananas",
+         110
+        ]
+       ],
+       "aurelie": [
+        [
+         "Ananas",
+         90
+        ]
+       ]
+      },
+      "recette": "ananas"
+     }
+    ]
+   },
+   {
+    "d": 14,
+    "date": "2026-11-14",
+    "tag": "plaisir",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Barbecue bœuf-poulet, pommes de terre, légumes grillés",
+       "aurelie": "Barbecue bœuf-poulet, pommes de terre, légumes grillés"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Bœuf",
+         100
+        ],
+        [
+         "Poulet",
+         100
+        ],
+        [
+         "Pommes de terre",
+         290
+        ],
+        [
+         "Courgettes",
+         120
+        ],
+        [
+         "Aubergines",
+         110
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Bœuf",
+         80
+        ],
+        [
+         "Poulet",
+         80
+        ],
+        [
+         "Pommes de terre",
+         175
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Aubergines",
+         140
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ]
+      },
+      "recette": "barbecue-boeuf-poulet-pommes-de-terre-legumes-grilles"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Salade des restes du barbecue (poulet), avocat, pommes de terre",
+       "aurelie": "Salade des restes du barbecue (poulet), avocat, pommes de terre"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         110
+        ],
+        [
+         "Avocat (chair)",
+         80
+        ],
+        [
+         "Tomates",
+         120
+        ],
+        [
+         "Salade",
+         40
+        ],
+        [
+         "Carottes",
+         60
+        ],
+        [
+         "Pommes de terre",
+         235
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         90
+        ],
+        [
+         "Avocat (chair)",
+         60
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Salade",
+         60
+        ],
+        [
+         "Carottes",
+         80
+        ],
+        [
+         "Pommes de terre",
+         110
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "salade-des-restes-du-barbecue-poulet-avocat-pommes-de-terre"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Glace",
+       "aurelie": "Glace"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Glace",
+         75
+        ]
+       ],
+       "aurelie": [
+        [
+         "Glace",
+         55
+        ]
+       ]
+      },
+      "recette": "glace"
+     }
+    ]
+   },
+   {
+    "d": 15,
+    "date": "2026-11-15",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Pâtes poulet, tomate, courgettes",
+       "aurelie": "Pâtes poulet, tomate, courgettes"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         120
+        ],
+        [
+         "Pâtes (sèches)",
+         95
+        ],
+        [
+         "Tomates",
+         100
+        ],
+        [
+         "Courgettes",
+         120
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         75
+        ],
+        [
+         "Pâtes (sèches)",
+         55
+        ],
+        [
+         "Tomates",
+         120
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "pates-poulet-tomate-courgettes"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Lasagnes (restes) + salade",
+       "aurelie": "Lasagnes (restes) + salade"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Bœuf",
+         110
+        ],
+        [
+         "Pâtes à lasagnes (sèches)",
+         60
+        ],
+        [
+         "Courgettes",
+         100
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Mozzarella râpée",
+         30
+        ],
+        [
+         "Lait",
+         80
+        ],
+        [
+         "Farine",
+         5
+        ],
+        [
+         "Huile",
+         10
+        ],
+        [
+         "Salade",
+         40
+        ]
+       ],
+       "aurelie": [
+        [
+         "Bœuf",
+         70
+        ],
+        [
+         "Pâtes à lasagnes (sèches)",
+         40
+        ],
+        [
+         "Courgettes",
+         120
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Mozzarella râpée",
+         25
+        ],
+        [
+         "Lait",
+         60
+        ],
+        [
+         "Farine",
+         5
+        ],
+        [
+         "Huile",
+         5
+        ],
+        [
+         "Salade",
+         60
+        ]
+       ]
+      },
+      "recette": "lasagnes-restes-du-samedi-salade"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Yaourt + chocolat",
+       "aurelie": "Yaourt + chocolat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ]
+      },
+      "recette": "yaourt-chocolat"
+     }
+    ]
+   },
+   {
+    "d": 16,
+    "date": "2026-11-16",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Poulet basquaise (poivrons, tomates), riz",
+       "aurelie": "Poulet basquaise (poivrons, tomates), riz"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         170
+        ],
+        [
+         "Poivrons",
+         70
+        ],
+        [
+         "Tomates",
+         120
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Riz (sec)",
+         80
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         120
+        ],
+        [
+         "Poivrons",
+         90
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Riz (sec)",
+         55
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "poulet-basquaise-poivrons-tomates-riz"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Bœuf sauté asiatique, riz, légumes",
+       "aurelie": "Bœuf sauté asiatique, riz, légumes"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Bœuf",
+         145
+        ],
+        [
+         "Riz (sec)",
+         80
+        ],
+        [
+         "Poivrons",
+         50
+        ],
+        [
+         "Carottes",
+         80
+        ],
+        [
+         "Courgettes",
+         60
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Bœuf",
+         100
+        ],
+        [
+         "Riz (sec)",
+         55
+        ],
+        [
+         "Poivrons",
+         60
+        ],
+        [
+         "Carottes",
+         100
+        ],
+        [
+         "Courgettes",
+         80
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "boeuf-saute-asiatique-riz-legumes"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Chocolat",
+       "aurelie": "Chocolat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Chocolat noir",
+         15
+        ]
+       ],
+       "aurelie": [
+        [
+         "Chocolat noir",
+         10
+        ]
+       ]
+      },
+      "recette": "chocolat"
+     }
+    ]
+   },
+   {
+    "d": 17,
+    "date": "2026-11-17",
+    "tag": "poisson",
+    "fish": true,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Poulet ratatouille, pommes de terre",
+       "aurelie": "Poulet ratatouille, pommes de terre"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         165
+        ],
+        [
+         "Aubergines",
+         100
+        ],
+        [
+         "Courgettes",
+         100
+        ],
+        [
+         "Poivrons",
+         40
+        ],
+        [
+         "Tomates",
+         100
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Pommes de terre",
+         340
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         120
+        ],
+        [
+         "Aubergines",
+         120
+        ],
+        [
+         "Courgettes",
+         120
+        ],
+        [
+         "Poivrons",
+         50
+        ],
+        [
+         "Tomates",
+         120
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Pommes de terre",
+         195
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ]
+      },
+      "recette": "poulet-ratatouille-pommes-de-terre"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Poisson créole, riz, haricots verts",
+       "aurelie": "Poisson créole, riz, haricots verts"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poisson blanc",
+         165
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Oignons",
+         40
+        ],
+        [
+         "Riz (sec)",
+         95
+        ],
+        [
+         "Haricots verts",
+         150
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poisson blanc",
+         125
+        ],
+        [
+         "Tomates",
+         180
+        ],
+        [
+         "Oignons",
+         40
+        ],
+        [
+         "Riz (sec)",
+         60
+        ],
+        [
+         "Haricots verts",
+         200
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "poisson-creole-riz-haricots-verts"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Mangue",
+       "aurelie": "Mangue"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Mangue",
+         100
+        ]
+       ],
+       "aurelie": [
+        [
+         "Mangue",
+         80
+        ]
+       ]
+      },
+      "recette": "mangue"
+     }
+    ]
+   },
+   {
+    "d": 18,
+    "date": "2026-11-18",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Poulet barbecue, patate douce, salade-avocat",
+       "aurelie": "Poulet barbecue, patate douce, salade-avocat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         150
+        ],
+        [
+         "Patates douces",
+         295
+        ],
+        [
+         "Avocat (chair)",
+         80
+        ],
+        [
+         "Salade",
+         40
+        ],
+        [
+         "Tomates",
+         120
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         120
+        ],
+        [
+         "Patates douces",
+         155
+        ],
+        [
+         "Avocat (chair)",
+         60
+        ],
+        [
+         "Salade",
+         60
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "poulet-barbecue-patate-douce-salade-avocat"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Hachis parmentier bœuf-porc + salade",
+       "aurelie": "Hachis parmentier bœuf-porc + salade"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Bœuf",
+         70
+        ],
+        [
+         "Porc haché",
+         70
+        ],
+        [
+         "Pommes de terre",
+         295
+        ],
+        [
+         "Lait",
+         50
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Huile",
+         5
+        ],
+        [
+         "Salade",
+         40
+        ]
+       ],
+       "aurelie": [
+        [
+         "Bœuf",
+         55
+        ],
+        [
+         "Porc haché",
+         55
+        ],
+        [
+         "Pommes de terre",
+         170
+        ],
+        [
+         "Lait",
+         40
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Huile",
+         5
+        ],
+        [
+         "Salade",
+         60
+        ]
+       ]
+      },
+      "recette": "hachis-parmentier-boeuf-porc-salade"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Yaourt + chocolat",
+       "aurelie": "Yaourt + chocolat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ]
+      },
+      "recette": "yaourt-chocolat"
+     }
+    ]
+   },
+   {
+    "d": 19,
+    "date": "2026-11-19",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Curry poulet-courgettes, riz",
+       "aurelie": "Curry poulet-courgettes, riz"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         150
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Riz (sec)",
+         90
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         120
+        ],
+        [
+         "Courgettes",
+         180
+        ],
+        [
+         "Tomates",
+         100
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Riz (sec)",
+         50
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "curry-poulet-courgettes-riz"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Lasagnes bœuf-courgettes + salade",
+       "aurelie": "Lasagnes bœuf-courgettes + salade"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Bœuf",
+         110
+        ],
+        [
+         "Pâtes à lasagnes (sèches)",
+         70
+        ],
+        [
+         "Courgettes",
+         100
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Mozzarella râpée",
+         30
+        ],
+        [
+         "Lait",
+         80
+        ],
+        [
+         "Farine",
+         10
+        ],
+        [
+         "Huile",
+         10
+        ],
+        [
+         "Salade",
+         40
+        ]
+       ],
+       "aurelie": [
+        [
+         "Bœuf",
+         85
+        ],
+        [
+         "Pâtes à lasagnes (sèches)",
+         50
+        ],
+        [
+         "Courgettes",
+         120
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Mozzarella râpée",
+         25
+        ],
+        [
+         "Lait",
+         60
+        ],
+        [
+         "Farine",
+         5
+        ],
+        [
+         "Huile",
+         5
+        ],
+        [
+         "Salade",
+         60
+        ]
+       ]
+      },
+      "recette": "lasagnes-boeuf-courgettes-salade"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Ananas",
+       "aurelie": "Ananas"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Ananas",
+         110
+        ]
+       ],
+       "aurelie": [
+        [
+         "Ananas",
+         90
+        ]
+       ]
+      },
+      "recette": "ananas"
+     }
+    ]
+   },
+   {
+    "d": 20,
+    "date": "2026-11-20",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Cassoulet aux pommes de terre",
+       "aurelie": "Cassoulet aux pommes de terre"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Saucisses (porc)",
+         120
+        ],
+        [
+         "Lardons",
+         30
+        ],
+        [
+         "Haricots blancs (égouttés)",
+         75
+        ],
+        [
+         "Pommes de terre",
+         95
+        ],
+        [
+         "Tomates",
+         100
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Carottes",
+         60
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ],
+       "aurelie": [
+        [
+         "Saucisses (porc)",
+         100
+        ],
+        [
+         "Lardons",
+         20
+        ],
+        [
+         "Haricots blancs (égouttés)",
+         40
+        ],
+        [
+         "Pommes de terre",
+         40
+        ],
+        [
+         "Tomates",
+         130
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Carottes",
+         80
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "cassoulet-pommes-de-terre"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Lasagnes (restes) + salade",
+       "aurelie": "Lasagnes (restes) + salade"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Bœuf",
+         110
+        ],
+        [
+         "Pâtes à lasagnes (sèches)",
+         40
+        ],
+        [
+         "Courgettes",
+         100
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Mozzarella râpée",
+         30
+        ],
+        [
+         "Lait",
+         80
+        ],
+        [
+         "Farine",
+         5
+        ],
+        [
+         "Huile",
+         10
+        ],
+        [
+         "Salade",
+         40
+        ]
+       ],
+       "aurelie": [
+        [
+         "Bœuf",
+         85
+        ],
+        [
+         "Pâtes à lasagnes (sèches)",
+         25
+        ],
+        [
+         "Courgettes",
+         120
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Mozzarella râpée",
+         25
+        ],
+        [
+         "Lait",
+         60
+        ],
+        [
+         "Farine",
+         5
+        ],
+        [
+         "Huile",
+         5
+        ],
+        [
+         "Salade",
+         60
+        ]
+       ]
+      },
+      "recette": "lasagnes-restes-du-samedi-salade"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Yaourt + chocolat",
+       "aurelie": "Yaourt + chocolat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ]
+      },
+      "recette": "yaourt-chocolat"
+     }
+    ]
+   },
+   {
+    "d": 21,
+    "date": "2026-11-21",
+    "tag": "plaisir",
+    "fish": true,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Saucisses grillées, frites au four, haricots verts",
+       "aurelie": "Saucisses grillées, frites au four, haricots verts"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Saucisses (porc)",
+         200
+        ],
+        [
+         "Pommes de terre",
+         175
+        ],
+        [
+         "Haricots verts",
+         200
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Saucisses (porc)",
+         135
+        ],
+        [
+         "Pommes de terre",
+         85
+        ],
+        [
+         "Haricots verts",
+         250
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "saucisses-grillees-frites-haricots-verts"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Poisson blanc, riz, poêlée de courgettes",
+       "aurelie": "Poisson blanc, riz, poêlée de courgettes"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poisson blanc",
+         200
+        ],
+        [
+         "Riz (sec)",
+         45
+        ],
+        [
+         "Courgettes",
+         180
+        ],
+        [
+         "Tomates",
+         60
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poisson blanc",
+         140
+        ],
+        [
+         "Riz (sec)",
+         25
+        ],
+        [
+         "Courgettes",
+         220
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "poisson-blanc-riz-poelee-de-courgettes"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Glace",
+       "aurelie": "Glace"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Glace",
+         75
+        ]
+       ],
+       "aurelie": [
+        [
+         "Glace",
+         55
+        ]
+       ]
+      },
+      "recette": "glace"
+     }
+    ]
+   },
+   {
+    "d": 22,
+    "date": "2026-11-22",
+    "tag": "plaisir",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Steak frites + salade",
+       "aurelie": "Steak frites + salade"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Bœuf",
+         150
+        ],
+        [
+         "Pommes de terre",
+         305
+        ],
+        [
+         "Salade",
+         40
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Bœuf",
+         120
+        ],
+        [
+         "Pommes de terre",
+         205
+        ],
+        [
+         "Salade",
+         60
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ]
+      },
+      "recette": "steak-frites-salade"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Fajitas poulet (wraps, poivrons, cheddar)",
+       "aurelie": "Fajitas poulet (wraps, poivrons, cheddar)"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         130
+        ],
+        [
+         "Wraps",
+         2
+        ],
+        [
+         "Poivrons",
+         60
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Tomates",
+         60
+        ],
+        [
+         "Cheddar",
+         15
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         100
+        ],
+        [
+         "Wraps",
+         1
+        ],
+        [
+         "Poivrons",
+         80
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Cheddar",
+         10
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "fajitas-poulet-wraps-poivrons-cheddar"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Glace",
+       "aurelie": "Glace"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Glace",
+         75
+        ]
+       ],
+       "aurelie": [
+        [
+         "Glace",
+         55
+        ]
+       ]
+      },
+      "recette": "glace"
+     }
+    ]
+   },
+   {
+    "d": 23,
+    "date": "2026-11-23",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Rougail poulet-lentilles, riz, haricots verts",
+       "aurelie": "Rougail poulet-lentilles, riz, haricots verts"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         100
+        ],
+        [
+         "Lentilles (égouttées)",
+         140
+        ],
+        [
+         "Riz (sec)",
+         55
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Oignons",
+         40
+        ],
+        [
+         "Haricots verts",
+         150
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         70
+        ],
+        [
+         "Lentilles (égouttées)",
+         100
+        ],
+        [
+         "Riz (sec)",
+         25
+        ],
+        [
+         "Tomates",
+         180
+        ],
+        [
+         "Oignons",
+         40
+        ],
+        [
+         "Haricots verts",
+         200
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "rougail-poulet-lentilles-riz-haricots-verts"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Poulet citronné, patate douce, haricots verts",
+       "aurelie": "Poulet citronné, patate douce, haricots verts"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         150
+        ],
+        [
+         "Patates douces",
+         315
+        ],
+        [
+         "Haricots verts",
+         250
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         100
+        ],
+        [
+         "Patates douces",
+         185
+        ],
+        [
+         "Haricots verts",
+         280
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "poulet-citronne-patate-douce-haricots-verts"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Yaourt + chocolat",
+       "aurelie": "Yaourt + chocolat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ]
+      },
+      "recette": "yaourt-chocolat"
+     }
+    ]
+   },
+   {
+    "d": 24,
+    "date": "2026-11-24",
+    "tag": "poisson",
+    "fish": true,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Salade poulet, avocat, tomate, maïs",
+       "aurelie": "Salade poulet, avocat, tomate, maïs"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         165
+        ],
+        [
+         "Avocat (chair)",
+         80
+        ],
+        [
+         "Tomates",
+         120
+        ],
+        [
+         "Maïs",
+         40
+        ],
+        [
+         "Carottes",
+         60
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         105
+        ],
+        [
+         "Avocat (chair)",
+         60
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Maïs",
+         30
+        ],
+        [
+         "Carottes",
+         80
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "salade-poulet-avocat-tomate-mais-2"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Poisson créole, riz, haricots verts",
+       "aurelie": "Poisson créole, riz, haricots verts"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poisson blanc",
+         190
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Oignons",
+         40
+        ],
+        [
+         "Riz (sec)",
+         135
+        ],
+        [
+         "Haricots verts",
+         150
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poisson blanc",
+         135
+        ],
+        [
+         "Tomates",
+         180
+        ],
+        [
+         "Oignons",
+         40
+        ],
+        [
+         "Riz (sec)",
+         70
+        ],
+        [
+         "Haricots verts",
+         200
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "poisson-creole-riz-haricots-verts"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Chocolat",
+       "aurelie": "Chocolat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Chocolat noir",
+         15
+        ]
+       ],
+       "aurelie": [
+        [
+         "Chocolat noir",
+         10
+        ]
+       ]
+      },
+      "recette": "chocolat"
+     }
+    ]
+   },
+   {
+    "d": 25,
+    "date": "2026-11-25",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Salade poulet froid, avocat, carottes râpées, pommes de terre",
+       "aurelie": "Salade poulet froid, avocat, carottes râpées, pommes de terre"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         145
+        ],
+        [
+         "Avocat (chair)",
+         80
+        ],
+        [
+         "Carottes",
+         100
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pommes de terre",
+         190
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         105
+        ],
+        [
+         "Avocat (chair)",
+         60
+        ],
+        [
+         "Carottes",
+         120
+        ],
+        [
+         "Tomates",
+         100
+        ],
+        [
+         "Pommes de terre",
+         100
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "salade-poulet-froid-avocat-carottes-rapees-pommes-de-terre"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Tacos bœuf (wraps, tomate, avocat, cheddar)",
+       "aurelie": "Tacos bœuf (wraps, tomate, avocat, cheddar)"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Bœuf",
+         135
+        ],
+        [
+         "Wraps",
+         2
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Avocat (chair)",
+         70
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Salade",
+         30
+        ],
+        [
+         "Cheddar",
+         15
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ],
+       "aurelie": [
+        [
+         "Bœuf",
+         100
+        ],
+        [
+         "Wraps",
+         1
+        ],
+        [
+         "Tomates",
+         100
+        ],
+        [
+         "Avocat (chair)",
+         50
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Salade",
+         40
+        ],
+        [
+         "Cheddar",
+         10
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "tacos-boeuf-wraps-tomate-avocat-cheddar"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Ananas",
+       "aurelie": "Ananas"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Ananas",
+         110
+        ]
+       ],
+       "aurelie": [
+        [
+         "Ananas",
+         90
+        ]
+       ]
+      },
+      "recette": "ananas"
+     }
+    ]
+   },
+   {
+    "d": 26,
+    "date": "2026-11-26",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Pâtes poulet-champignons-courgettes",
+       "aurelie": "Pâtes poulet-champignons-courgettes"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         120
+        ],
+        [
+         "Pâtes (sèches)",
+         100
+        ],
+        [
+         "Champignons",
+         80
+        ],
+        [
+         "Courgettes",
+         120
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         90
+        ],
+        [
+         "Pâtes (sèches)",
+         60
+        ],
+        [
+         "Champignons",
+         80
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "pates-poulet-champignons-courgettes"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Bœuf sauté asiatique, riz, légumes",
+       "aurelie": "Bœuf sauté asiatique, riz, légumes"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Bœuf",
+         130
+        ],
+        [
+         "Riz (sec)",
+         80
+        ],
+        [
+         "Poivrons",
+         50
+        ],
+        [
+         "Carottes",
+         80
+        ],
+        [
+         "Courgettes",
+         60
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Bœuf",
+         100
+        ],
+        [
+         "Riz (sec)",
+         45
+        ],
+        [
+         "Poivrons",
+         60
+        ],
+        [
+         "Carottes",
+         100
+        ],
+        [
+         "Courgettes",
+         80
+        ],
+        [
+         "Oignons",
+         30
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "boeuf-saute-asiatique-riz-legumes"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Yaourt + chocolat",
+       "aurelie": "Yaourt + chocolat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ]
+      },
+      "recette": "yaourt-chocolat"
+     }
+    ]
+   },
+   {
+    "d": 27,
+    "date": "2026-11-27",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Carry poulet-lentilles, riz, carottes râpées",
+       "aurelie": "Carry poulet-lentilles, riz, carottes râpées"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         115
+        ],
+        [
+         "Lentilles (égouttées)",
+         165
+        ],
+        [
+         "Riz (sec)",
+         30
+        ],
+        [
+         "Tomates",
+         120
+        ],
+        [
+         "Oignons",
+         40
+        ],
+        [
+         "Carottes",
+         80
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         80
+        ],
+        [
+         "Lentilles (égouttées)",
+         120
+        ],
+        [
+         "Riz (sec)",
+         15
+        ],
+        [
+         "Tomates",
+         150
+        ],
+        [
+         "Oignons",
+         40
+        ],
+        [
+         "Carottes",
+         100
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "carry-poulet-lentilles-riz-carottes-rapees"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Quiche légère lardons-courgettes (pâte maison) + salade-tomate",
+       "aurelie": "Quiche légère lardons-courgettes (pâte maison) + salade-tomate"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Lardons",
+         70
+        ],
+        [
+         "Lait",
+         100
+        ],
+        [
+         "Farine",
+         40
+        ],
+        [
+         "Huile",
+         10
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Salade",
+         40
+        ],
+        [
+         "Tomates",
+         100
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Lardons",
+         40
+        ],
+        [
+         "Lait",
+         100
+        ],
+        [
+         "Farine",
+         25
+        ],
+        [
+         "Huile",
+         5
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Salade",
+         60
+        ],
+        [
+         "Tomates",
+         130
+        ]
+       ]
+      },
+      "recette": "quiche-legere-lardons-courgettes-pate-maison-salade-tomate"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Mangue",
+       "aurelie": "Mangue"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Mangue",
+         100
+        ]
+       ],
+       "aurelie": [
+        [
+         "Mangue",
+         80
+        ]
+       ]
+      },
+      "recette": "mangue"
+     }
+    ]
+   },
+   {
+    "d": 28,
+    "date": "2026-11-28",
+    "tag": "plaisir",
+    "fish": true,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Burger maison, potatoes au four, crudités",
+       "aurelie": "Burger maison, potatoes au four, crudités"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Bœuf",
+         150
+        ],
+        [
+         "Pains burger",
+         1
+        ],
+        [
+         "Cheddar",
+         20
+        ],
+        [
+         "Tomates",
+         60
+        ],
+        [
+         "Salade",
+         30
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Pommes de terre",
+         255
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Bœuf",
+         120
+        ],
+        [
+         "Pains burger",
+         1
+        ],
+        [
+         "Cheddar",
+         15
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Salade",
+         40
+        ],
+        [
+         "Oignons",
+         20
+        ],
+        [
+         "Pommes de terre",
+         125
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "burger-maison-potatoes-au-four-crudites"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Poisson grillé, champignons, pommes de terre, tomates",
+       "aurelie": "Poisson grillé, champignons, pommes de terre, tomates"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poisson blanc",
+         150
+        ],
+        [
+         "Champignons",
+         80
+        ],
+        [
+         "Pommes de terre",
+         255
+        ],
+        [
+         "Tomates",
+         100
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poisson blanc",
+         125
+        ],
+        [
+         "Champignons",
+         100
+        ],
+        [
+         "Pommes de terre",
+         125
+        ],
+        [
+         "Tomates",
+         120
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "poisson-grille-champignons-pommes-de-terre-tomates"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Glace",
+       "aurelie": "Glace"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Glace",
+         75
+        ]
+       ],
+       "aurelie": [
+        [
+         "Glace",
+         55
+        ]
+       ]
+      },
+      "recette": "glace"
+     }
+    ]
+   },
+   {
+    "d": 29,
+    "date": "2026-11-29",
+    "tag": "plaisir",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Saucisses grillées, frites au four, haricots verts",
+       "aurelie": "Saucisses grillées, frites au four, haricots verts"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Saucisses (porc)",
+         175
+        ],
+        [
+         "Pommes de terre",
+         175
+        ],
+        [
+         "Haricots verts",
+         200
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Saucisses (porc)",
+         125
+        ],
+        [
+         "Pommes de terre",
+         90
+        ],
+        [
+         "Haricots verts",
+         250
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "saucisses-grillees-frites-haricots-verts"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Pâtes poulet, tomate, courgettes",
+       "aurelie": "Pâtes poulet, tomate, courgettes"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         140
+        ],
+        [
+         "Pâtes (sèches)",
+         55
+        ],
+        [
+         "Tomates",
+         100
+        ],
+        [
+         "Courgettes",
+         120
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         95
+        ],
+        [
+         "Pâtes (sèches)",
+         30
+        ],
+        [
+         "Tomates",
+         120
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "pates-poulet-tomate-courgettes"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Glace",
+       "aurelie": "Glace"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Glace",
+         75
+        ]
+       ],
+       "aurelie": [
+        [
+         "Glace",
+         55
+        ]
+       ]
+      },
+      "recette": "glace"
+     }
+    ]
+   },
+   {
+    "d": 30,
+    "date": "2026-11-30",
+    "tag": "",
+    "fish": false,
+    "meals": [
+     {
+      "k": "pdj",
+      "label": "Petit-déjeuner",
+      "plat": {
+       "nicolas": "Smoothie banane-avoine et œuf",
+       "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Lait",
+         250
+        ],
+        [
+         "Bananes",
+         100
+        ],
+        [
+         "Flocons d'avoine",
+         65
+        ],
+        [
+         "Œufs",
+         1
+        ]
+       ],
+       "aurelie": [
+        [
+         "Œufs",
+         2
+        ],
+        [
+         "Jambon",
+         30
+        ],
+        [
+         "Tomates",
+         80
+        ],
+        [
+         "Pain complet",
+         40
+        ],
+        [
+         "Pommes",
+         150
+        ]
+       ]
+      },
+      "recette": "pdj-smoothie-banane-avoine-et-oeuf"
+     },
+     {
+      "k": "dej",
+      "label": "Déjeuner",
+      "plat": {
+       "nicolas": "Poulet rôti, pommes de terre, haricots verts",
+       "aurelie": "Poulet rôti, pommes de terre, haricots verts"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Poulet",
+         150
+        ],
+        [
+         "Pommes de terre",
+         285
+        ],
+        [
+         "Haricots verts",
+         250
+        ],
+        [
+         "Huile",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Poulet",
+         100
+        ],
+        [
+         "Pommes de terre",
+         170
+        ],
+        [
+         "Haricots verts",
+         280
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "poulet-roti-pommes-de-terre-haricots-verts"
+     },
+     {
+      "k": "din",
+      "label": "Dîner",
+      "plat": {
+       "nicolas": "Carbonara légère (lardons, jambon, œuf, champignons, courgettes)",
+       "aurelie": "Carbonara légère (lardons, jambon, œuf, champignons, courgettes)"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Pâtes (sèches)",
+         85
+        ],
+        [
+         "Lardons",
+         60
+        ],
+        [
+         "Jambon",
+         40
+        ],
+        [
+         "Œufs",
+         1
+        ],
+        [
+         "Champignons",
+         60
+        ],
+        [
+         "Courgettes",
+         120
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ],
+       "aurelie": [
+        [
+         "Pâtes (sèches)",
+         60
+        ],
+        [
+         "Lardons",
+         35
+        ],
+        [
+         "Jambon",
+         25
+        ],
+        [
+         "Œufs",
+         1
+        ],
+        [
+         "Champignons",
+         60
+        ],
+        [
+         "Courgettes",
+         150
+        ],
+        [
+         "Huile",
+         5
+        ]
+       ]
+      },
+      "recette": "carbonara-legere-lardons-jambon-oeuf-champignons-courgettes"
+     },
+     {
+      "k": "des",
+      "label": "Dessert",
+      "plat": {
+       "nicolas": "Yaourt + chocolat",
+       "aurelie": "Yaourt + chocolat"
+      },
+      "items": {
+       "nicolas": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ],
+       "aurelie": [
+        [
+         "Yaourt nature",
+         125
+        ],
+        [
+         "Chocolat noir",
+         10
+        ]
+       ]
+      },
+      "recette": "yaourt-chocolat"
+     }
+    ]
+   }
+  ],
+  "courses": [
+   {
+    "id": 1,
+    "date": "2026-11-03",
+    "jourPlan": 3,
+    "titre": "Course 1",
+    "jour": "mardi 3 novembre",
+    "couvre": "du 3 novembre au 9 novembre",
+    "items": [
+     {
+      "a": "Lait",
+      "buy": 3,
+      "est": 3.57,
+      "needN": 1900,
+      "needA": 140
+     },
+     {
+      "a": "Bananes",
+      "buy": 700,
+      "est": 1.32,
+      "needN": 700,
+      "needA": 0
+     },
+     {
+      "a": "Flocons d'avoine",
+      "buy": 1,
+      "est": 1.71,
+      "needN": 455,
+      "needA": 0
+     },
+     {
+      "a": "Œufs",
+      "buy": 3,
+      "est": 11.4,
+      "needN": 10,
+      "needA": 17
+     },
+     {
+      "a": "Bœuf",
+      "buy": 1,
+      "est": 8.4,
+      "needN": 395,
+      "needA": 280
+     },
+     {
+      "a": "Riz (sec)",
+      "buy": 1,
+      "est": 2.34,
+      "needN": 295,
+      "needA": 170
+     },
+     {
+      "a": "Poivrons",
+      "buy": 200,
+      "est": 2.8,
+      "needN": 70,
+      "needA": 90
+     },
+     {
+      "a": "Carottes",
+      "buy": 450,
+      "est": 0.9,
+      "needN": 180,
+      "needA": 230
+     },
+     {
+      "a": "Oignons",
+      "buy": 450,
+      "est": 1.12,
+      "needN": 220,
+      "needA": 220
+     },
+     {
+      "a": "Huile",
+      "buy": 1,
+      "est": 0,
+      "needN": 125,
+      "needA": 75
+     },
+     {
+      "a": "Poulet",
+      "buy": 2,
+      "est": 22.54,
+      "needN": 810,
+      "needA": 605
+     },
+     {
+      "a": "Pommes de terre",
+      "buy": 1900,
+      "est": 2.76,
+      "needN": 1205,
+      "needA": 655
+     },
+     {
+      "a": "Haricots verts",
+      "buy": 2,
+      "est": 3.44,
+      "needN": 400,
+      "needA": 480
+     },
+     {
+      "a": "Yaourt nature",
+      "buy": 1,
+      "est": 3.25,
+      "needN": 250,
+      "needA": 250
+     },
+     {
+      "a": "Chocolat noir",
+      "buy": 1,
+      "est": 5.26,
+      "needN": 35,
+      "needA": 30
+     },
+     {
+      "a": "Café",
+      "buy": 1,
+      "est": 16,
+      "needN": 333.2,
+      "needA": 0
+     },
+     {
+      "a": "Eau (bouteilles 5 L)",
+      "buy": 6,
+      "est": 9.24,
+      "needN": 14,
+      "needA": 14
+     },
+     {
+      "a": "Jambon",
+      "buy": 285,
+      "est": 3.2,
+      "needN": 45,
+      "needA": 240
+     },
+     {
+      "a": "Tomates",
+      "buy": 2500,
+      "est": 6.98,
+      "needN": 850,
+      "needA": 1610
+     },
+     {
+      "a": "Pain complet",
+      "buy": 3,
+      "est": 3.6,
+      "needN": 0,
+      "needA": 280
+     },
+     {
+      "a": "Pommes",
+      "buy": 1050,
+      "est": 3.14,
+      "needN": 0,
+      "needA": 1050
+     },
+     {
+      "a": "Lentilles (égouttées)",
+      "buy": 1,
+      "est": 0,
+      "needN": 140,
+      "needA": 120
+     },
+     {
+      "a": "Poisson blanc",
+      "buy": 1,
+      "est": 7.49,
+      "needN": 320,
+      "needA": 250
+     },
+     {
+      "a": "Patates douces",
+      "buy": 600,
+      "est": 1.97,
+      "needN": 350,
+      "needA": 220
+     },
+     {
+      "a": "Pâtes (sèches)",
+      "buy": 1,
+      "est": 1.45,
+      "needN": 275,
+      "needA": 175
+     },
+     {
+      "a": "Lardons",
+      "buy": 2,
+      "est": 2.54,
+      "needN": 165,
+      "needA": 105
+     },
+     {
+      "a": "Champignons",
+      "buy": 2,
+      "est": 2.16,
+      "needN": 220,
+      "needA": 240
+     },
+     {
+      "a": "Courgettes",
+      "buy": 1850,
+      "est": 2.76,
+      "needN": 840,
+      "needA": 1000
+     },
+     {
+      "a": "Porc haché",
+      "buy": 1,
+      "est": 5.9,
+      "needN": 85,
+      "needA": 60
+     },
+     {
+      "a": "Salade",
+      "buy": 2,
+      "est": 2.78,
+      "needN": 160,
+      "needA": 240
+     },
+     {
+      "a": "Ananas",
+      "buy": 1,
+      "est": 2.69,
+      "needN": 220,
+      "needA": 180
+     },
+     {
+      "a": "Farine",
+      "buy": 1,
+      "est": 0,
+      "needN": 45,
+      "needA": 20
+     },
+     {
+      "a": "Mangue",
+      "buy": 300,
+      "est": 2.7,
+      "needN": 100,
+      "needA": 80
+     },
+     {
+      "a": "Avocat (chair)",
+      "buy": 1,
+      "est": 1.99,
+      "needN": 80,
+      "needA": 60
+     },
+     {
+      "a": "Maïs",
+      "buy": 1,
+      "est": 0.89,
+      "needN": 40,
+      "needA": 30
+     },
+     {
+      "a": "Glace",
+      "buy": 1,
+      "est": 2.49,
+      "needN": 75,
+      "needA": 55
+     },
+     {
+      "a": "Saucisses (porc)",
+      "buy": 1,
+      "est": 5.5,
+      "needN": 135,
+      "needA": 100
+     },
+     {
+      "a": "Haricots blancs (égouttés)",
+      "buy": 1,
+      "est": 1.25,
+      "needN": 65,
+      "needA": 45
+     },
+     {
+      "a": "Chorizo",
+      "buy": 1,
+      "est": 3.2,
+      "needN": 30,
+      "needA": 20
+     },
+     {
+      "a": "Haricots rouges (égouttés)",
+      "buy": 1,
+      "est": 1.25,
+      "needN": 45,
+      "needA": 35
+     }
+    ]
+   },
+   {
+    "id": 2,
+    "date": "2026-11-10",
+    "jourPlan": 10,
+    "titre": "Course 2",
+    "jour": "mardi 10 novembre",
+    "couvre": "du 10 novembre au 16 novembre",
+    "items": [
+     {
+      "a": "Lait",
+      "buy": 2,
+      "est": 2.38,
+      "needN": 2010,
+      "needA": 220
+     },
+     {
+      "a": "Bananes",
+      "buy": 700,
+      "est": 1.32,
+      "needN": 700,
+      "needA": 0
+     },
+     {
+      "a": "Flocons d'avoine",
+      "buy": 1,
+      "est": 1.71,
+      "needN": 455,
+      "needA": 0
+     },
+     {
+      "a": "Œufs",
+      "buy": 2,
+      "est": 7.6,
+      "needN": 10,
+      "needA": 17
+     },
+     {
+      "a": "Bœuf",
+      "buy": 1,
+      "est": 8.4,
+      "needN": 600,
+      "needA": 430
+     },
+     {
+      "a": "Poivrons",
+      "buy": 250,
+      "est": 3.5,
+      "needN": 120,
+      "needA": 150
+     },
+     {
+      "a": "Carottes",
+      "buy": 700,
+      "est": 1.39,
+      "needN": 320,
+      "needA": 400
+     },
+     {
+      "a": "Oignons",
+      "buy": 400,
+      "est": 1,
+      "needN": 200,
+      "needA": 200
+     },
+     {
+      "a": "Poulet",
+      "buy": 1,
+      "est": 11.27,
+      "needN": 875,
+      "needA": 635
+     },
+     {
+      "a": "Pommes de terre",
+      "buy": 1550,
+      "est": 2.25,
+      "needN": 1040,
+      "needA": 530
+     },
+     {
+      "a": "Yaourt nature",
+      "buy": 2,
+      "est": 6.5,
+      "needN": 375,
+      "needA": 375
+     },
+     {
+      "a": "Eau (bouteilles 5 L)",
+      "buy": 6,
+      "est": 9.24,
+      "needN": 14,
+      "needA": 14
+     },
+     {
+      "a": "Jambon",
+      "buy": 285,
+      "est": 3.2,
+      "needN": 45,
+      "needA": 240
+     },
+     {
+      "a": "Tomates",
+      "buy": 3000,
+      "est": 8.37,
+      "needN": 1120,
+      "needA": 1880
+     },
+     {
+      "a": "Pain complet",
+      "buy": 3,
+      "est": 3.6,
+      "needN": 0,
+      "needA": 280
+     },
+     {
+      "a": "Pommes",
+      "buy": 1050,
+      "est": 3.14,
+      "needN": 0,
+      "needA": 1050
+     },
+     {
+      "a": "Lentilles (égouttées)",
+      "buy": 1,
+      "est": 0,
+      "needN": 155,
+      "needA": 120
+     },
+     {
+      "a": "Pâtes (sèches)",
+      "buy": 1,
+      "est": 1.45,
+      "needN": 255,
+      "needA": 165
+     },
+     {
+      "a": "Lardons",
+      "buy": 1,
+      "est": 1.27,
+      "needN": 130,
+      "needA": 80
+     },
+     {
+      "a": "Champignons",
+      "buy": 2,
+      "est": 2.16,
+      "needN": 220,
+      "needA": 240
+     },
+     {
+      "a": "Courgettes",
+      "buy": 1950,
+      "est": 2.91,
+      "needN": 890,
+      "needA": 1070
+     },
+     {
+      "a": "Salade",
+      "buy": 1,
+      "est": 1.39,
+      "needN": 190,
+      "needA": 280
+     },
+     {
+      "a": "Ananas",
+      "buy": 1,
+      "est": 2.69,
+      "needN": 110,
+      "needA": 90
+     },
+     {
+      "a": "Avocat (chair)",
+      "buy": 1,
+      "est": 1.99,
+      "needN": 230,
+      "needA": 170
+     },
+     {
+      "a": "Wraps",
+      "buy": 1,
+      "est": 2.74,
+      "needN": 1,
+      "needA": 1
+     },
+     {
+      "a": "Cheddar",
+      "buy": 50,
+      "est": 0.83,
+      "needN": 15,
+      "needA": 10
+     },
+     {
+      "a": "Pâtes à lasagnes (sèches)",
+      "buy": 1,
+      "est": 2.47,
+      "needN": 140,
+      "needA": 105
+     },
+     {
+      "a": "Mozzarella râpée",
+      "buy": 1,
+      "est": 3.13,
+      "needN": 60,
+      "needA": 50
+     },
+     {
+      "a": "Aubergines",
+      "buy": 250,
+      "est": 0.57,
+      "needN": 110,
+      "needA": 140
+     }
+    ]
+   },
+   {
+    "id": 3,
+    "date": "2026-11-17",
+    "jourPlan": 17,
+    "titre": "Course 3",
+    "jour": "mardi 17 novembre",
+    "couvre": "du 17 novembre au 23 novembre",
+    "items": [
+     {
+      "a": "Lait",
+      "buy": 2,
+      "est": 2.38,
+      "needN": 1960,
+      "needA": 160
+     },
+     {
+      "a": "Bananes",
+      "buy": 700,
+      "est": 1.32,
+      "needN": 700,
+      "needA": 0
+     },
+     {
+      "a": "Flocons d'avoine",
+      "buy": 1,
+      "est": 1.71,
+      "needN": 455,
+      "needA": 0
+     },
+     {
+      "a": "Œufs",
+      "buy": 2,
+      "est": 7.6,
+      "needN": 7,
+      "needA": 14
+     },
+     {
+      "a": "Bœuf",
+      "buy": 1,
+      "est": 8.4,
+      "needN": 440,
+      "needA": 345
+     },
+     {
+      "a": "Riz (sec)",
+      "buy": 1,
+      "est": 2.34,
+      "needN": 285,
+      "needA": 160
+     },
+     {
+      "a": "Poivrons",
+      "buy": 250,
+      "est": 3.5,
+      "needN": 100,
+      "needA": 130
+     },
+     {
+      "a": "Carottes",
+      "buy": 150,
+      "est": 0.3,
+      "needN": 60,
+      "needA": 80
+     },
+     {
+      "a": "Oignons",
+      "buy": 550,
+      "est": 1.37,
+      "needN": 270,
+      "needA": 270
+     },
+     {
+      "a": "Poulet",
+      "buy": 2,
+      "est": 22.54,
+      "needN": 845,
+      "needA": 630
+     },
+     {
+      "a": "Pommes de terre",
+      "buy": 1900,
+      "est": 2.76,
+      "needN": 1210,
+      "needA": 695
+     },
+     {
+      "a": "Haricots verts",
+      "buy": 4,
+      "est": 6.88,
+      "needN": 750,
+      "needA": 930
+     },
+     {
+      "a": "Yaourt nature",
+      "buy": 1,
+      "est": 3.25,
+      "needN": 375,
+      "needA": 375
+     },
+     {
+      "a": "Eau (bouteilles 5 L)",
+      "buy": 5,
+      "est": 7.7,
+      "needN": 14,
+      "needA": 14
+     },
+     {
+      "a": "Jambon",
+      "buy": 210,
+      "est": 2.36,
+      "needN": 0,
+      "needA": 210
+     },
+     {
+      "a": "Tomates",
+      "buy": 3000,
+      "est": 8.37,
+      "needN": 1120,
+      "needA": 1880
+     },
+     {
+      "a": "Pain complet",
+      "buy": 3,
+      "est": 3.6,
+      "needN": 0,
+      "needA": 280
+     },
+     {
+      "a": "Pommes",
+      "buy": 1050,
+      "est": 3.14,
+      "needN": 0,
+      "needA": 1050
+     },
+     {
+      "a": "Poisson blanc",
+      "buy": 1,
+      "est": 7.49,
+      "needN": 365,
+      "needA": 265
+     },
+     {
+      "a": "Patates douces",
+      "buy": 950,
+      "est": 3.13,
+      "needN": 610,
+      "needA": 340
+     },
+     {
+      "a": "Courgettes",
+      "buy": 1400,
+      "est": 2.09,
+      "needN": 630,
+      "needA": 760
+     },
+     {
+      "a": "Salade",
+      "buy": 2,
+      "est": 2.78,
+      "needN": 200,
+      "needA": 300
+     },
+     {
+      "a": "Mangue",
+      "buy": 250,
+      "est": 2.25,
+      "needN": 100,
+      "needA": 80
+     },
+     {
+      "a": "Glace",
+      "buy": 1,
+      "est": 2.49,
+      "needN": 150,
+      "needA": 110
+     },
+     {
+      "a": "Saucisses (porc)",
+      "buy": 1,
+      "est": 5.5,
+      "needN": 320,
+      "needA": 235
+     },
+     {
+      "a": "Mozzarella râpée",
+      "buy": 1,
+      "est": 3.13,
+      "needN": 60,
+      "needA": 50
+     },
+     {
+      "a": "Aubergines",
+      "buy": 250,
+      "est": 0.57,
+      "needN": 100,
+      "needA": 120
+     }
+    ]
+   },
+   {
+    "id": 4,
+    "date": "2026-11-24",
+    "jourPlan": 24,
+    "titre": "Course 4",
+    "jour": "mardi 24 novembre",
+    "couvre": "du 24 novembre au 30 novembre",
+    "items": [
+     {
+      "a": "Lait",
+      "buy": 2,
+      "est": 2.38,
+      "needN": 1850,
+      "needA": 100
+     },
+     {
+      "a": "Bananes",
+      "buy": 700,
+      "est": 1.32,
+      "needN": 700,
+      "needA": 0
+     },
+     {
+      "a": "Flocons d'avoine",
+      "buy": 1,
+      "est": 1.71,
+      "needN": 455,
+      "needA": 0
+     },
+     {
+      "a": "Œufs",
+      "buy": 2,
+      "est": 7.6,
+      "needN": 10,
+      "needA": 17
+     },
+     {
+      "a": "Bœuf",
+      "buy": 1,
+      "est": 8.4,
+      "needN": 415,
+      "needA": 320
+     },
+     {
+      "a": "Poivrons",
+      "buy": 100,
+      "est": 1.4,
+      "needN": 50,
+      "needA": 60
+     },
+     {
+      "a": "Carottes",
+      "buy": 700,
+      "est": 1.39,
+      "needN": 320,
+      "needA": 400
+     },
+     {
+      "a": "Oignons",
+      "buy": 350,
+      "est": 0.87,
+      "needN": 170,
+      "needA": 170
+     },
+     {
+      "a": "Poulet",
+      "buy": 1,
+      "est": 11.27,
+      "needN": 835,
+      "needA": 575
+     },
+     {
+      "a": "Pommes de terre",
+      "buy": 1800,
+      "est": 2.61,
+      "needN": 1160,
+      "needA": 610
+     },
+     {
+      "a": "Haricots verts",
+      "buy": 3,
+      "est": 5.16,
+      "needN": 600,
+      "needA": 730
+     },
+     {
+      "a": "Yaourt nature",
+      "buy": 1,
+      "est": 3.25,
+      "needN": 250,
+      "needA": 250
+     },
+     {
+      "a": "Café",
+      "buy": 1,
+      "est": 16,
+      "needN": 333.2,
+      "needA": 0
+     },
+     {
+      "a": "Eau (bouteilles 5 L)",
+      "buy": 6,
+      "est": 9.24,
+      "needN": 14,
+      "needA": 14
+     },
+     {
+      "a": "Jambon",
+      "buy": 275,
+      "est": 3.09,
+      "needN": 40,
+      "needA": 235
+     },
+     {
+      "a": "Tomates",
+      "buy": 2600,
+      "est": 7.25,
+      "needN": 910,
+      "needA": 1690
+     },
+     {
+      "a": "Pain complet",
+      "buy": 3,
+      "est": 3.6,
+      "needN": 0,
+      "needA": 280
+     },
+     {
+      "a": "Pommes",
+      "buy": 1050,
+      "est": 3.14,
+      "needN": 0,
+      "needA": 1050
+     },
+     {
+      "a": "Poisson blanc",
+      "buy": 1,
+      "est": 7.49,
+      "needN": 340,
+      "needA": 260
+     },
+     {
+      "a": "Pâtes (sèches)",
+      "buy": 1,
+      "est": 1.45,
+      "needN": 240,
+      "needA": 150
+     },
+     {
+      "a": "Lardons",
+      "buy": 1,
+      "est": 1.27,
+      "needN": 130,
+      "needA": 75
+     },
+     {
+      "a": "Champignons",
+      "buy": 2,
+      "est": 2.16,
+      "needN": 220,
+      "needA": 240
+     },
+     {
+      "a": "Courgettes",
+      "buy": 1250,
+      "est": 1.86,
+      "needN": 570,
+      "needA": 680
+     },
+     {
+      "a": "Salade",
+      "buy": 1,
+      "est": 1.39,
+      "needN": 100,
+      "needA": 140
+     },
+     {
+      "a": "Ananas",
+      "buy": 1,
+      "est": 2.69,
+      "needN": 110,
+      "needA": 90
+     },
+     {
+      "a": "Mangue",
+      "buy": 250,
+      "est": 2.25,
+      "needN": 100,
+      "needA": 80
+     },
+     {
+      "a": "Avocat (chair)",
+      "buy": 2,
+      "est": 3.98,
+      "needN": 230,
+      "needA": 170
+     },
+     {
+      "a": "Saucisses (porc)",
+      "buy": 1,
+      "est": 5.5,
+      "needN": 175,
+      "needA": 125
+     },
+     {
+      "a": "Cheddar",
+      "buy": 100,
+      "est": 1.65,
+      "needN": 35,
+      "needA": 25
+     },
+     {
+      "a": "Pains burger",
+      "buy": 1,
+      "est": 3,
+      "needN": 1,
+      "needA": 1
+     }
+    ]
+   }
+  ]
+ },
+ "bilan": {
+  "nutrition": {
+   "nicolas": {
+    "kcalMoyen": 1910,
+    "protMoyen": 111,
+    "objectifs": {
+     "kcalMin": 1850,
+     "kcalMax": 1950,
+     "prot": 110
+    }
+   },
+   "aurelie": {
+    "kcalMoyen": 1377,
+    "protMoyen": 91,
+    "objectifs": {
+     "kcalMin": 1350,
+     "kcalMax": 1450,
+     "prot": 85
+    }
+   }
+  },
+  "quotas": {
+   "poisson": 8,
+   "plaisir": 6,
+   "objectif": {
+    "poisson": 8,
+    "plaisir": 6
+   },
+   "joursPlaisir": [
+    7,
+    14,
+    21,
+    22,
+    28,
+    29
+   ]
+  },
+  "cout": {
+   "consommation": {
+    "nicolas": 250.17,
+    "aurelie": 233.93
+   },
+   "achats": 503.77,
+   "budget": 500,
+   "parCourse": [
+    {
+     "id": 1,
+     "date": "2026-11-03",
+     "total": 161.98,
+     "articles": 40
+    },
+    {
+     "id": 2,
+     "date": "2026-11-10",
+     "total": 98.47,
+     "articles": 29
+    },
+    {
+     "id": 3,
+     "date": "2026-11-17",
+     "total": 118.95,
+     "articles": 27
+    },
+    {
+     "id": 4,
+     "date": "2026-11-24",
+     "total": 124.37,
+     "articles": 30
+    }
+   ]
+  },
+  "manquesAvantPremiereCourse": [
+   {
+    "a": "Lait",
+    "q": 500
+   },
+   {
+    "a": "Bananes",
+    "q": 200
+   },
+   {
+    "a": "Flocons d'avoine",
+    "q": 130
+   },
+   {
+    "a": "Œufs",
+    "q": 6
+   },
+   {
+    "a": "Bœuf",
+    "q": 230
+   },
+   {
+    "a": "Riz (sec)",
+    "q": 215
+   },
+   {
+    "a": "Poivrons",
+    "q": 140
+   },
+   {
+    "a": "Carottes",
+    "q": 360
+   },
+   {
+    "a": "Oignons",
+    "q": 140
+   },
+   {
+    "a": "Huile",
+    "q": 60
+   },
+   {
+    "a": "Poulet",
+    "q": 470
+   },
+   {
+    "a": "Pommes de terre",
+    "q": 515
+   },
+   {
+    "a": "Haricots verts",
+    "q": 1060
+   },
+   {
+    "a": "Yaourt nature",
+    "q": 250
+   },
+   {
+    "a": "Chocolat noir",
+    "q": 45
+   },
+   {
+    "a": "Café",
+    "q": 95.2
+   },
+   {
+    "a": "Eau (bouteilles 5 L)",
+    "q": 8
+   },
+   {
+    "a": "Jambon",
+    "q": 60
+   },
+   {
+    "a": "Tomates",
+    "q": 430
+   },
+   {
+    "a": "Pain complet",
+    "q": 80
+   },
+   {
+    "a": "Pommes",
+    "q": 300
+   },
+   {
+    "a": "Lentilles (égouttées)",
+    "q": 285
+   },
+   {
+    "a": "Poisson blanc",
+    "q": 305
+   },
+   {
+    "a": "Patates douces",
+    "q": 570
+   }
+  ],
+  "ruptures": [],
+  "fraisAuDelaConservation": [
+   {
+    "d": 2,
+    "k": "dej",
+    "a": "Tomates"
+   },
+   {
+    "d": 9,
+    "k": "din",
+    "a": "Tomates"
+   },
+   {
+    "d": 15,
+    "k": "din",
+    "a": "Salade"
+   },
+   {
+    "d": 16,
+    "k": "dej",
+    "a": "Tomates"
+   },
+   {
+    "d": 22,
+    "k": "dej",
+    "a": "Salade"
+   },
+   {
+    "d": 23,
+    "k": "dej",
+    "a": "Tomates"
+   },
+   {
+    "d": 28,
+    "k": "din",
+    "a": "Champignons"
+   },
+   {
+    "d": 30,
+    "k": "din",
+    "a": "Champignons"
+   }
+  ],
+  "fraisAuDelaPetitDejeuner": [
+   {
+    "d": 1,
+    "k": "pdj",
+    "a": "Bananes"
+   },
+   {
+    "d": 1,
+    "k": "pdj",
+    "a": "Jambon"
+   },
+   {
+    "d": 1,
+    "k": "pdj",
+    "a": "Tomates"
+   },
+   {
+    "d": 2,
+    "k": "pdj",
+    "a": "Bananes"
+   },
+   {
+    "d": 2,
+    "k": "pdj",
+    "a": "Jambon"
+   },
+   {
+    "d": 2,
+    "k": "pdj",
+    "a": "Tomates"
+   },
+   {
+    "d": 9,
+    "k": "pdj",
+    "a": "Bananes"
+   },
+   {
+    "d": 9,
+    "k": "pdj",
+    "a": "Tomates"
+   },
+   {
+    "d": 16,
+    "k": "pdj",
+    "a": "Bananes"
+   },
+   {
+    "d": 16,
+    "k": "pdj",
+    "a": "Tomates"
+   },
+   {
+    "d": 23,
+    "k": "pdj",
+    "a": "Bananes"
+   },
+   {
+    "d": 23,
+    "k": "pdj",
+    "a": "Tomates"
+   },
+   {
+    "d": 30,
+    "k": "pdj",
+    "a": "Bananes"
+   },
+   {
+    "d": 30,
+    "k": "pdj",
+    "a": "Tomates"
+   }
+  ],
+  "fraisAVerifier": [
+   {
+    "a": "Tomates",
+    "course": 2,
+    "q": 40
+   },
+   {
+    "a": "Champignons",
+    "course": 2,
+    "q": 40
+   },
+   {
+    "a": "Courgettes",
+    "course": 2,
+    "q": 10
+   },
+   {
+    "a": "Salade",
+    "course": 2,
+    "q": 200
+   },
+   {
+    "a": "Mangue",
+    "course": 2,
+    "q": 30
+   },
+   {
+    "a": "Avocat (chair)",
+    "course": 2,
+    "q": 210
+   },
+   {
+    "a": "Tomates",
+    "course": 3,
+    "q": 40
+   },
+   {
+    "a": "Champignons",
+    "course": 3,
+    "q": 80
+   },
+   {
+    "a": "Salade",
+    "course": 3,
+    "q": 30
+   },
+   {
+    "a": "Ananas",
+    "course": 3,
+    "q": 200
+   },
+   {
+    "a": "Mangue",
+    "course": 3,
+    "q": 30
+   },
+   {
+    "a": "Avocat (chair)",
+    "course": 3,
+    "q": 160
+   },
+   {
+    "a": "Tomates",
+    "course": 4,
+    "q": 40
+   },
+   {
+    "a": "Champignons",
+    "course": 4,
+    "q": 80
+   },
+   {
+    "a": "Courgettes",
+    "course": 4,
+    "q": 10
+   },
+   {
+    "a": "Salade",
+    "course": 4,
+    "q": 130
+   },
+   {
+    "a": "Mangue",
+    "course": 4,
+    "q": 25
+   },
+   {
+    "a": "Avocat (chair)",
+    "course": 4,
+    "q": 20
+   },
+   {
+    "a": "Aubergines",
+    "course": 4,
+    "q": 30
+   }
+  ],
+  "horsFourchette": [
+   {
+    "p": "nicolas",
+    "d": 8,
+    "kcal": 1945,
+    "prot": 103
+   },
+   {
+    "p": "nicolas",
+    "d": 12,
+    "kcal": 1798,
+    "prot": 110
+   },
+   {
+    "p": "nicolas",
+    "d": 20,
+    "kcal": 1917,
+    "prot": 104
+   },
+   {
+    "p": "nicolas",
+    "d": 29,
+    "kcal": 1950,
+    "prot": 103
+   }
+  ],
+  "stockFin": {
+   "Lait": 660,
+   "Flocons d'avoine": 180,
+   "Œufs": 6,
+   "Bœuf": 375,
+   "Riz (sec)": 385,
+   "Poivrons": 30,
+   "Carottes": 10,
+   "Oignons": 30,
+   "Huile": 185,
+   "Poulet": 190,
+   "Pommes de terre": 45,
+   "Haricots verts": 70,
+   "Chocolat noir": 200,
+   "Café": 667.2,
+   "Eau (bouteilles 5 L)": 3,
+   "Tomates": 40,
+   "Pain complet": 80,
+   "Poisson blanc": 905,
+   "Patates douces": 30,
+   "Pâtes (sèches)": 240,
+   "Lardons": 65,
+   "Champignons": 120,
+   "Courgettes": 10,
+   "Porc haché": 230,
+   "Salade": 190,
+   "Ananas": 200,
+   "Farine": 760,
+   "Mangue": 20,
+   "Avocat (chair)": 320,
+   "Glace": 220,
+   "Saucisses (porc)": 410,
+   "Haricots blancs (égouttés)": 40,
+   "Chorizo": 150,
+   "Haricots rouges (égouttés)": 170,
+   "Cheddar": 40,
+   "Pâtes à lasagnes (sèches)": 70,
+   "Mozzarella râpée": 80,
+   "Aubergines": 30
+  },
+  "recettesUtilisees": 40
+ }
+}

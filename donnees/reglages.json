@@ -1,0 +1,65 @@
+{
+ "version": 1,
+ "cycle": "mois",
+ "courses": {
+  "jours": [
+   3,
+   10,
+   17,
+   24
+  ],
+  "note": "Jours du mois, modifiables. Chaque course couvre jusqu'à la suivante ; la dernière couvre jusqu'à la première du mois suivant."
+ },
+ "quotas": {
+  "poisson": 8,
+  "plaisir": 6
+ },
+ "ecartMinJours": 5,
+ "inventaire": {
+  "avantChaqueCourse": true,
+  "verificationFacultative": true,
+  "verificationFraisParMois": 1,
+  "fraisMaxJours": 10
+ },
+ "claude": {
+  "planning": "un appel le jour du planning du mois, pour proposer des recettes nouvelles",
+  "jaiFaim": "bibliothèque locale par défaut ; « Nouveauté » appelle Claude à la demande"
+ },
+ "rappels": {
+  "preparerMoisJour": 30,
+  "coursesJ": -1
+ },
+ "personnes": {
+  "nicolas": {
+   "poids": 85,
+   "kcalMin": 1850,
+   "kcalMax": 1950,
+   "prot": 110,
+   "budget": 180,
+   "budgetJours": 21
+  },
+  "aurelie": {
+   "poids": 70,
+   "kcalMin": 1350,
+   "kcalMax": 1450,
+   "prot": 85,
+   "budget": 170,
+   "budgetJours": 21
+  }
+ },
+ "horsRepas": [
+  {
+   "a": "Café",
+   "parJour": {
+    "nicolas": 47.6
+   }
+  },
+  {
+   "a": "Eau (bouteilles 5 L)",
+   "parJour": {
+    "nicolas": 2,
+    "aurelie": 2
+   }
+  }
+ ]
+}

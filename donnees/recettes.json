@@ -1,0 +1,3224 @@
+{
+ "version": 1,
+ "recettes": [
+  {
+   "id": "pdj-smoothie-banane-avoine-et-oeuf",
+   "nom": null,
+   "repas": [
+    "pdj"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Lait",
+      250.0
+     ],
+     [
+      "Bananes",
+      100.0
+     ],
+     [
+      "Flocons d'avoine",
+      65.0
+     ],
+     [
+      "Œufs",
+      1.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Œufs",
+      2.0
+     ],
+     [
+      "Jambon",
+      30.0
+     ],
+     [
+      "Tomates",
+      80.0
+     ],
+     [
+      "Pain complet",
+      40.0
+     ],
+     [
+      "Pommes",
+      150.0
+     ]
+    ]
+   },
+   "nomParPersonne": {
+    "nicolas": "Smoothie banane-avoine et œuf",
+    "aurelie": "Œufs, jambon, tomate, pain complet et pomme"
+   }
+  },
+  {
+   "id": "poulet-roti-pommes-de-terre-haricots-verts",
+   "nom": "Poulet rôti, pommes de terre, haricots verts",
+   "repas": [
+    "dej"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      150.0
+     ],
+     [
+      "Pommes de terre",
+      360.0
+     ],
+     [
+      "Haricots verts",
+      250.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      120.0
+     ],
+     [
+      "Pommes de terre",
+      170.0
+     ],
+     [
+      "Haricots verts",
+      280.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "poisson-blanc-patate-douce-poelee-courgettes-poivrons",
+   "nom": "Poisson blanc, patate douce, poêlée courgettes-poivrons",
+   "repas": [
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poisson blanc",
+      150.0
+     ],
+     [
+      "Patates douces",
+      300.0
+     ],
+     [
+      "Courgettes",
+      170.0
+     ],
+     [
+      "Poivrons",
+      50.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poisson blanc",
+      125.0
+     ],
+     [
+      "Patates douces",
+      140.0
+     ],
+     [
+      "Courgettes",
+      200.0
+     ],
+     [
+      "Poivrons",
+      60.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "yaourt-chocolat",
+   "nom": "Yaourt + chocolat",
+   "repas": [
+    "des"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Yaourt nature",
+      125.0
+     ],
+     [
+      "Chocolat noir",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Yaourt nature",
+      125.0
+     ],
+     [
+      "Chocolat noir",
+      10.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "carry-poulet-lentilles-riz-carottes-rapees",
+   "nom": "Carry poulet-lentilles, riz, carottes râpées",
+   "repas": [
+    "dej"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      100.0
+     ],
+     [
+      "Lentilles (égouttées)",
+      140.0
+     ],
+     [
+      "Riz (sec)",
+      50.0
+     ],
+     [
+      "Tomates",
+      120.0
+     ],
+     [
+      "Oignons",
+      40.0
+     ],
+     [
+      "Carottes",
+      80.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      80.0
+     ],
+     [
+      "Lentilles (égouttées)",
+      120.0
+     ],
+     [
+      "Riz (sec)",
+      20.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Oignons",
+      40.0
+     ],
+     [
+      "Carottes",
+      100.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "omelette-paysanne-pommes-de-terre-courgettes-salade-tomate",
+   "nom": "Omelette paysanne (pommes de terre, courgettes) + salade-tomate",
+   "repas": [
+    "din"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Œufs",
+      3.0
+     ],
+     [
+      "Pommes de terre",
+      300.0
+     ],
+     [
+      "Courgettes",
+      150.0
+     ],
+     [
+      "Tomates",
+      100.0
+     ],
+     [
+      "Salade",
+      40.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Huile",
+      8.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Œufs",
+      2.0
+     ],
+     [
+      "Pommes de terre",
+      110.0
+     ],
+     [
+      "Courgettes",
+      170.0
+     ],
+     [
+      "Tomates",
+      130.0
+     ],
+     [
+      "Salade",
+      60.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Huile",
+      6.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "ananas",
+   "nom": "Ananas",
+   "repas": [
+    "des"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Ananas",
+      110.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Ananas",
+      90.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "salade-tiede-lentilles-oeufs-durs-pommes-de-terre-tomates",
+   "nom": "Salade tiède lentilles, œufs durs, pommes de terre, tomates",
+   "repas": [
+    "dej"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Lentilles (égouttées)",
+      150.0
+     ],
+     [
+      "Œufs",
+      2.0
+     ],
+     [
+      "Pommes de terre",
+      240.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Lentilles (égouttées)",
+      120.0
+     ],
+     [
+      "Œufs",
+      2.0
+     ],
+     [
+      "Pommes de terre",
+      90.0
+     ],
+     [
+      "Tomates",
+      180.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "boeuf-saute-asiatique-riz-poivrons-carottes",
+   "nom": "Bœuf sauté asiatique, riz, poivrons-carottes",
+   "repas": [
+    "din"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      130.0
+     ],
+     [
+      "Riz (sec)",
+      85.0
+     ],
+     [
+      "Poivrons",
+      60.0
+     ],
+     [
+      "Carottes",
+      80.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      100.0
+     ],
+     [
+      "Riz (sec)",
+      45.0
+     ],
+     [
+      "Poivrons",
+      80.0
+     ],
+     [
+      "Carottes",
+      100.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "burger-maison-potatoes-au-four-crudites",
+   "nom": "Burger maison, potatoes au four, crudités",
+   "repas": [
+    "dej"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      150.0
+     ],
+     [
+      "Pains burger",
+      1.0
+     ],
+     [
+      "Cheddar",
+      20.0
+     ],
+     [
+      "Tomates",
+      60.0
+     ],
+     [
+      "Salade",
+      30.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Pommes de terre",
+      300.0
+     ],
+     [
+      "Huile",
+      8.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      120.0
+     ],
+     [
+      "Pains burger",
+      1.0
+     ],
+     [
+      "Cheddar",
+      15.0
+     ],
+     [
+      "Tomates",
+      80.0
+     ],
+     [
+      "Salade",
+      40.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Pommes de terre",
+      140.0
+     ],
+     [
+      "Huile",
+      5.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "salade-poulet-avocat-tomate-mais",
+   "nom": "Salade poulet, avocat, tomate, maïs",
+   "repas": [
+    "din"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      130.0
+     ],
+     [
+      "Avocat (chair)",
+      80.0
+     ],
+     [
+      "Tomates",
+      120.0
+     ],
+     [
+      "Maïs",
+      40.0
+     ],
+     [
+      "Salade",
+      40.0
+     ],
+     [
+      "Huile",
+      8.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      100.0
+     ],
+     [
+      "Avocat (chair)",
+      60.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Maïs",
+      30.0
+     ],
+     [
+      "Salade",
+      60.0
+     ],
+     [
+      "Huile",
+      6.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "glace",
+   "nom": "Glace",
+   "repas": [
+    "des"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Glace",
+      75.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Glace",
+      55.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "poulet-citronne-patate-douce-haricots-verts",
+   "nom": "Poulet citronné, patate douce, haricots verts",
+   "repas": [
+    "dej"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      150.0
+     ],
+     [
+      "Patates douces",
+      300.0
+     ],
+     [
+      "Haricots verts",
+      250.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      120.0
+     ],
+     [
+      "Patates douces",
+      140.0
+     ],
+     [
+      "Haricots verts",
+      280.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "salade-poulet-froid-avocat-carottes-rapees-pommes-de-terre",
+   "nom": "Salade poulet froid, avocat, carottes râpées, pommes de terre",
+   "repas": [
+    "din"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      130.0
+     ],
+     [
+      "Avocat (chair)",
+      80.0
+     ],
+     [
+      "Carottes",
+      100.0
+     ],
+     [
+      "Tomates",
+      80.0
+     ],
+     [
+      "Pommes de terre",
+      240.0
+     ],
+     [
+      "Huile",
+      8.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      100.0
+     ],
+     [
+      "Avocat (chair)",
+      60.0
+     ],
+     [
+      "Carottes",
+      120.0
+     ],
+     [
+      "Tomates",
+      100.0
+     ],
+     [
+      "Pommes de terre",
+      90.0
+     ],
+     [
+      "Huile",
+      6.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "poulet-basquaise-poivrons-tomates-riz",
+   "nom": "Poulet basquaise (poivrons, tomates), riz",
+   "repas": [
+    "dej"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      150.0
+     ],
+     [
+      "Poivrons",
+      70.0
+     ],
+     [
+      "Tomates",
+      120.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Riz (sec)",
+      85.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      120.0
+     ],
+     [
+      "Poivrons",
+      90.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Riz (sec)",
+      45.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "pates-poulet-champignons-courgettes",
+   "nom": "Pâtes poulet-champignons-courgettes",
+   "repas": [
+    "din"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      120.0
+     ],
+     [
+      "Pâtes (sèches)",
+      105.0
+     ],
+     [
+      "Champignons",
+      80.0
+     ],
+     [
+      "Courgettes",
+      120.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      90.0
+     ],
+     [
+      "Pâtes (sèches)",
+      60.0
+     ],
+     [
+      "Champignons",
+      80.0
+     ],
+     [
+      "Courgettes",
+      150.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "chocolat",
+   "nom": "Chocolat",
+   "repas": [
+    "des"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Chocolat noir",
+      15.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Chocolat noir",
+      10.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "poisson-blanc-au-citron-patate-douce-haricots-verts",
+   "nom": "Poisson blanc au citron, patate douce, haricots verts",
+   "repas": [
+    "dej"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poisson blanc",
+      150.0
+     ],
+     [
+      "Patates douces",
+      300.0
+     ],
+     [
+      "Haricots verts",
+      250.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poisson blanc",
+      125.0
+     ],
+     [
+      "Patates douces",
+      140.0
+     ],
+     [
+      "Haricots verts",
+      280.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "poulet-ratatouille-pommes-de-terre",
+   "nom": "Poulet ratatouille, pommes de terre",
+   "repas": [
+    "din"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      150.0
+     ],
+     [
+      "Aubergines",
+      100.0
+     ],
+     [
+      "Courgettes",
+      100.0
+     ],
+     [
+      "Poivrons",
+      40.0
+     ],
+     [
+      "Tomates",
+      100.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Pommes de terre",
+      300.0
+     ],
+     [
+      "Huile",
+      12.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      120.0
+     ],
+     [
+      "Aubergines",
+      120.0
+     ],
+     [
+      "Courgettes",
+      120.0
+     ],
+     [
+      "Poivrons",
+      50.0
+     ],
+     [
+      "Tomates",
+      120.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Pommes de terre",
+      140.0
+     ],
+     [
+      "Huile",
+      8.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "mangue",
+   "nom": "Mangue",
+   "repas": [
+    "des"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Mangue",
+      100.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Mangue",
+      80.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "poulet-roti-pommes-de-terre-salade-tomate",
+   "nom": "Poulet rôti, pommes de terre, salade-tomate",
+   "repas": [
+    "dej"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      150.0
+     ],
+     [
+      "Pommes de terre",
+      360.0
+     ],
+     [
+      "Salade",
+      40.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      120.0
+     ],
+     [
+      "Pommes de terre",
+      170.0
+     ],
+     [
+      "Salade",
+      60.0
+     ],
+     [
+      "Tomates",
+      180.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "poisson-en-papillote-carottes-champignons-pommes-de-terre",
+   "nom": "Poisson en papillote, carottes-champignons, pommes de terre",
+   "repas": [
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poisson blanc",
+      150.0
+     ],
+     [
+      "Carottes",
+      120.0
+     ],
+     [
+      "Champignons",
+      80.0
+     ],
+     [
+      "Oignons",
+      40.0
+     ],
+     [
+      "Tomates",
+      60.0
+     ],
+     [
+      "Pommes de terre",
+      300.0
+     ],
+     [
+      "Huile",
+      8.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poisson blanc",
+      125.0
+     ],
+     [
+      "Carottes",
+      150.0
+     ],
+     [
+      "Champignons",
+      100.0
+     ],
+     [
+      "Oignons",
+      40.0
+     ],
+     [
+      "Tomates",
+      60.0
+     ],
+     [
+      "Pommes de terre",
+      140.0
+     ],
+     [
+      "Huile",
+      6.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "rougail-poulet-lentilles-riz-haricots-verts",
+   "nom": "Rougail poulet-lentilles, riz, haricots verts",
+   "repas": [
+    "dej"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      100.0
+     ],
+     [
+      "Lentilles (égouttées)",
+      140.0
+     ],
+     [
+      "Riz (sec)",
+      50.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Oignons",
+      40.0
+     ],
+     [
+      "Haricots verts",
+      150.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      80.0
+     ],
+     [
+      "Lentilles (égouttées)",
+      120.0
+     ],
+     [
+      "Riz (sec)",
+      20.0
+     ],
+     [
+      "Tomates",
+      180.0
+     ],
+     [
+      "Oignons",
+      40.0
+     ],
+     [
+      "Haricots verts",
+      200.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "quiche-legere-lardons-courgettes-pate-maison-salade-tomate",
+   "nom": "Quiche légère lardons-courgettes (pâte maison) + salade-tomate",
+   "repas": [
+    "din"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Œufs",
+      2.0
+     ],
+     [
+      "Lardons",
+      60.0
+     ],
+     [
+      "Lait",
+      100.0
+     ],
+     [
+      "Farine",
+      60.0
+     ],
+     [
+      "Huile",
+      12.0
+     ],
+     [
+      "Courgettes",
+      150.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Salade",
+      40.0
+     ],
+     [
+      "Tomates",
+      100.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Œufs",
+      2.0
+     ],
+     [
+      "Lardons",
+      40.0
+     ],
+     [
+      "Lait",
+      100.0
+     ],
+     [
+      "Farine",
+      35.0
+     ],
+     [
+      "Huile",
+      7.0
+     ],
+     [
+      "Courgettes",
+      150.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Salade",
+      60.0
+     ],
+     [
+      "Tomates",
+      130.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "lasagnes-boeuf-courgettes-salade",
+   "nom": "Lasagnes bœuf-courgettes + salade",
+   "repas": [
+    "dej"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      110.0
+     ],
+     [
+      "Pâtes à lasagnes (sèches)",
+      65.0
+     ],
+     [
+      "Courgettes",
+      100.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Mozzarella râpée",
+      30.0
+     ],
+     [
+      "Lait",
+      80.0
+     ],
+     [
+      "Farine",
+      8.0
+     ],
+     [
+      "Huile",
+      8.0
+     ],
+     [
+      "Salade",
+      40.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      85.0
+     ],
+     [
+      "Pâtes à lasagnes (sèches)",
+      45.0
+     ],
+     [
+      "Courgettes",
+      120.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Mozzarella râpée",
+      25.0
+     ],
+     [
+      "Lait",
+      60.0
+     ],
+     [
+      "Farine",
+      6.0
+     ],
+     [
+      "Huile",
+      6.0
+     ],
+     [
+      "Salade",
+      60.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "salade-lentilles-oeufs-durs-carottes-pommes-de-terre",
+   "nom": "Salade lentilles, œufs durs, carottes, pommes de terre",
+   "repas": [
+    "din"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Lentilles (égouttées)",
+      150.0
+     ],
+     [
+      "Œufs",
+      2.0
+     ],
+     [
+      "Carottes",
+      80.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Pommes de terre",
+      240.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Lentilles (égouttées)",
+      120.0
+     ],
+     [
+      "Œufs",
+      2.0
+     ],
+     [
+      "Carottes",
+      100.0
+     ],
+     [
+      "Tomates",
+      180.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Pommes de terre",
+      90.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "pizza-maison-boeuf-poivrons-champignons-salade",
+   "nom": "Pizza maison bœuf, poivrons, champignons + salade",
+   "repas": [
+    "dej"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Farine",
+      100.0
+     ],
+     [
+      "Huile",
+      10.0
+     ],
+     [
+      "Bœuf",
+      90.0
+     ],
+     [
+      "Mozzarella râpée",
+      50.0
+     ],
+     [
+      "Tomates",
+      160.0
+     ],
+     [
+      "Poivrons",
+      50.0
+     ],
+     [
+      "Champignons",
+      50.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Salade",
+      30.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Farine",
+      65.0
+     ],
+     [
+      "Huile",
+      7.0
+     ],
+     [
+      "Bœuf",
+      70.0
+     ],
+     [
+      "Mozzarella râpée",
+      35.0
+     ],
+     [
+      "Tomates",
+      180.0
+     ],
+     [
+      "Poivrons",
+      60.0
+     ],
+     [
+      "Champignons",
+      50.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Salade",
+      50.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "salade-poulet-avocat-tomate-mais-2",
+   "nom": "Salade poulet, avocat, tomate, maïs",
+   "repas": [
+    "din"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      130.0
+     ],
+     [
+      "Avocat (chair)",
+      80.0
+     ],
+     [
+      "Tomates",
+      120.0
+     ],
+     [
+      "Maïs",
+      40.0
+     ],
+     [
+      "Carottes",
+      60.0
+     ],
+     [
+      "Huile",
+      8.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      100.0
+     ],
+     [
+      "Avocat (chair)",
+      60.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Maïs",
+      30.0
+     ],
+     [
+      "Carottes",
+      80.0
+     ],
+     [
+      "Huile",
+      6.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "poulet-barbecue-patate-douce-salade-avocat",
+   "nom": "Poulet barbecue, patate douce, salade-avocat",
+   "repas": [
+    "dej"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      150.0
+     ],
+     [
+      "Patates douces",
+      300.0
+     ],
+     [
+      "Avocat (chair)",
+      80.0
+     ],
+     [
+      "Salade",
+      40.0
+     ],
+     [
+      "Tomates",
+      120.0
+     ],
+     [
+      "Huile",
+      8.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      120.0
+     ],
+     [
+      "Patates douces",
+      140.0
+     ],
+     [
+      "Avocat (chair)",
+      60.0
+     ],
+     [
+      "Salade",
+      60.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Huile",
+      6.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "lasagnes-restes-du-samedi-salade",
+   "nom": "Lasagnes (restes) + salade",
+   "repas": [
+    "din"
+   ],
+   "tags": [
+    "restes"
+   ],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      110.0
+     ],
+     [
+      "Pâtes à lasagnes (sèches)",
+      65.0
+     ],
+     [
+      "Courgettes",
+      100.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Mozzarella râpée",
+      30.0
+     ],
+     [
+      "Lait",
+      80.0
+     ],
+     [
+      "Farine",
+      8.0
+     ],
+     [
+      "Huile",
+      8.0
+     ],
+     [
+      "Salade",
+      40.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      85.0
+     ],
+     [
+      "Pâtes à lasagnes (sèches)",
+      45.0
+     ],
+     [
+      "Courgettes",
+      120.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Mozzarella râpée",
+      25.0
+     ],
+     [
+      "Lait",
+      60.0
+     ],
+     [
+      "Farine",
+      6.0
+     ],
+     [
+      "Huile",
+      6.0
+     ],
+     [
+      "Salade",
+      60.0
+     ]
+    ]
+   },
+   "suit": "lasagnes-boeuf-courgettes-salade",
+   "delaiMaxJours": 2
+  },
+  {
+   "id": "curry-poulet-courgettes-riz",
+   "nom": "Curry poulet-courgettes, riz",
+   "repas": [
+    "dej"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      150.0
+     ],
+     [
+      "Courgettes",
+      150.0
+     ],
+     [
+      "Tomates",
+      80.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Riz (sec)",
+      85.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      120.0
+     ],
+     [
+      "Courgettes",
+      180.0
+     ],
+     [
+      "Tomates",
+      100.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Riz (sec)",
+      45.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "fajitas-poulet-wraps-poivrons-cheddar",
+   "nom": "Fajitas poulet (wraps, poivrons, cheddar)",
+   "repas": [
+    "din"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      130.0
+     ],
+     [
+      "Wraps",
+      2.0
+     ],
+     [
+      "Poivrons",
+      60.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Tomates",
+      60.0
+     ],
+     [
+      "Cheddar",
+      15.0
+     ],
+     [
+      "Huile",
+      8.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      100.0
+     ],
+     [
+      "Wraps",
+      1.0
+     ],
+     [
+      "Poivrons",
+      80.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Tomates",
+      80.0
+     ],
+     [
+      "Cheddar",
+      10.0
+     ],
+     [
+      "Huile",
+      6.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "poisson-creole-riz-haricots-verts",
+   "nom": "Poisson créole, riz, haricots verts",
+   "repas": [
+    "dej"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poisson blanc",
+      150.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Oignons",
+      40.0
+     ],
+     [
+      "Riz (sec)",
+      85.0
+     ],
+     [
+      "Haricots verts",
+      150.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poisson blanc",
+      125.0
+     ],
+     [
+      "Tomates",
+      180.0
+     ],
+     [
+      "Oignons",
+      40.0
+     ],
+     [
+      "Riz (sec)",
+      45.0
+     ],
+     [
+      "Haricots verts",
+      200.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "pates-poulet-tomate-courgettes",
+   "nom": "Pâtes poulet, tomate, courgettes",
+   "repas": [
+    "din"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      120.0
+     ],
+     [
+      "Pâtes (sèches)",
+      105.0
+     ],
+     [
+      "Tomates",
+      100.0
+     ],
+     [
+      "Courgettes",
+      120.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      90.0
+     ],
+     [
+      "Pâtes (sèches)",
+      60.0
+     ],
+     [
+      "Tomates",
+      120.0
+     ],
+     [
+      "Courgettes",
+      150.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "boeuf-saute-asiatique-riz-legumes",
+   "nom": "Bœuf sauté asiatique, riz, légumes",
+   "repas": [
+    "din"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      130.0
+     ],
+     [
+      "Riz (sec)",
+      85.0
+     ],
+     [
+      "Poivrons",
+      50.0
+     ],
+     [
+      "Carottes",
+      80.0
+     ],
+     [
+      "Courgettes",
+      60.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      100.0
+     ],
+     [
+      "Riz (sec)",
+      45.0
+     ],
+     [
+      "Poivrons",
+      60.0
+     ],
+     [
+      "Carottes",
+      100.0
+     ],
+     [
+      "Courgettes",
+      80.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "carbonara-legere-lardons-jambon-oeuf-champignons-courgettes",
+   "nom": "Carbonara légère (lardons, jambon, œuf, champignons, courgettes)",
+   "repas": [
+    "din"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Pâtes (sèches)",
+      105.0
+     ],
+     [
+      "Lardons",
+      60.0
+     ],
+     [
+      "Jambon",
+      40.0
+     ],
+     [
+      "Œufs",
+      1.0
+     ],
+     [
+      "Champignons",
+      60.0
+     ],
+     [
+      "Courgettes",
+      120.0
+     ],
+     [
+      "Huile",
+      5.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Pâtes (sèches)",
+      60.0
+     ],
+     [
+      "Lardons",
+      40.0
+     ],
+     [
+      "Jambon",
+      30.0
+     ],
+     [
+      "Œufs",
+      1.0
+     ],
+     [
+      "Champignons",
+      60.0
+     ],
+     [
+      "Courgettes",
+      150.0
+     ],
+     [
+      "Huile",
+      3.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "salade-lentilles-oeufs-durs-tomates-pommes-de-terre",
+   "nom": "Salade lentilles, œufs durs, tomates, pommes de terre",
+   "repas": [
+    "dej"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Lentilles (égouttées)",
+      150.0
+     ],
+     [
+      "Œufs",
+      2.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Pommes de terre",
+      240.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Lentilles (égouttées)",
+      120.0
+     ],
+     [
+      "Œufs",
+      2.0
+     ],
+     [
+      "Tomates",
+      180.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Pommes de terre",
+      90.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "tacos-boeuf-wraps-tomate-avocat-cheddar",
+   "nom": "Tacos bœuf (wraps, tomate, avocat, cheddar)",
+   "repas": [
+    "din"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      120.0
+     ],
+     [
+      "Wraps",
+      2.0
+     ],
+     [
+      "Tomates",
+      80.0
+     ],
+     [
+      "Avocat (chair)",
+      70.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Salade",
+      30.0
+     ],
+     [
+      "Cheddar",
+      15.0
+     ],
+     [
+      "Huile",
+      6.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      95.0
+     ],
+     [
+      "Wraps",
+      1.0
+     ],
+     [
+      "Tomates",
+      100.0
+     ],
+     [
+      "Avocat (chair)",
+      50.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Salade",
+      40.0
+     ],
+     [
+      "Cheddar",
+      10.0
+     ],
+     [
+      "Huile",
+      4.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "barbecue-boeuf-poulet-pommes-de-terre-legumes-grilles",
+   "nom": "Barbecue bœuf-poulet, pommes de terre, légumes grillés",
+   "repas": [
+    "dej"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      100.0
+     ],
+     [
+      "Poulet",
+      100.0
+     ],
+     [
+      "Pommes de terre",
+      300.0
+     ],
+     [
+      "Courgettes",
+      120.0
+     ],
+     [
+      "Aubergines",
+      110.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Huile",
+      12.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      80.0
+     ],
+     [
+      "Poulet",
+      80.0
+     ],
+     [
+      "Pommes de terre",
+      140.0
+     ],
+     [
+      "Courgettes",
+      150.0
+     ],
+     [
+      "Aubergines",
+      140.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Huile",
+      8.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "salade-des-restes-du-barbecue-poulet-avocat-pommes-de-terre",
+   "nom": "Salade des restes du barbecue (poulet), avocat, pommes de terre",
+   "repas": [
+    "din"
+   ],
+   "tags": [
+    "restes"
+   ],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      110.0
+     ],
+     [
+      "Avocat (chair)",
+      80.0
+     ],
+     [
+      "Tomates",
+      120.0
+     ],
+     [
+      "Salade",
+      40.0
+     ],
+     [
+      "Carottes",
+      60.0
+     ],
+     [
+      "Pommes de terre",
+      240.0
+     ],
+     [
+      "Huile",
+      8.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      90.0
+     ],
+     [
+      "Avocat (chair)",
+      60.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Salade",
+      60.0
+     ],
+     [
+      "Carottes",
+      80.0
+     ],
+     [
+      "Pommes de terre",
+      90.0
+     ],
+     [
+      "Huile",
+      6.0
+     ]
+    ]
+   },
+   "suit": "barbecue-boeuf-poulet-pommes-de-terre-legumes-grilles",
+   "delaiMaxJours": 0
+  },
+  {
+   "id": "poisson-grille-champignons-pommes-de-terre-tomates",
+   "nom": "Poisson grillé, champignons, pommes de terre, tomates",
+   "repas": [
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poisson blanc",
+      150.0
+     ],
+     [
+      "Champignons",
+      80.0
+     ],
+     [
+      "Pommes de terre",
+      300.0
+     ],
+     [
+      "Tomates",
+      100.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poisson blanc",
+      125.0
+     ],
+     [
+      "Champignons",
+      100.0
+     ],
+     [
+      "Pommes de terre",
+      140.0
+     ],
+     [
+      "Tomates",
+      120.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "poisson-blanc-riz-poelee-de-courgettes",
+   "nom": "Poisson blanc, riz, poêlée de courgettes",
+   "repas": [
+    "dej"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poisson blanc",
+      150.0
+     ],
+     [
+      "Riz (sec)",
+      85.0
+     ],
+     [
+      "Courgettes",
+      180.0
+     ],
+     [
+      "Tomates",
+      60.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poisson blanc",
+      125.0
+     ],
+     [
+      "Riz (sec)",
+      45.0
+     ],
+     [
+      "Courgettes",
+      220.0
+     ],
+     [
+      "Tomates",
+      80.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "poulet-basquaise-pommes-de-terre",
+   "nom": "Poulet basquaise, pommes de terre",
+   "repas": [
+    "din"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      150.0
+     ],
+     [
+      "Poivrons",
+      60.0
+     ],
+     [
+      "Tomates",
+      120.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Pommes de terre",
+      360.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      120.0
+     ],
+     [
+      "Poivrons",
+      80.0
+     ],
+     [
+      "Tomates",
+      150.0
+     ],
+     [
+      "Oignons",
+      30.0
+     ],
+     [
+      "Pommes de terre",
+      170.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "omelette-aux-legumes-pommes-de-terre-salade",
+   "nom": "Omelette aux légumes, pommes de terre, salade",
+   "repas": [
+    "dej"
+   ],
+   "tags": [],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Œufs",
+      3.0
+     ],
+     [
+      "Pommes de terre",
+      300.0
+     ],
+     [
+      "Courgettes",
+      150.0
+     ],
+     [
+      "Tomates",
+      100.0
+     ],
+     [
+      "Salade",
+      40.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Huile",
+      8.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Œufs",
+      2.0
+     ],
+     [
+      "Pommes de terre",
+      110.0
+     ],
+     [
+      "Courgettes",
+      170.0
+     ],
+     [
+      "Tomates",
+      130.0
+     ],
+     [
+      "Salade",
+      60.0
+     ],
+     [
+      "Oignons",
+      20.0
+     ],
+     [
+      "Huile",
+      6.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "poisson-blanc-patate-douce-haricots-verts",
+   "nom": "Poisson blanc, patate douce, haricots verts",
+   "repas": [
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "octobre-2026",
+   "portions": {
+    "nicolas": [
+     [
+      "Poisson blanc",
+      150.0
+     ],
+     [
+      "Patates douces",
+      300.0
+     ],
+     [
+      "Haricots verts",
+      250.0
+     ],
+     [
+      "Huile",
+      10.0
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poisson blanc",
+      125.0
+     ],
+     [
+      "Patates douces",
+      140.0
+     ],
+     [
+      "Haricots verts",
+      280.0
+     ],
+     [
+      "Huile",
+      7.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "saucisses-grillees-frites-haricots-verts",
+   "nom": "Saucisses grillées, frites au four, haricots verts",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "nico-2026-09-30",
+   "portions": {
+    "nicolas": [
+     [
+      "Saucisses (porc)",
+      150
+     ],
+     [
+      "Pommes de terre",
+      350
+     ],
+     [
+      "Haricots verts",
+      200
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Saucisses (porc)",
+      120
+     ],
+     [
+      "Pommes de terre",
+      170
+     ],
+     [
+      "Haricots verts",
+      250
+     ],
+     [
+      "Huile",
+      7
+     ]
+    ]
+   }
+  },
+  {
+   "id": "steak-frites-salade",
+   "nom": "Steak frites + salade",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "nico-2026-09-30",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      150
+     ],
+     [
+      "Pommes de terre",
+      350
+     ],
+     [
+      "Salade",
+      40
+     ],
+     [
+      "Huile",
+      12
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      120
+     ],
+     [
+      "Pommes de terre",
+      170
+     ],
+     [
+      "Salade",
+      60
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ]
+   }
+  },
+  {
+   "id": "hachis-parmentier-boeuf-porc-salade",
+   "nom": "Hachis parmentier bœuf-porc + salade",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "nico-2026-09-30",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      70
+     ],
+     [
+      "Porc haché",
+      70
+     ],
+     [
+      "Pommes de terre",
+      300
+     ],
+     [
+      "Lait",
+      50
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Huile",
+      5
+     ],
+     [
+      "Salade",
+      40
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      55
+     ],
+     [
+      "Porc haché",
+      55
+     ],
+     [
+      "Pommes de terre",
+      150
+     ],
+     [
+      "Lait",
+      40
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Huile",
+      4
+     ],
+     [
+      "Salade",
+      60
+     ]
+    ]
+   }
+  },
+  {
+   "id": "cassoulet-pommes-de-terre",
+   "nom": "Cassoulet aux pommes de terre",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "nico-2026-09-30",
+   "portions": {
+    "nicolas": [
+     [
+      "Saucisses (porc)",
+      120
+     ],
+     [
+      "Lardons",
+      30
+     ],
+     [
+      "Haricots blancs (égouttés)",
+      120
+     ],
+     [
+      "Pommes de terre",
+      150
+     ],
+     [
+      "Tomates",
+      100
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Carottes",
+      60
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ],
+    "aurelie": [
+     [
+      "Saucisses (porc)",
+      100
+     ],
+     [
+      "Lardons",
+      20
+     ],
+     [
+      "Haricots blancs (égouttés)",
+      80
+     ],
+     [
+      "Pommes de terre",
+      80
+     ],
+     [
+      "Tomates",
+      130
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Carottes",
+      80
+     ],
+     [
+      "Huile",
+      4
+     ]
+    ]
+   }
+  },
+  {
+   "id": "riz-mexicain-poulet",
+   "nom": "Riz mexicain (poulet, chorizo, haricots rouges, poivrons)",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "nico-2026-09-30",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      120
+     ],
+     [
+      "Chorizo",
+      25
+     ],
+     [
+      "Riz (sec)",
+      70
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      80
+     ],
+     [
+      "Poivrons",
+      70
+     ],
+     [
+      "Tomates",
+      80
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      95
+     ],
+     [
+      "Chorizo",
+      20
+     ],
+     [
+      "Riz (sec)",
+      35
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      60
+     ],
+     [
+      "Poivrons",
+      90
+     ],
+     [
+      "Tomates",
+      100
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Huile",
+      6
+     ]
+    ]
+   }
+  },
+  {
+   "id": "riz-mexicain-boeuf",
+   "nom": "Riz mexicain (bœuf, chorizo, haricots rouges, poivrons)",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "nico-2026-09-30",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      120
+     ],
+     [
+      "Chorizo",
+      25
+     ],
+     [
+      "Riz (sec)",
+      70
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      80
+     ],
+     [
+      "Poivrons",
+      70
+     ],
+     [
+      "Tomates",
+      80
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      95
+     ],
+     [
+      "Chorizo",
+      20
+     ],
+     [
+      "Riz (sec)",
+      35
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      60
+     ],
+     [
+      "Poivrons",
+      90
+     ],
+     [
+      "Tomates",
+      100
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Huile",
+      6
+     ]
+    ]
+   }
+  }
+ ]
+}
