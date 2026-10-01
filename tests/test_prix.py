@@ -13,6 +13,8 @@ async def main():
         pg = await b.new_page(viewport={"width": 390, "height": 844}, device_scale_factor=2)
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.route("**/fonts.g*/**", lambda r: r.abort())
+        # lignes détaillées (prix et quantité visibles) : le mode magasin est testé dans test_ecrans.py
+        await pg.add_init_script("try { localStorage.setItem('marmite-courses', 'detail'); } catch (e) {}")
         await pg.goto(PAGE); await pg.wait_for_timeout(300)
         await pg.click("#nav-barre button[data-vue='courses']")
 

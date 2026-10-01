@@ -97,17 +97,22 @@ h3{ font-size:18px; font-weight:700; }
 .bandeau{ margin:10px 0 0; padding:10px 14px; border-radius:14px; background:var(--surface-2); font-size:14px; display:flex; gap:10px; align-items:center; }
 .bandeau .ico{ width:20px; height:20px; color:var(--or); }
 
-/* ---------- L'assiette ---------- */
-.jour-grille{ display:grid; gap:18px; margin-top:18px; }
-@media (min-width:960px){ .jour-grille{ grid-template-columns:340px 1fr; align-items:start; } .assiette-bloc{ position:sticky; top:34px; } }
-.assiette-bloc{ background:var(--surface); border-radius:28px; padding:22px 20px 18px; box-shadow:var(--ombre); }
-.assiette{ display:block; width:min(280px,78vw); height:auto; margin:0 auto; }
-.assiette .arc{ transition:stroke-opacity .5s ease, stroke-width .5s ease; }
-@media (prefers-reduced-motion:reduce){ .assiette .arc, body{ transition:none; } }
-.jauges{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
-.jauge{ text-align:center; }
-.jauge .chiffre{ font-size:22px; display:block; line-height:1.1; }
-.jauge .discret{ font-size:12px; }
+/* ---------- Bilan du jour (bande collante) ---------- */
+.bilan-mini{ position:sticky; top:env(safe-area-inset-top,0px); z-index:15; margin:10px -8px 0; padding:6px 8px;
+  background:color-mix(in srgb, var(--fond) 82%, transparent); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); border-radius:0 0 18px 18px; }
+.bilan-tete{ width:100%; display:flex; align-items:center; gap:12px; background:var(--surface); border:0; border-radius:16px; padding:6px 12px 6px 6px; box-shadow:var(--ombre); color:var(--encre); text-align:left; }
+.bilan-tete .anneau{ width:40px; height:40px; flex:none; }
+.bilan-tete .anneau .arc{ transition:stroke-opacity .5s ease, stroke-width .5s ease; }
+@media (prefers-reduced-motion:reduce){ .bilan-tete .anneau .arc, body{ transition:none; } }
+.bilan-val{ display:flex; align-items:baseline; gap:4px; min-width:0; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.bilan-val b{ font-family:var(--titre); font-size:16px; font-weight:700; }
+.bilan-val small{ font-size:12px; color:var(--brume); }
+.bilan-tete > .ico{ margin-left:auto; width:18px; height:18px; color:var(--brume); flex:none; transition:transform .2s ease; }
+.bilan-tete[aria-expanded="true"] > .ico{ transform:rotate(180deg); }
+.bilan-plus{ margin:6px 4px 2px; font-size:13px; color:var(--brume); }
+@media (max-width:380px){ .bilan-tete{ gap:8px; } .bilan-val small{ font-size:11px; } .bilan-val b{ font-size:15px; } }
+.repas-jour{ margin-top:14px; }
+.repas-jour .faim{ margin:12px 0; }
 .barre-prog{ height:6px; border-radius:6px; background:var(--surface-2); overflow:hidden; margin-top:6px; }
 .barre-prog i{ display:block; height:100%; border-radius:6px; }
 
@@ -117,15 +122,30 @@ h3{ font-size:18px; font-weight:700; }
 .repas::before{ content:""; position:absolute; left:0; top:14px; bottom:14px; width:6px; border-radius:0 6px 6px 0; background:var(--couleur); }
 .repas.fait{ background:color-mix(in srgb, var(--couleur) 12%, var(--surface)); }
 .repas-type{ font-size:13px; font-weight:700; color:var(--brume); }
-.repas h3{ margin-top:2px; }
+.repas h3{ margin-top:2px; overflow-wrap:anywhere; }
+.repas{ min-width:0; }
 .pastille{ display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:700; padding:2px 8px; border-radius:999px; background:var(--surface-2); color:var(--titre-c); margin-top:6px; }
 .pastille .ico{ width:13px; height:13px; }
 .ingredients{ list-style:none; padding:0; margin:10px 0 8px; display:grid; grid-template-columns:1fr auto; column-gap:14px; row-gap:3px; font-size:15px; }
 .ingredients li{ display:contents; }
 .ingredients .q{ text-align:right; font-variant-numeric:tabular-nums; color:var(--brume); }
 .repas-pied{ display:flex; align-items:center; justify-content:space-between; gap:8px; border-top:1px dashed var(--trait); padding-top:10px; flex-wrap:wrap; }
-.repas-pied .infos{ display:flex; gap:14px; font-size:14px; }
-.repas-pied .infos b{ font-family:var(--titre); }
+.repas-pied .infos{ display:flex; gap:12px; font-size:13px; color:var(--brume); }
+.repas-pied .infos b{ font-weight:700; color:var(--encre); }
+.repas.moment{ box-shadow:var(--ombre), 0 0 0 2px color-mix(in srgb, var(--couleur) 55%, transparent); }
+.repas-type{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.maintenant{ font-size:11px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--surface); background:var(--couleur); border-radius:999px; padding:2px 8px; }
+.repas-type .replier{ margin-left:auto; font-size:13px; }
+.repas.replie{ padding:0; }
+.repas.replie::before{ top:10px; bottom:10px; }
+.replie-tete{ width:100%; display:flex; align-items:center; gap:10px; background:none; border:0; padding:10px 14px 10px 20px; text-align:left; color:var(--encre); border-radius:18px; }
+.replie-tete .ok{ width:24px; height:24px; flex:none; border-radius:50%; background:var(--couleur); display:grid; place-items:center; }
+.replie-tete .ok .ico{ width:14px; height:14px; stroke:var(--surface); stroke-width:3; }
+.replie-txt{ min-width:0; flex:1; display:flex; flex-direction:column; }
+.replie-txt .repas-type{ font-size:12px; }
+.replie-plat{ font-weight:700; font-size:15px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.replie-kcal{ font-size:13px; color:var(--brume); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.replie-tete > .ico{ width:18px; height:18px; color:var(--brume); flex:none; }
 .coche{ display:inline-flex; align-items:center; gap:8px; border:2px solid var(--couleur); background:transparent; border-radius:999px; padding:6px 14px 6px 8px; font-weight:700; font-size:14px; }
 .coche .case{ width:22px; height:22px; border-radius:50%; border:2px solid var(--couleur); display:grid; place-items:center; }
 .coche .case .ico{ width:14px; height:14px; opacity:0; stroke-width:3; }
@@ -137,16 +157,19 @@ h3{ font-size:18px; font-weight:700; }
 /* ---------- Ajustement d'un repas ---------- */
 .repas.edition{ outline:2px solid var(--or); }
 .lignes-ed{ list-style:none; padding:0; margin:10px 0 6px; display:grid; gap:6px; }
-.lignes-ed li{ display:grid; grid-template-columns:1fr auto auto; gap:8px; align-items:center; }
-.lignes-ed .nom-ed{ font-size:15px; }
+.lignes-ed li{ display:grid; grid-template-columns:minmax(0,1fr) auto auto; gap:6px; align-items:center; }
+.lignes-ed .nom-ed{ font-size:15px; min-width:0; overflow-wrap:anywhere; }
 .lignes-ed .ecart{ display:block; font-size:12px; color:var(--brume); }
 .qte{ display:flex; align-items:center; gap:4px; }
 .qte button,.suppr{ width:34px; height:34px; border-radius:50%; border:1px solid var(--trait); background:var(--surface); font-weight:700; font-size:18px; padding:0; line-height:1; }
-.qte input{ width:64px; text-align:right; border:1px solid var(--trait); border-radius:10px; padding:6px 6px; background:var(--surface); font-size:15px; font-variant-numeric:tabular-nums; }
-.qte .u{ font-size:13px; color:var(--brume); width:34px; }
+.qte input{ -moz-appearance:textfield; appearance:textfield; }
+.qte input::-webkit-outer-spin-button,.qte input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+.qte input{ width:58px; min-width:0; text-align:right; border:1px solid var(--trait); border-radius:10px; padding:6px 6px; background:var(--surface); font-size:15px; font-variant-numeric:tabular-nums; }
+.qte .u{ font-size:13px; color:var(--brume); width:22px; }
+@media (max-width:380px){ .qte button,.lignes-ed .suppr{ width:30px; height:30px; } .qte input{ width:50px; } .qte .u{ width:18px; } }
 .suppr{ color:var(--alerte); }
-.ajout-ed{ display:grid; grid-template-columns:1fr auto; gap:8px; margin:8px 0 10px; }
-.ajout-ed select{ border:1px solid var(--trait); background:var(--surface); border-radius:12px; padding:9px 10px; font-size:15px; color:var(--encre); }
+.ajout-ed{ display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px; margin:8px 0 10px; }
+.ajout-ed select{ width:100%; min-width:0; border:1px solid var(--trait); background:var(--surface); border-radius:12px; padding:9px 10px; font-size:15px; color:var(--encre); }
 .btns-ed{ display:flex; gap:8px; flex-wrap:wrap; }
 .btns-ed .bouton{ padding:10px 16px; font-size:15px; }
 
@@ -264,6 +287,24 @@ h3{ font-size:18px; font-weight:700; }
 .cat-titre{ font-family:var(--titre); font-weight:700; font-size:16px; margin:22px 0 6px; color:var(--titre-c); }
 .article{ display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:12px; align-items:center; padding:10px 4px; border-bottom:1px solid var(--trait); cursor:pointer; -webkit-tap-highlight-color:transparent; }
 .article .saisie{ cursor:default; }
+.mag-barre{ display:flex; align-items:center; gap:8px 14px; flex-wrap:wrap; margin:6px 0 10px; font-size:14px; }
+.mag-barre b{ font-variant-numeric:tabular-nums; }
+.mag-barre .mode-mag{ margin-left:auto; display:inline-flex; align-items:center; gap:6px; }
+.mag-barre .mode-mag .ico{ width:16px; height:16px; }
+.article.mag{ grid-template-columns:auto minmax(0,1fr) auto; gap:4px 14px; padding:12px 4px; }
+.article.mag .check{ width:40px; height:40px; border-radius:12px; }
+.article.mag .check .ico{ width:22px; height:22px; }
+.article.mag .nom{ font-size:17px; }
+.article.mag.achete{ opacity:.55; }
+.mag-prix{ display:inline-flex; align-items:center; gap:4px; font-size:13px; color:var(--brume); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.mag-prix b{ color:var(--encre); }
+.mag-prix .ico{ width:16px; height:16px; transition:transform .2s ease; }
+.article.mag.ouvert .mag-prix .ico{ transform:rotate(180deg); }
+.article.mag.ouvert{ opacity:1; }
+.mag-detail{ grid-column:1 / -1; padding:4px 0 2px 54px; cursor:default; }
+.mag-detail .detail{ margin:0 0 6px; }
+.mag-champs{ display:flex; flex-wrap:wrap; gap:8px 16px; align-items:center; }
+@media (max-width:380px){ .mag-detail{ padding-left:0; } }
 .article .check{ width:28px; height:28px; border-radius:9px; border:2px solid var(--vert); background:var(--surface); display:grid; place-items:center; padding:0; }
 :root[data-theme="dark"] .article .check{ border-color:var(--or); }
 .article .check .ico{ width:16px; height:16px; opacity:0; stroke:var(--surface); stroke-width:3; }
@@ -981,6 +1022,9 @@ try { const a = localStorage.getItem("marmite-actif"); if (PERSONNES[a]) actif =
 let vue = "jour";
 let jourSel = jourDuPlan();
 let courseSel = courseDuJour();
+// Mode magasin (par défaut) : liste épurée, la case coche, le reste de la ligne ouvre le détail (quantité, prix)
+let modeMagasin = (() => { try { return localStorage.getItem("marmite-courses") !== "detail"; } catch (e) { return true; } })();
+let artOuvert = null;
 let sync = "local";
 let refDoc = null;
 
@@ -1004,6 +1048,7 @@ const ICONES = {
   lune: I('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>'),
   plein: I('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>'),
   reduire: I('<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>'),
+  bas: I('<path d="m6 9 6 6 6-6"/>'),
   soleil: I('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>')
 };
 const LOGO = `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 14h22v6a8 8 0 0 1-8 8h-6a8 8 0 0 1-8-8z" fill="#1B6B4A"/><rect x="3" y="12" width="26" height="4" rx="2" fill="#C9A96E"/><path d="M11 9c0-2 2-2 2-4M16 9c0-2 2-2 2-4M21 9c0-2 2-2 2-4" stroke="#C9A96E" stroke-width="2" fill="none" stroke-linecap="round"/></svg>Marmite`;
@@ -1103,11 +1148,11 @@ function statsRepas(m) {
 }
 function horsRepasJour(p = actif) { return (DONNEES.reglages.horsRepas || []).reduce((s, h) => s + (prixUnitaire(h.a) || 0) * (h.parJour[p] || 0), 0); }
 function statsJour(j, p = actif) {
-  const r = { kcal: 0, prot: 0, cout: 0, kcalFait: 0, coutFait: 0, faits: 0 };
+  const r = { kcal: 0, prot: 0, cout: 0, kcalFait: 0, protFait: 0, coutFait: 0, faits: 0 };
   for (const k of CLES) {
     const s = statsRepas(repasDe(j, k, p)), f = !!P(p).coches["d" + j + "-" + k];
     r.kcal += s.kcal; r.prot += s.prot; r.cout += s.cout;
-    if (f) { r.kcalFait += s.kcal; r.coutFait += s.cout; r.faits++; }
+    if (f) { r.kcalFait += s.kcal; r.protFait += s.prot; r.coutFait += s.cout; r.faits++; }
   }
   return r;
 }
@@ -1264,52 +1309,60 @@ function rendre() {
 function aller(k) { vue = k; edition = null; rendre(); document.getElementById("vue").focus({ preventScroll: true }); window.scrollTo(0, 0); }
 
 /* ---------- Vue : jour ---------- */
-function assietteSVG(j) {
-  const R = 100, C = 2 * Math.PI * R, ecart = 5;
+// Bilan du jour : petite bande qui reste en haut de l'écran au défilement (anneau des 4 repas, kcal et protéines mangées)
+let bilanOuvert = false, deplies = new Set();
+function miniAnneau(j) {
+  const R = 18, C = 2 * Math.PI * R, ecart = 2.5;
   const parts = CLES.map(k => ({ k, s: statsRepas(repasDe(j, k)), f: !!P().coches["d" + j + "-" + k] }));
-  const tot = parts.reduce((s, x) => s + x.s.kcal, 0) || 1;
+  const tot = parts.reduce((t, x) => t + x.s.kcal, 0) || 1;
   let off = 0, arcs = "";
   for (const x of parts) {
-    const len = Math.max(C * x.s.kcal / tot - ecart, 2);
-    arcs += `<circle class="arc" cx="130" cy="130" r="${R}" fill="none" style="stroke:${COULEUR[x.k]}" stroke-width="${x.f ? 30 : 22}" stroke-opacity="${x.f ? 1 : .3}" stroke-dasharray="${len} ${C}" stroke-dashoffset="${-off}" transform="rotate(-90 130 130)"/>`;
+    const len = Math.max(C * x.s.kcal / tot - ecart, 1);
+    arcs += `<circle class="arc" cx="24" cy="24" r="${R}" fill="none" style="stroke:${COULEUR[x.k]}" stroke-width="${x.f ? 7 : 5}" stroke-opacity="${x.f ? 1 : .28}" stroke-dasharray="${len} ${C}" stroke-dashoffset="${-off}" transform="rotate(-90 24 24)"/>`;
     off += C * x.s.kcal / tot;
   }
-  const st = statsJour(j);
-  return `<svg class="assiette" viewBox="0 0 260 260" role="img" aria-label="Assiette du jour : ${nb(st.kcalFait)} kcal mangées sur ${nb(st.kcal)} prévues">
-    <circle cx="130" cy="130" r="122" style="fill:var(--surface-2)"/><circle cx="130" cy="130" r="78" style="fill:var(--surface)"/>${arcs}
-    <text x="130" y="122" text-anchor="middle" style="font:800 40px var(--titre);fill:var(--titre-c)">${nb(st.kcalFait)}</text>
-    <text x="130" y="146" text-anchor="middle" style="font:14px var(--texte);fill:var(--brume)">sur ${nb(st.kcal)} kcal</text>
-    <text x="130" y="170" text-anchor="middle" style="font:700 14px var(--texte);fill:var(--or)">${st.faits}/4 repas</text></svg>`;
+  return `<svg class="anneau" viewBox="0 0 48 48" aria-hidden="true">${arcs}</svg>`;
+}
+function bilanMini(j) {
+  const st = statsJour(j), pr = P().profil;
+  return `<section class="bilan-mini" aria-label="Bilan du jour">
+    <button class="bilan-tete" data-bilan="1" aria-expanded="${bilanOuvert}" aria-label="Bilan du jour : ${nb(st.kcalFait)} kcal mangées sur ${nb(st.kcal)}, ${nb(st.protFait)} g de protéines sur ${nb(st.prot)}, ${st.faits} repas sur 4">
+      ${miniAnneau(j)}
+      <span class="bilan-val"><b>${nb(st.kcalFait)}</b><small>/ ${nb(st.kcal)} kcal</small></span>
+      <span class="bilan-val"><b>${nb(st.protFait)}</b><small>/ ${nb(st.prot)} g prot.</small></span>
+      ${ICONES.bas}</button>
+    ${bilanOuvert ? `<p class="bilan-plus">${st.faits} repas sur 4 cochés. Objectif : ${nb(pr.kcalMin)} à ${nb(pr.kcalMax)} kcal et ${nb(pr.prot)} g de protéines par jour.</p>` : ""}
+  </section>`;
+}
+// Ordre des fiches : le repas du moment en haut, puis ceux qui restent, puis les repas faits (repliés)
+function ordreRepas(j) {
+  const fait = k => !!P().coches["d" + j + "-" + k];
+  const auj = !planPasCommence() && j === jourDuPlan(), i0 = auj ? CLES.indexOf(creneauMaintenant()) : 0;
+  const moment = [...CLES.slice(i0), ...CLES.slice(0, i0)].find(k => !fait(k)) || null;
+  return { moment, auj, restants: CLES.filter(k => k !== moment && !fait(k)), faits: CLES.filter(fait) };
 }
 function vueJour() {
-  const j = jourSel, jour = PLAN[j - 1], st = statsJour(j), pr = P().profil;
+  const j = jourSel, jour = PLAN[j - 1], o = ordreRepas(j);
   let b = "";
   if (planPasCommence() && j === 1) b += `<p class="bandeau">${ICONES.info}Le planning démarre le ${libelleJour(1).toLowerCase()}. Voici la première journée.</p>`;
   for (const c of COURSES()) if (c.jourPlan === j) b += `<p class="bandeau">${ICONES.panier}${c.titre} aujourd'hui : ce qu'il faut ${c.couvre}.</p>`;
   if (jour.tag === "plaisir") b += `<p class="bandeau">${ICONES.etoile}Jour plaisir : le déjeuner est le repas plaisir de la semaine.</p>`;
-  const kp = Math.min(st.kcal / pr.kcalMax, 1) * 100, pp = Math.min(st.prot / pr.prot, 1) * 100;
+  const faim = `<button class="bouton or faim" data-ia="faim"><span>J'ai faim, demandez au chef<small>Le chef part de ce qu'il y a à la maison</small></span>${ICONES.etincelle}</button>`;
   return `<div class="entete"><div><p class="discret petit" style="margin:0">Programme ${de()}, jour ${j} sur ${NB_JOURS}</p><h1>${libelleJour(j)}</h1></div>
     <div class="nav-jour"><button class="rond" data-jour="${j - 1}" ${j <= 1 ? "disabled" : ""} aria-label="Jour précédent">${ICONES.gauche}</button>
       <button class="rond" data-jour="${j + 1}" ${j >= NB_JOURS ? "disabled" : ""} aria-label="Jour suivant">${ICONES.droite}</button></div></div>
+  ${bilanMini(j)}
   ${b}
-  <div class="jour-grille">
-    <section class="assiette-bloc" aria-label="Bilan du jour">${assietteSVG(j)}
-      <div class="jauges">
-        <div class="jauge"><span class="chiffre">${nb(st.kcal)}</span><span class="discret">kcal prévues</span><div class="barre-prog"><i style="width:${kp}%;background:var(--c-pdj)"></i></div></div>
-        <div class="jauge"><span class="chiffre">${nb(st.prot)} g</span><span class="discret">protéines</span><div class="barre-prog"><i style="width:${pp}%;background:var(--c-dej)"></i></div></div>
-        <div class="jauge"><span class="chiffre">${eur(st.cout)}</span><span class="discret">repas du jour</span><div class="barre-prog"><i style="width:100%;background:var(--c-din)"></i></div></div>
-      </div>
-      <p class="discret petit" style="margin:12px 0 0;text-align:center">Hors repas (café, eau) : ${eur(horsRepasJour())} par jour. Objectif : ${nb(pr.kcalMin)} à ${nb(pr.kcalMax)} kcal, ${nb(pr.prot)} g de protéines.</p>
-    </section>
-    <section aria-label="Repas du jour">${CLES.map(k => ticketRepas(j, k)).join("")}
-      <button class="bouton or faim" data-ia="faim"><span>J'ai faim, demandez au chef<small>Le chef part de ce qu'il y a à la maison</small></span>${ICONES.etincelle}</button>
-    </section>
-  </div>`;
+  <section class="repas-jour" aria-label="Repas du jour">
+    ${o.moment ? ticketRepas(j, o.moment, o.auj ? "Maintenant" : "Premier repas") : ""}
+    ${faim}
+    ${o.restants.map(k => ticketRepas(j, k)).join("")}
+    ${o.faits.map(k => ticketRepas(j, k)).join("")}
+  </section>`;
 }
 function ecartTexte(m, j, k) {
-  const a = statsRepas(m), b = statsRepas(repasPlan(j, k)), dk = a.kcal - b.kcal, dc = a.cout - b.cout;
-  const sg = x => (x >= 0 ? "+" : "−");
-  return `${sg(dk)}${nb(Math.abs(dk))} kcal, ${sg(dc)}${eur(Math.abs(dc))}`;
+  const dk = statsRepas(m).kcal - statsRepas(repasPlan(j, k)).kcal;
+  return `${dk >= 0 ? "+" : "−"}${nb(Math.abs(dk))} kcal`;
 }
 let edition = null; // { j, k, items } : repas en cours d'ajustement
 const PAS = u => u === "ml" ? 10 : u === "unité" ? 1 : 5;
@@ -1321,7 +1374,7 @@ function optionsAjout() {
 function infosEdition() {
   const s = statsRepas({ items: edition.items.filter(([, q]) => q > 0) }), b = statsRepas(repasPlan(edition.j, edition.k));
   const dk = s.kcal - b.kcal;
-  return `<span><b>${nb(s.kcal)}</b> kcal</span><span><b>${nb(s.prot)}</b> g prot.</span><span><b>${eur(s.cout)}</b></span><span class="discret">plan ${dk >= 0 ? "+" : "−"}${nb(Math.abs(dk))} kcal</span>`;
+  return `<span><b>${nb(s.kcal)}</b> kcal</span><span><b>${nb(s.prot)}</b> g prot.</span><span class="discret">plan ${dk >= 0 ? "+" : "−"}${nb(Math.abs(dk))} kcal</span>`;
 }
 function ticketEdition(j, k) {
   const m = repasDe(j, k), plan = repasPlan(j, k), qPlan = Object.fromEntries(plan.items);
@@ -1343,16 +1396,20 @@ function ticketEdition(j, k) {
       <div class="btns-ed"><button class="bouton leger" data-ed="annuler">Annuler</button><button class="bouton" data-ed="enregistrer">Enregistrer</button></div></div>
   </article>`;
 }
-function ticketRepas(j, k) {
+function ticketRepas(j, k, moment) {
   if (edition && edition.j === j && edition.k === k) return ticketEdition(j, k);
   const m = repasDe(j, k), s = statsRepas(m), cle = "d" + j + "-" + k, fait = !!P().coches[cle], remp = !!P().remplacements[cle];
-  return `<article class="repas ${fait ? "fait" : ""}" id="t-${k}" style="--couleur:${COULEUR[k]}">
-    <div class="repas-type">${m.label}</div><h3>${echap(m.plat)}</h3>
+  if (fait && !deplies.has(k)) return `<article class="repas fait replie" id="t-${k}" style="--couleur:${COULEUR[k]}">
+    <button class="replie-tete" data-deplier="${k}" aria-expanded="false" aria-label="${m.label} fait : ${echap(m.plat)}. Afficher le détail">
+      <span class="ok">${ICONES.coche}</span><span class="replie-txt"><span class="repas-type">${m.label}</span><span class="replie-plat">${echap(m.plat)}</span></span>
+      <span class="replie-kcal">${nb(s.kcal)} kcal</span>${ICONES.bas}</button></article>`;
+  return `<article class="repas ${fait ? "fait" : ""} ${moment ? "moment" : ""}" id="t-${k}" style="--couleur:${COULEUR[k]}">
+    <div class="repas-type">${m.label}${moment ? `<span class="maintenant">${moment}</span>` : ""}${fait ? `<button class="lien replier" data-deplier="${k}" aria-expanded="true">Replier</button>` : ""}</div><h3>${echap(m.plat)}</h3>
     ${m.ia ? `<span class="pastille">${ICONES.etincelle}Proposé par le chef${m.convives > 1 ? ", pour " + m.convives : ""}</span> ` : ""}
     ${m.ajuste ? `<span class="pastille">Ajusté : ${ecartTexte(m, j, k)} par rapport au plan</span>` : ""}
     <ul class="ingredients">${m.items.map(([a, q]) => `<li><span>${echap(a)}</span><span class="q">${quantite(a, q)}</span></li>`).join("")}</ul>
     <div class="repas-pied">
-      <div class="infos"><span><b>${nb(s.kcal)}</b> kcal</span><span><b>${nb(s.prot)}</b> g prot.</span><span><b>${eur(s.cout)}</b>${s.inconnu ? " + ?" : ""}</span></div>
+      <div class="infos"><span><b>${nb(s.kcal)}</b> kcal</span><span><b>${nb(s.prot)}</b> g prot.</span></div>
       <div><button class="lien" data-ed="ouvrir" data-k="${k}">Ajuster</button><button class="lien" data-ia="${k}">${m.ia ? "Autre idée" : "Changer"}</button>
         ${remp ? `<button class="lien" data-retour="${k}">Revenir au plan</button>` : ""}
         <button class="coche" data-coche="${cle}" aria-pressed="${fait}"><span class="case">${ICONES.coche}</span>${fait ? "Fait" : "Je l'ai fait"}</button></div>
@@ -1873,6 +1930,36 @@ function vueCourses() {
   const puces = `<div class="puces courses-puces" role="group" aria-label="Choisir la course">${COURSES().map(x => { const bx = bilanCourse(x.id);
     return `<button class="puce" data-course="${x.id}" aria-pressed="${x.id === courseSel}">${x.titre} · ${dateCourte(x.date)}<span class="discret">${bx.faits}/${bx.total}</span></button>`; }).join("")}</div>`;
   let liste = "";
+  const modeBtn = `<button class="puce mode-mag" data-mode-courses="1" aria-pressed="${modeMagasin}">${ICONES.panier}Mode magasin</button>`;
+  if (modeMagasin) {
+    for (const [cat, items] of Object.entries(groupes)) {
+      liste += `<h3 class="cat-titre">${echap(cat)}</h3>`;
+      for (const it of items) {
+        const k = cleLigne(courseSel, it), fait = !!E.foyer.achats[k], est = estimationLigne(it), v = E.foyer.payes[k], c = DONNEES.cat[it.a], ouvert = artOuvert === k;
+        const qa = c.vrac ? nb(it.buy) + " g" : it.buy + " × " + echap(c.achat);
+        liste += `<div class="article mag ${fait ? "achete" : ""} ${ouvert ? "ouvert" : ""}" data-art-ouvrir="${echap(k)}">
+          <button class="check" data-achat="${echap(k)}" aria-pressed="${fait}" aria-label="${echap(it.a)} acheté">${ICONES.coche}</button>
+          <div class="mag-txt"><div class="nom">${echap(it.a)}</div><div class="detail">${qa}</div></div>
+          <span class="mag-prix">${v != null ? `<b>${eur(v)}</b>` : est != null ? eur(est) : ""}${ICONES.bas}</span>
+          ${ouvert ? `<div class="mag-detail">
+            <p class="detail">Besoin ${quantite(it.a, it.needN + it.needA + (it.needI || 0))}${it.remplace ? " · remplace " + echap(it.remplace) : ""} · part ${de()} ${est == null ? "—" : eur(est * part(it.a))}</p>
+            <div class="mag-champs">
+              <label class="saisie qte-achat">Acheté <input type="number" inputmode="decimal" min="0" step="${c.vrac ? 10 : 1}" data-qte="${echap(k)}" data-art="${echap(it.a)}" data-prevu="${it.prevu != null ? it.prevu : it.buy}" value="${it.buy}" aria-label="Quantité achetée de ${echap(it.a)}">
+                ${c.vrac ? "g" : "× " + echap(c.achat)}</label>
+              <label class="saisie">Prix payé <input type="number" inputmode="decimal" step="0.01" min="0" data-paye="${echap(k)}" data-art="${echap(it.a)}" data-buy="${it.buy}"
+                value="${v != null ? v : ""}" placeholder="${est != null ? nb(est, 2) : "prix ?"}" aria-label="Prix payé pour ${echap(it.a)} (estimé ${est == null ? "inconnu" : eur(est)})"> €</label>
+            </div></div>` : ""}
+        </div>`;
+      }
+    }
+    const d = depassementFoyer(), alerte = d.ecart > 0.5 && d.ecart > (E.foyer.depassementAccepte || 0) + 1;
+    return `<h1>Courses du foyer</h1>
+    <div class="segments" role="group" aria-label="Choisir la liste">${seg}</div>
+    ${puces}
+    <div class="mag-barre"><span><b>${b.faits}/${b.total}</b> au panier · payé <b>${eur(b.paye)}</b> · reste ${eur(b.avenir)}</span>${modeBtn}</div>
+    ${alerte ? panneauDepassement() : ""}
+    ${liste}`;
+  }
   for (const [cat, items] of Object.entries(groupes)) {
     liste += `<h3 class="cat-titre">${echap(cat)}</h3>`;
     for (const it of items) {
@@ -1892,7 +1979,7 @@ function vueCourses() {
   return `<h1>Courses du foyer</h1>
   <div class="segments" role="group" aria-label="Choisir la liste">${seg}</div>
   ${puces}
-  <p class="discret petit" style="margin:4px 0 12px">${cap(c.jour)}, ${c.couvre}.</p>
+  <div class="mag-barre"><span class="discret">${cap(c.jour)}, ${c.couvre}.</span>${modeBtn}</div>
   <div class="totaux">
     <div><span class="chiffre">${eur(b.paye)}</span><span class="discret">payé (cochés)</span></div>
     <div><span class="chiffre">${eur(b.avenir)}</span><span class="discret">reste à acheter</span></div>
@@ -2207,10 +2294,12 @@ function action(b) {
   if (d.ed) return actionEdition(d);
   if (d.vue) return aller(d.vue);
   if (d.personne) { actif = d.personne; edition = null; try { localStorage.setItem("marmite-actif", actif); } catch (e) {} return rendre(); }
-  if (d.jour) { jourSel = +d.jour; edition = null; return rendre(); }
+  if (d.jour) { jourSel = +d.jour; edition = null; deplies.clear(); return rendre(); }
+  if (d.bilan) { bilanOuvert = !bilanOuvert; return rendre(); }
+  if (d.deplier) { deplies.has(d.deplier) ? deplies.delete(d.deplier) : deplies.add(d.deplier); return rendre(); }
   if (d.voir) { jourSel = +d.voir; return aller("jour"); }
-  if (d.coche) { const c = P().coches; c[d.coche] ? delete c[d.coche] : (c[d.coche] = true); sauver(); return rendre(); }
-  if (d.course) { courseSel = d.course === "stock" || d.course === "prix" ? d.course : +d.course; jeterSel = null; return rendre(); }
+  if (d.coche) { const c = P().coches; c[d.coche] ? delete c[d.coche] : (c[d.coche] = true); deplies.delete(d.coche.split("-")[1]); sauver(); return rendre(); }
+  if (d.course) { courseSel = d.course === "stock" || d.course === "prix" ? d.course : +d.course; jeterSel = null; artOuvert = null; return rendre(); }
   if (d.modif) {
     const m = { id: Date.now(), type: d.modif === "retrait" ? "retrait" : "substitution", cid: +d.cid, a: d.a, date: new Date().toISOString().slice(0, 10) };
     const c = COURSES().find(x => x.id === m.cid), it = c.items.find(x => x.a === m.a);
@@ -2255,6 +2344,7 @@ function action(b) {
     jeterSel = null; return rendre();
   }
   if (d.perteSuppr) { E.foyer.pertes.splice(+d.perteSuppr, 1); sauver(); return rendre(); }
+  if (d.modeCourses) { modeMagasin = !modeMagasin; artOuvert = null; try { localStorage.setItem("marmite-courses", modeMagasin ? "magasin" : "detail"); } catch (e) {} return rendre(); }
   if (d.achat) {
     const a = E.foyer.achats; a[d.achat] ? delete a[d.achat] : (a[d.achat] = true); sauver(); return rendre();
   }
@@ -2297,7 +2387,9 @@ document.onclick = e => {
   const v = e.target.closest(".voile"); if (v && e.target === v) return fermerIA();
   const b = e.target.closest("button, .interrupteur"); if (b) return action(b);
   // liste de courses : toucher n'importe où sur la ligne coche l'article (sauf le champ « Prix payé »)
-  const art = e.target.closest(".article"); if (art && !e.target.closest(".saisie")) { const c = art.querySelector("button.check"); if (c) action(c); }
+  const art = e.target.closest(".article"); if (!art || e.target.closest(".saisie, .mag-detail")) return;
+  if (art.dataset.artOuvrir) { artOuvert = artOuvert === art.dataset.artOuvrir ? null : art.dataset.artOuvrir; return rendre(); }
+  const c = art.querySelector("button.check"); if (c) action(c);
 };
 document.ondragstart = e => {
   const t = e.target.closest && e.target.closest("[data-drag-id]"); if (!t) return;

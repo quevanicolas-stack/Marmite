@@ -20,10 +20,14 @@ async def main():
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.add_init_script(MOCK)
         await pg.route("**/fonts.g*/**", lambda r: r.abort())
+        # lignes détaillées (prix et quantité visibles) : le mode magasin est testé dans test_ecrans.py
+        await pg.add_init_script("try { localStorage.setItem('marmite-courses', 'detail'); } catch (e) {}")
         await pg.goto(PAGE); await pg.wait_for_timeout(600)
         verif(await pg.evaluate("sync") == "compte", "compte non branché")
-        await pg.tap("button.coche[data-coche]")
-        verif(await pg.locator("button.coche[data-coche]").first.get_attribute("aria-pressed") == "true", "repas non coché")
+        cle = await pg.locator("button.coche[data-coche]").first.get_attribute("data-coche")
+        await pg.tap(f"button.coche[data-coche='{cle}']")
+        # un repas fait se replie : sa fiche devient une ligne « fait »
+        verif(await pg.evaluate(f"!!E.personnes.nicolas.coches['{cle}']") and await pg.locator(f"#t-{cle.split('-')[1]}.replie").count() == 1, "repas non coché")
         await pg.tap("#nav-barre button[data-vue='courses']")
         await pg.locator("button.check").nth(0).tap()
         verif(await pg.locator("button.check").nth(0).get_attribute("aria-pressed") == "true", "article non coché")
