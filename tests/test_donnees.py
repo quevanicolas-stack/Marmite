@@ -60,7 +60,7 @@ for r in d["recettes"]:
     for p, items in r["portions"].items():
         for a, q in items:
             verif(a in cat and cat[a]["nut"], f"{r['id']} : {a} absent du catalogue ou sans nutrition")
-verif({a for a, p in cat.items() if p.get("animal")} == {"Poulet", "Bœuf", "Lardons", "Jambon", "Poisson blanc", "Saucisses (porc)", "Porc haché", "Chorizo"}, "protéines animales")
+verif({a for a, p in cat.items() if p.get("animal")} == {"Poulet", "Bœuf", "Lardons", "Jambon", "Poisson blanc", "Saucisses (porc)", "Porc haché", "Chorizo", "Bacon"}, "protéines animales")
 for a, p in cat.items():
     verif(p["role"] in ("proteine", "feculent", "legume", "matiere_grasse", "autre"), f"{a} : rôle inconnu")
     verif(p["conservation"]["jours"] > 0, f"{a} : conservation manquante")

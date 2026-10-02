@@ -13,6 +13,7 @@ async def main():
         pg = await b.new_page(viewport={"width": 1280, "height": 900})
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.route("**/fonts.g*/**", lambda r: r.abort())
+        await pg.add_init_script("try { localStorage.setItem('marmite-tickets', 'manuel'); } catch (e) {}")   # ticket non reporté (testé dans test_achats.py)
         await pg.goto(PAGE); await pg.wait_for_timeout(300)
         verif(await pg.locator("#theme-rail button[data-action='plein-ecran']").count() == 1, "bouton Plein écran absent du rail")
         await pg.click("#nav-rail button[data-vue='planning']")

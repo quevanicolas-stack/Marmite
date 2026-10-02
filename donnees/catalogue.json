@@ -1168,6 +1168,35 @@
     "estime": true
    },
    "note": "Prix à saisir. Pizza du 11."
+  },
+  "Bacon": {
+   "rayon": "Viande",
+   "achat": "à la coupe, au gramme",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 24.18,
+   "nut": [
+    100,
+    "g",
+    130,
+    21
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 10,
+    "lieu": "frigo",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Bacon fumé Montagne Noire à la coupe. Prix au kilo déduit du ticket du 01/10/2026 (2,66 €), poids estimé à 110 g : à corriger avec l'étiquette.",
+   "prixEstime": true,
+   "pasAchat": 1,
+   "animal": true,
+   "substituts": [
+    "Lardons",
+    "Jambon"
+   ]
   }
  }
 }

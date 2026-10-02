@@ -1,0 +1,232 @@
+{
+ "id": "leclerc-2026-10-01",
+ "magasin": "E.Leclerc Les Casernes, Saint-Pierre",
+ "date": "2026-10-01",
+ "course": 1,
+ "mois": "2026-10",
+ "totalTicket": 165.76,
+ "note": "Alimentaire seulement. Écartés : droguerie, bazar, beauté (19,72 €), vin, sodas, Perrier (16,72 €), chips et saucisson sec (5,01 €).",
+ "lignes": [
+  {
+   "a": "Poulet",
+   "buy": 1.65,
+   "paye": 15.62,
+   "ticket": "Filet poulet 1 kg (11,83 €) + pilons 1 kg (3,79 €), 650 g de viande sans les os",
+   "prix": 11.83
+  },
+  {
+   "a": "Bœuf",
+   "buy": 1,
+   "paye": 8.25,
+   "ticket": "Boulettes de bœuf surgelées 30 × 30 g"
+  },
+  {
+   "a": "Poisson blanc",
+   "buy": 1,
+   "paye": 7.81,
+   "ticket": "Colin d'Alaska 10 portions 1 kg"
+  },
+  {
+   "a": "Jambon",
+   "buy": 246,
+   "paye": 4.29,
+   "ticket": "Jambon fumé à la coupe, 246 g"
+  },
+  {
+   "a": "Bacon",
+   "buy": 110,
+   "paye": 2.66,
+   "ticket": "Bacon Montagne Noire à la coupe (poids estimé)",
+   "ajout": true
+  },
+  {
+   "a": "Œufs",
+   "buy": 1,
+   "paye": 3.8,
+   "ticket": "Œufs Kokot × 12"
+  },
+  {
+   "a": "Lait",
+   "buy": 2,
+   "paye": 2.38,
+   "ticket": "Lait demi-écrémé 2 × 1 L"
+  },
+  {
+   "a": "Yaourt nature",
+   "buy": 1,
+   "paye": 2.81,
+   "ticket": "Câlin 500 g"
+  },
+  {
+   "a": "Cheddar",
+   "buy": 126,
+   "paye": 2.08,
+   "ticket": "Cheddar à la coupe, 126 g"
+  },
+  {
+   "a": "Riz (sec)",
+   "buy": 1,
+   "paye": 2.19,
+   "ticket": "Riz long étuvé 1 kg"
+  },
+  {
+   "a": "Pâtes (sèches)",
+   "buy": 1,
+   "paye": 1.47,
+   "ticket": "Linguine intégrales 500 g"
+  },
+  {
+   "a": "Pains burger",
+   "buy": 2,
+   "paye": 3.33,
+   "ticket": "Maxi burger brioche × 4"
+  },
+  {
+   "a": "Pommes de terre",
+   "buy": 1994,
+   "paye": 2.77,
+   "ticket": "Pomme de terre blanche Réunion"
+  },
+  {
+   "a": "Patates douces",
+   "buy": 640,
+   "paye": 2.11,
+   "ticket": "Patate douce blanche"
+  },
+  {
+   "a": "Haricots verts",
+   "buy": 1,
+   "paye": 1.73,
+   "ticket": "Haricots verts 440 g"
+  },
+  {
+   "a": "Maïs",
+   "buy": 1,
+   "paye": 1.46,
+   "ticket": "Maïs doux Bonduelle"
+  },
+  {
+   "a": "Champignons",
+   "buy": 0.92,
+   "paye": 1.08,
+   "ticket": "Champignons pieds et morceaux 230 g"
+  },
+  {
+   "a": "Tomates",
+   "buy": 1012,
+   "paye": 3.53,
+   "ticket": "Tomate ronde"
+  },
+  {
+   "a": "Courgettes",
+   "buy": 596,
+   "paye": 0.95,
+   "ticket": "Courgette"
+  },
+  {
+   "a": "Poivrons",
+   "buy": 352,
+   "paye": 3.11,
+   "ticket": "Poivrons doux jaune et vert"
+  },
+  {
+   "a": "Carottes",
+   "buy": 658,
+   "paye": 1.31,
+   "ticket": "Carotte"
+  },
+  {
+   "a": "Aubergines",
+   "buy": 324,
+   "paye": 0.97,
+   "ticket": "Aubergine"
+  },
+  {
+   "a": "Oignons",
+   "buy": 264,
+   "paye": 1.05,
+   "ticket": "Oignon pays rose"
+  },
+  {
+   "a": "Bananes",
+   "buy": 1168,
+   "paye": 2.32,
+   "ticket": "Banane Réunion"
+  },
+  {
+   "a": "Pommes",
+   "buy": 912,
+   "paye": 2.73,
+   "ticket": "Pomme granny smith"
+  },
+  {
+   "a": "Mangue",
+   "buy": 372,
+   "paye": 4.09,
+   "ticket": "Mangue"
+  },
+  {
+   "a": "Ananas",
+   "buy": 1,
+   "paye": 2.69,
+   "ticket": "Ananas pièce"
+  },
+  {
+   "a": "Avocat (chair)",
+   "buy": 1,
+   "paye": 2.69,
+   "ticket": "Avocat pièce"
+  },
+  {
+   "a": "Citrons",
+   "buy": 2,
+   "paye": 0.94,
+   "ticket": "Citron vert, 118 g"
+  },
+  {
+   "a": "Chocolat noir",
+   "buy": 0.6,
+   "paye": 3.46,
+   "ticket": "Chocolat noir 47 % 3 × 100 g"
+  },
+  {
+   "a": "Glace",
+   "buy": 1,
+   "paye": 2.49,
+   "ticket": "Bac parfum chocolat 500 g"
+  },
+  {
+   "a": "Moutarde / ketchup",
+   "buy": 1,
+   "paye": 1.2,
+   "ticket": "Moutarde bocal 370 g"
+  },
+  {
+   "a": "Café",
+   "buy": 1,
+   "paye": 16.45,
+   "ticket": "L'Or Absolu grains 1 kg"
+  },
+  {
+   "a": "Eau (bouteilles 5 L)",
+   "buy": 1.8,
+   "paye": 4.0,
+   "ticket": "Australine 6 × 1,5 L (9 L)"
+  },
+  {
+   "a": "Huile",
+   "buy": 1,
+   "paye": 3.6,
+   "ticket": "Huile friture 1 L",
+   "ajout": true
+  },
+  {
+   "a": "Farine",
+   "buy": 1,
+   "paye": 0.89,
+   "ticket": "Farine ménagère 1 kg",
+   "ajout": true
+  }
+ ],
+ "totalImporte": 124.31
+}
