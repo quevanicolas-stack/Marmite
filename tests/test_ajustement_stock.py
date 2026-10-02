@@ -7,6 +7,9 @@ async def main():
         pg = await b.new_page(viewport={"width": 390, "height": 844}, device_scale_factor=2)
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.route("**/fonts.g*/**", lambda r: r.abort())
+        await pg.add_init_script("try { localStorage.setItem('marmite-tickets', 'manuel'); } catch (e) {}")   # ticket non reporté (testé dans test_achats.py)
+        # jour 1 du plan (1er octobre), comme les autres tests : le test dépend des repas de ce jour-là
+        await pg.add_init_script("{ const V = Date; const t = new V(2026, 9, 1, 12).getTime(); Date = class extends V { constructor(...a) { super(...(a.length ? a : [t])); } static now() { return t; } }; }")
         await pg.goto(PAGE); await pg.wait_for_timeout(300)
         await pg.click("button[data-ed='ouvrir'][data-k='des']")
         # yaourt 125 -> 100 en tapant, chocolat 10 -> 15 avec +

@@ -287,6 +287,23 @@ h3{ font-size:18px; font-weight:700; }
 .cat-titre{ font-family:var(--titre); font-weight:700; font-size:16px; margin:22px 0 6px; color:var(--titre-c); }
 .article{ display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:12px; align-items:center; padding:10px 4px; border-bottom:1px solid var(--trait); cursor:pointer; -webkit-tap-highlight-color:transparent; }
 .article .saisie{ cursor:default; }
+.etiq-ligne{ display:inline-block; font-size:11px; font-weight:700; padding:1px 7px; border-radius:999px; background:color-mix(in srgb, var(--or) 25%, var(--surface)); color:var(--titre-c); margin-left:6px; vertical-align:2px; text-decoration:none; }
+.etiq-ligne.non{ background:color-mix(in srgb, var(--alerte) 15%, var(--surface)); color:var(--alerte); }
+.article.non-achete .nom{ text-decoration:none; color:var(--brume); }
+.article.mag.non-achete{ opacity:.6; }
+.bas-course{ display:grid; gap:10px; margin:20px 0 6px; }
+.ajout-produit{ border:1px dashed var(--or); }
+.carte.ticket{ margin:8px 0 10px; border:2px solid color-mix(in srgb, var(--or) 55%, transparent); }
+.carte.panier-valide{ margin:8px 0 10px; border:2px solid color-mix(in srgb, var(--ok) 45%, transparent); }
+.carte.panier-valide .bouton .ico{ width:18px; height:18px; }
+.choix-plat.nouveau b{ color:var(--titre-c); }
+.feuille-ia .champ input, .feuille-ia .champ select{ width:100%; min-width:0; }
+.feuille-ia .form-ia .rangee{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+.feuille-ia .ligne-case input{ width:20px; }
+.saisie-u{ display:flex; align-items:center; gap:8px; font-weight:500; color:var(--encre); }
+.saisie-u input{ flex:1; min-width:0; border:1px solid var(--trait); background:var(--surface); border-radius:12px; padding:10px 12px; font-size:16px; color:var(--encre); }
+.ligne-case{ flex-direction:row; align-items:center; gap:10px; color:var(--encre); font-weight:500; font-size:15px; }
+.ligne-case input{ width:20px; height:20px; }
 .mag-barre{ display:flex; align-items:center; gap:8px 14px; flex-wrap:wrap; margin:6px 0 10px; font-size:14px; }
 .mag-barre b{ font-variant-numeric:tabular-nums; }
 .mag-barre .mode-mag{ margin-left:auto; display:inline-flex; align-items:center; gap:6px; }
@@ -447,7 +464,8 @@ const HORS_REPAS = { nicolas: [ { a: "Café", q: 1000 }, { a: "Eau (bouteilles 5
 const UNITES_SPECIALES = { "Café": "g", "Eau (bouteilles 5 L)": "L" };
 const DEFAUT = {
   version: 2,
-  foyer: { achats: {}, payes: {}, prix: {}, magasins: {}, pertes: [], modifs: [], depassementAccepte: 0, quantites: {}, generation: null },   // quantites : quantité achetée modifiée, par ligne   // pertes : produits jetés ; modifs : retraits et échanges décidés face à un dépassement
+  foyer: { achats: {}, payes: {}, prix: {}, magasins: {}, pertes: [], modifs: [], depassementAccepte: 0, quantites: {}, generation: null,
+    produits: {}, ajouts: {}, validees: {}, imports: {} },   // produits créés dans l'app ; lignes ajoutées à une course (ou achats spontanés) ; paniers validés ; tickets reportés   // quantites : quantité achetée modifiée, par ligne   // pertes : produits jetés ; modifs : retraits et échanges décidés face à un dépassement
   personnes: {
     nicolas: { coches: {}, remplacements: {}, pesees: [], profil: { poids: 85, cible: 80, taille: 180, age: 38, budget: 180, reference: 208.94,
       kcalMin: 1850, kcalMax: 1950, prot: 110, eviter: ["fromage (sauf pizza, lasagnes, burger)", "poisson gras", "trop de laitages"] } },
@@ -606,7 +624,8 @@ function quantiteUtile(it) { const c = DONNEES.cat[it.a]; return c.vrac ? it.buy
 function stockBrut(j, planSeul = false) {
   const s = {};
   Object.assign(s, STOCK_DEPART);
-  for (const c of COURSES()) if (c.jourPlan <= j) for (const it of (planSeul ? c.items : itemsCourse(c))) s[it.a] = (s[it.a] || 0) + quantiteUtile(it);
+  for (const c of COURSES()) if (c.jourPlan <= j) for (const it of (planSeul ? c.items : itemsCourse(c)))
+    if (planSeul || !valide(c.id) || E.foyer.achats[cleLigne(c.id, it)]) s[it.a] = (s[it.a] || 0) + quantiteUtile(it);
   for (let d = 1; d < j && d <= NB_JOURS; d++) for (const p of Object.keys(PERSONNES)) for (const k of CLES)
     for (const [a, q] of (planSeul ? repasPlan(d, k, p) : repasDe(d, k, p)).items) s[a] = (s[a] || 0) - q;
   retirerInvites(s, j);
@@ -643,7 +662,8 @@ function est0(it) { const c = DONNEES.cat[it.a]; if (!c || c.prix == null) retur
 function estimationLigne(it) { const c = fiche(it.a); if (!c || c.prix == null) return null; return c.vrac ? it.buy / 1000 * c.prix : it.buy * c.prix; }
 function cleArticle(cid, a) { return "c" + cid + "-" + a; }
 // clé d'une ligne : un produit de remplacement garde la trace de celui qu'il remplace (« Courgettes~Poivrons »)
-function cleLigne(cid, it) { return cleArticle(cid, it.remplace ? it.a + "~" + it.remplace : it.a); }
+function cleLigne(cid, it) { return it.cle || cleArticle(cid, it.remplace ? it.a + "~" + it.remplace : it.a); }
+const valide = cid => !!(E.foyer.validees || {})[cid];
 // Articles d'une course après les décisions prises face à un dépassement (retraits, échanges)
 function itemsCourse(c) {
   const out = [];
@@ -653,6 +673,13 @@ function itemsCourse(c) {
     if (!l) continue;
     // quantité achetée modifiée sur la ligne (dans l'unité d'achat : conditionnements, ou grammes en vrac)
     const q = (E.foyer.quantites || {})[cleLigne(c.id, l)];
+    out.push(q != null ? { ...l, prevu: l.buy, buy: q } : l);
+  }
+  // produits ajoutés à la main (hors liste du chef) et achats spontanés rattachés à cette course
+  for (const x of ((E.foyer.ajouts || {})[c.id] || [])) {
+    if (!DONNEES.cat[x.a]) continue;
+    const l = { a: x.a, buy: x.buy, needN: 0, needA: 0, ajout: x.id, cle: "c" + c.id + "-+" + x.id, spontane: !!x.spontane, date: x.date };
+    const q = (E.foyer.quantites || {})[l.cle];
     out.push(q != null ? { ...l, prevu: l.buy, buy: q } : l);
   }
   return out;
@@ -669,13 +696,74 @@ function bilanCourse(cid, p = actif) {
   const c = COURSES().find(x => x.id === cid);
   let est = 0, maPart = 0, paye = 0, partPaye = 0, faits = 0;
   // une case cochée vaut prix validé : le montant de la ligne devient réel (payé)
-  const items = itemsCourse(c);
+  const items = itemsCourse(c), val = valide(cid);
   for (const it of items) {
+    if (val && !E.foyer.achats[cleLigne(cid, it)]) continue;   // panier validé : pas coché = pas acheté
     const e = montantLigne(cid, it); est += e; maPart += e * part(it.a, p);
     if (E.foyer.achats[cleLigne(cid, it)]) { faits++; paye += e; partPaye += e * part(it.a, p); }
   }
   return { est, maPart, paye, partPaye, avenir: est - paye, faits, total: items.length };
 }
+
+/* ---------- Produits créés dans l'app (foyer.produits) : ajoutés au catalogue de la page ---------- */
+function integrerProduits() {
+  for (const [a, p] of Object.entries(E.foyer.produits || {})) {
+    DONNEES.cat[a] = { cat: p.rayon, achat: p.achat, cond: p.cond, vrac: p.vrac ? 1 : 0, rend: 1, prix: p.prix, stock: 0, note: "Produit ajouté dans l'app" };
+    if (p.nut) DONNEES.nut[a] = p.nut;
+    DONNEES.catalogue[a] = { rayon: p.rayon, achat: p.achat, cond: p.cond, vrac: p.vrac ? 1 : 0, rend: 1, prix: p.prix, nut: p.nut || null,
+      role: p.animal ? "proteine" : "autre", animal: !!p.animal, conservation: { jours: 7, lieu: "frigo", frais: true, estime: true }, ajoute: true };
+  }
+}
+/* ---------- Tickets de caisse (donnees/tickets) : reportés une fois dans leur course, annulables ----------
+   Une course pas encore commencée (aucune case cochée, panier non validé) reçoit les quantités et les prix payés du ticket ;
+   les produits hors liste s'ajoutent. On vérifie, puis on valide le panier. */
+const ISO_JOUR = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+function ticketsSuspendus() { try { return localStorage.getItem("marmite-tickets") === "manuel"; } catch (e) { return false; } }
+function appliquerTickets() {
+  if (ticketsSuspendus() || E.mois) return false;
+  let fait = false;
+  for (const t of DONNEES.tickets || []) {
+    if (t.mois !== MOIS_ID || (E.foyer.imports || {})[t.id]) continue;
+    const c = COURSES().find(x => x.id === t.course);
+    if (!c || valide(c.id) || itemsCourse(c).some(it => E.foyer.achats[cleLigne(c.id, it)])) continue;
+    reporterTicket(t, c); fait = true;
+  }
+  return fait;
+}
+function reporterTicket(t, c) {
+  // on garde, clé par clé, ce que le ticket remplace : l'annulation ne touche à rien d'autre (achats faits depuis, autres courses)
+  const F = E.foyer, avant = { achats: {}, payes: {}, quantites: {}, prix: {}, magasin: F.magasins[c.id] == null ? null : F.magasins[c.id] };
+  F.quantites = F.quantites || {}; F.ajouts = F.ajouts || {}; F.imports = F.imports || {};
+  const garder = (champ, cle, src) => { if (!(cle in avant[champ])) avant[champ][cle] = src[cle] === undefined ? null : JSON.parse(JSON.stringify(src[cle])); };
+  for (const l of t.lignes) {
+    const cc = DONNEES.cat[l.a]; if (!cc) continue;
+    let it = !l.ajout && itemsCourse(c).find(x => x.a === l.a && !x.ajout && !x.remplace);
+    if (!it) {
+      const id = t.id + "-" + l.a;
+      F.ajouts[c.id] = (F.ajouts[c.id] || []).filter(x => x.id !== id).concat({ id, a: l.a, buy: l.buy, ticket: t.id });
+      it = itemsCourse(c).find(x => x.ajout === id);
+    }
+    const k = cleLigne(c.id, it), prevu = it.prevu != null ? it.prevu : it.buy;
+    garder("achats", k, F.achats); garder("payes", k, F.payes); garder("quantites", k, F.quantites); garder("prix", l.a, F.prix);
+    if (Math.abs(prevu - l.buy) > 1e-9) F.quantites[k] = l.buy; else delete F.quantites[k];
+    F.achats[k] = true; F.payes[k] = l.paye;
+    const prix = l.prix != null ? l.prix : cc.vrac ? l.paye / (l.buy / 1000) : l.paye / l.buy;
+    F.prix[l.a] = { prix: Math.round(prix * 100) / 100, date: t.date, source: "paye" };
+  }
+  F.magasins[c.id] = F.magasins[c.id] || t.magasin;
+  F.imports[t.id] = { date: ISO_JOUR(new Date()), course: c.id, avant };
+}
+function annulerTicket(id) {
+  const x = (E.foyer.imports || {})[id]; if (!x || !x.avant) return;
+  const F = E.foyer;
+  for (const champ of ["achats", "payes", "quantites", "prix"]) for (const [cle, v] of Object.entries(x.avant[champ] || {})) {
+    if (v == null) delete F[champ][cle]; else F[champ][cle] = v;
+  }
+  for (const cid of Object.keys(F.ajouts || {})) F.ajouts[cid] = F.ajouts[cid].filter(y => y.ticket !== id);
+  if (x.avant.magasin == null) delete F.magasins[x.course]; else F.magasins[x.course] = x.avant.magasin;
+  F.imports[id] = { date: ISO_JOUR(new Date()), annule: true };
+}
+function apresChargement() { integrerProduits(); if (appliquerTickets()) sauver(); }
 
 /* ---------- Sauvegarde : compte en ligne puis appareil ---------- */
 let minuterie = null, enCours = false, encore = false;
@@ -722,7 +810,7 @@ async function brancherCompte() {
     const id = await user.id(); if (!id) return;
     refDoc = db.doc("data/users/" + id + "/marmite");
     const snap = await refDoc.get();
-    if (snap.exists) { charger(snap.data()); try { localStorage.setItem("marmite-nicolas", JSON.stringify(E)); } catch (e) {} }
+    if (snap.exists) { charger(snap.data()); integrerProduits(); appliquerTickets(); try { localStorage.setItem("marmite-nicolas", JSON.stringify(E)); } catch (e) {} }
     E.version = 2;
     await refDoc.set(JSON.parse(JSON.stringify(E)));
     sync = "compte"; rendre();
@@ -871,7 +959,7 @@ function genererMenu(j0, graine, invites, budget) {
   for (const [a, q] of Object.entries(sr)) if (q > 0.5) stock[a] = Math.round(q * 10) / 10;
   // une course dont un article est déjà coché est gardée telle quelle ; les suivantes sont recalculées
   const base = BASE_COURSES, commencees = base.filter(c => itemsCourse(c).some(it => E.foyer.achats[cleLigne(c.id, it)])).map(c => c.id);
-  const gardees = base.filter(c => c.jourPlan < j0 || commencees.includes(c.id)).map(c => c.id);
+  const gardees = base.filter(c => c.jourPlan < j0 || commencees.includes(c.id) || valide(c.id)).map(c => c.id);
   const joursCourses = base.filter(c => !gardees.includes(c.id)).map(c => c.date);
   const historique = [];
   for (let d = Math.max(1, j0 - 5); d < j0; d++) for (const k of ["dej", "din"]) {
@@ -1197,7 +1285,9 @@ function vueStock(seg) {
     <div><span class="chiffre">${eur(valeur)}</span><span class="discret">à la maison aujourd'hui</span></div>
     <div><span class="chiffre">${adj}</span><span class="discret">repas ajustés ${de()} (${dk >= 0 ? "+" : "−"}${nb(Math.abs(dk))} kcal)</span></div>
   </div>
-  <p class="discret petit">Ce qu'il reste à la maison aujourd'hui : articles cochés aux courses, moins les repas des jours passés et la poubelle. La dernière colonne prévoit la fin du cycle avec toutes les courses de la liste.</p>
+  <p class="discret petit">Ce qu'il reste à la maison aujourd'hui : articles cochés aux courses (et achats hors liste), moins les repas des jours passés et la poubelle. La dernière colonne prévoit la fin du cycle avec toutes les courses de la liste.</p>
+  <button class="bouton leger plein ajout-produit" data-ajout-ouvrir="achat">+ Ajouter un achat (courses spontanées)</button>
+  ${achatsSpontanes()}
   <div class="stock-ligne stock-tete"><span>Aliment</span><span class="n">${aujourdhui}</span><span class="n">Le ${dateDuJour(NB_JOURS).getDate()} au soir</span><span></span></div>
   ${lignes.map(l => `<div class="stock-ligne"><span>${echap(l.a)}</span><span class="n">${quantite(l.a, l.n)}</span>
     <span class="n ${l.f < -0.5 ? "manque" : ""}">${l.f < -0.5 ? "manque " + quantite(l.a, -l.f) : quantite(l.a, Math.max(0, l.f))}</span>
@@ -1207,6 +1297,14 @@ function vueStock(seg) {
   ${vuePertes()}`;
 }
 let jeterSel = null;
+function achatsSpontanes() {
+  const l = [];
+  for (const c of COURSES()) for (const it of itemsCourse(c)) if (it.spontane) l.push({ c, it });
+  if (!l.length) return "";
+  return `<div class="carte pertes"><div class="sect-titre"><h3>Achats hors liste</h3><span class="chiffre">${eur(l.reduce((s, x) => s + montantLigne(x.c.id, x.it), 0))}</span></div>
+    <ul>${l.map(({ c, it }) => `<li><span>${echap(it.a)} · ${DONNEES.cat[it.a].vrac ? quantite(it.a, it.buy) : nb(it.buy, it.buy % 1 ? 1 : 0) + " × " + echap(DONNEES.cat[it.a].achat)} <span class="discret">${dateCourte(it.date).toLowerCase()} · ${eur(montantLigne(c.id, it))}</span></span>
+      <button class="lien" data-ajout-suppr="${c.id}|${echap(String(it.ajout))}">Annuler</button></li>`).join("")}</ul></div>`;
+}
 function vuePertes() {
   const l = E.foyer.pertes || [];
   if (!l.length) return "";
@@ -1276,7 +1374,7 @@ function finPeriode(c) { const n = COURSES().find(x => x.jourPlan > c.jourPlan);
 function lignesAAcheter() {
   const out = [];
   for (const c of COURSES()) {
-    if (finPeriode(c) < jourActuel()) continue;
+    if (finPeriode(c) < jourActuel() || valide(c.id)) continue;
     for (const it of itemsCourse(c)) if (!it.remplace && !E.foyer.achats[cleLigne(c.id, it)]) out.push({ c, it });
   }
   return out;
@@ -1368,23 +1466,30 @@ function vueCourses() {
   if (courseSel === "prix") return vuePrix(seg);
   const c = COURSES().find(x => x.id === courseSel), b = bilanCourse(courseSel);
   const groupes = {};
-  for (const it of itemsCourse(c)) (groupes[DONNEES.cat[it.a].cat] = groupes[DONNEES.cat[it.a].cat] || []).push(it);
+  // rayon affiché : ce qui était « déjà en stock » (huile, farine) se rachète au rayon épicerie
+  const rayon = a => DONNEES.cat[a].cat === "Déjà en stock" ? "Épicerie" : DONNEES.cat[a].cat;
+  for (const it of itemsCourse(c)) (groupes[rayon(it.a)] = groupes[rayon(it.a)] || []).push(it);
   const puces = `<div class="puces courses-puces" role="group" aria-label="Choisir la course">${COURSES().map(x => { const bx = bilanCourse(x.id);
     return `<button class="puce" data-course="${x.id}" aria-pressed="${x.id === courseSel}">${x.titre} · ${dateCourte(x.date)}<span class="discret">${bx.faits}/${bx.total}</span></button>`; }).join("")}</div>`;
   let liste = "";
   const modeBtn = `<button class="puce mode-mag" data-mode-courses="1" aria-pressed="${modeMagasin}">${ICONES.panier}Mode magasin</button>`;
+  const val = valide(courseSel), haut = enteteCourse(c, b), bas = basCourse(c, b);
+  // étiquettes d'une ligne : ajoutée à la main, achat spontané, pas achetée (panier validé)
+  const etiq = (it, fait) => (it.spontane ? `<span class="etiq-ligne">achat du ${dateCourte(it.date)}</span>` : it.ajout ? `<span class="etiq-ligne">ajouté</span>` : "")
+    + (val && !fait ? `<span class="etiq-ligne non">pas acheté</span>` : "");
+  const retirer = (it) => it.ajout ? `<button class="lien" data-ajout-suppr="${courseSel}|${echap(String(it.ajout))}">Retirer de la liste</button>` : "";
   if (modeMagasin) {
     for (const [cat, items] of Object.entries(groupes)) {
       liste += `<h3 class="cat-titre">${echap(cat)}</h3>`;
       for (const it of items) {
         const k = cleLigne(courseSel, it), fait = !!E.foyer.achats[k], est = estimationLigne(it), v = E.foyer.payes[k], c = DONNEES.cat[it.a], ouvert = artOuvert === k;
         const qa = c.vrac ? nb(it.buy) + " g" : it.buy + " × " + echap(c.achat);
-        liste += `<div class="article mag ${fait ? "achete" : ""} ${ouvert ? "ouvert" : ""}" data-art-ouvrir="${echap(k)}">
+        liste += `<div class="article mag ${fait ? "achete" : ""} ${val && !fait ? "non-achete" : ""} ${ouvert ? "ouvert" : ""}" data-art-ouvrir="${echap(k)}">
           <button class="check" data-achat="${echap(k)}" aria-pressed="${fait}" aria-label="${echap(it.a)} acheté">${ICONES.coche}</button>
-          <div class="mag-txt"><div class="nom">${echap(it.a)}</div><div class="detail">${qa}</div></div>
+          <div class="mag-txt"><div class="nom">${echap(it.a)}${etiq(it, fait)}</div><div class="detail">${qa}</div></div>
           <span class="mag-prix">${v != null ? `<b>${eur(v)}</b>` : est != null ? eur(est) : ""}${ICONES.bas}</span>
           ${ouvert ? `<div class="mag-detail">
-            <p class="detail">Besoin ${quantite(it.a, it.needN + it.needA + (it.needI || 0))}${it.remplace ? " · remplace " + echap(it.remplace) : ""} · part ${de()} ${est == null ? "—" : eur(est * part(it.a))}</p>
+            <p class="detail">${it.ajout ? (it.spontane ? "Achat hors liste" : "Ajouté à la liste") : "Besoin " + quantite(it.a, it.needN + it.needA + (it.needI || 0))}${it.remplace ? " · remplace " + echap(it.remplace) : ""} · part ${de()} ${est == null ? "—" : eur(est * part(it.a))} ${retirer(it)}</p>
             <div class="mag-champs">
               <label class="saisie qte-achat">Acheté <input type="number" inputmode="decimal" min="0" step="${c.vrac ? 10 : 1}" data-qte="${echap(k)}" data-art="${echap(it.a)}" data-prevu="${it.prevu != null ? it.prevu : it.buy}" value="${it.buy}" aria-label="Quantité achetée de ${echap(it.a)}">
                 ${c.vrac ? "g" : "× " + echap(c.achat)}</label>
@@ -1399,17 +1504,19 @@ function vueCourses() {
     <div class="segments" role="group" aria-label="Choisir la liste">${seg}</div>
     ${puces}
     <div class="mag-barre"><span><b>${b.faits}/${b.total}</b> au panier · payé <b>${eur(b.paye)}</b> · reste ${eur(b.avenir)}</span>${modeBtn}</div>
+    ${haut}
     ${alerte ? panneauDepassement() : ""}
-    ${liste}`;
+    ${liste}
+    ${bas}`;
   }
   for (const [cat, items] of Object.entries(groupes)) {
     liste += `<h3 class="cat-titre">${echap(cat)}</h3>`;
     for (const it of items) {
       const k = cleLigne(courseSel, it), fait = !!E.foyer.achats[k], est = estimationLigne(it), v = E.foyer.payes[k];
-      liste += `<div class="article ${fait ? "achete" : ""}">
+      liste += `<div class="article ${fait ? "achete" : ""} ${val && !fait ? "non-achete" : ""}">
         <button class="check" data-achat="${echap(k)}" aria-pressed="${fait}" aria-label="${echap(it.a)} acheté">${ICONES.coche}</button>
-        <div><div class="nom">${echap(it.a)}</div>
-          <div class="detail">Besoin ${quantite(it.a, it.needN + it.needA + (it.needI || 0))}${it.remplace ? " · remplace " + echap(it.remplace) : ""}</div>
+        <div><div class="nom">${echap(it.a)}${etiq(it, fait)}</div>
+          <div class="detail">${it.ajout ? (it.spontane ? "Achat hors liste" : "Ajouté à la liste") : "Besoin " + quantite(it.a, it.needN + it.needA + (it.needI || 0))}${it.remplace ? " · remplace " + echap(it.remplace) : ""} ${retirer(it)}</div>
           <label class="saisie qte-achat">Acheté <input type="number" inputmode="decimal" min="0" step="${DONNEES.cat[it.a].vrac ? 10 : 1}" data-qte="${echap(k)}" data-art="${echap(it.a)}" data-prevu="${it.prevu != null ? it.prevu : it.buy}" value="${it.buy}" aria-label="Quantité achetée de ${echap(it.a)}">
             ${DONNEES.cat[it.a].vrac ? "g" : "× " + echap(DONNEES.cat[it.a].achat)}</label></div>
         <div class="prix"><label class="saisie"><input type="number" inputmode="decimal" step="0.01" min="0" data-paye="${echap(k)}" data-art="${echap(it.a)}" data-buy="${it.buy}"
@@ -1430,8 +1537,132 @@ function vueCourses() {
   ${ligneProjection()}
   <div class="ligne-saisie"><label class="champ">Magasin<input type="text" data-magasin="${courseSel}" value="${echap(E.foyer.magasins[courseSel] || "")}" placeholder="Ex. Leclerc Saint-Pierre"></label>
     <p class="discret petit" style="margin:0 0 10px">${b.faits}/${b.total} articles</p></div>
-  <p class="discret petit">Coche un article quand il est dans le panier : son prix est validé et compte dans le réel. Corrige la quantité achetée si besoin (le besoin de la période est indiqué), et le prix s'il n'est pas celui affiché : il remplace l'ancien partout.</p>
-  ${liste}`;
+  ${haut}
+  <p class="discret petit">Coche un article quand il est dans le panier : son prix est validé et compte dans le réel. Corrige la quantité achetée si besoin (le besoin de la période est indiqué), et le prix s'il n'est pas celui affiché : il remplace l'ancien partout. En fin de course, valide le panier.</p>
+  ${liste}
+  ${bas}`;
+}
+
+// En tête de liste : ticket reporté à vérifier, ou panier validé avec la proposition de refaire le planning
+function enteteCourse(c, b) {
+  let h = "";
+  for (const t of DONNEES.tickets || []) {
+    const x = (E.foyer.imports || {})[t.id];
+    if (!x || x.annule || x.course !== c.id || valide(c.id)) continue;
+    h += `<div class="carte ticket"><p style="margin:0"><b>Ticket ${echap(t.magasin.split(",")[0])} du ${dateCourte(t.date).toLowerCase()} reporté</b> : ${t.lignes.length} articles alimentaires, ${eur(t.totalImporte)} payés.</p>
+      <p class="discret petit" style="margin:4px 0 8px">Quantités et prix payés viennent du ticket ; ils deviennent les prix de référence. Vérifie les lignes, puis valide le panier en bas de la liste : ce qui n'est pas coché sera noté non acheté.</p>
+      <button class="lien" data-ticket-annuler="${echap(t.id)}">Annuler le report du ticket</button></div>`;
+  }
+  if (valide(c.id)) {
+    const non = b.total - b.faits;
+    h += `<div class="carte panier-valide"><p style="margin:0"><b>Panier validé le ${dateCourte(E.foyer.validees[c.id]).toLowerCase()}</b> : ${b.faits} article${b.faits > 1 ? "s" : ""} acheté${b.faits > 1 ? "s" : ""} pour ${eur(b.paye)}${non ? `, ${non} pas acheté${non > 1 ? "s" : ""}` : ""}.</p>
+      <p class="discret petit" style="margin:4px 0 10px">Le stock et le budget ne comptent que ce qui a été acheté. Le chef peut recomposer les jours qui viennent avec ce qu'il y a vraiment à la maison.</p>
+      <div class="btns-ed"><button class="bouton" data-replanifier="1">${ICONES.etincelle}Refaire le planning selon les achats</button><button class="bouton leger" data-panier-rouvrir="${c.id}">Rouvrir le panier</button></div></div>`;
+  }
+  return h;
+}
+let validerSel = null;
+function basCourse(c, b) {
+  const ajouter = `<button class="bouton leger plein ajout-produit" data-ajout-ouvrir="liste">+ Ajouter un produit</button>`;
+  if (valide(c.id)) return `<div class="bas-course">${ajouter}</div>`;
+  const non = itemsCourse(c).filter(it => !E.foyer.achats[cleLigne(c.id, it)]);
+  const confirmer = validerSel === c.id ? `<div class="carte valider-panier">
+      <p style="margin:0"><b>${b.faits} article${b.faits > 1 ? "s" : ""} au panier, ${eur(b.paye)}.</b></p>
+      ${non.length ? `<p class="petit" style="margin:6px 0 0">${non.length} pas coché${non.length > 1 ? "s" : ""}, noté${non.length > 1 ? "s" : ""} non acheté${non.length > 1 ? "s" : ""} : ${non.map(it => echap(it.a)).join(", ")}.</p>` : `<p class="petit" style="margin:6px 0 0">Tout est coché.</p>`}
+      <div class="btns-ed" style="margin-top:10px"><button class="bouton" data-panier-ok="${c.id}">Valider le panier</button><button class="bouton leger" data-panier-non="1">Pas encore</button></div></div>`
+    : `<button class="bouton plein" data-panier-valider="${c.id}">Valider le panier</button>`;
+  return `<div class="bas-course">${ajouter}${confirmer}</div>`;
+}
+
+/* ---------- Ajouter un produit à une course, ou un achat spontané au stock ---------- */
+let ajout = null;   // { mode: "liste" | "achat", cid, q, sel, nouveau }
+const RAYONS = () => [...new Set(Object.values(DONNEES.cat).map(c => c.cat).filter(r => r && r !== "Déjà en stock"))];
+function ouvrirAjout(mode) {
+  ajout = { mode, cid: mode === "achat" ? courseDuJour() : courseSel, q: "", sel: null, nouveau: false };
+  rendreAjout(); const i = document.getElementById("ajout-q"); if (i && window.matchMedia && matchMedia("(min-width:700px)").matches) i.focus();
+}
+function listeAjout() {
+  const q = ajout.q.trim().toLowerCase();
+  const l = Object.keys(DONNEES.cat).filter(a => !q || a.toLowerCase().includes(q) || (DONNEES.cat[a].cat || "").toLowerCase().includes(q))
+    .sort((x, y) => x.localeCompare(y, "fr")).slice(0, 40);
+  const lignes = l.map(a => { const c = fiche(a);
+    return `<li><button class="choix-plat" data-ajout-choisir="${echap(a)}"><b>${echap(a)}</b><span class="discret">${echap(c.cat === "Déjà en stock" ? "Épicerie" : c.cat)} · ${echap(c.achat)}${c.prix != null ? " · " + nb(c.prix, 2) + (c.vrac ? " €/kg" : " €") : ""}</span></button></li>`; }).join("");
+  return lignes + `<li><button class="choix-plat nouveau" data-ajout-nouveau="1"><b>+ Nouveau produit${ajout.q.trim() ? " : « " + echap(ajout.q.trim()) + " »" : ""}</b><span class="discret">S'il n'est pas dans la liste</span></button></li>`;
+}
+function rendreAjout() {
+  const el = document.getElementById("couche"); if (!ajout) { el.innerHTML = ""; return; }
+  const achat = ajout.mode === "achat", course = COURSES().find(x => x.id === ajout.cid);
+  const titre = achat ? "Ajouter un achat au stock" : "Ajouter à la " + course.titre.toLowerCase().replace("course", "course");
+  let corps;
+  if (ajout.nouveau) {
+    corps = `<div class="form-ia">
+      <label class="champ">Nom du produit<input id="np-nom" type="text" value="${echap(ajout.q.trim())}" placeholder="Ex. Bacon" autocomplete="off"></label>
+      <label class="champ">Rayon<select id="np-rayon">${RAYONS().map(r => `<option>${echap(r)}</option>`).join("")}</select></label>
+      <label class="champ">Vendu<select id="np-vrac"><option value="0">au paquet ou à la pièce</option><option value="1">au poids (vrac, à la coupe)</option></select></label>
+      <div class="rangee"><label class="champ">Contenu d'un paquet<input id="np-cond" type="number" inputmode="decimal" min="0" step="any" placeholder="500"></label>
+        <label class="champ">Unité<select id="np-unite"><option value="g">g</option><option value="ml">ml</option><option value="unité">pièces</option></select></label></div>
+      <label class="champ">Prix (au paquet, ou au kilo en vrac)<input id="np-prix" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0,00"></label>
+      <div class="rangee"><label class="champ">kcal pour 100 g (facultatif)<input id="np-kcal" type="number" inputmode="decimal" min="0" step="any"></label>
+        <label class="champ">Protéines (g) pour 100 g<input id="np-prot" type="number" inputmode="decimal" min="0" step="any"></label></div>
+      <label class="champ ligne-case"><input id="np-animal" type="checkbox"> Viande, poisson ou charcuterie</label>
+      <div class="btns-ed"><button class="bouton" data-ajout-creer="1">Créer le produit</button><button class="bouton leger" data-ajout-retour="1">Retour</button></div></div>`;
+  } else if (ajout.sel) {
+    const a = ajout.sel, c = fiche(a), u = c.vrac ? "g" : "× " + c.achat;
+    corps = `<div class="form-ia">
+      <p style="margin:0"><b>${echap(a)}</b> <span class="discret">· ${echap(c.achat)}${c.prix != null ? " · " + nb(c.prix, 2) + (c.vrac ? " €/kg" : " €") : ""}</span></p>
+      <label class="champ">Quantité ${achat ? "achetée" : "à acheter"}<span class="saisie-u"><input id="ajout-qte" type="number" inputmode="decimal" min="0" step="any" value="${c.vrac ? 100 : 1}"> ${echap(u)}</span></label>
+      <label class="champ">Prix payé ${achat ? "" : "(si déjà dans le panier)"}<span class="saisie-u"><input id="ajout-prix" type="number" inputmode="decimal" min="0" step="0.01" placeholder="${achat ? "0,00" : "facultatif"}"> €</span></label>
+      ${achat ? `<p class="discret petit" style="margin:0">L'achat entre dans le stock à partir d'aujourd'hui et compte dans le budget (rattaché à la ${course.titre.toLowerCase()}).</p>` : ""}
+      <div class="btns-ed"><button class="bouton" data-ajout-ok="1">${achat ? "Ajouter au stock" : "Ajouter à la liste"}</button><button class="bouton leger" data-ajout-retour="1">Retour</button></div></div>`;
+  } else {
+    corps = `<label class="champ">Chercher un produit<input id="ajout-q" type="search" data-ajout-q="1" value="${echap(ajout.q)}" placeholder="poulet, yaourt, bacon…" autocomplete="off"></label>
+      <ul class="choix-liste" id="ajout-liste">${listeAjout()}</ul>`;
+  }
+  el.innerHTML = `<div class="voile"><div class="feuille-ia" role="dialog" aria-modal="true" aria-labelledby="titre-ajout">
+    <div class="tete"><div><h2 id="titre-ajout">${titre}</h2><p class="discret petit" style="margin:4px 0 0">${achat ? "Courses spontanées : ce qui a été acheté hors liste." : "Un produit qui n'était pas prévu dans la liste."}</p></div>
+      <button class="rond" data-choix-fermer="1" aria-label="Fermer">×</button></div>${corps}</div></div>`;
+}
+function creerProduit() {
+  const v = id => (document.getElementById(id) || {}).value, n = id => parseFloat(String(v(id) || "").replace(",", "."));
+  const nom = (v("np-nom") || "").trim();
+  if (!nom) return toast("Donne un nom au produit");
+  if (DONNEES.cat[nom]) { ajout.nouveau = false; ajout.sel = nom; return rendreAjout(); }
+  const vrac = v("np-vrac") === "1", unite = v("np-unite") || "g", cond = vrac ? 1 : n("np-cond"), prix = n("np-prix");
+  if (!vrac && !(cond > 0)) return toast("Indique le contenu d'un paquet");
+  const kcal = n("np-kcal"), prot = n("np-prot");
+  const base = unite === "unité" && !vrac ? 1 : 100;
+  E.foyer.produits = E.foyer.produits || {};
+  E.foyer.produits[nom] = { rayon: v("np-rayon") || "Épicerie", vrac, cond, prix: prix > 0 ? prix : null, animal: !!(document.getElementById("np-animal") || {}).checked,
+    achat: vrac ? "à la coupe, au gramme" : unite === "unité" ? "paquet de " + nb(cond) : "paquet " + nb(cond) + " " + unite,
+    nut: kcal >= 0 && !isNaN(kcal) ? [base, vrac ? "g" : unite, kcal, isNaN(prot) ? 0 : prot] : null };
+  integrerProduits(); sauver();
+  ajout.nouveau = false; ajout.sel = nom; rendreAjout(); toast(nom + " ajouté aux produits");
+}
+function validerAjout() {
+  const a = ajout.sel, c = DONNEES.cat[a], qte = parseFloat(String((document.getElementById("ajout-qte") || {}).value || "").replace(",", "."));
+  const prixTxt = String((document.getElementById("ajout-prix") || {}).value || "").replace(",", "."), prix = prixTxt === "" ? null : parseFloat(prixTxt);
+  if (!(qte > 0)) return toast("Indique une quantité");
+  const cid = ajout.cid, course = COURSES().find(x => x.id === cid), achat = ajout.mode === "achat";
+  // déjà prévu dans la liste : on ouvre sa ligne plutôt que de la doubler
+  const existe = !achat && itemsCourse(course).find(it => it.a === a && !it.remplace);
+  if (existe) { artOuvert = cleLigne(cid, existe); ajout = null; rendreAjout(); rendre(); return toast(a + " est déjà dans la liste : modifie la quantité sur sa ligne"); }
+  const x = { id: String(Date.now()), a, buy: Math.round(qte * 1000) / 1000 };
+  if (achat) Object.assign(x, { spontane: true, date: ISO_JOUR(new Date()) });
+  E.foyer.ajouts = E.foyer.ajouts || {}; E.foyer.ajouts[cid] = (E.foyer.ajouts[cid] || []).concat(x);
+  const k = "c" + cid + "-+" + x.id;
+  if (achat || prix != null) E.foyer.achats[k] = true;
+  if (prix != null && !isNaN(prix)) {
+    E.foyer.payes[k] = Math.round(prix * 100) / 100;
+    if (prix > 0) E.foyer.prix[a] = { prix: Math.round((c.vrac ? prix / (x.buy / 1000) : prix / x.buy) * 100) / 100, date: ISO_JOUR(new Date()), source: "paye" };
+  }
+  ajout = null; rendreAjout(); sauver(); rendre();
+  toast(achat ? a + " ajouté au stock" : a + " ajouté à la " + course.titre.toLowerCase());
+}
+function retirerAjout(cid, id) {
+  const l = (E.foyer.ajouts || {})[cid] || [], x = l.find(y => String(y.id) === id); if (!x) return;
+  E.foyer.ajouts[cid] = l.filter(y => y !== x);
+  const k = "c" + cid + "-+" + x.id; delete E.foyer.achats[k]; delete E.foyer.payes[k]; if (E.foyer.quantites) delete E.foyer.quantites[k];
+  artOuvert = null; sauver(); toast(x.a + " retiré");
 }
 
 /* ---------- Vue : budget ---------- */
@@ -1566,7 +1797,7 @@ function ouvrirIA(k) {
     budgetActif: false, budget: Math.max(0.5, Math.round(s.cout * 100) / 100 || 2), kcal: s.kcal, prot: s.prot, etat: "form", propositions: [], erreur: "" };
   rendreIA();
 }
-function fermerIA() { ia = null; choix = null; document.getElementById("couche").innerHTML = ""; }
+function fermerIA() { ia = null; choix = null; ajout = null; document.getElementById("couche").innerHTML = ""; }
 function lireForm() {
   const bi = document.getElementById("ia-budget"), ti = document.getElementById("ia-temps");
   if (bi) { const v = parseFloat(bi.value); if (!isNaN(v) && v > 0) ia.budget = v; }
@@ -1741,7 +1972,7 @@ function action(b) {
   if (d.deplier) { deplies.has(d.deplier) ? deplies.delete(d.deplier) : deplies.add(d.deplier); return rendre(); }
   if (d.voir) { jourSel = +d.voir; return aller("jour"); }
   if (d.coche) { const c = P().coches; c[d.coche] ? delete c[d.coche] : (c[d.coche] = true); deplies.delete(d.coche.split("-")[1]); sauver(); return rendre(); }
-  if (d.course) { courseSel = d.course === "stock" || d.course === "prix" ? d.course : +d.course; jeterSel = null; artOuvert = null; return rendre(); }
+  if (d.course) { courseSel = d.course === "stock" || d.course === "prix" ? d.course : +d.course; jeterSel = null; artOuvert = null; validerSel = null; return rendre(); }
   if (d.modif) {
     const m = { id: Date.now(), type: d.modif === "retrait" ? "retrait" : "substitution", cid: +d.cid, a: d.a, date: new Date().toISOString().slice(0, 10) };
     const c = COURSES().find(x => x.id === m.cid), it = c.items.find(x => x.a === m.a);
@@ -1786,6 +2017,26 @@ function action(b) {
     jeterSel = null; return rendre();
   }
   if (d.perteSuppr) { E.foyer.pertes.splice(+d.perteSuppr, 1); sauver(); return rendre(); }
+  if (d.ajoutOuvrir) return ouvrirAjout(d.ajoutOuvrir);
+  if (d.ajoutChoisir) { ajout.sel = d.ajoutChoisir; return rendreAjout(); }
+  if (d.ajoutNouveau) { ajout.nouveau = true; return rendreAjout(); }
+  if (d.ajoutRetour) { if (ajout.nouveau) ajout.nouveau = false; else ajout.sel = null; return rendreAjout(); }
+  if (d.ajoutCreer) return creerProduit();
+  if (d.ajoutOk) return validerAjout();
+  if (d.ajoutSuppr) { const [cid, id] = d.ajoutSuppr.split("|"); retirerAjout(+cid, id); return rendre(); }
+  if (d.panierValider) { validerSel = +d.panierValider; return rendre(); }
+  if (d.panierNon) { validerSel = null; return rendre(); }
+  if (d.panierOk) {
+    E.foyer.validees = E.foyer.validees || {}; E.foyer.validees[+d.panierOk] = ISO_JOUR(new Date()); validerSel = null; artOuvert = null;
+    sauver(); rendre(); window.scrollTo(0, 0); return toast("Panier validé");
+  }
+  if (d.panierRouvrir) { delete E.foyer.validees[+d.panierRouvrir]; sauver(); toast("Panier rouvert"); return rendre(); }
+  if (d.replanifier) {
+    gen = { mode: "stock", j0: premierJourLibre(), graine: 1, invites: 0, budget: null, res: null };
+    gen.res = genererMenu(gen.j0, 1, 0, null); aller("planning");
+    const g = document.querySelector(".generation"); if (g) g.scrollIntoView({ block: "start" }); return;
+  }
+  if (d.ticketAnnuler) { annulerTicket(d.ticketAnnuler); sauver(); toast("Report du ticket annulé"); return rendre(); }
   if (d.modeCourses) { modeMagasin = !modeMagasin; artOuvert = null; try { localStorage.setItem("marmite-courses", modeMagasin ? "magasin" : "detail"); } catch (e) {} return rendre(); }
   if (d.achat) {
     const a = E.foyer.achats; a[d.achat] ? delete a[d.achat] : (a[d.achat] = true); sauver(); return rendre();
@@ -1849,11 +2100,12 @@ document.ondrop = e => {
 };
 document.ondragend = () => document.querySelectorAll(".cible, .glisse").forEach(x => x.classList.remove("cible", "glisse"));
 document.onkeydown = e => {
-  if (e.key === "Escape" && (ia || choix)) return fermerIA();
+  if (e.key === "Escape" && (ia || choix || ajout)) return fermerIA();
   const t = e.target; if ((e.key === " " || e.key === "Enter") && t.classList && t.classList.contains("interrupteur")) { e.preventDefault(); action(t); }
 };
 document.oninput = e => {
   const t = e.target;
+  if (t.dataset.ajoutQ != null && ajout) { ajout.q = t.value; const l = document.getElementById("ajout-liste"); if (l) l.innerHTML = listeAjout(); return; }
   if (t.dataset.biblioQ != null) { biblio.q = t.value; const l = document.getElementById("biblio-liste"); if (l) l.innerHTML = listeBiblio(); return; }
   if (t.dataset.choixQ != null && choix) { choix.q = t.value; const l = document.getElementById("choix-liste"); if (l) l.innerHTML = listeChoix(); return; } if (t.dataset.edQ == null || !edition) return;
   const v = parseFloat(t.value); edition.items[+t.dataset.edQ][1] = isNaN(v) ? 0 : Math.max(0, v);
@@ -1903,6 +2155,7 @@ window.onresize = () => { if (vue !== "budget") return; clearTimeout(minuterieTa
 if (window.matchMedia) matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => rendreCadre());
 
 /* ---------- Démarrage ---------- */
+apresChargement();
 rendre();
 brancherCompte();
 </script>

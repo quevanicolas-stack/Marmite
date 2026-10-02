@@ -15,6 +15,7 @@ async def main():
         pg = await ctx.new_page()
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.route("**/fonts.g*/**", lambda r: r.abort())
+        await pg.add_init_script("try { localStorage.setItem('marmite-tickets', 'manuel'); } catch (e) {}")   # ticket non reporté (testé dans test_achats.py)
         await pg.goto(PAGE); await pg.wait_for_timeout(300)
         # octobre suivi : une coche, un article acheté
         await pg.evaluate("E.personnes.nicolas.coches['d2-dej'] = true; E.foyer.achats['c1-Poulet'] = true; sauver(); rendre();")

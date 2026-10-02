@@ -13,6 +13,7 @@ async def main():
         pg = await b.new_page(viewport={"width": 390, "height": 844}, device_scale_factor=2)
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.route("**/fonts.g*/**", lambda r: r.abort())
+        await pg.add_init_script("try { localStorage.setItem('marmite-tickets', 'manuel'); } catch (e) {}")   # ticket non reporté (testé dans test_achats.py)
         # lignes détaillées (prix et quantité visibles) : le mode magasin est testé dans test_ecrans.py
         await pg.add_init_script("try { localStorage.setItem('marmite-courses', 'detail'); } catch (e) {}")
         await pg.goto(PAGE); await pg.wait_for_timeout(300)
