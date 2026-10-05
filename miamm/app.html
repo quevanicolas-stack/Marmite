@@ -33,7 +33,12 @@ a{ color:var(--primaire); }
 .page{ max-width:720px; margin:0 auto; padding:18px 16px calc(96px + env(safe-area-inset-bottom,0px)); }
 .sans-nav .page{ padding-bottom:40px; }
 .entete{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:16px; }
-.marque{ font-family:var(--titre); font-weight:800; font-size:28px; letter-spacing:-1px; color:var(--primaire); }
+.marque{ font-family:var(--titre); font-weight:800; font-size:28px; letter-spacing:-1px; color:var(--primaire); display:inline-flex; align-items:center; gap:8px; }
+.badge-marque{ width:46px; height:46px; margin:-6px 0; }
+.chef{ display:block; }
+.attente .chef{ animation:pop 1.2s ease-in-out infinite; }
+.signe-chef{ display:flex; align-items:center; gap:10px; }
+.signe-chef img{ width:52px; height:52px; flex-shrink:0; }
 .marque i{ font-style:normal; color:var(--paprika); }
 .rond{ width:44px; height:44px; border-radius:50%; border:2px solid var(--trait); background:var(--surface); display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
 .rond svg{ width:20px; height:20px; }
@@ -65,7 +70,7 @@ a{ color:var(--primaire); }
 .mode-mesure{ background:var(--aubergine); color:#FFFBF2; }
 .mode-express{ background:var(--surface); color:var(--encre); border:3px solid var(--encre) !important; }
 .hero{ position:relative; border-radius:32px; background:var(--safran); color:#24112E; padding:22px; min-height:220px; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end; align-items:flex-start; gap:10px; margin-bottom:16px; }
-button.hero{ width:100%; border:none; text-align:left; font:inherit; min-height:300px; padding-top:150px; box-shadow:0 6px 0 #C99600; transition:transform .12s, box-shadow .12s; }
+button.hero{ width:100%; border:none; text-align:left; font:inherit; min-height:300px; padding-top:172px; box-shadow:0 6px 0 #C99600; transition:transform .12s, box-shadow .12s; }
 button.hero:active{ transform:translateY(4px); box-shadow:0 2px 0 #C99600; }
 button.hero:focus-visible{ outline:4px solid var(--aubergine); outline-offset:3px; }
 .hero h1{ position:relative; font-size:40px; line-height:.98; max-width:250px; }
@@ -73,8 +78,10 @@ button.hero:focus-visible{ outline:4px solid var(--aubergine); outline-offset:3p
 button.hero h1{ max-width:none; font-size:38px; }
 .hero .sous{ position:relative; font-size:16px; font-weight:500; max-width:240px; line-height:1.3; }
 .hero .appel{ position:relative; display:inline-flex; align-items:center; gap:8px; background:var(--aubergine); color:#FFFBF2; border-radius:999px; padding:10px 16px; font-weight:700; font-size:16px; }
-.hero .appareil{ position:absolute; right:34px; top:30px; width:96px; height:96px; border-radius:50%; background:#FFFBF2; display:flex; align-items:center; justify-content:center; color:var(--aubergine); box-shadow:0 0 0 10px var(--basilic); }
-.hero .appareil svg{ width:46px; height:46px; }
+.hero .chef-hero{ position:absolute; right:14px; top:8px; width:150px; height:150px; }
+.hero .chef-hero img{ width:150px; height:150px; display:block; }
+.hero .appareil{ position:absolute; right:-6px; bottom:0; width:54px; height:54px; border-radius:50%; background:#FFFBF2; display:flex; align-items:center; justify-content:center; color:var(--aubergine); box-shadow:0 0 0 5px var(--basilic); }
+.hero .appareil svg{ width:28px; height:28px; }
 @media (prefers-reduced-motion: reduce){ button.hero{ transition:none; } }
 .hero .b1{ position:absolute; right:-40px; top:-40px; width:200px; height:200px; border-radius:50%; background:var(--paprika); }
 .hero .b2{ position:absolute; right:40px; top:40px; width:90px; height:90px; border-radius:50%; background:#FFFBF2; }
@@ -141,7 +148,7 @@ button.hero h1{ max-width:none; font-size:38px; }
 .attente{ display:flex; flex-direction:column; align-items:center; gap:14px; padding:40px 10px; text-align:center; }
 .marmite-anim{ width:64px; height:64px; border-radius:50%; background:var(--safran); position:relative; animation:pop 1.2s ease-in-out infinite; }
 @keyframes pop{ 50%{ transform:scale(1.12); } }
-@media (prefers-reduced-motion: reduce){ .marmite-anim{ animation:none; } }
+@media (prefers-reduced-motion: reduce){ .marmite-anim, .attente .chef{ animation:none; } }
 .secours{ font-family:var(--titre); font-weight:800; font-size:26px; letter-spacing:.06em; text-align:center; background:var(--surface-2); border-radius:18px; padding:16px; word-break:break-all; }
 .alerte{ color:var(--alerte); font-weight:600; }
 .toast{ position:fixed; left:50%; bottom:calc(90px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); background:var(--encre); color:var(--fond); padding:12px 18px; border-radius:16px; z-index:60; font-weight:600; max-width:calc(100% - 32px); }
@@ -158,7 +165,8 @@ button.hero h1{ max-width:none; font-size:38px; }
 <body>
 <div id="app"></div>
 <div id="couche"></div>
-<script>const DONNEES = __DATA__;</script>
+<script>const DONNEES = __DATA__;
+const BADGE = "__BADGE__";   // la mascotte du chef dans son badge (miamm/logo/fabriquer.py)</script>
 <script>__MOTEUR__</script>
 <script>
 "use strict";
@@ -475,18 +483,19 @@ function boutonTheme() {
   const t = document.documentElement.dataset.theme, sombre = t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches);
   return `<button class="rond" data-action="theme" aria-label="${sombre ? "Passer en clair" : "Passer en sombre"}">${sombre ? ICONES.soleil : ICONES.lune}</button>`;
 }
-const marque = () => `<span class="marque">miamm<i>.</i></span>`;
+const marque = () => `<span class="marque"><img class="badge-marque" src="${BADGE}" alt=""><span>miamm<i>.</i></span></span>`;
+const chef = (taille = 120) => `<img class="chef" src="${BADGE}" alt="Le chef" width="${taille}" height="${taille}">`;
 function rendre() {
   const e = S.ecran;
   document.body.classList.toggle("sans-nav", e !== "app");
-  const vues = { chargement: () => `<div class="page"><div class="attente"><div class="marmite-anim"></div></div></div>`, accueil: ecranAccueil, inscription: ecranInscription, secours: ecranSecours,
+  const vues = { chargement: () => `<div class="page"><div class="attente">${chef(130)}</div></div>`, accueil: ecranAccueil, inscription: ecranInscription, secours: ecranSecours,
     choix: ecranChoix, surmesure: ecranSurMesure, express: ecranExpress, proposition: ecranProposition, app: ecranApp };
   app().innerHTML = (vues[e] || ecranAccueil)();
   if (e === "app") app().insertAdjacentHTML("beforeend", nav());
 }
 // Le gros bouton de l'accueil : le menu express à partir du ticket de caisse (photo)
 const boutonExpress = () => `<button class="hero" data-action="express" aria-label="On mange quoi cette semaine ? Scanner mon ticket de caisse">
-    <div class="b1"></div><span class="appareil">${ICONES.photo}</span>
+    <div class="b1"></div><span class="chef-hero"><img src="${BADGE}" alt=""><span class="appareil">${ICONES.photo}</span></span>
     <h1>On mange quoi cette semaine ?</h1>
     <span class="sous">Scanne ton ticket de caisse, le chef fait le menu avec ce que tu as acheté.</span>
     <span class="appel">Scanner mon ticket ${ICONES.fleche.replace('width="26" height="26"', 'width="20" height="20"')}</span></button>`;
@@ -594,7 +603,7 @@ function lirePersonne() {
 /* ----- Express ----- */
 function ecranExpress() {
   const x = S.express;
-  if (x.etape === "lecture") return `<div class="page"><div class="attente"><div class="marmite-anim"></div><h2>Le chef lit ton ticket…</h2><p class="discret">Les produits, les quantités et les prix.</p></div></div>`;
+  if (x.etape === "lecture") return `<div class="page"><div class="attente">${chef(130)}<h2>Le chef lit ton ticket…</h2><p class="discret">Les produits, les quantités et les prix.</p></div></div>`;
   const lignes = x.lignes.map((l, i) => `<div class="ligne-ticket"><span class="lib">${echap(l.libelle || "Produit ajouté")}${l.prix ? " · " + euros(l.prix) : ""}</span>
       <label><span class="sr">Produit</span><select data-ligne="${i}"><option value="">Ignorer</option>${ALIMENTS.map(a => `<option ${a === l.a ? "selected" : ""}>${echap(a)}</option>`).join("")}</select></label>
       <span class="q">${l.a ? fmtQ(l.a, l.q) : "—"}</span></div>`).join("");
@@ -629,7 +638,7 @@ function ecranProposition() {
       <div class="plats">${j.meals.filter(m => m.k !== "pdj").map(m => `<button class="plat-btn" data-action="changer" data-j="${j.d}" data-k="${m.k}"><b>${Moteur.LABELS[m.k]}${j.tag === "plaisir" && m.k === "dej" ? '<span class="tag">plaisir</span>' : ""}</b>${echap(m.plat)}</button>`).join("")}</div></div>`).join("");
   const stockUtilise = pr.mode === "express" ? `<p class="petit" style="margin:8px 0 0">${b.stockUtilise.length} produits du ticket utilisés.</p>` : "";
   return `<div class="page"><div class="entete"><button class="rond" data-action="aller" data-ecran="${pr.mode === "express" ? "express" : "surmesure"}" aria-label="Retour">${ICONES.gauche}</button>${marque()}</div>
-    <p class="etiquette" style="margin:0">Proposé par le chef</p>
+    <div class="signe-chef"><img src="${BADGE}" alt=""><p class="etiquette" style="margin:0">Proposé par le chef</p></div>
     <h1 style="margin:4px 0 14px">${echap(per.titre)}</h1>
     <div class="carte pleine"><div class="chiffres"><div><b>${euros(b.cout.achats)}</b><span class="petit">${pr.mode === "express" ? "à compléter" : "de courses"}</span></div>${budget ? `<div><b>${euros(budget)}</b><span class="petit">budget</span></div>` : ""}</div>
       ${budget && b.cout.achats > budget ? `<p class="petit" style="margin:8px 0 0">Le chef dépasse le budget de ${euros(b.cout.achats - budget)}. Retire un produit cher ou réduis la durée.</p>` : ""}${stockUtilise}</div>

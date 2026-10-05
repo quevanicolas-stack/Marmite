@@ -1,4 +1,4 @@
-"""Assemble Miamm : app.html + moteur.js + blocs de donnees/ (catalogue, recettes, réglages) → miamm.html."""
+"""Assemble Miamm : app.html + moteur.js + badge de la mascotte + blocs de donnees/ (catalogue, recettes, réglages) → miamm.html."""
 import json, pathlib
 ICI = pathlib.Path(__file__).resolve().parent
 DONNEES = ICI.parent / "donnees"
@@ -8,10 +8,11 @@ def construire():
     donnees = {"catalogue": lire("catalogue.json")["produits"], "recettes": lire("recettes.json")["recettes"], "reglages": lire("reglages.json")}
     page = (ICI / "app.html").read_text(encoding="utf-8")
     moteur = (ICI / "moteur.js").read_text(encoding="utf-8")
-    assert page.count("__DATA__") == 1 and page.count("__MOTEUR__") == 1
+    badge = (ICI / "logo" / "badge-192.txt").read_text().strip()
+    assert page.count("__DATA__") == 1 and page.count("__MOTEUR__") == 1 and page.count("__BADGE__") == 1
     # « </ » échappé pour que rien dans les données ne ferme la balise script
     data = json.dumps(donnees, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-    page = page.replace("__DATA__", data).replace("__MOTEUR__", moteur)
+    page = page.replace("__BADGE__", badge).replace("__DATA__", data).replace("__MOTEUR__", moteur)
     (ICI / "miamm.html").write_text(page, encoding="utf-8")
     print("miamm/miamm.html construit")
 
