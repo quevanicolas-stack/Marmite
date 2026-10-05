@@ -380,7 +380,7 @@ Les données sont dans un seul document `db`. Avec plusieurs mois et une bibliot
 
 13. **Décisions du 05/10/2026, suite** : passage sur Cloudflare validé (« fais tout »). Worker + D1, chef par l'API Anthropic côté serveur, rappels Web Push, déploiement par GitHub Actions ; la version claude.ai reste en service pendant la transition (copier / importer les données).
 14. **Décisions du 05/10/2026, fin** : nouveau nom (d'abord Popote) et DA plus gourmande (aubergine, safran, paprika, basilic ; Bricolage Grotesque et Outfit ; maquettes : https://claude.ai/artifact/PVQLMr3TPCJ7trND4Duw9B). Comptes pour soi et des proches, **sur invitation**, connexion par **clé d'accès** ; deux voies : **Sur mesure** (personnes, objectifs de poids, budget) et **Express** (photo du ticket, jours, personnes). Prix de départ : le catalogue actuel en estimation, corrigé par les tickets. Miamm est construit à part (`miamm/`), Marmite reste en service jusqu'à la bascule.
-15. **Décisions du 05/10/2026, soir** : l'app s'appelle **MIAMM** (écrit « miamm. » dans l'app, comme la maquette Popote). Version d'essai sans compte publiée sur claude.ai : https://claude.ai/artifact/6rrg7UpLjZ4xkb8okrbPS5. Base D1 « miamm » (les bases « marmite-foyer » et « popote », vides, ont été supprimées).
+15. **Décisions du 05/10/2026, soir** : l'app s'appelle **MIAMM** (écrit « miamm. » dans l'app, comme la maquette Popote). Version d'essai sans compte publiée sur claude.ai : https://claude.ai/artifact/6rrg7UpLjZ4xkb8okrbPS5. **En ligne** : https://miamm.queva-nicolas.workers.dev (déployé par GitHub Actions le 05/10/2026). Base D1 « miamm » (les bases « marmite-foyer » et « popote », vides, ont été supprimées).
 
 ## 8. Arborescence
 
@@ -440,7 +440,7 @@ tests/test_miamm_moteur.js        moteur de Miamm : objectifs, N personnes, enfa
 
 ## 9. Miamm (05/10/2026)
 
-L'app pour soi et ses proches qui succède à Marmite. Code dans `miamm/` (front) et `cloudflare/` (serveur). Pas encore en ligne : il faut les secrets du dépôt GitHub (voir `.github/workflows/cloudflare.yml`), puis une fusion dans `main`.
+L'app pour soi et ses proches qui succède à Marmite. Code dans `miamm/` (front) et `cloudflare/` (serveur). En ligne sur https://miamm.queva-nicolas.workers.dev : chaque fusion dans `main` redéploie (secrets du dépôt posés par Nico le 05/10/2026).
 
 ### Construire et tester
 
@@ -462,7 +462,7 @@ cd cloudflare && npm install && cd .. && python3 tests/test_miamm.py    # wrangl
 ### Le front (`miamm/app.html`)
 
 - **DA** : aubergine `#3B1F4A`, safran `#F5B700`, paprika `#E4572E`, basilic `#7DB46C`, crème `#FFFBF2` ; Bricolage Grotesque (titres) et Outfit (texte) ; clair et sombre (`localStorage["miamm-theme"]`). Icônes à tracé, pas d'emoji. L'app ne parle jamais de Claude : c'est « le chef ».
-- **Écrans** : accueil (invitation, connexion, code de secours) → choix **Sur mesure** / **Express** → proposition (bilan, courses, menu ; chaque plat se change depuis la bibliothèque ; « Une autre idée, chef ») → l'app : Aujourd'hui (portions par personne, « Je l'ai fait »), Menu, Courses (cases, prix payé, « Ajouter un ticket de caisse »), Stock (ce matin + ce qui manque pour 3 jours), Foyer (personnes, invitations, rappels, compte).
+- **Écrans** : accueil = un gros bouton « On mange quoi cette semaine ? » (appareil photo, « Scanner mon ticket » : menu express, connexion par la clé d'abord si besoin), puis « Se connecter », « Première fois ? J'ai une invitation » (masqué sur un appareil déjà connecté, `localStorage["miamm-deja"]`) et le code de secours en petit → choix (même gros bouton express, puis **Sur mesure**) ; l'express reste en tête de l'onglet Menu → proposition (bilan, courses, menu ; chaque plat se change depuis la bibliothèque ; « Une autre idée, chef ») → l'app : Aujourd'hui (portions par personne, « Je l'ai fait »), Menu, Courses (cases, prix payé, « Ajouter un ticket de caisse »), Stock (ce matin + ce qui manque pour 3 jours), Foyer (personnes, invitations, rappels, compte).
 - **Sur mesure** : personnes (sexe, âge, taille, poids, objectif, activité, petit-déjeuner sucré / salé / aucun, « pas de régime »), durée 7 à 30 jours, budget du mois (ramené à la durée), jour des courses (la première a lieu le jour du début), produits exclus.
 - **Express** : photo du ticket (réduite à 1 800 px, JPEG) → `/api/ticket` (schéma JSON : libellé, aliment du catalogue, nombre, poids, prix, alimentaire) → lignes à vérifier → jours, adultes, enfants, « huile, épices, sauces à la maison », desserts → menu à partir du stock (`priorite:"stock"`) et liste « À compléter ». Les prix du ticket deviennent les prix de référence (`doc.prix`, source `ticket`).
 - **Document** : `{ version, personnes, reglages: { budget, jourCourses, jours, debut, exclus, desserts }, periode, bilan, mode, suivi: { coches, achats, payes, remplacements }, prix, ajouts, tickets, archives }`.

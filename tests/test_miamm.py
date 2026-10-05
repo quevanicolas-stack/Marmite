@@ -118,7 +118,8 @@ async def main():
             verif(await bb.evaluate("(async () => (await api('/api/inscription/debut', { invitation: '" + code + "', nom: 'X' })).ok)()") is False, "invitation réutilisable")
 
             # 4. déconnexion puis connexion par la clé d'accès
-            await a.click("button[data-action=deconnexion]"); await a.wait_for_selector("text=J'ai une invitation")
+            await a.click("button[data-action=deconnexion]"); await a.wait_for_selector("button[data-action=connexion]")
+            verif(await a.locator("text=Première fois ? J'ai une invitation").count() == 0, "l'invitation est encore proposée en grand sur un appareil déjà connecté")
             await a.click("button[data-action=connexion]")
             await a.wait_for_selector("nav button[data-vue=jour]", timeout=15000)
             verif(await a.evaluate("S.compte.nom") == "Nicolas", "connexion par la clé ratée")
