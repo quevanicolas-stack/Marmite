@@ -38,6 +38,8 @@ function detourer(img, damier) {
   x.putImageData(d, 0, 0);
   return c;
 }
+// contour de la marmite (anse comprise, sans la vapeur au-dessus) dans mascotte-source.jpg
+const MARMITE = [[700, 640], [790, 598], [880, 615], [950, 660], [1000, 720], [1018, 760], [1012, 1010], [690, 1010], [670, 900], [625, 870], [640, 835], [660, 780], [700, 730], [712, 690]];
 // badge : cercle safran cerné d'aubergine, assiette crème, anneau paprika ; la mascotte dépasse par le haut
 function badge(x, cx, cy, r, mascotte) {
   x.save();
@@ -58,6 +60,13 @@ function badge(x, cx, cy, r, mascotte) {
   x.restore();
   // le bas du cercle repasse par-dessus pour un contour net
   x.lineWidth = r * 0.07; x.strokeStyle = AUB; x.beginPath(); x.arc(cx, cy, r, 0.08 * Math.PI, 0.92 * Math.PI); x.stroke();
+  // la marmite déborde du cercle, par-dessus le contour (tracé autour d'elle, en pixels de l'image source 1024)
+  const k = t / mascotte.width;
+  x.save(); x.beginPath();
+  MARMITE.forEach(([a, b], i) => x[i ? "lineTo" : "moveTo"](mx + a * k, my + b * k)); x.closePath(); x.clip();
+  x.shadowColor = "rgba(36,17,46,.28)"; x.shadowBlur = r * .05; x.shadowOffsetY = r * .02;
+  x.drawImage(mascotte, mx, my, t, t);
+  x.restore();
   x.restore();
 }
 function rendre(w, h, opts) {
@@ -141,6 +150,31 @@ function medaillon(img, taille, cx, cy, rayon) {
   x.lineWidth = r * .035; x.strokeStyle = CRE; x.beginPath(); x.arc(r, r, r * .8, 0, 7); x.stroke();
   return c.toDataURL("image/webp", 0.86);
 }
+// variante : les portes ouvertes du frigo sortent du médaillon par le haut (image détourée, bandes [x0, x1] de l'image source)
+function medaillonPortes(img, r, cx, cy, rayon, bandes) {
+  const t = detourer(img), k = r * .8 / rayon;
+  // emprise des portes une fois posées, pour dimensionner la toile
+  const px = sx => (sx - cx) * k, py = sy => (sy - cy) * k;
+  const g = Math.max(r, -px(0), px(t.width)), hh = Math.max(r, -py(0), py(t.height));
+  const c = document.createElement("canvas"); c.width = Math.ceil(2 * g); c.height = Math.ceil(2 * hh);
+  const x = c.getContext("2d"), ox = c.width / 2, oy = c.height / 2;
+  x.beginPath(); x.arc(ox, oy, r * .97, 0, 7); x.fillStyle = AUB; x.fill();
+  x.beginPath(); x.arc(ox, oy, r * .9, 0, 7); x.fillStyle = PAP; x.fill();
+  const poser = () => x.drawImage(img, ox + px(0), oy + py(0), img.naturalWidth * k, img.naturalHeight * k);
+  x.save(); x.beginPath(); x.arc(ox, oy, r * .8, 0, 7); x.clip(); poser(); x.restore();
+  x.lineWidth = r * .035; x.strokeStyle = CRE; x.beginPath(); x.arc(ox, oy, r * .8, 0, 7); x.stroke();
+  // les portes, par-dessus : elles sortent du cercle par le haut ; en bas, le cercle les cache (cadrage choisi pour
+  // que leur bord extérieur reste dans le cercle à mi-hauteur, sans arête dans le vide)
+  x.save(); x.beginPath(); bandes.forEach(([a, b]) => x.rect(ox + px(a), 0, (b - a) * k, oy)); x.clip();
+  x.shadowColor = "rgba(36,17,46,.3)"; x.shadowBlur = r * .06; x.shadowOffsetY = -r * .01;
+  x.drawImage(t, ox + px(0), oy + py(0), t.width * k, t.height * k); x.restore();
+  // recadrage au plus juste
+  const d = x.getImageData(0, 0, c.width, c.height).data; let x0 = c.width, y0 = c.height, x1 = 0, y1 = 0;
+  for (let j = 0; j < c.height; j++) for (let i = 0; i < c.width; i++) if (d[(j * c.width + i) * 4 + 3] > 20) { x0 = Math.min(x0, i); x1 = Math.max(x1, i); y0 = Math.min(y0, j); y1 = Math.max(y1, j); }
+  const o = document.createElement("canvas"); o.width = x1 - x0 + 1; o.height = y1 - y0 + 1;
+  o.getContext("2d").drawImage(c, x0, y0, o.width, o.height, 0, 0, o.width, o.height);
+  return o.toDataURL("image/webp", 0.86);
+}
 async function pret() { await document.fonts.load('800 40px "Bricolage Grotesque"'); const m = document.getElementById("m"); await m.decode(); window.MASCOTTE = detourer(m); await document.getElementById('s').decode(); await document.getElementById('k').decode(); return document.fonts.check('800 40px "Bricolage Grotesque"'); }
 </script></body></html>""" % (SOURCE, base64.b64encode((ICI / "chef-stock-source.webp").read_bytes()).decode(), base64.b64encode((ICI / "chef-courses-source.png").read_bytes()).decode())
 
@@ -167,7 +201,7 @@ async def main():
             print(chemin.relative_to(ICI.parent.parent), w, "×", h)
         # illustrations des onglets Courses (le caddie, détouré) et Stock (le frigo, en médaillon), en WebP embarqué
         caddie = await pg.evaluate("scene(document.getElementById('k'), 'png', 360)")
-        frigo = await pg.evaluate("medaillon(document.getElementById('s'), 300, 512, 470, 430)")
+        frigo = await pg.evaluate("medaillonPortes(document.getElementById('s'), 150, 512, 470, 400, [[0, 228], [782, 1024]])")
         for nom, url in (("chef-courses", caddie), ("chef-stock", frigo)):
             (ICI / f"{nom}.txt").write_text(url)
             (ICI / f"{nom}.webp").write_bytes(base64.b64decode(url.split(",", 1)[1]))
