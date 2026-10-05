@@ -72,7 +72,7 @@ Il contient 8 onglets et environ 3 860 formules. Il est généré par `python/bu
 - **Publiée** : https://claude.ai/artifact/8Ez5pJQH4tzZ49GJLgvpB5. C'est une page hébergée par claude.ai, qui appartient au compte de Nico.
 - **Capacités d'exécution déclarées** : `db`, pour les données privées synchronisées sur tous ses appareils ; `sample`, pour les appels à Claude de l'assistant ; `user`, pour l'identifiant.
 - **Mise à jour** : republier `app/marmite.html` avec l'outil Artifact (action publish, avec l'`url` ci-dessus), sans redéclarer les capacités. Les sessions Claude Code web disposent de cet outil ; lire d'abord la version en ligne (action read) pour vérifier qu'elle n'a pas bougé. Republiée le 05/10/2026 depuis Claude Code (version 12 : copier / importer les données, base de la version Cloudflare ; version 11 : bibliothèque de 100 plats avec variantes, produits exclus ; version 10 : ajouter un produit, valider le panier, achat spontané, ticket du 1er octobre reporté ; version 9 : Aujourd'hui réorganisé, mode magasin, Ajuster sans débordement ; version 8 : glisser-déposer sur ordinateur, plein écran ; version 7 : cases et prix corrigés, repas remplaçable depuis la bibliothèque ; version 6 : le chef prépare le mois, archives ; version 5 : courses hebdomadaires, budget réel, quantité achetée, stock réel, budget du foyer, planning selon le stock ; version 4 : prix, dépassement, poubelle, jambon au gramme) ; elle correspond à `app/marmite.html`. Titre de la page : « Marmite ». Partage : « toute personne ayant le lien » (réglé dans le menu Partager de la page) ; chaque compte voit ses propres données (`db` par utilisateur).
-- **Cloudflare** : le dossier `cloudflare/` sert désormais **Popote** (section 9), pas Marmite. Marmite garde son mode « serveur du foyer » dans le code (détection `/api/etat` avec `marmite:true`), inactif. Profil → Données → « Copier les données » / « Importer des données » reste utile pour passer d'un appareil à l'autre.
+- **Cloudflare** : le dossier `cloudflare/` sert désormais **Miamm** (section 9), pas Marmite. Marmite garde son mode « serveur du foyer » dans le code (détection `/api/etat` avec `marmite:true`), inactif. Profil → Données → « Copier les données » / « Importer des données » reste utile pour passer d'un appareil à l'autre.
 - **En local** : ouvrir `app/marmite.html` suffit. Les données passent alors en localStorage et l'assistant est indisponible, car `window.claude` est absent. Tout le reste fonctionne.
 
 ### Construire
@@ -379,7 +379,8 @@ Les données sont dans un seul document `db`. Avec plusieurs mois et une bibliot
 12. **Décisions du 05/10/2026** : pas d'aspiration de Marmiton (conditions d'utilisation, droit des bases de données) ; 100 plats écrits pour Marmite, pas plus de créole que le reste, avec des **variantes** (une viande pour une autre, un fromage pour un autre ou sans) qui multiplient les plats et servent aux **produits exclus**. 30 produits ajoutés au catalogue (dinde, échine de porc, steak haché, merguez, saucisses fumées, boucané, pilons, thon, crevettes, morue, emmental, mozzarella, crème, lait de coco, tomates concassées, pois chiches, lentilles sèches, semoule, boulgour, nouilles, pâtes à pizza et brisée, pain de mie, brocoli, épinards, petits pois, chou, chouchou, citrouille, poireaux, concombre).
 
 13. **Décisions du 05/10/2026, suite** : passage sur Cloudflare validé (« fais tout »). Worker + D1, chef par l'API Anthropic côté serveur, rappels Web Push, déploiement par GitHub Actions ; la version claude.ai reste en service pendant la transition (copier / importer les données).
-14. **Décisions du 05/10/2026, fin** : nouveau nom **Popote** et DA plus gourmande (aubergine, safran, paprika, basilic ; Bricolage Grotesque et Outfit ; maquettes : https://claude.ai/artifact/PVQLMr3TPCJ7trND4Duw9B). Comptes pour soi et des proches, **sur invitation**, connexion par **clé d'accès** ; deux voies : **Sur mesure** (personnes, objectifs de poids, budget) et **Express** (photo du ticket, jours, personnes). Prix de départ : le catalogue actuel en estimation, corrigé par les tickets. Popote est construit à part (`popote/`), Marmite reste en service jusqu'à la bascule.
+14. **Décisions du 05/10/2026, fin** : nouveau nom (d'abord Popote) et DA plus gourmande (aubergine, safran, paprika, basilic ; Bricolage Grotesque et Outfit ; maquettes : https://claude.ai/artifact/PVQLMr3TPCJ7trND4Duw9B). Comptes pour soi et des proches, **sur invitation**, connexion par **clé d'accès** ; deux voies : **Sur mesure** (personnes, objectifs de poids, budget) et **Express** (photo du ticket, jours, personnes). Prix de départ : le catalogue actuel en estimation, corrigé par les tickets. Miamm est construit à part (`miamm/`), Marmite reste en service jusqu'à la bascule.
+15. **Décisions du 05/10/2026, soir** : l'app s'appelle **MIAMM** (écrit « miamm. » dans l'app, comme la maquette Popote). Version d'essai sans compte publiée sur claude.ai : https://claude.ai/artifact/6rrg7UpLjZ4xkb8okrbPS5. Base D1 « miamm » (les bases « marmite-foyer » et « popote », vides, ont été supprimées).
 
 ## 8. Arborescence
 
@@ -424,49 +425,49 @@ tests/test_poubelle.py             case cochée en touchant la ligne, poubelle d
 tests/test_ajustement_stock.py     ajustement d'un repas, retour au plan, stock
 tests/test_assistant_personnes_theme.py   Nicolas/Aurélie, thème, assistant simulé, remplacement à 2
 docs/prototype-beta-resume.md      résumé du prototype de l'app grand public
-popote/app.html                    Popote : source de l'app (une page, sans framework)
-popote/moteur.js                   moteur de Popote : N personnes, objectifs calculés, Express (priorité au stock)
-popote/construire.py               app.html + moteur.js + blocs de donnees/ → popote/popote.html (non versionné)
-cloudflare/wrangler.toml           Worker « popote » : page (public/), D1 « popote », cron des rappels
+miamm/app.html                    Miamm : source de l'app (une page, sans framework)
+miamm/moteur.js                   moteur de Miamm : N personnes, objectifs calculés, Express (priorité au stock)
+miamm/construire.py               app.html + moteur.js + blocs de donnees/ → miamm/miamm.html (non versionné)
+cloudflare/wrangler.toml           Worker « miamm » : page (public/), D1 « miamm », cron des rappels
 cloudflare/src/worker.js           API : comptes, invitations, sessions, foyers (révision), chef, tickets, rappels
 cloudflare/src/cles.js             vérification des clés d'accès (WebAuthn : CBOR, COSE, ES256 / RS256)
-cloudflare/preparer.py             construit Popote → public/index.html (+ manifeste, icônes, service worker)
-cloudflare/statique/               service worker, manifeste, icônes de Popote
-.github/workflows/cloudflare.yml   mise en ligne de Popote à chaque fusion dans main
-tests/test_popote.py               wrangler dev + clé d'accès simulée : invitation, compte, sur mesure, foyer partagé, connexion, tickets, Express, rappels
-tests/test_popote_moteur.js        moteur de Popote : objectifs, N personnes, enfant, invités, budget, Express, exclusions, graine
+cloudflare/preparer.py             construit Miamm → public/index.html (+ manifeste, icônes, service worker)
+cloudflare/statique/               service worker, manifeste, icônes de Miamm
+.github/workflows/cloudflare.yml   mise en ligne de Miamm à chaque fusion dans main
+tests/test_miamm.py               wrangler dev + clé d'accès simulée : invitation, compte, sur mesure, foyer partagé, connexion, tickets, Express, rappels
+tests/test_miamm_moteur.js        moteur de Miamm : objectifs, N personnes, enfant, invités, budget, Express, exclusions, graine
 ```
 
-## 9. Popote (05/10/2026)
+## 9. Miamm (05/10/2026)
 
-L'app pour soi et ses proches qui succède à Marmite. Code dans `popote/` (front) et `cloudflare/` (serveur). Pas encore en ligne : il faut les secrets du dépôt GitHub (voir `.github/workflows/cloudflare.yml`), puis une fusion dans `main`.
+L'app pour soi et ses proches qui succède à Marmite. Code dans `miamm/` (front) et `cloudflare/` (serveur). Pas encore en ligne : il faut les secrets du dépôt GitHub (voir `.github/workflows/cloudflare.yml`), puis une fusion dans `main`.
 
 ### Construire et tester
 
 ```bash
-python3 popote/construire.py                 # → popote/popote.html (s'ouvre aussi en fichier : mode d'essai, sans compte)
-node tests/test_popote_moteur.js
-cd cloudflare && npm install && cd .. && python3 tests/test_popote.py    # wrangler dev en local, clé d'accès simulée
+python3 miamm/construire.py                 # → miamm/miamm.html (s'ouvre aussi en fichier : mode d'essai, sans compte)
+node tests/test_miamm_moteur.js
+cd cloudflare && npm install && cd .. && python3 tests/test_miamm.py    # wrangler dev en local, clé d'accès simulée
 ```
 
-### Comptes et foyers (`cloudflare/src/worker.js`, base D1 « popote »)
+### Comptes et foyers (`cloudflare/src/worker.js`, base D1 « miamm »)
 
 - **Sur invitation** : le secret `INVITATION_INITIALE` (réutilisable) crée le premier compte et son foyer ; ensuite, depuis Foyer → Inviter, un code à usage unique « Dans mon foyer » (même menu, mêmes courses) ou « Un proche » (il crée son foyer).
 - **Clé d'accès** (WebAuthn, clé découvrable) : `/api/inscription/debut|fin`, `/api/connexion/debut|fin`, `/api/cle/debut|fin` (nouvel appareil). La vérification est faite à la main dans `cles.js` (pas de dépendance). Le nom de domaine sert d'identifiant (rpId) : en local, `localhost`, jamais une adresse IP.
 - **Code de secours** (16 caractères, montré une seule fois, haché en base, renouvelé à chaque usage) : `/api/secours`.
-- **Session** : cookie `popote_session` HttpOnly, SameSite=Lax, Secure (sauf localhost), 180 jours ; requêtes qui modifient : même origine et JSON.
+- **Session** : cookie `miamm_session` HttpOnly, SameSite=Lax, Secure (sauf localhost), 180 jours ; requêtes qui modifient : même origine et JSON.
 - **Document du foyer** : `docs` clé `foyer:<id>`, avec révision ; l'app fusionne à trois en cas de conflit (même logique que Marmite).
 - **Garde-fous de dépense** : 30 appels « chef » et 15 tickets par foyer et par jour.
 
-### Le front (`popote/app.html`)
+### Le front (`miamm/app.html`)
 
-- **DA** : aubergine `#3B1F4A`, safran `#F5B700`, paprika `#E4572E`, basilic `#7DB46C`, crème `#FFFBF2` ; Bricolage Grotesque (titres) et Outfit (texte) ; clair et sombre (`localStorage["popote-theme"]`). Icônes à tracé, pas d'emoji. L'app ne parle jamais de Claude : c'est « le chef ».
+- **DA** : aubergine `#3B1F4A`, safran `#F5B700`, paprika `#E4572E`, basilic `#7DB46C`, crème `#FFFBF2` ; Bricolage Grotesque (titres) et Outfit (texte) ; clair et sombre (`localStorage["miamm-theme"]`). Icônes à tracé, pas d'emoji. L'app ne parle jamais de Claude : c'est « le chef ».
 - **Écrans** : accueil (invitation, connexion, code de secours) → choix **Sur mesure** / **Express** → proposition (bilan, courses, menu ; chaque plat se change depuis la bibliothèque ; « Une autre idée, chef ») → l'app : Aujourd'hui (portions par personne, « Je l'ai fait »), Menu, Courses (cases, prix payé, « Ajouter un ticket de caisse »), Stock (ce matin + ce qui manque pour 3 jours), Foyer (personnes, invitations, rappels, compte).
 - **Sur mesure** : personnes (sexe, âge, taille, poids, objectif, activité, petit-déjeuner sucré / salé / aucun, « pas de régime »), durée 7 à 30 jours, budget du mois (ramené à la durée), jour des courses (la première a lieu le jour du début), produits exclus.
 - **Express** : photo du ticket (réduite à 1 800 px, JPEG) → `/api/ticket` (schéma JSON : libellé, aliment du catalogue, nombre, poids, prix, alimentaire) → lignes à vérifier → jours, adultes, enfants, « huile, épices, sauces à la maison », desserts → menu à partir du stock (`priorite:"stock"`) et liste « À compléter ». Les prix du ticket deviennent les prix de référence (`doc.prix`, source `ticket`).
 - **Document** : `{ version, personnes, reglages: { budget, jourCourses, jours, debut, exclus, desserts }, periode, bilan, mode, suivi: { coches, achats, payes, remplacements }, prix, ajouts, tickets, archives }`.
 
-### Le moteur (`popote/moteur.js`)
+### Le moteur (`miamm/moteur.js`)
 
 Dérivé de celui de Marmite (même composition : quotas poisson et plaisir au prorata de 8 et 6 par 30 jours, écart de 5 jours, protéine animale midi et soir, variantes, exclusions, budget en plusieurs passes), pour N personnes :
 - `objectifs(p)` : Mifflin-St Jeor × activité ; perte : 500 kcal de moins (au plus 25 % du maintien, plancher 1 200 / 1 500 kcal, rien avant 18 ans ni avec « pas de régime ») ; protéines 1,4 g par kg visé. Retombe sur les cibles de Nicolas et Aurélie à 100 kcal près.
@@ -475,7 +476,7 @@ Dérivé de celui de Marmite (même composition : quotas poisson et plaisir au p
 
 ### À faire
 
-- « J'ai faim » dans Popote (la route `/api/chef` existe, l'écran pas encore) ; refaire le menu selon le stock en cours de période ; panneau de dépassement ; poubelle.
-- Reprendre le suivi de Marmite dans Popote (Nico et Aurélie repartent d'un menu Sur mesure ; une conversion n'est pas écrite).
+- « J'ai faim » dans Miamm (la route `/api/chef` existe, l'écran pas encore) ; refaire le menu selon le stock en cours de période ; panneau de dépassement ; poubelle.
+- Reprendre le suivi de Marmite dans Miamm (Nico et Aurélie repartent d'un menu Sur mesure ; une conversion n'est pas écrite).
 - Besoins des enfants : la formule adulte est approximative (portions réduites, sans déficit).
 - Politique de confidentialité avant d'ouvrir au-delà des proches (poids et objectifs sont des données de santé au sens du RGPD).

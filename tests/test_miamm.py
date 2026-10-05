@@ -1,4 +1,4 @@
-"""Popote sur Cloudflare, testé en local avec « wrangler dev » et une clé d'accès simulée (authentificateur virtuel
+"""Miamm sur Cloudflare, testé en local avec « wrangler dev » et une clé d'accès simulée (authentificateur virtuel
 de Chromium) : invitation, compte, code de secours, menu sur mesure, second membre du foyer invité qui voit le même
 menu, déconnexion puis connexion par la clé, ticket lu par le chef (API simulée) en mode Express, ticket ajouté aux
 courses, rappels par foyer. Passe sans rien faire si cloudflare/node_modules est absent (npm install)."""
@@ -44,7 +44,7 @@ async def main():
     subprocess.run([sys.executable, str(CF / "preparer.py")], check=True, capture_output=True)
     pw = port_libre(); base = f"http://localhost:{pw}"   # une clé d'accès exige un nom de domaine (pas une adresse IP)
     env = {k: v for k, v in os.environ.items() if "proxy" not in k.lower()}
-    wr = subprocess.Popen(["npx", "wrangler", "dev", "--ip", "127.0.0.1", "--port", str(pw), "--test-scheduled", "--persist-to", tempfile.mkdtemp(prefix="popote-"),
+    wr = subprocess.Popen(["npx", "wrangler", "dev", "--ip", "127.0.0.1", "--port", str(pw), "--test-scheduled", "--persist-to", tempfile.mkdtemp(prefix="miamm-"),
                            "--var", "INVITATION_INITIALE:POPO-TE01", "--var", "ANTHROPIC_API_KEY:cle-de-test", "--var", f"ANTHROPIC_BASE_URL:http://127.0.0.1:{pf}",
                            "--show-interactive-dev-session=false"], cwd=CF, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     try:
@@ -54,7 +54,7 @@ async def main():
             except Exception: time.sleep(0.5)
         else:
             wr.kill(); print(wr.stdout.read()[-3000:]); sys.exit("wrangler dev ne répond pas")
-        verif(etat.get("popote") and etat.get("compte") is None, f"/api/etat : {etat}")
+        verif(etat.get("miamm") and etat.get("compte") is None, f"/api/etat : {etat}")
 
         async with async_playwright() as p:
             b = await p.chromium.launch()

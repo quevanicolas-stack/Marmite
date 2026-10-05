@@ -1,4 +1,4 @@
-"""Prépare public/ pour Cloudflare : popote/popote.html (construit par popote/construire.py) devient index.html,
+"""Prépare public/ pour Cloudflare : miamm/miamm.html (construit par miamm/construire.py) devient index.html,
 avec manifeste, icônes et service worker, plus les fichiers de statique/."""
 import pathlib, shutil, subprocess, sys
 ICI = pathlib.Path(__file__).resolve().parent
@@ -10,13 +10,13 @@ TETE = """<link rel="manifest" href="/manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Popote">
+<meta name="apple-mobile-web-app-title" content="Miamm">
 <script>if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));</script>
 """
 
 def preparer():
-    subprocess.run([sys.executable, str(ICI.parent / "popote" / "construire.py")], check=True)
-    page = (ICI.parent / "popote" / "popote.html").read_text(encoding="utf-8")
+    subprocess.run([sys.executable, str(ICI.parent / "miamm" / "construire.py")], check=True)
+    page = (ICI.parent / "miamm" / "miamm.html").read_text(encoding="utf-8")
     assert page.count("</head>") == 1, "en-tête de page introuvable"
     if PUBLIC.exists(): shutil.rmtree(PUBLIC)
     PUBLIC.mkdir()

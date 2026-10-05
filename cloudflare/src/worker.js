@@ -1,4 +1,4 @@
-// Popote sur Cloudflare : sert la page (public/) et l'API.
+// Miamm sur Cloudflare : sert la page (public/) et l'API.
 //  Comptes : clés d'accès (WebAuthn), sur invitation ; un code de secours par compte ; session en cookie HttpOnly.
 //  Foyers : un document par foyer, avec révision (deux téléphones peuvent enregistrer, l'app fusionne).
 //  Le chef : « J'ai faim » (/api/chef) et la lecture des tickets de caisse en photo (/api/ticket), via l'API Anthropic.
@@ -48,7 +48,7 @@ async function limite(env, nom, max) {
 }
 
 /* ---------- Sessions ---------- */
-const NOM_COOKIE = "popote_session";
+const NOM_COOKIE = "miamm_session";
 function cookieSession(req, valeur, maxAge) {
   const local = /^http:\/\/(localhost|127\.0\.0\.1)[:/]/.test(req.url);
   return `${NOM_COOKIE}=${valeur}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${maxAge}${local ? "" : "; Secure"}`;
@@ -79,7 +79,7 @@ async function prendreDefi(env, id) {
   return d && d.expire >= maintenant() ? JSON.parse(d.valeur) : null;
 }
 const optionsCreation = (req, defi, idUtilisateur, nom) => ({
-  challenge: defi, rp: { name: "Popote", id: rp(req).rpId },
+  challenge: defi, rp: { name: "Miamm", id: rp(req).rpId },
   user: { id: idUtilisateur, name: nom, displayName: nom },
   pubKeyCredParams: [{ type: "public-key", alg: -7 }, { type: "public-key", alg: -257 }],
   authenticatorSelection: { residentKey: "required", requireResidentKey: true, userVerification: "preferred" },
@@ -208,13 +208,13 @@ async function api(req, env) {
   const corps = m !== "GET" ? await req.json().catch(() => ({})) : {};
   const compte = await compteDe(env, req);
 
-  if (chemin === "/api/etat") return json({ popote: true, chef: !!env.ANTHROPIC_API_KEY, vapid: (await clesVapid(env)).publique,
+  if (chemin === "/api/etat") return json({ miamm: true, chef: !!env.ANTHROPIC_API_KEY, vapid: (await clesVapid(env)).publique,
     compte: compte ? { id: compte.id, nom: compte.nom, foyer: compte.foyer } : null });
   if (chemin === "/api/rappel") {
     // lu par le service worker à la réception d'un rappel : le texte du jour pour le foyer de la session, sinon générique
     const l = compte ? await rappelsDuJour(env, compte.foyer) : [];
     return json(l.length ? { titre: l.map(r => r.titre).join(" · "), texte: l.map(r => r.texte).join("\n"), date: l[0].date }
-      : { titre: "Popote", texte: "Un rappel t'attend dans l'app.", date: jourLocal(env) });
+      : { titre: "Miamm", texte: "Un rappel t'attend dans l'app.", date: jourLocal(env) });
   }
 
   // inscription : invitation + prénom → options de création de la clé → vérification → compte, foyer, session, code de secours
@@ -332,7 +332,7 @@ async function api(req, env) {
   if (chemin === "/api/rappels" && m === "PUT") {
     if (!Array.isArray(corps.rappels)) return erreur("requete", "Liste de rappels attendue.", 400);
     const propres = corps.rappels.filter(r => r && /^\d{4}-\d{2}-\d{2}$/.test(r.date)).slice(0, 60)
-      .map(r => ({ date: r.date, titre: String(r.titre || "Popote").slice(0, 80), texte: String(r.texte || "").slice(0, 300) }));
+      .map(r => ({ date: r.date, titre: String(r.titre || "Miamm").slice(0, 80), texte: String(r.texte || "").slice(0, 300) }));
     const avant = await lire(env, "rappels:" + compte.foyer);
     if (!avant || JSON.stringify(avant.valeur) !== JSON.stringify(propres)) await ecrire(env, "rappels:" + compte.foyer, propres);
     return json({ ok: true, n: propres.length });

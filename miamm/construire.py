@@ -1,4 +1,4 @@
-"""Assemble Popote : app.html + moteur.js + blocs de donnees/ (catalogue, recettes, réglages) → popote.html."""
+"""Assemble Miamm : app.html + moteur.js + blocs de donnees/ (catalogue, recettes, réglages) → miamm.html."""
 import json, pathlib
 ICI = pathlib.Path(__file__).resolve().parent
 DONNEES = ICI.parent / "donnees"
@@ -12,8 +12,8 @@ def construire():
     # « </ » échappé pour que rien dans les données ne ferme la balise script
     data = json.dumps(donnees, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     page = page.replace("__DATA__", data).replace("__MOTEUR__", moteur)
-    (ICI / "popote.html").write_text(page, encoding="utf-8")
-    print("popote/popote.html construit")
+    (ICI / "miamm.html").write_text(page, encoding="utf-8")
+    print("miamm/miamm.html construit")
 
 if __name__ == "__main__":
     construire()

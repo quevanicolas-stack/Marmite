@@ -1,5 +1,5 @@
-# Popote sur Cloudflare : la page (public/, préparée par preparer.py) et l'API (src/worker.js).
-name = "popote"
+# Miamm sur Cloudflare : la page (public/, préparée par preparer.py) et l'API (src/worker.js).
+name = "miamm"
 main = "src/worker.js"
 compatibility_date = "2026-06-01"
 compatibility_flags = ["nodejs_compat"]
@@ -12,8 +12,8 @@ run_worker_first = ["/api/*"]
 # Comptes, clés d'accès, sessions, invitations, documents des foyers, abonnements aux rappels.
 [[d1_databases]]
 binding = "BASE"
-database_name = "popote"
-database_id = "1b8f7f59-a056-4d80-b72b-6f5c4d93eb60"
+database_name = "miamm"
+database_id = "705c8f26-ad93-49c7-8039-3b95635f27b3"
 
 # Rappels envoyés à 18 h, heure de La Réunion (UTC+4).
 [triggers]

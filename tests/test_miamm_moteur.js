@@ -1,6 +1,6 @@
-// Moteur de Popote : objectifs calculés, foyer de N personnes, enfants, invités, courses hebdomadaires, budget,
+// Moteur de Miamm : objectifs calculés, foyer de N personnes, enfants, invités, courses hebdomadaires, budget,
 // mode Express (priorité au stock), produits exclus, même graine = même menu.
-const M = require("../popote/moteur.js");
+const M = require("../miamm/moteur.js");
 const cat = require("../donnees/catalogue.json").produits, recettes = require("../donnees/recettes.json").recettes, reglages = require("../donnees/reglages.json");
 const erreurs = [], verif = (ok, msg) => { if (!ok) erreurs.push(msg); };
 const base = { catalogue: cat, recettes, reglages };

@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Popote</title>
+<title>Miamm</title>
 <meta name="description" content="Le menu de la semaine, les courses et le budget du foyer.">
-<script>try { const t = localStorage.getItem("popote-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
+<script>try { const t = localStorage.getItem("miamm-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -153,7 +153,7 @@ a{ color:var(--primaire); }
 <script>
 "use strict";
 /* ============================================================
-   Popote — l'app (une seule page, sans framework)
+   Miamm — l'app (une seule page, sans framework)
    Serveur : /api (comptes par clé d'accès, document du foyer). Sans serveur (fichier ouvert en local) :
    mode d'essai, données sur l'appareil, sans compte ni lecture de ticket.
    ============================================================ */
@@ -224,7 +224,7 @@ function fusionner(b, l, d) {
   return o;
 }
 function recevoir(doc, rev) { S.doc = Object.assign(DOC0(), doc); S.rev = rev; S.base = cloneJ(doc); localSauver(); }
-function localSauver() { try { localStorage.setItem("popote-doc", JSON.stringify(S.doc)); } catch (e) {} }
+function localSauver() { try { localStorage.setItem("miamm-doc", JSON.stringify(S.doc)); } catch (e) {} }
 function sauver() {
   localSauver();
   if (!S.serveur || !S.compte) return;
@@ -263,13 +263,13 @@ document.onvisibilitychange = () => { if (document.visibilityState === "visible"
 async function demarrer() {
   if (/^https?:$/.test(location.protocol)) try {
     const r = await fetch("/api/etat", { cache: "no-store", credentials: "same-origin" });
-    if (r.ok) { const e = await r.json(); if (e.popote) Object.assign(S, { serveur: true, chef: !!e.chef, vapid: e.vapid, compte: e.compte }); }
+    if (r.ok) { const e = await r.json(); if (e.miamm) Object.assign(S, { serveur: true, chef: !!e.chef, vapid: e.vapid, compte: e.compte }); }
   } catch (e) {}
   if (!S.serveur) {   // mode d'essai : tout sur l'appareil
-    try { const l = localStorage.getItem("popote-doc"); if (l) S.doc = Object.assign(DOC0(), JSON.parse(l)); } catch (e) {}
+    try { const l = localStorage.getItem("miamm-doc"); if (l) S.doc = Object.assign(DOC0(), JSON.parse(l)); } catch (e) {}
     S.compte = { id: "local", nom: "Moi", local: true };
   } else if (S.compte) {
-    try { const l = localStorage.getItem("popote-doc"); if (l) S.doc = Object.assign(DOC0(), JSON.parse(l)); } catch (e) {}
+    try { const l = localStorage.getItem("miamm-doc"); if (l) S.doc = Object.assign(DOC0(), JSON.parse(l)); } catch (e) {}
     await tirer();
   }
   S.ecran = !S.compte ? "accueil" : (D().periode ? "app" : (D().personnes.length || !S.serveur ? "choix" : "choix"));
@@ -446,7 +446,7 @@ async function envoyerRappels() {
   const r = await api("/api/rappels", { rappels: JSON.parse(l) }, "PUT"); if (r.ok) rappelsEnvoyes = l;
 }
 async function activerRappels() {
-  if (!("serviceWorker" in navigator) || !("PushManager" in window)) return toast("Sur iPhone : ajoute d'abord Popote à l'écran d'accueil");
+  if (!("serviceWorker" in navigator) || !("PushManager" in window)) return toast("Sur iPhone : ajoute d'abord Miamm à l'écran d'accueil");
   try {
     if (await Notification.requestPermission() !== "granted") return toast("Notifications refusées dans les réglages");
     const reg = await navigator.serviceWorker.register("/sw.js"); await navigator.serviceWorker.ready;
@@ -462,7 +462,7 @@ function boutonTheme() {
   const t = document.documentElement.dataset.theme, sombre = t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches);
   return `<button class="rond" data-action="theme" aria-label="${sombre ? "Passer en clair" : "Passer en sombre"}">${sombre ? ICONES.soleil : ICONES.lune}</button>`;
 }
-const marque = () => `<span class="marque">popote<i>.</i></span>`;
+const marque = () => `<span class="marque">miamm<i>.</i></span>`;
 function rendre() {
   const e = S.ecran;
   document.body.classList.toggle("sans-nav", e !== "app");
@@ -479,7 +479,7 @@ function ecranAccueil() {
       <button class="bouton plein contour" data-action="connexion">Se connecter avec ma clé d'accès</button>
       <button class="lien" data-action="secours">J'ai perdu mon téléphone (code de secours)</button>
     </div>
-    <p class="discret petit" style="margin-top:22px">Popote compose le menu de ton foyer à partir de tes courses, de ton budget et de tes objectifs, puis la liste de courses qui va avec.</p></div>`;
+    <p class="discret petit" style="margin-top:22px">Miamm compose le menu de ton foyer à partir de tes courses, de ton budget et de tes objectifs, puis la liste de courses qui va avec.</p></div>`;
 }
 function ecranInscription() {
   return `<div class="page"><div class="entete"><button class="rond" data-action="aller" data-ecran="accueil" aria-label="Retour">${ICONES.gauche}</button>${marque()}</div>
@@ -776,7 +776,7 @@ async function action(b) {
     case "aller": S.ecran = d.ecran; if (d.ecran === "app") S.vue = S.vue || "jour"; return rendre();
     case "theme": {
       const t = document.documentElement.dataset.theme, sombre = t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches);
-      document.documentElement.dataset.theme = sombre ? "light" : "dark"; try { localStorage.setItem("popote-theme", sombre ? "light" : "dark"); } catch (e) {}
+      document.documentElement.dataset.theme = sombre ? "light" : "dark"; try { localStorage.setItem("miamm-theme", sombre ? "light" : "dark"); } catch (e) {}
       return rendre();
     }
     case "connexion": return connecter();
@@ -831,7 +831,7 @@ async function action(b) {
     }
     case "rappels": return activerRappels();
     case "ajouter-cle": return ajouterCle();
-    case "deconnexion": await api("/api/deconnexion", {}); S.compte = null; S.doc = DOC0(); S.base = null; try { localStorage.removeItem("popote-doc"); } catch (e) {} S.ecran = "accueil"; return rendre();
+    case "deconnexion": await api("/api/deconnexion", {}); S.compte = null; S.doc = DOC0(); S.base = null; try { localStorage.removeItem("miamm-doc"); } catch (e) {} S.ecran = "accueil"; return rendre();
   }
 }
 document.onclick = e => {

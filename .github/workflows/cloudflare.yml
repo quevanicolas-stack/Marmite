@@ -1,4 +1,4 @@
-# Met Popote en ligne sur Cloudflare à chaque fusion dans main (ou à la demande, onglet Actions).
+# Met Miamm en ligne sur Cloudflare à chaque fusion dans main (ou à la demande, onglet Actions).
 # Secrets du dépôt (Settings → Secrets and variables → Actions) :
 #   CLOUDFLARE_API_TOKEN   jeton « Edit Cloudflare Workers » (Workers, D1 en modification)  — obligatoire
 #   CLOUDFLARE_ACCOUNT_ID  identifiant du compte Cloudflare                                — obligatoire
@@ -8,7 +8,7 @@ name: Cloudflare
 on:
   push:
     branches: [main]
-    paths: ["popote/**", "donnees/catalogue.json", "donnees/recettes.json", "donnees/reglages.json", "cloudflare/**", ".github/workflows/cloudflare.yml"]
+    paths: ["miamm/**", "donnees/catalogue.json", "donnees/recettes.json", "donnees/reglages.json", "cloudflare/**", ".github/workflows/cloudflare.yml"]
   workflow_dispatch:
 concurrency: cloudflare
 jobs:

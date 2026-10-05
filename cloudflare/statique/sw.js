@@ -1,5 +1,5 @@
-// Service worker de Popote : rappels (Web Push) et ouverture hors ligne de la dernière version de la page.
-const CACHE = "popote-v1";
+// Service worker de Miamm : rappels (Web Push) et ouverture hors ligne de la dernière version de la page.
+const CACHE = "miamm-v1";
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", e => e.waitUntil(self.clients.claim()));
 
@@ -13,9 +13,9 @@ self.addEventListener("fetch", e => {
 
 // Le rappel arrive sans contenu : on lit le texte du jour sur le serveur.
 self.addEventListener("push", e => e.waitUntil((async () => {
-  let r = { titre: "Popote", texte: "Un rappel t'attend dans l'app." };
+  let r = { titre: "Miamm", texte: "Un rappel t'attend dans l'app." };
   try { const x = await fetch("/api/rappel", { cache: "no-store" }); if (x.ok) r = await x.json(); } catch (err) {}
-  await self.registration.showNotification(r.titre, { body: r.texte, icon: "/icone-192.png", badge: "/icone-192.png", tag: "popote-" + (r.date || "") });
+  await self.registration.showNotification(r.titre, { body: r.texte, icon: "/icone-192.png", badge: "/icone-192.png", tag: "miamm-" + (r.date || "") });
 })()));
 
 self.addEventListener("notificationclick", e => {

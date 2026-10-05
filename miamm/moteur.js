@@ -1,5 +1,5 @@
 /* ============================================================
-   Popote — moteur de composition d'une période (sans IA)
+   Miamm — moteur de composition d'une période (sans IA)
    Dérivé du moteur de Marmite, pour un foyer de N personnes.
    Entrées : catalogue, recettes, réglages, personnes du foyer, période (début + jours), jours de courses,
              stock de départ, budget facultatif, invités.
