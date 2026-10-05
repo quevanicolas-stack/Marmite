@@ -377,6 +377,14 @@ table.tab .n{ text-align:right; }
 .voile{ position:fixed; inset:0; background:rgba(16,56,42,.55); z-index:40; display:flex; align-items:flex-end; justify-content:center; }
 .feuille-ia{ background:var(--fond); width:100%; max-width:660px; max-height:92vh; overflow:auto; border-radius:26px 26px 0 0; padding:20px 18px calc(24px + env(safe-area-inset-bottom,0px)); }
 @media (min-width:700px){ .voile{ align-items:center; } .feuille-ia{ border-radius:26px; } }
+.porte{ align-items:center; z-index:60; background:var(--fond); }
+.porte .feuille-ia{ border-radius:26px; max-width:420px; box-shadow:0 10px 40px rgba(16,56,42,.18); }
+.marque-porte{ display:flex; align-items:center; gap:10px; font:800 22px var(--titre); color:var(--titre-c); margin-bottom:10px; }
+.marque-porte svg{ width:36px; height:36px; }
+.porte .btns-ed{ margin-top:16px; }
+.alerte-txt{ color:var(--alerte); font-weight:700; margin:8px 0 0; }
+.zone-donnees{ width:100%; min-height:180px; font:12px/1.4 ui-monospace, monospace; border:1px solid var(--trait); border-radius:14px; padding:10px; background:var(--surface); color:inherit; box-sizing:border-box; }
+.liste-rappels{ margin:0 0 10px; padding-left:18px; }
 .feuille-ia .tete{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:12px; }
 .form-ia{ display:grid; gap:16px; }
 .form-ia .rangee{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px; }
@@ -797,10 +805,11 @@ function sauver() {
   clearTimeout(minuterie); minuterie = setTimeout(envoyer, 800);
 }
 async function envoyer() {
-  if (!refDoc) return;
+  if (!refDoc && !(SERVEUR.actif && SERVEUR.code)) return;
   if (enCours) { encore = true; return; }
   enCours = true;
-  try { await refDoc.set(JSON.parse(JSON.stringify(E))); sync = "compte"; } catch (e) { sync = "hors-ligne"; }
+  if (SERVEUR.actif) await envoyerServeur();
+  else try { await refDoc.set(JSON.parse(JSON.stringify(E))); sync = "compte"; } catch (e) { sync = "hors-ligne"; }
   enCours = false;
   if (encore) { encore = false; envoyer(); }
 }
@@ -817,6 +826,141 @@ async function brancherCompte() {
     await refDoc.set(JSON.parse(JSON.stringify(E)));
     sync = "compte"; rendre();
   } catch (e) { sync = "hors-ligne"; rendre(); }
+}
+
+/* ---------- Serveur du foyer (Cloudflare) : un seul document pour vous deux ---------- */
+// La même page tourne sur claude.ai (compte de chacun) ou sur le serveur du foyer : elle le détecte avec /api/etat.
+// Chaque enregistrement porte la révision lue ; si l'autre téléphone a enregistré entre-temps, on fusionne.
+const SERVEUR = { actif: false, code: null, rev: 0, base: null, chef: false, vapid: null, rappels: "" };
+const cloneJ = o => JSON.parse(JSON.stringify(o));
+const estObjet = o => o && typeof o === "object" && !Array.isArray(o);
+// Fusion à trois : ce qui n'a changé que d'un côté est gardé ; un même champ changé des deux côtés garde la valeur
+// de l'appareil qui enregistre ; une clé retirée d'un côté et inchangée de l'autre reste retirée.
+function fusionner(b, l, d) {
+  const s = JSON.stringify;
+  if (s(l) === s(b)) return d;
+  if (s(d) === s(b) || s(l) === s(d)) return l;
+  if (!estObjet(l) || !estObjet(d)) return l;
+  const o = {}, bb = estObjet(b) ? b : {};
+  for (const k of new Set([...Object.keys(l), ...Object.keys(d)])) {
+    if (!(k in l)) { if (s(d[k]) !== s(bb[k])) o[k] = d[k]; continue; }
+    if (!(k in d)) { if (s(l[k]) !== s(bb[k])) o[k] = l[k]; continue; }
+    o[k] = fusionner(bb[k], l[k], d[k]);
+  }
+  return o;
+}
+function lireCode() { try { return localStorage.getItem("marmite-code"); } catch (e) { return null; } }
+async function appelServeur(chemin, opts = {}) {
+  const r = await fetch(chemin, { ...opts, cache: "no-store", headers: { "content-type": "application/json", authorization: "Bearer " + (SERVEUR.code || ""), ...(opts.headers || {}) } });
+  if (r.status === 401) { SERVEUR.code = null; try { localStorage.removeItem("marmite-code"); } catch (e) {} porteCode("Code incorrect."); throw { code: "code" }; }
+  return r;
+}
+function recevoir(doc, rev) {
+  SERVEUR.rev = rev; SERVEUR.base = cloneJ(doc);
+  charger(doc); integrerProduits(); appliquerTickets();
+  try { localStorage.setItem("marmite-nicolas", JSON.stringify(E)); } catch (e) {}
+}
+async function tirerServeur() {
+  if (!SERVEUR.code) return;
+  try {
+    const { doc, rev } = await (await appelServeur("/api/foyer")).json();
+    if (!doc) { E.version = 2; SERVEUR.rev = 0; await envoyerServeur(); }   // premier appareil : il apporte ce qu'il a
+    else if (!SERVEUR.base) recevoir(doc, rev);                              // appareil qui arrive : il prend le foyer
+    else if (rev !== SERVEUR.rev) {
+      const local = cloneJ(E), f = fusionner(SERVEUR.base, local, doc);
+      recevoir(f, rev); SERVEUR.base = cloneJ(doc);
+      if (JSON.stringify(f) !== JSON.stringify(doc)) await envoyerServeur();
+    }
+    sync = "serveur";
+  } catch (e) { if (e.code !== "code") sync = "hors-ligne"; }
+  rendre();
+}
+async function envoyerServeur() {
+  for (let essai = 0; essai < 4; essai++) {
+    const doc = cloneJ(E);
+    let r;
+    try { r = await appelServeur("/api/foyer", { method: "PUT", body: JSON.stringify({ doc, rev: SERVEUR.rev }) }); }
+    catch (e) { if (e.code !== "code") sync = "hors-ligne"; return; }
+    if (r.ok) { SERVEUR.rev = (await r.json()).rev; SERVEUR.base = doc; sync = "serveur"; envoyerRappels(); return; }
+    if (r.status !== 409) { sync = "hors-ligne"; return; }
+    // l'autre téléphone a enregistré entre-temps : on fusionne puis on réessaie
+    const { doc: distant, rev } = await r.json();
+    const f = fusionner(SERVEUR.base || distant, doc, distant);
+    recevoir(f, rev); SERVEUR.base = cloneJ(distant); rendre();
+  }
+}
+// Rappels : la veille de chaque course, et le jour où l'on prépare le mois suivant (le 30, le dernier jour en février).
+function rappelsAVenir() {
+  const auj = ISO_JOUR(new Date()), l = [];
+  for (const c of COURSES()) {
+    if (!c.date) continue;
+    const d = new Date(c.date + "T12:00"); d.setDate(d.getDate() - 1);
+    l.push({ date: ISO_JOUR(d), titre: "Courses demain", texte: `${c.titre} : vérifie ce qu'il reste à la maison, puis la liste.` });
+  }
+  const d0 = new Date(DEBUT);
+  for (let i = 0; i < 2; i++) {
+    const a = d0.getFullYear(), m = d0.getMonth() + i, dernier = new Date(a, m + 1, 0).getDate();
+    l.push({ date: ISO_JOUR(new Date(a, m, Math.min(30, dernier))), titre: "Prépare le mois suivant", texte: "Le chef peut préparer le planning et les courses du mois prochain (onglet Planning)." });
+  }
+  return l.filter(x => x.date >= auj).sort((x, y) => x.date.localeCompare(y.date));
+}
+async function envoyerRappels() {
+  const l = JSON.stringify(rappelsAVenir());
+  if (l === SERVEUR.rappels) return;
+  try { const r = await appelServeur("/api/rappels", { method: "PUT", body: JSON.stringify({ rappels: JSON.parse(l) }) }); if (r.ok) SERVEUR.rappels = l; } catch (e) {}
+}
+// Porte d'entrée : le code du foyer, demandé une fois par appareil.
+function porteCode(msg) {
+  let p = document.getElementById("porte");
+  if (!p) { p = document.createElement("div"); p.id = "porte"; document.body.appendChild(p); }
+  p.innerHTML = `<div class="voile porte"><form class="feuille-ia" role="dialog" aria-modal="true" aria-labelledby="titre-porte" data-porte="1">
+    <div class="marque-porte">${LOGO}</div>
+    <h2 id="titre-porte">Code du foyer</h2>
+    <p class="discret">Le même pour vous deux. Il n'est demandé qu'une fois sur chaque appareil.</p>
+    <label class="champ">Code<input id="code-foyer" type="password" autocomplete="current-password" required></label>
+    ${msg ? `<p class="alerte-txt">${echap(msg)}</p>` : ""}
+    <div class="btns-ed"><button class="bouton" type="submit">Entrer</button></div></form></div>`;
+  setTimeout(() => { const i = document.getElementById("code-foyer"); if (i) i.focus(); }, 50);
+}
+async function entrerCode(code) {
+  SERVEUR.code = code;
+  try { const r = await appelServeur("/api/foyer"); if (!r.ok) throw {}; } catch (e) { return; }
+  try { localStorage.setItem("marmite-code", code); } catch (e) {}
+  const p = document.getElementById("porte"); if (p) p.remove();
+  await tirerServeur();
+}
+async function brancherServeur() {
+  if (window.claude || !/^https?:$/.test(location.protocol)) return;
+  let etat;
+  try { const r = await fetch("/api/etat", { cache: "no-store" }); if (!r.ok) return; etat = await r.json(); } catch (e) { return; }
+  if (!etat || !etat.marmite) return;
+  Object.assign(SERVEUR, { actif: true, chef: !!etat.chef, vapid: etat.vapid, code: lireCode() });
+  sync = "hors-ligne";
+  if (!SERVEUR.code) return porteCode();
+  await tirerServeur();
+}
+// Retour sur l'app (l'autre a peut-être coché ou acheté entre-temps)
+document.onvisibilitychange = () => { if (document.visibilityState === "visible" && SERVEUR.actif && !enCours) tirerServeur(); };
+async function abonnementActuel() {
+  try { const reg = await navigator.serviceWorker.getRegistration(); return reg ? await reg.pushManager.getSubscription() : null; } catch (e) { return null; }
+}
+const b64VersOctets = s => { const b = atob(s.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((s.length + 3) % 4)); return Uint8Array.from(b, c => c.charCodeAt(0)); };
+async function activerRappels() {
+  if (!("serviceWorker" in navigator) || !("PushManager" in window)) return toast("Sur iPhone : ajoute d'abord Marmite à l'écran d'accueil");
+  try {
+    if (await Notification.requestPermission() !== "granted") return toast("Notifications refusées dans les réglages du téléphone");
+    const reg = await navigator.serviceWorker.register("/sw.js"); await navigator.serviceWorker.ready;
+    const ab = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64VersOctets(SERVEUR.vapid) });
+    await appelServeur("/api/abonnement", { method: "POST", body: JSON.stringify({ abonnement: ab.toJSON() }) });
+    SERVEUR.rappels = ""; await envoyerRappels();
+    toast("Rappels activés sur cet appareil");
+  } catch (e) { toast("Les rappels n'ont pas pu être activés"); }
+  rendre();
+}
+async function couperRappels() {
+  const ab = await abonnementActuel();
+  if (ab) { try { await appelServeur("/api/abonnement", { method: "DELETE", body: JSON.stringify({ endpoint: ab.endpoint }) }); } catch (e) {} await ab.unsubscribe(); }
+  toast("Rappels coupés sur cet appareil"); rendre();
 }
 
 /* ---------- Rendu général ---------- */
@@ -1794,8 +1938,53 @@ function vueProfil() {
       <div class="ligne-saisie"><label class="champ">Ajouter<input type="text" id="ajout-eviter" placeholder="Ex. coriandre"></label><button class="bouton leger" data-action="eviter">Ajouter</button></div></section>
   </div>
   <section class="carte" style="margin-top:14px"><h3>Données</h3>
-    <p style="margin:8px 0"><span class="etat-sync ${sync === "compte" ? "ok" : ""}"><i></i>${sync === "compte" ? "Enregistrées sur ton compte : les mêmes sur téléphone, tablette et ordinateur." : "Enregistrées sur cet appareil uniquement."}</span></p>
-    <button class="bouton leger" data-action="reset">Remettre à zéro le suivi ${de()}</button></section>`;
+    <p style="margin:8px 0"><span class="etat-sync ${sync === "compte" || sync === "serveur" ? "ok" : ""}"><i></i>${texteSync()}</span></p>
+    <div class="btns-ed"><button class="bouton leger" data-action="exporter">Copier les données</button><button class="bouton leger" data-action="importer">Importer des données</button></div>
+    <p class="discret petit" style="margin:8px 0 0">Pour passer d'une version de l'app à l'autre : copier ici, importer là-bas.</p>
+    <button class="bouton leger" data-action="reset" style="margin-top:10px">Remettre à zéro le suivi ${de()}</button></section>
+  ${SERVEUR.actif ? carteRappels() : ""}`;
+}
+
+function texteSync() {
+  if (sync === "serveur") return "Enregistrées pour le foyer : les mêmes sur vos deux téléphones.";
+  if (sync === "compte") return "Enregistrées sur ton compte : les mêmes sur téléphone, tablette et ordinateur.";
+  if (SERVEUR.actif) return "Serveur du foyer injoignable : enregistrées sur cet appareil, envoyées au retour du réseau.";
+  return "Enregistrées sur cet appareil uniquement.";
+}
+let etatRappels = null;   // "actifs" | "inactifs" | "impossible", lu une fois puis à chaque changement
+function carteRappels() {
+  if (etatRappels === null) {
+    etatRappels = "inactifs";
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) etatRappels = "impossible";
+    else abonnementActuel().then(ab => { const e = ab ? "actifs" : "inactifs"; if (e !== etatRappels) { etatRappels = e; rendre(); } });
+  }
+  const prochains = rappelsAVenir().slice(0, 3).map(r => `<li><b>${echap(libelleDate(r.date))}</b> · ${echap(r.titre)}</li>`).join("");
+  return `<section class="carte" style="margin-top:14px"><h3>Rappels sur ce téléphone</h3>
+    <p class="discret petit" style="margin:4px 0 8px">À 18 h : la veille de chaque course, et le jour où l'on prépare le mois suivant.</p>
+    ${prochains ? `<ul class="liste-rappels">${prochains}</ul>` : ""}
+    ${etatRappels === "impossible" ? `<p class="discret petit">Sur iPhone : touche Partager puis « Sur l'écran d'accueil », et ouvre Marmite depuis son icône pour activer les rappels.</p>`
+      : etatRappels === "actifs" ? `<div class="btns-ed"><button class="bouton leger" data-action="rappels-essai">Envoyer un rappel d'essai</button><button class="bouton leger" data-action="rappels-couper">Couper les rappels</button></div>`
+      : `<button class="bouton" data-action="rappels-activer">Activer les rappels</button>`}</section>`;
+}
+function libelleDate(iso) { const d = new Date(iso + "T12:00"); return d.toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" }); }
+let feuilleDonnees = null;   // "exporter" | "importer"
+function rendreDonnees() {
+  const el = document.getElementById("couche"); if (!feuilleDonnees) { el.innerHTML = ""; return; }
+  const exp = feuilleDonnees === "exporter";
+  el.innerHTML = `<div class="voile"><div class="feuille-ia" role="dialog" aria-modal="true" aria-labelledby="titre-donnees">
+    <div class="tete"><div><h2 id="titre-donnees">${exp ? "Copier les données" : "Importer des données"}</h2>
+      <p class="discret petit" style="margin:4px 0 0">${exp ? "Tout le suivi du foyer : coches, courses, prix, stock, mois préparés. Copie ce texte, puis colle-le dans « Importer des données » de l'autre version." : "Colle le texte copié depuis l'autre version. Il remplace le suivi actuel de cet appareil (et du foyer sur le serveur)."}</p></div>
+      <button class="rond" data-choix-fermer="1" aria-label="Fermer">×</button></div>
+    <textarea id="donnees-texte" class="zone-donnees" ${exp ? "readonly" : 'placeholder="{ &quot;version&quot;: 2, … }"'}>${exp ? echap(JSON.stringify(E)) : ""}</textarea>
+    <div class="btns-ed">${exp ? `<button class="bouton" data-action="copier-donnees">Copier</button>` : `<button class="bouton" data-action="importer-ok">Importer</button>`}<button class="bouton leger" data-action="fermer">Fermer</button></div></div></div>`;
+  if (exp) { const t = document.getElementById("donnees-texte"); t.focus(); t.select(); }
+}
+function importerDonnees() {
+  let obj;
+  try { obj = JSON.parse(document.getElementById("donnees-texte").value); } catch (e) { return toast("Ce texte n'est pas lisible"); }
+  if (!obj || obj.version !== 2 || !obj.personnes || !obj.foyer) return toast("Ce ne sont pas des données de Marmite");
+  if (!confirm("Remplacer le suivi actuel par ces données ?")) return;
+  charger(obj); integrerProduits(); E.version = 2; sauver(); fermerIA(); rendre(); toast("Données importées");
 }
 
 /* ---------- Le chef : « J'ai faim » et « Changer » ---------- */
@@ -1808,7 +1997,7 @@ function ouvrirIA(k) {
     budgetActif: false, budget: Math.max(0.5, Math.round(s.cout * 100) / 100 || 2), kcal: s.kcal, prot: s.prot, etat: "form", propositions: [], erreur: "" };
   rendreIA();
 }
-function fermerIA() { ia = null; choix = null; ajout = null; document.getElementById("couche").innerHTML = ""; }
+function fermerIA() { ia = null; choix = null; ajout = null; feuilleDonnees = null; document.getElementById("couche").innerHTML = ""; }
 function lireForm() {
   const bi = document.getElementById("ia-budget"), ti = document.getElementById("ia-temps");
   if (bi) { const v = parseFloat(bi.value); if (!isNaN(v) && v > 0) ia.budget = v; }
@@ -1898,7 +2087,11 @@ async function proposer() {
   lireForm(); ia.etat = "attente"; ia.erreur = ""; rendreIA();
   let sample = null;
   try { sample = window.claude && window.claude.use ? await window.claude.use("sample") : null; } catch (e) { sample = null; }
-  if (!sample) { ia.etat = "form"; ia.erreur = "Le chef n'est disponible que dans l'app Marmite en ligne."; return rendreIA(); }
+  if (!sample && SERVEUR.actif && SERVEUR.chef) sample = { json: async consigne => {
+    const r = await appelServeur("/api/chef", { method: "POST", body: JSON.stringify({ consigne }) }), d = await r.json();
+    if (!r.ok) throw { code: d.code }; return d;
+  } };
+  if (!sample) { ia.etat = "form"; ia.erreur = SERVEUR.actif ? "Le chef n'est pas encore branché sur le serveur du foyer." : "Le chef n'est disponible que dans l'app Marmite en ligne."; return rendreIA(); }
   try {
     const rep = await sample.json(consigne(), { modelTier: "default", cache: false });
     const stock = stockPourIA();
@@ -2081,6 +2274,20 @@ function action(b) {
     }
     case "exclure": { const v = (document.getElementById("ajout-exclu") || {}).value; if (!v) return; E.foyer.exclus = (E.foyer.exclus || []).concat(v); sauver(); toast(v + " exclu des menus"); return rendre(); }
     case "eviter": { const v = document.getElementById("ajout-eviter").value.trim(); if (!v) return; P().profil.eviter.push(v); sauver(); return rendre(); }
+    case "exporter": feuilleDonnees = "exporter"; return rendreDonnees();
+    case "importer": feuilleDonnees = "importer"; return rendreDonnees();
+    case "importer-ok": return importerDonnees();
+    case "copier-donnees": {
+      const t = document.getElementById("donnees-texte"); t.select();
+      const ok = () => toast("Copié"), ko = () => { try { document.execCommand("copy"); toast("Copié"); } catch (e) { toast("Sélectionne le texte et copie-le"); } };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t.value).then(ok, ko); else ko();
+      return;
+    }
+    case "rappels-activer": return activerRappels();
+    case "rappels-couper": etatRappels = null; return couperRappels();
+    case "rappels-essai":
+      appelServeur("/api/rappels/essai", { method: "POST" }).then(r => r.json()).then(d => toast(d.envoyes ? "Rappel envoyé" : "Aucun téléphone abonné")).catch(() => toast("Envoi impossible"));
+      return;
     case "reset":
       if (confirm("Effacer les coches, remplacements et pesées " + de() + " ?")) { E.personnes[actif] = structuredClone(DEFAUT.personnes[actif]); sauver(); rendre(); toast("Suivi remis à zéro"); }
       return;
@@ -2096,6 +2303,11 @@ document.onclick = e => {
   const art = e.target.closest(".article"); if (!art || e.target.closest(".saisie, .mag-detail")) return;
   if (art.dataset.artOuvrir) { artOuvert = artOuvert === art.dataset.artOuvrir ? null : art.dataset.artOuvrir; return rendre(); }
   const c = art.querySelector("button.check"); if (c) action(c);
+};
+document.onsubmit = e => {
+  const f = e.target.closest("[data-porte]"); if (!f) return;
+  e.preventDefault();
+  const v = (document.getElementById("code-foyer") || {}).value; if (v) entrerCode(v.trim());
 };
 document.ondragstart = e => {
   const t = e.target.closest && e.target.closest("[data-drag-id]"); if (!t) return;
@@ -2171,6 +2383,7 @@ if (window.matchMedia) matchMedia("(prefers-color-scheme: dark)").addEventListen
 apresChargement();
 rendre();
 brancherCompte();
+brancherServeur();
 </script>
 </body>
 </html>

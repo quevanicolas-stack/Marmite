@@ -71,7 +71,16 @@ Il contient 8 onglets et environ 3 860 formules. Il est généré par `python/bu
 
 - **Publiée** : https://claude.ai/artifact/8Ez5pJQH4tzZ49GJLgvpB5. C'est une page hébergée par claude.ai, qui appartient au compte de Nico.
 - **Capacités d'exécution déclarées** : `db`, pour les données privées synchronisées sur tous ses appareils ; `sample`, pour les appels à Claude de l'assistant ; `user`, pour l'identifiant.
-- **Mise à jour** : republier `app/marmite.html` avec l'outil Artifact (action publish, avec l'`url` ci-dessus), sans redéclarer les capacités. Les sessions Claude Code web disposent de cet outil ; lire d'abord la version en ligne (action read) pour vérifier qu'elle n'a pas bougé. Republiée le 05/10/2026 depuis Claude Code (version 11 : bibliothèque de 100 plats avec variantes, produits exclus ; version 10 : ajouter un produit, valider le panier, achat spontané, ticket du 1er octobre reporté ; version 9 : Aujourd'hui réorganisé, mode magasin, Ajuster sans débordement ; version 8 : glisser-déposer sur ordinateur, plein écran ; version 7 : cases et prix corrigés, repas remplaçable depuis la bibliothèque ; version 6 : le chef prépare le mois, archives ; version 5 : courses hebdomadaires, budget réel, quantité achetée, stock réel, budget du foyer, planning selon le stock ; version 4 : prix, dépassement, poubelle, jambon au gramme) ; elle correspond à `app/marmite.html`. Titre de la page : « Marmite ». Partage : « toute personne ayant le lien » (réglé dans le menu Partager de la page) ; chaque compte voit ses propres données (`db` par utilisateur).
+- **Mise à jour** : republier `app/marmite.html` avec l'outil Artifact (action publish, avec l'`url` ci-dessus), sans redéclarer les capacités. Les sessions Claude Code web disposent de cet outil ; lire d'abord la version en ligne (action read) pour vérifier qu'elle n'a pas bougé. Republiée le 05/10/2026 depuis Claude Code (version 12 : copier / importer les données, base de la version Cloudflare ; version 11 : bibliothèque de 100 plats avec variantes, produits exclus ; version 10 : ajouter un produit, valider le panier, achat spontané, ticket du 1er octobre reporté ; version 9 : Aujourd'hui réorganisé, mode magasin, Ajuster sans débordement ; version 8 : glisser-déposer sur ordinateur, plein écran ; version 7 : cases et prix corrigés, repas remplaçable depuis la bibliothèque ; version 6 : le chef prépare le mois, archives ; version 5 : courses hebdomadaires, budget réel, quantité achetée, stock réel, budget du foyer, planning selon le stock ; version 4 : prix, dépassement, poubelle, jambon au gramme) ; elle correspond à `app/marmite.html`. Titre de la page : « Marmite ». Partage : « toute personne ayant le lien » (réglé dans le menu Partager de la page) ; chaque compte voit ses propres données (`db` par utilisateur).
+- **Version Cloudflare** (préparée le 05/10/2026, pas encore en ligne) : la même page, servie par un Worker (`cloudflare/`), détecte seule qu'elle est sur le serveur du foyer (`/api/etat`). Différences avec claude.ai :
+  - **un seul document pour le foyer** (D1 `marmite-foyer`, créée sur le compte Cloudflare de Nico, id `8005c9f9-…` dans `cloudflare/wrangler.toml`), alors que sur claude.ai chaque compte a ses propres données ;
+  - accès par un **code du foyer** (secret `CODE_FOYER`), demandé une fois par appareil (`localStorage["marmite-code"]`) ;
+  - enregistrement avec **révision** : si l'autre téléphone a enregistré entre-temps (409), `fusionner(base, local, distant)` garde ce qui n'a changé que d'un côté ; un même champ changé des deux côtés garde la valeur de l'appareil qui enregistre ; relecture au retour sur l'app (`visibilitychange`) ;
+  - **le chef** par `/api/chef` (clé `ANTHROPIC_API_KEY` dans les secrets du Worker, jamais dans la page ; sortie JSON imposée par schéma, 30 appels par jour au plus) ;
+  - **rappels** (Web Push, clés VAPID générées et gardées par le Worker) : la veille de chaque course et le jour où l'on prépare le mois suivant, à 18 h heure de La Réunion (cron), carte « Rappels sur ce téléphone » dans Profil ; sur iPhone, il faut d'abord ajouter Marmite à l'écran d'accueil ;
+  - installable comme une app (manifeste, icônes, service worker qui garde la dernière page pour l'ouverture hors ligne).
+  - **Mise en ligne** : `.github/workflows/cloudflare.yml` déploie à chaque fusion dans `main` (ou à la demande), avec les secrets du dépôt `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CODE_FOYER`, `ANTHROPIC_API_KEY` (facultatif). Depuis une session Claude Code, `api.cloudflare.com` est bloqué et le connecteur Cloudflare ne sait pas déployer de code (il crée D1, KV, R2).
+  - **Passage des données** : Profil → Données → « Copier les données » sur claude.ai, puis « Importer des données » sur la version Cloudflare.
 - **En local** : ouvrir `app/marmite.html` suffit. Les données passent alors en localStorage et l'assistant est indisponible, car `window.claude` est absent. Tout le reste fonctionne.
 
 ### Construire
@@ -88,6 +97,8 @@ python3 decouper.py                       # migration faite une fois : appdata.j
 # Chaîne courante :
 cd ../app && python3 construire.py        # template + blocs de donnees/ → app/marmite.html
 cd .. && for t in tests/*.py; do python3 $t || break; done && node tests/test_moteur.js
+cd cloudflare && npm install && python3 preparer.py && npx wrangler dev --var CODE_FOYER:essai
+                                          # version Cloudflare en local (tests/test_cloudflare.py le fait seul)
 node outils/proposer_mois.js 2026-11 [graine] [--jours N] [--invites N] [--budget €] [--debut aaaa-mm-jj]
                                           # proposition du moteur → donnees/propositions/<id>.json + résumé
 ```
@@ -195,6 +206,7 @@ Schéma version 2. Il est stocké dans `localStorage["marmite-nicolas"]` (le nom
     imports:  { "leclerc-2026-10-01": { date, course, avant } },                            // tickets reportés (ou { annule:true })
     exclus:   ["Poulet"]                                                                    // produits que le chef ne propose jamais
   },
+  // version Cloudflare : ce même document, une seule fois pour le foyer (table docs, clé « foyer », avec rev)
   mois: { id, titre, debut, jours, invites, plan, courses, share, stockDepart, budget, graine, date },   // mois préparé par le chef (absent : octobre)
   archives: { "2026-10": { titre, date, foyer: { achats, payes, … }, personnes: { nicolas: { coches, remplacements } }, mois } },
   personnes: {
@@ -265,7 +277,7 @@ Les blocs sont désormais enrichis à la main : `python/decouper.py` refuse de l
 - **Liste de courses fixe.** Ajuster ou remplacer un repas ne la recalcule pas. Seul l'onglet « À la maison » reflète la réalité.
 - **Stock estimé.** Un repas non coché compte quand même comme mangé. Les pertes et le grignotage ne sont pas vus. Condiments et épices ne sont pas suivis.
 - **Octobre acheté au plus juste.** Beaucoup d'aliments finissent à 0 g le 21 (tomates, pommes de terre, patates douces, riz, lentilles…). Toute portion en plus sur l'un d'eux crée une rupture.
-- **Pas de vraie notification.** Une page web fermée ne peut pas sonner sur le téléphone.
+- **Pas de vraie notification sur claude.ai.** Une page web fermée ne peut pas sonner sur le téléphone ; la version Cloudflare le fait (Web Push).
 - **Référence d'Aurélie.** Les 208,94 € ont été recopiés depuis Nicolas et restent à confirmer.
 
 ## 6. Prochaine étape : programmer le mois suivant
@@ -374,6 +386,8 @@ Les données sont dans un seul document `db`. Avec plusieurs mois et une bibliot
 11. **Décisions du 02/10/2026** (après les courses du 1er) : ajouter un produit à une liste (catalogue ou nouveau), valider le panier (non coché = non acheté) puis refaire le planning selon les achats, ajouter un achat spontané au stock. Ticket Leclerc du 1er reporté dans la Course 1, alimentaire seulement (ni grignotage, ni alcool, ni sodas) : pilons comptés en poulet (650 g de viande), boulettes en bœuf, bacon nouveau produit (à la coupe, poids estimé 110 g), jambon 246 g, cheddar 126 g, café 1 kg, eau 9 L.
 12. **Décisions du 05/10/2026** : pas d'aspiration de Marmiton (conditions d'utilisation, droit des bases de données) ; 100 plats écrits pour Marmite, pas plus de créole que le reste, avec des **variantes** (une viande pour une autre, un fromage pour un autre ou sans) qui multiplient les plats et servent aux **produits exclus**. 30 produits ajoutés au catalogue (dinde, échine de porc, steak haché, merguez, saucisses fumées, boucané, pilons, thon, crevettes, morue, emmental, mozzarella, crème, lait de coco, tomates concassées, pois chiches, lentilles sèches, semoule, boulgour, nouilles, pâtes à pizza et brisée, pain de mie, brocoli, épinards, petits pois, chou, chouchou, citrouille, poireaux, concombre).
 
+13. **Décisions du 05/10/2026, suite** : passage sur Cloudflare validé (« fais tout »). Worker + D1 pour un document unique du foyer, code du foyer, chef par l'API Anthropic côté serveur, rappels Web Push, déploiement par GitHub Actions ; la version claude.ai reste en service pendant la transition (copier / importer les données).
+
 ## 8. Arborescence
 
 ```
@@ -417,4 +431,10 @@ tests/test_poubelle.py             case cochée en touchant la ligne, poubelle d
 tests/test_ajustement_stock.py     ajustement d'un repas, retour au plan, stock
 tests/test_assistant_personnes_theme.py   Nicolas/Aurélie, thème, assistant simulé, remplacement à 2
 docs/prototype-beta-resume.md      résumé du prototype de l'app grand public
+cloudflare/wrangler.toml           Worker « marmite » : page (public/), D1, cron des rappels
+cloudflare/src/worker.js           API du foyer (révision), chef, abonnements et envoi des rappels
+cloudflare/preparer.py             app/marmite.html → public/index.html (+ manifeste, icônes, service worker)
+cloudflare/statique/               service worker, manifeste, icônes
+.github/workflows/cloudflare.yml   mise en ligne sur Cloudflare à chaque fusion dans main
+tests/test_cloudflare.py           wrangler dev en local : code, deux téléphones et fusion, chef simulé, rappels signés, copier / importer
 ```

@@ -1,0 +1,27 @@
+# Marmite sur Cloudflare : la page (public/, préparée par preparer.py) et l'API du foyer (src/worker.js).
+name = "marmite"
+main = "src/worker.js"
+compatibility_date = "2026-06-01"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
+
+# Le document du foyer, les abonnements aux rappels et les clés d'envoi.
+[[d1_databases]]
+binding = "BASE"
+database_name = "marmite-foyer"
+database_id = "8005c9f9-4ad8-44fc-9371-f241f202c209"
+
+# Rappels envoyés à 18 h, heure de La Réunion (UTC+4).
+[triggers]
+crons = ["0 14 * * *"]
+
+[vars]
+FUSEAU = "Indian/Reunion"
+CONTACT = "https://github.com/quevanicolas-stack/Marmite"
+CHEF_PAR_JOUR = "30"
+
+# Secrets (jamais dans ce fichier) : CODE_FOYER (obligatoire), ANTHROPIC_API_KEY (facultatif, pour le chef).

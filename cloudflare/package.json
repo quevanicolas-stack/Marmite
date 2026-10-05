@@ -1,0 +1,16 @@
+{
+  "name": "marmite-cloudflare",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "preparer": "python3 preparer.py",
+    "dev": "python3 preparer.py && wrangler dev",
+    "deployer": "python3 preparer.py && wrangler deploy"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.147.0"
+  }
+}
