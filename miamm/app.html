@@ -349,7 +349,7 @@ function texteObjectif(p) {
   const sens = r < 0 ? `perte d'environ ${nb(-r, 1)} kg par semaine` : r > 0 ? `prise d'environ ${nb(r, 1)} kg par semaine` : "poids stable";
   return `${nb(o.kcalMin)} à ${nb(o.kcalMax)} kcal, ${o.prot} g de protéines par jour · ${sens}`;
 }
-const nomDe = id => ((D().personnes.find(p => p.id === id) || (S.proposition && S.proposition.periode.personnes.find(p => p.id === id)) || {}).nom) || "Invité";
+const nomDe = id => ((D().personnes.find(p => p.id === id) || (P() && P().personnes.find(p => p.id === id)) || (S.proposition && S.proposition.periode.personnes.find(p => p.id === id)) || {}).nom) || "Invité";
 
 /* ---------- Période active : repas, stock, courses ---------- */
 const P = () => D().periode;
@@ -362,10 +362,19 @@ function repas(j, k) {
 }
 const quantiteAchat = (a, buy) => { const c = CAT()[a]; if (!c) return 0; return c.vrac ? buy * (c.rend || 1) : buy * c.cond; };
 const cleLigne = (cid, a) => `c${cid}-${a}`;
-const qui = () => S.qui && D().personnes.some(p => p.id === S.qui) ? S.qui : (D().personnes[0] || {}).id;
+// la personne affichée : parmi celles du menu (un menu express peut avoir été composé pour d'autres convives que le foyer)
+const qui = () => { const l = (P() && P().personnes) || D().personnes; return S.qui && l.some(p => p.id === S.qui) ? S.qui : (l[0] || {}).id; };
+// profils complets des convives du menu (objectifs, petit-déjeuner…), pour recomposer en cours de menu
+function profilsPeriode() {
+  const p = P(); if (p.profils) return p.profils;
+  const ids = p.personnes.map(x => x.id);
+  if (ids.every(id => D().personnes.some(x => x.id === id))) return ids.map(id => D().personnes.find(x => x.id === id));
+  const a = ids.filter(id => /^a/.test(id)).length, e = ids.filter(id => /^e/.test(id)).length;
+  return personnesExpress(Math.max(1, a), e).filter(x => ids.includes(x.id));
+}
 // stock réel au matin du jour j : départ + articles cochés des courses passées + achats ajoutés − repas des jours d'avant
 function stockReel(j) {
-  const p = P(), s = Object.assign({}, p.stockDepart || {}), date = p.plan[Math.min(j, p.jours) - 1].date;
+  const p = P(), s = Object.assign({}, p.stockDepart || {}), date = j > p.jours ? ajouterJours(p.fin, 1) : p.plan[j - 1].date;
   for (const c of p.courses) if (c.date <= date || c.complement) for (const it of c.items) if (D().suivi.achats[cleLigne(c.id, it.a)]) s[it.a] = (s[it.a] || 0) + quantiteAchat(it.a, it.buy);
   for (const x of D().ajouts) if (x.date <= date) s[x.a] = (s[x.a] || 0) + x.q;
   for (let d = 1; d < j; d++) for (const m of p.plan[d - 1].meals) {
@@ -411,7 +420,8 @@ const composerExpress = graine => Moteur.composer(Object.assign(composerExpressE
 function validerProposition() {
   const pr = S.proposition, doc = D();
   if (doc.periode) doc.archives = (doc.archives || []).concat([{ periode: { debut: doc.periode.debut, fin: doc.periode.fin, titre: doc.periode.titre }, bilan: doc.bilan && doc.bilan.cout, date: aujourdhui() }]).slice(-12);
-  doc.periode = pr.periode; doc.bilan = pr.bilan; doc.mode = pr.mode;
+  const profils = pr.mode === "stock" ? convivesStock() : pr.mode === "express" ? convivesExpress(S.express) : doc.personnes;
+  doc.periode = Object.assign({}, pr.periode, { profils: cloneJ(profils) }); doc.bilan = pr.bilan; doc.mode = pr.mode;
   doc.suivi = { coches: {}, achats: {}, payes: {}, remplacements: {} };
   doc.ajouts = [];
   if (pr.mode === "express") {
@@ -654,14 +664,15 @@ function ecranProposition() {
       <ul class="ingr" style="margin-top:10px">${c.items.map(i => `<li><span>${echap(i.a)}</span><span>${libelleAchat(i)}</span></li>`).join("")}</ul></details>`).join("");
   const jours = per.plan.map(j => `<div class="ligne-jour"><div class="date">${deIso(j.date).getDate()}<small>${JOURS[deIso(j.date).getDay()].slice(0, 3)}.</small></div>
       <div class="plats">${j.meals.filter(m => m.k !== "pdj").map(m => `<button class="plat-btn" data-action="changer" data-j="${j.d}" data-k="${m.k}"><b>${Moteur.LABELS[m.k]}${j.tag === "plaisir" && m.k === "dej" ? '<span class="tag">plaisir</span>' : ""}</b>${echap(m.plat)}</button>`).join("")}</div></div>`).join("");
-  const stockUtilise = pr.mode === "express" ? `<p class="petit" style="margin:8px 0 0">${b.stockUtilise.length} produits du ticket utilisés.</p>` : "";
-  return `<div class="page"><div class="entete"><button class="rond" data-action="aller" data-ecran="${pr.mode === "express" ? "express" : "surmesure"}" aria-label="Retour">${ICONES.gauche}</button>${marque()}</div>
+  const avecStock = pr.mode === "express" || pr.mode === "stock";
+  const stockUtilise = avecStock ? `<p class="petit" style="margin:8px 0 0">${b.stockUtilise.length} produits ${pr.mode === "stock" ? "de la maison" : "du ticket"} utilisés.</p>` : "";
+  return `<div class="page"><div class="entete"><button class="rond" data-action="aller" data-ecran="${pr.mode === "express" ? "express" : pr.mode === "stock" ? "app" : "surmesure"}" aria-label="Retour">${ICONES.gauche}</button>${marque()}</div>
     <div class="signe-chef"><img src="${BADGE}" alt=""><p class="etiquette" style="margin:0">Proposé par le chef</p></div>
     <h1 style="margin:4px 0 14px">${echap(per.titre)}</h1>
-    <div class="carte pleine"><div class="chiffres"><div><b>${euros(b.cout.achats)}</b><span class="petit">${pr.mode === "express" ? "à compléter" : "de courses"}</span></div>${budget ? `<div><b>${euros(budget)}</b><span class="petit">budget</span></div>` : ""}</div>
+    <div class="carte pleine"><div class="chiffres"><div><b>${euros(b.cout.achats)}</b><span class="petit">${avecStock ? "à compléter" : "de courses"}</span></div>${budget ? `<div><b>${euros(budget)}</b><span class="petit">budget</span></div>` : ""}</div>
       ${budget && b.cout.achats > budget ? `<p class="petit" style="margin:8px 0 0">Le chef dépasse le budget de ${euros(b.cout.achats - budget)}. Retire un produit cher ou réduis la durée.</p>` : ""}${stockUtilise}</div>
     <div class="carte"><div class="chiffres">${nut}</div><p class="discret petit" style="margin:10px 0 0">${b.quotas.poisson} repas de poisson, ${b.quotas.plaisir} repas plaisir, ${b.recettesUtilisees} plats différents.</p></div>
-    <h2 style="margin:18px 0 10px">${pr.mode === "express" ? "Ce qu'il faut compléter" : "Les courses"}</h2>
+    <h2 style="margin:18px 0 10px">${avecStock ? "Ce qu'il faut compléter" : "Les courses"}</h2>
     ${courses || `<p class="discret">Rien à acheter : tout est à la maison.</p>`}
     <h2 style="margin:18px 0 6px">Le menu</h2>
     <p class="discret petit" style="margin:0 0 6px">Touche un plat pour le changer.</p>
@@ -691,14 +702,14 @@ function appliquerChoix(id) {
   if (choix.cible === "proposition") {
     const pr = S.proposition, grille = Moteur.grilleDuPlan(pr.periode);
     grille[`${choix.j}-${choix.k}`] = id;
-    const extra = pr.mode === "express" ? composerExpressEntrees() : composerMesureEntrees();
+    const extra = entreesDuMode(pr.mode);
     const res = Moteur.composer(Object.assign(extra, { grilleImposee: grille }));
     S.proposition = Object.assign(res, { mode: pr.mode, graine: pr.graine });
   } else {
     // en cours de menu : seul ce repas change (les courses déjà prévues ne bougent pas)
     const per = P(), grille = Moteur.grilleDuPlan(per);
     grille[`${choix.j}-${choix.k}`] = id;
-    const res = Moteur.composer(entreesMoteur({ personnes: D().personnes.length ? D().personnes : per.personnes, debut: per.debut, jours: per.jours, joursCourses: [], invites: per.invites, grilleImposee: grille }));
+    const res = Moteur.composer(entreesMoteur({ personnes: profilsPeriode(), debut: per.debut, jours: per.jours, joursCourses: [], invites: per.invites, grilleImposee: grille }));
     const m = res.periode.plan[choix.j - 1].meals.find(x => x.k === choix.k);
     if (m) D().suivi.remplacements[`${choix.j}-${choix.k}`] = { plat: m.plat, items: m.items, recette: m.recette };
     sauver();
@@ -714,8 +725,31 @@ function composerExpressEntrees() {
   const x = S.express, stock = {};
   for (const l of x.lignes) if (l.a && l.q > 0) stock[l.a] = (stock[l.a] || 0) + l.q;
   for (const a of ["Huile", "Sauce soja", "Concentré de tomate", "Moutarde / ketchup", "Ail, gingembre, curcuma", "Farine", "Citrons"]) if (x.placard && CAT0[a]) stock[a] = (stock[a] || 0) + 5000;
-  return entreesMoteur({ personnes: personnesExpress(x.adultes, x.enfants), debut: aujourdhui(), jours: x.jours, joursCourses: [], stockDepart: stock, priorite: "stock", avecDessert: x.desserts });
+  return entreesMoteur({ personnes: convivesExpress(x), debut: aujourdhui(), jours: x.jours, joursCourses: [], stockDepart: stock, priorite: "stock", avecDessert: x.desserts });
 }
+// le foyer tel qu'il est (prénoms, objectifs) si les compteurs correspondent ; sinon des convives types
+function convivesExpress(x) {
+  const f = D().personnes, ad = f.filter(p => +p.age >= 18).length;
+  return f.length && x.adultes === ad && x.enfants === f.length - ad ? f : personnesExpress(x.adultes, x.enfants);
+}
+// refaire le menu avec ce qu'il y a à la maison : du premier jour libre (aujourd'hui si rien n'y est coché) au bout du menu
+function premierJourLibre() {
+  const p = P(), j = jourDuPlan();
+  if (aujourdhui() > p.fin) return p.jours + 1;
+  return p.plan[j - 1].meals.some(m => D().suivi.coches[`d${j}-${m.k}`]) ? j + 1 : j;
+}
+function composerStockEntrees() {
+  const p = P(), j = premierJourLibre(), stock = {};
+  for (const [a, q] of Object.entries(stockReel(j))) if (q > 0.5) stock[a] = Math.round(q);
+  const debut = j > p.jours ? ajouterJours(p.fin, 1) : p.plan[j - 1].date;
+  return entreesMoteur({ personnes: convivesStock(), invites: p.invites || 0, debut, jours: Math.max(3, Math.min(14, p.jours - j + 1)), joursCourses: [], stockDepart: stock, priorite: "stock" });
+}
+// un nouveau menu repart du foyer (prénoms, objectifs) quand il compte autant de personnes que le menu en cours
+function convivesStock() { const p = P(), f = D().personnes; return !p.profils && f.length === p.personnes.length ? f : profilsPeriode(); }
+const composerStock = graine => Moteur.composer(Object.assign(composerStockEntrees(), { graine: graine || 1 }));
+const entreesDuMode = mode => mode === "express" ? composerExpressEntrees() : mode === "stock" ? composerStockEntrees() : composerMesureEntrees();
+const composerDuMode = (mode, g) => mode === "express" ? composerExpress(g) : mode === "stock" ? composerStock(g) : composerSurMesure(g);
+const carteRefaire = () => `<div class="carte"><h3 style="margin-bottom:4px">Faire avec ce qu'il y a</h3><p class="discret petit" style="margin:0 0 10px">Le chef refait la suite du menu à partir du stock ci-dessus (ticket compris), et ne te dit d'acheter que ce qui manque.</p><button class="bouton plein accent" data-action="refaire-stock">Refaire le menu avec ce que j'ai</button></div>`;
 
 /* ----- L'app ----- */
 const VUES = [["jour", "Aujourd'hui"], ["menu", "Menu"], ["courses", "Courses"], ["stock", "Stock"], ["foyer", "Foyer"]];
@@ -780,7 +814,8 @@ function vueCourses() {
     <div class="carte pleine"><div class="chiffres"><div><b>${euros(b.paye)}</b><span class="petit">payé</span></div><div><b>${euros(b.reste)}</b><span class="petit">reste à acheter</span></div>${budget ? `<div><b>${euros(budget)}</b><span class="petit">budget</span></div>` : ""}</div>
       ${budget ? `<div class="barre" style="margin-top:12px;background:rgba(255,255,255,.2)"><i class="${b.paye + b.reste > budget ? "trop" : ""}" style="width:${Math.min(100, (b.paye + b.reste) / budget * 100)}%"></i></div>` : ""}</div>
     <div class="carte"><p class="discret petit" style="margin:0 0 4px">${echap(c.couvre || "")}</p>${lignes}</div>
-    ${boutonTicket()}</div>`;
+    ${boutonTicket()}
+    <button class="bouton plein leger" data-action="refaire-stock">Refaire le menu avec ce que j'ai</button></div>`;
 }
 const boutonTicket = () => S.chef ? `<label class="bouton plein leger" style="cursor:pointer">Ajouter un ticket de caisse<input type="file" accept="image/*,application/pdf" data-photo="courses" class="sr"></label>` : "";
 function vueStock() {
@@ -792,6 +827,7 @@ function vueStock() {
     <div class="tete-vue"><div><h1>À la maison</h1><p class="discret" style="margin:6px 0 0">Ce matin, d'après les courses cochées et les repas passés.</p></div><img class="frigo" src="${CHEF_STOCK}" alt="Le chef vérifie son stock"></div>
     ${manque ? `<div class="carte"><h3 style="margin-bottom:8px">Pour les 3 prochains jours</h3><ul class="ingr">${manque}</ul></div>` : ""}
     <div class="carte"><ul class="ingr">${dispo || `<li class="discret">Rien en stock.</li>`}</ul></div>
+    ${carteRefaire()}
     ${boutonTicket()}</div>`;
 }
 function vueFoyer() {
@@ -855,9 +891,10 @@ async function action(b) {
     }
     case "autre-idee": {
       const g = (S.proposition.graine || 1) + 1, mode = S.proposition.mode;
-      S.proposition = Object.assign(mode === "express" ? composerExpress(g) : composerSurMesure(g), { mode, graine: g }); window.scrollTo(0, 0); return rendre();
+      S.proposition = Object.assign(composerDuMode(mode, g), { mode, graine: g }); window.scrollTo(0, 0); return rendre();
     }
     case "valider": return validerProposition();
+    case "refaire-stock": { S.proposition = Object.assign(composerStock(1), { mode: "stock", graine: 1 }); S.ecran = "proposition"; window.scrollTo(0, 0); return rendre(); }
     case "personne-ajouter": edition = PERSONNE0(); return feuillePersonne();
     case "personne-modifier": edition = cloneJ(D().personnes.find(p => p.id === d.id)); return feuillePersonne();
     case "personne-retirer": D().personnes = D().personnes.filter(p => p.id !== d.id); sauver(); return rendre();
@@ -939,6 +976,7 @@ function integrerTicket(t) {
     if (l.prix > 0) majPrix(l);
   }
   D().tickets = (D().tickets || []).concat([{ date: auj, magasin: t.magasin, total: t.total, lignes: lignes.length }]).slice(-30);
+  S.vue = "stock"; window.scrollTo(0, 0);
   sauver(); rendre(); toast(`Ticket ajouté : ${coches} articles cochés, ${ajoutes} au stock`);
 }
 document.onkeydown = e => { if (e.key === "Escape" && (edition || choix)) { edition = null; choix = null; document.getElementById("couche").innerHTML = ""; } };
