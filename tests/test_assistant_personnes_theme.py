@@ -22,6 +22,7 @@ async def main():
         pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.add_init_script(MOCK)
         await pg.route("**/fonts.g*/**", lambda r: r.abort())
+        await pg.add_init_script("try { localStorage.setItem('marmite-tickets', 'manuel'); } catch (e) {}")   # ticket non reporté (testé dans test_achats.py)
         await pg.goto(PAGE)
         await pg.wait_for_timeout(400)
         print("prévu N", await pg.evaluate("totalPrevu('nicolas')"), "A", await pg.evaluate("totalPrevu('aurelie')"))

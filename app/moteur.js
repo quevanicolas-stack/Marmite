@@ -156,10 +156,13 @@ const Moteur = (() => {
     const plaisirs = plats.filter(r => r.tags.includes("plaisir"));
     for (const j of joursPlaisir) { const r = meilleur(plaisirs, j, "dej") || meilleur(plats, j, "dej"); if (r) placerAvecRestes(j, "dej", r); }
 
-    // 2. poisson : réparti régulièrement, en alternant déjeuner et dîner
-    const poissons = plats.filter(r => r.tags.includes("poisson"));
-    for (let i = 0; i < quotas.poisson; i++) {
-      let j = Math.min(N, Math.max(1, Math.round((i + 0.5) * N / quotas.poisson)));
+    // 2. poisson : réparti régulièrement, en alternant déjeuner et dîner. Un plaisir déjà au poisson (fish and chips,
+    // pizza au thon) compte dans le quota ; les plats plaisir restent hors de ce tour pour ne pas dépasser leur quota.
+    const poissons = plats.filter(r => r.tags.includes("poisson") && !r.tags.includes("plaisir"));
+    const dejaPoisson = Object.values(grille).filter(r => (r.tags || []).includes("poisson") && (r.repas.includes("dej") || r.repas.includes("din"))).length;
+    const nPoisson = Math.max(0, quotas.poisson - dejaPoisson);
+    for (let i = 0; i < nPoisson; i++) {
+      let j = Math.min(N, Math.max(1, Math.round((i + 0.5) * N / nPoisson)));
       let k = i % 2 ? "dej" : "din";
       for (let d = 0; d < N && !libre(j, k); d++) { const alt = k === "dej" ? "din" : "dej"; if (libre(j, alt)) { k = alt; break; } j = j % N + 1; }
       const r = meilleur(poissons, j, k); if (r) placerAvecRestes(j, k, r);
@@ -226,8 +229,40 @@ const Moteur = (() => {
     return choix.sort((x, y) => x - y);
   }
 
-  // Famille d'un plat : son nom avant la première virgule ou parenthèse.
-  const famille = r => (r.nom || r.id).split(/[,(+]/)[0].trim().toLowerCase();
+  // Famille d'un plat : celle qu'il déclare (les variantes gardent celle de leur plat d'origine),
+  // sinon son nom avant la première virgule ou parenthèse.
+  const famille = r => r.famille || (r.nom || r.id).split(/[,(+]/)[0].trim().toLowerCase();
+
+  /* ---------- Variantes ---------- */
+  // Un plat peut déclarer des ingrédients interchangeables : { de: "Poulet", vers: [{ a: "Dinde (escalope)", nom, f? }] }
+  // (a: null = sans cet ingrédient, f = facteur de quantité). Chaque choix donne un plat de plus, de la même famille.
+  // exclus : produits à ne jamais proposer ; un plat qui en contient disparaît, ses variantes sans ce produit restent
+  // (les petits-déjeuners, fixes, ne sont pas concernés).
+  const slug = s => String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  function deplierVariantes(recettes, cat, exclus) {
+    const ex = new Set(exclus || []), out = [];
+    const permis = r => r.repas.includes("pdj") || !PERSONNES.some(p => (r.portions[p] || []).some(([a]) => ex.has(a)));
+    for (const r of recettes) {
+      const fam = famille(r), base = Object.assign({}, r, { famille: fam });
+      if (permis(base)) out.push(base);
+      for (const v of r.variantes || []) for (const w of v.vers || []) {
+        const portions = {};
+        for (const p of PERSONNES) portions[p] = (r.portions[p] || []).flatMap(([a, q]) => {
+          if (a !== v.de) return [[a, q]];
+          if (!w.a) return [];
+          const x = q * (w.f || 1);
+          return [[w.a, UNITES_ENTIERES.has(w.a) ? Math.max(1, Math.round(x)) : Math.max(5, arrondi(x, 5))]];
+        });
+        // l'étiquette poisson suit les ingrédients (thon au lieu de jambon, poulet au lieu de crevettes)
+        let tags = (r.tags || []).slice();
+        if (cat) { const poisson = portions.nicolas.some(([a]) => cat[a] && cat[a].rayon === "Poisson"); tags = tags.filter(t => t !== "poisson").concat(poisson ? ["poisson"] : []); }
+        const x = Object.assign({}, r, { id: r.id + "~" + slug(w.a || "sans " + v.de), nom: w.nom || r.nom, famille: fam, portions, tags, base: r.id, variante: { de: v.de, vers: w.a || null } });
+        delete x.variantes;
+        if (permis(x)) out.push(x);
+      }
+    }
+    return out;
+  }
 
   // Produits frais utilisés au-delà de leur conservation depuis la dernière course :
   // pénalité qui grandit avec le dépassement, plafonnée par produit.
@@ -379,7 +414,7 @@ const Moteur = (() => {
     // fréquence des desserts dans le mois de référence : sert de répartition cible
     const freq = {};
     for (const j of entrees.moisReference ? entrees.moisReference.plan : []) for (const m of j.meals) if (m.k === "des") freq[m.recette] = (freq[m.recette] || 0) + 1;
-    const recs = recettes.map(r => Object.assign({}, r, { frequenceReference: freq[r.id] || 1 }));
+    const recs = deplierVariantes(recettes, cat, entrees.exclureProduits).map(r => Object.assign({}, r, { frequenceReference: freq[r.id] || 1 }));
 
     // on recompose en donnant plus de poids au coût tant que les achats dépassent le budget (6 passes au plus)
     let res = null;
@@ -439,7 +474,7 @@ const Moteur = (() => {
     for (const j of plan) for (const m of j.meals) for (const a of new Set(m.items.nicolas.concat(m.items.aurelie).map(([x]) => x))) {
       const c = cat[a]; if (c && c.conservation && res.ctx.cal.age(j.d) >= c.conservation.jours) fraisTard.push({ d: j.d, k: m.k, a });
     }
-    const tagsDe = id => (recettes.find(r => r.id === id).tags || []);
+    const tagsDe = id => ((recs.find(r => r.id === id) || {}).tags || []);
     const compte = tag => plan.reduce((s, j) => s + j.meals.filter(m => (m.k === "dej" || m.k === "din") && tagsDe(m.recette).includes(tag)).length, 0);
     const fin = cal.dates[n - 1];
     const moisObj = {
@@ -513,7 +548,8 @@ const Moteur = (() => {
 
     // quotas restants et historique des jours juste avant, pour l'écart entre deux mêmes plats
     const fixes = m.plan.filter(x => x.d < aPartirDe);
-    const tags = id => ((entrees.recettes.find(r => r.id === id) || {}).tags || []);
+    const toutes = deplierVariantes(entrees.recettes, cat);
+    const tags = id => ((toutes.find(r => r.id === id) || {}).tags || []);
     const faitsTag = t => fixes.reduce((s, j) => s + j.meals.filter(x => (x.k === "dej" || x.k === "din") && tags(x.recette).includes(t)).length, 0);
     const q0 = entrees.quotas || reglages.quotas;
     const quotas = { poisson: Math.max(0, q0.poisson - faitsTag("poisson")), plaisir: Math.max(0, q0.plaisir - faitsTag("plaisir")) };
@@ -553,6 +589,6 @@ const Moteur = (() => {
     return listeCourses({ cat: e.catalogue, reglages: e.reglages, cal, invites: e.invites || 0, stockDepart: e.stockDepart || {} }, e.plan);
   }
 
-  return { composerMois, reajuster, coursesPour, grilleDuMois, avecPrix, objectifs, prixUnitaire, totaux, calendrier, portionsDuJour, aProteineAnimale };
+  return { composerMois, reajuster, coursesPour, grilleDuMois, avecPrix, objectifs, prixUnitaire, totaux, calendrier, portionsDuJour, aProteineAnimale, deplierVariantes, famille };
 })();
 if (typeof module !== "undefined") module.exports = Moteur;

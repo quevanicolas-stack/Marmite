@@ -1,0 +1,29 @@
+# Miamm sur Cloudflare : la page (public/, préparée par preparer.py) et l'API (src/worker.js).
+name = "miamm"
+main = "src/worker.js"
+compatibility_date = "2026-06-01"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
+
+# Comptes, clés d'accès, sessions, invitations, documents des foyers, abonnements aux rappels.
+[[d1_databases]]
+binding = "BASE"
+database_name = "miamm"
+database_id = "705c8f26-ad93-49c7-8039-3b95635f27b3"
+
+# Rappels envoyés à 18 h, heure de La Réunion (UTC+4).
+[triggers]
+crons = ["0 14 * * *"]
+
+[vars]
+FUSEAU = "Indian/Reunion"
+CONTACT = "https://github.com/quevanicolas-stack/Marmite"
+CHEF_PAR_JOUR = "30"
+TICKETS_PAR_JOUR = "15"
+
+# Secrets (jamais dans ce fichier) : INVITATION_INITIALE (le premier code d'invitation, réutilisable),
+# ANTHROPIC_API_KEY (lecture des tickets et « J'ai faim » ; sans elle, tout le reste marche).

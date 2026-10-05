@@ -3219,6 +3219,7074 @@
      ]
     ]
    }
+  },
+  {
+   "id": "cari-de-poulet-riz-lentilles",
+   "nom": "Cari de poulet, riz, lentilles",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      160
+     ],
+     [
+      "Tomates",
+      100
+     ],
+     [
+      "Oignons",
+      40
+     ],
+     [
+      "Riz (sec)",
+      80
+     ],
+     [
+      "Lentilles vertes (sèches)",
+      30
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      130
+     ],
+     [
+      "Tomates",
+      120
+     ],
+     [
+      "Oignons",
+      50
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Lentilles vertes (sèches)",
+      15
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Bœuf",
+       "nom": "Cari de bœuf, riz, lentilles"
+      },
+      {
+       "a": "Porc (échine)",
+       "nom": "Cari de porc, riz, lentilles"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rougail-saucisses-fumees-riz-haricots-rouges",
+   "nom": "Rougail saucisses fumées, riz, haricots rouges",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Saucisses fumées",
+      140
+     ],
+     [
+      "Tomates",
+      120
+     ],
+     [
+      "Oignons",
+      40
+     ],
+     [
+      "Riz (sec)",
+      75
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      80
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ],
+    "aurelie": [
+     [
+      "Saucisses fumées",
+      110
+     ],
+     [
+      "Tomates",
+      145
+     ],
+     [
+      "Oignons",
+      50
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      40
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Saucisses fumées",
+     "vers": [
+      {
+       "a": "Saucisses (porc)",
+       "nom": "Rougail saucisses, riz, haricots rouges"
+      },
+      {
+       "a": "Merguez",
+       "nom": "Rougail merguez, riz, haricots rouges"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "civet-de-porc-riz-haricots-blancs",
+   "nom": "Civet de porc, riz, haricots blancs",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Porc (échine)",
+      160
+     ],
+     [
+      "Oignons",
+      50
+     ],
+     [
+      "Tomates",
+      80
+     ],
+     [
+      "Riz (sec)",
+      75
+     ],
+     [
+      "Haricots blancs (égouttés)",
+      80
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Porc (échine)",
+      130
+     ],
+     [
+      "Oignons",
+      60
+     ],
+     [
+      "Tomates",
+      95
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Haricots blancs (égouttés)",
+      40
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Porc (échine)",
+     "vers": [
+      {
+       "a": "Bœuf",
+       "nom": "Civet de bœuf, riz, haricots blancs"
+      },
+      {
+       "a": "Poulet",
+       "nom": "Civet de poulet, riz, haricots blancs"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rougail-boucane-riz-lentilles",
+   "nom": "Rougail boucané, riz, lentilles",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Boucané",
+      130
+     ],
+     [
+      "Tomates",
+      120
+     ],
+     [
+      "Oignons",
+      40
+     ],
+     [
+      "Riz (sec)",
+      75
+     ],
+     [
+      "Lentilles vertes (sèches)",
+      35
+     ]
+    ],
+    "aurelie": [
+     [
+      "Boucané",
+      105
+     ],
+     [
+      "Tomates",
+      145
+     ],
+     [
+      "Oignons",
+      50
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Lentilles vertes (sèches)",
+      20
+     ]
+    ]
+   }
+  },
+  {
+   "id": "rougail-morue-riz-haricots-verts",
+   "nom": "Rougail morue, riz, haricots verts",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Morue salée",
+      150
+     ],
+     [
+      "Tomates",
+      120
+     ],
+     [
+      "Oignons",
+      40
+     ],
+     [
+      "Riz (sec)",
+      85
+     ],
+     [
+      "Haricots verts",
+      150
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Morue salée",
+      120
+     ],
+     [
+      "Tomates",
+      145
+     ],
+     [
+      "Oignons",
+      50
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Haricots verts",
+      180
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   }
+  },
+  {
+   "id": "cari-de-poisson-blanc-riz-chouchou",
+   "nom": "Cari de poisson blanc, riz, chouchou",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poisson blanc",
+      180
+     ],
+     [
+      "Tomates",
+      100
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Chouchou",
+      150
+     ],
+     [
+      "Riz (sec)",
+      85
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poisson blanc",
+      145
+     ],
+     [
+      "Tomates",
+      120
+     ],
+     [
+      "Oignons",
+      35
+     ],
+     [
+      "Chouchou",
+      180
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poisson blanc",
+     "vers": [
+      {
+       "a": "Crevettes",
+       "nom": "Cari de crevettes, riz, chouchou"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gratin-de-chouchou-au-jambon-mozzarella",
+   "nom": "Gratin de chouchou au jambon (mozzarella)",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Jambon",
+      100
+     ],
+     [
+      "Chouchou",
+      350
+     ],
+     [
+      "Lait",
+      80
+     ],
+     [
+      "Farine",
+      10
+     ],
+     [
+      "Mozzarella râpée",
+      25
+     ],
+     [
+      "Riz (sec)",
+      60
+     ]
+    ],
+    "aurelie": [
+     [
+      "Jambon",
+      80
+     ],
+     [
+      "Chouchou",
+      420
+     ],
+     [
+      "Lait",
+      60
+     ],
+     [
+      "Farine",
+      5
+     ],
+     [
+      "Mozzarella râpée",
+      20
+     ],
+     [
+      "Riz (sec)",
+      30
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Mozzarella râpée",
+     "vers": [
+      {
+       "a": "Emmental râpé",
+       "nom": "Gratin de chouchou au jambon (emmental)"
+      },
+      {
+       "a": "Cheddar",
+       "nom": "Gratin de chouchou au jambon (cheddar)"
+      },
+      {
+       "a": null,
+       "nom": "Gratin de chouchou au jambon (sans fromage)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "massale-de-porc-riz-citrouille",
+   "nom": "Massalé de porc, riz, citrouille",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Porc (échine)",
+      160
+     ],
+     [
+      "Citrouille",
+      150
+     ],
+     [
+      "Oignons",
+      40
+     ],
+     [
+      "Tomates",
+      60
+     ],
+     [
+      "Riz (sec)",
+      80
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Porc (échine)",
+      130
+     ],
+     [
+      "Citrouille",
+      180
+     ],
+     [
+      "Oignons",
+      50
+     ],
+     [
+      "Tomates",
+      70
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Porc (échine)",
+     "vers": [
+      {
+       "a": "Bœuf",
+       "nom": "Massalé de bœuf, riz, citrouille"
+      },
+      {
+       "a": "Poulet",
+       "nom": "Massalé de poulet, riz, citrouille"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "brochettes-de-poulet-rougail-tomate-riz",
+   "nom": "Brochettes de poulet, rougail tomate, riz",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      160
+     ],
+     [
+      "Tomates",
+      150
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Riz (sec)",
+      85
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      130
+     ],
+     [
+      "Tomates",
+      180
+     ],
+     [
+      "Oignons",
+      35
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Dinde (escalope)",
+       "nom": "Brochettes de dinde, rougail tomate, riz"
+      },
+      {
+       "a": "Porc (échine)",
+       "nom": "Brochettes de porc, rougail tomate, riz"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "saute-de-porc-au-chouchou-riz",
+   "nom": "Sauté de porc au chouchou, riz",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Porc (échine)",
+      160
+     ],
+     [
+      "Chouchou",
+      200
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Riz (sec)",
+      85
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Porc (échine)",
+      130
+     ],
+     [
+      "Chouchou",
+      240
+     ],
+     [
+      "Oignons",
+      35
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Porc (échine)",
+     "vers": [
+      {
+       "a": "Poulet",
+       "nom": "Sauté de poulet au chouchou, riz"
+      },
+      {
+       "a": "Dinde (escalope)",
+       "nom": "Sauté de dinde au chouchou, riz"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cari-de-poulet-aux-haricots-blancs-riz",
+   "nom": "Cari de poulet aux haricots blancs, riz",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      150
+     ],
+     [
+      "Haricots blancs (égouttés)",
+      100
+     ],
+     [
+      "Tomates",
+      100
+     ],
+     [
+      "Oignons",
+      40
+     ],
+     [
+      "Riz (sec)",
+      70
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      120
+     ],
+     [
+      "Haricots blancs (égouttés)",
+      50
+     ],
+     [
+      "Tomates",
+      120
+     ],
+     [
+      "Oignons",
+      50
+     ],
+     [
+      "Riz (sec)",
+      35
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Bœuf",
+       "nom": "Cari de bœuf aux haricots blancs, riz"
+      },
+      {
+       "a": "Porc (échine)",
+       "nom": "Cari de porc aux haricots blancs, riz"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "grillade-de-poulet-achards-de-legumes-riz",
+   "nom": "Grillade de poulet, achards de légumes, riz",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      160
+     ],
+     [
+      "Chou",
+      80
+     ],
+     [
+      "Carottes",
+      80
+     ],
+     [
+      "Haricots verts",
+      60
+     ],
+     [
+      "Riz (sec)",
+      85
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      130
+     ],
+     [
+      "Chou",
+      95
+     ],
+     [
+      "Carottes",
+      95
+     ],
+     [
+      "Haricots verts",
+      70
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Dinde (escalope)",
+       "nom": "Grillade de dinde, achards de légumes, riz"
+      },
+      {
+       "a": "Porc (échine)",
+       "nom": "Grillade de porc, achards de légumes, riz"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cari-de-crevettes-au-lait-de-coco-citrouille-riz",
+   "nom": "Cari de crevettes au lait de coco, citrouille, riz",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Crevettes",
+      170
+     ],
+     [
+      "Lait de coco",
+      60
+     ],
+     [
+      "Citrouille",
+      150
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Riz (sec)",
+      85
+     ]
+    ],
+    "aurelie": [
+     [
+      "Crevettes",
+      135
+     ],
+     [
+      "Lait de coco",
+      45
+     ],
+     [
+      "Citrouille",
+      180
+     ],
+     [
+      "Oignons",
+      35
+     ],
+     [
+      "Riz (sec)",
+      40
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Crevettes",
+     "vers": [
+      {
+       "a": "Poisson blanc",
+       "nom": "Cari de poisson blanc au lait de coco, citrouille, riz"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rougail-saucisses-aux-pommes-de-terre-salade",
+   "nom": "Rougail saucisses aux pommes de terre, salade",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Saucisses (porc)",
+      140
+     ],
+     [
+      "Pommes de terre",
+      300
+     ],
+     [
+      "Tomates",
+      100
+     ],
+     [
+      "Oignons",
+      40
+     ],
+     [
+      "Salade",
+      50
+     ]
+    ],
+    "aurelie": [
+     [
+      "Saucisses (porc)",
+      110
+     ],
+     [
+      "Pommes de terre",
+      150
+     ],
+     [
+      "Tomates",
+      120
+     ],
+     [
+      "Oignons",
+      50
+     ],
+     [
+      "Salade",
+      60
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Saucisses (porc)",
+     "vers": [
+      {
+       "a": "Saucisses fumées",
+       "nom": "Rougail saucisses fumées aux pommes de terre, salade"
+      },
+      {
+       "a": "Merguez",
+       "nom": "Rougail merguez aux pommes de terre, salade"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gratin-de-pommes-de-terre-au-jambon-mozzarella",
+   "nom": "Gratin de pommes de terre au jambon (mozzarella)",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Jambon",
+      100
+     ],
+     [
+      "Pommes de terre",
+      330
+     ],
+     [
+      "Crème fraîche",
+      30
+     ],
+     [
+      "Lait",
+      60
+     ],
+     [
+      "Mozzarella râpée",
+      25
+     ],
+     [
+      "Salade",
+      50
+     ]
+    ],
+    "aurelie": [
+     [
+      "Jambon",
+      80
+     ],
+     [
+      "Pommes de terre",
+      165
+     ],
+     [
+      "Crème fraîche",
+      20
+     ],
+     [
+      "Lait",
+      45
+     ],
+     [
+      "Mozzarella râpée",
+      20
+     ],
+     [
+      "Salade",
+      60
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Mozzarella râpée",
+     "vers": [
+      {
+       "a": "Emmental râpé",
+       "nom": "Gratin de pommes de terre au jambon (emmental)"
+      },
+      {
+       "a": "Cheddar",
+       "nom": "Gratin de pommes de terre au jambon (cheddar)"
+      },
+      {
+       "a": null,
+       "nom": "Gratin de pommes de terre au jambon (sans fromage)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hachis-parmentier-de-patate-douce-au-buf-hache-salade",
+   "nom": "Hachis parmentier de patate douce au bœuf haché, salade",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Steak haché",
+      150
+     ],
+     [
+      "Patates douces",
+      330
+     ],
+     [
+      "Lait",
+      50
+     ],
+     [
+      "Oignons",
+      40
+     ],
+     [
+      "Salade",
+      50
+     ]
+    ],
+    "aurelie": [
+     [
+      "Steak haché",
+      120
+     ],
+     [
+      "Patates douces",
+      165
+     ],
+     [
+      "Lait",
+      40
+     ],
+     [
+      "Oignons",
+      50
+     ],
+     [
+      "Salade",
+      60
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Steak haché",
+     "vers": [
+      {
+       "a": "Porc haché",
+       "nom": "Hachis parmentier de patate douce au porc haché, salade"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "blanquette-de-dinde-riz-carottes",
+   "nom": "Blanquette de dinde, riz, carottes",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Dinde (escalope)",
+      160
+     ],
+     [
+      "Crème fraîche",
+      30
+     ],
+     [
+      "Champignons",
+      80
+     ],
+     [
+      "Carottes",
+      100
+     ],
+     [
+      "Riz (sec)",
+      85
+     ]
+    ],
+    "aurelie": [
+     [
+      "Dinde (escalope)",
+      130
+     ],
+     [
+      "Crème fraîche",
+      20
+     ],
+     [
+      "Champignons",
+      95
+     ],
+     [
+      "Carottes",
+      120
+     ],
+     [
+      "Riz (sec)",
+      40
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Dinde (escalope)",
+     "vers": [
+      {
+       "a": "Poulet",
+       "nom": "Blanquette de poulet, riz, carottes"
+      },
+      {
+       "a": "Porc (échine)",
+       "nom": "Blanquette de porc, riz, carottes"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "poulet-a-la-creme-et-a-la-moutarde-pates-haricots-verts",
+   "nom": "Poulet à la crème et à la moutarde, pâtes, haricots verts",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      160
+     ],
+     [
+      "Crème fraîche",
+      30
+     ],
+     [
+      "Pâtes (sèches)",
+      85
+     ],
+     [
+      "Haricots verts",
+      150
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      130
+     ],
+     [
+      "Crème fraîche",
+      20
+     ],
+     [
+      "Pâtes (sèches)",
+      40
+     ],
+     [
+      "Haricots verts",
+      180
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Dinde (escalope)",
+       "nom": "Dinde à la crème et à la moutarde, pâtes, haricots verts"
+      },
+      {
+       "a": "Porc (échine)",
+       "nom": "Porc à la crème et à la moutarde, pâtes, haricots verts"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "escalope-de-dinde-aux-champignons-pates",
+   "nom": "Escalope de dinde aux champignons, pâtes",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Dinde (escalope)",
+      160
+     ],
+     [
+      "Champignons",
+      120
+     ],
+     [
+      "Crème fraîche",
+      25
+     ],
+     [
+      "Pâtes (sèches)",
+      85
+     ]
+    ],
+    "aurelie": [
+     [
+      "Dinde (escalope)",
+      130
+     ],
+     [
+      "Champignons",
+      145
+     ],
+     [
+      "Crème fraîche",
+      20
+     ],
+     [
+      "Pâtes (sèches)",
+      40
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Dinde (escalope)",
+     "vers": [
+      {
+       "a": "Poulet",
+       "nom": "Escalope de poulet aux champignons, pâtes"
+      },
+      {
+       "a": "Porc (échine)",
+       "nom": "Escalope de porc aux champignons, pâtes"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "quiche-lorraine-lardons-salade",
+   "nom": "Quiche lorraine (lardons), salade",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Lardons",
+      70
+     ],
+     [
+      "Pâte brisée",
+      70
+     ],
+     [
+      "Œufs",
+      2
+     ],
+     [
+      "Crème fraîche",
+      30
+     ],
+     [
+      "Lait",
+      60
+     ],
+     [
+      "Salade",
+      70
+     ]
+    ],
+    "aurelie": [
+     [
+      "Lardons",
+      55
+     ],
+     [
+      "Pâte brisée",
+      35
+     ],
+     [
+      "Œufs",
+      2
+     ],
+     [
+      "Crème fraîche",
+      20
+     ],
+     [
+      "Lait",
+      45
+     ],
+     [
+      "Salade",
+      85
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Lardons",
+     "vers": [
+      {
+       "a": "Bacon",
+       "nom": "Quiche lorraine (bacon), salade"
+      },
+      {
+       "a": "Jambon",
+       "nom": "Quiche lorraine (jambon), salade"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "croque-monsieur-emmental-salade",
+   "nom": "Croque-monsieur (emmental), salade",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Jambon",
+      70
+     ],
+     [
+      "Pain de mie",
+      120
+     ],
+     [
+      "Emmental râpé",
+      30
+     ],
+     [
+      "Salade",
+      70
+     ]
+    ],
+    "aurelie": [
+     [
+      "Jambon",
+      55
+     ],
+     [
+      "Pain de mie",
+      60
+     ],
+     [
+      "Emmental râpé",
+      20
+     ],
+     [
+      "Salade",
+      85
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Emmental râpé",
+     "vers": [
+      {
+       "a": "Mozzarella râpée",
+       "nom": "Croque-monsieur (mozzarella), salade"
+      },
+      {
+       "a": "Cheddar",
+       "nom": "Croque-monsieur (cheddar), salade"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "buf-bourguignon-pommes-de-terre-vapeur",
+   "nom": "Bœuf bourguignon, pommes de terre vapeur",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      170
+     ],
+     [
+      "Carottes",
+      100
+     ],
+     [
+      "Champignons",
+      60
+     ],
+     [
+      "Oignons",
+      40
+     ],
+     [
+      "Pommes de terre",
+      300
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      135
+     ],
+     [
+      "Carottes",
+      120
+     ],
+     [
+      "Champignons",
+      70
+     ],
+     [
+      "Oignons",
+      50
+     ],
+     [
+      "Pommes de terre",
+      150
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   }
+  },
+  {
+   "id": "mijote-de-buf-aux-carottes-puree",
+   "nom": "Mijoté de bœuf aux carottes, purée",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      170
+     ],
+     [
+      "Carottes",
+      150
+     ],
+     [
+      "Oignons",
+      40
+     ],
+     [
+      "Pommes de terre",
+      300
+     ],
+     [
+      "Lait",
+      50
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      135
+     ],
+     [
+      "Carottes",
+      180
+     ],
+     [
+      "Oignons",
+      50
+     ],
+     [
+      "Pommes de terre",
+      150
+     ],
+     [
+      "Lait",
+      40
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Bœuf",
+     "vers": [
+      {
+       "a": "Porc (échine)",
+       "nom": "Mijoté de porc aux carottes, purée"
+      },
+      {
+       "a": "Poulet",
+       "nom": "Mijoté de poulet aux carottes, purée"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "saute-de-porc-aux-pommes-riz",
+   "nom": "Sauté de porc aux pommes, riz",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Porc (échine)",
+      160
+     ],
+     [
+      "Pommes",
+      100
+     ],
+     [
+      "Oignons",
+      40
+     ],
+     [
+      "Riz (sec)",
+      80
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Porc (échine)",
+      130
+     ],
+     [
+      "Pommes",
+      75
+     ],
+     [
+      "Oignons",
+      50
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Porc (échine)",
+     "vers": [
+      {
+       "a": "Poulet",
+       "nom": "Sauté de poulet aux pommes, riz"
+      },
+      {
+       "a": "Dinde (escalope)",
+       "nom": "Sauté de dinde aux pommes, riz"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "saucisses-aux-lentilles-et-carottes",
+   "nom": "Saucisses aux lentilles et carottes",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Saucisses (porc)",
+      140
+     ],
+     [
+      "Lentilles vertes (sèches)",
+      70
+     ],
+     [
+      "Carottes",
+      120
+     ],
+     [
+      "Oignons",
+      40
+     ]
+    ],
+    "aurelie": [
+     [
+      "Saucisses (porc)",
+      110
+     ],
+     [
+      "Lentilles vertes (sèches)",
+      35
+     ],
+     [
+      "Carottes",
+      145
+     ],
+     [
+      "Oignons",
+      50
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Saucisses (porc)",
+     "vers": [
+      {
+       "a": "Saucisses fumées",
+       "nom": "Saucisses fumées aux lentilles et carottes"
+      },
+      {
+       "a": "Merguez",
+       "nom": "Merguez aux lentilles et carottes"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "petit-sale-aux-lentilles-lardons",
+   "nom": "Petit salé aux lentilles (lardons)",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Lardons",
+      110
+     ],
+     [
+      "Lentilles vertes (sèches)",
+      75
+     ],
+     [
+      "Carottes",
+      100
+     ],
+     [
+      "Oignons",
+      40
+     ]
+    ],
+    "aurelie": [
+     [
+      "Lardons",
+      90
+     ],
+     [
+      "Lentilles vertes (sèches)",
+      40
+     ],
+     [
+      "Carottes",
+      120
+     ],
+     [
+      "Oignons",
+      50
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Lardons",
+     "vers": [
+      {
+       "a": "Boucané",
+       "nom": "Petit salé aux lentilles (boucané)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "poisson-blanc-a-la-provencale-riz",
+   "nom": "Poisson blanc à la provençale, riz",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poisson blanc",
+      180
+     ],
+     [
+      "Tomates",
+      150
+     ],
+     [
+      "Courgettes",
+      100
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Riz (sec)",
+      85
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poisson blanc",
+      145
+     ],
+     [
+      "Tomates",
+      180
+     ],
+     [
+      "Courgettes",
+      120
+     ],
+     [
+      "Oignons",
+      35
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   }
+  },
+  {
+   "id": "brandade-de-poisson-blanc-salade",
+   "nom": "Brandade de poisson blanc, salade",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poisson blanc",
+      170
+     ],
+     [
+      "Pommes de terre",
+      320
+     ],
+     [
+      "Lait",
+      60
+     ],
+     [
+      "Huile",
+      10
+     ],
+     [
+      "Salade",
+      60
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poisson blanc",
+      135
+     ],
+     [
+      "Pommes de terre",
+      160
+     ],
+     [
+      "Lait",
+      45
+     ],
+     [
+      "Huile",
+      10
+     ],
+     [
+      "Salade",
+      70
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poisson blanc",
+     "vers": [
+      {
+       "a": "Morue salée",
+       "nom": "Brandade de morue, salade"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "poisson-pane-maison-puree-petits-pois",
+   "nom": "Poisson pané maison, purée, petits pois",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poisson blanc",
+      180
+     ],
+     [
+      "Farine",
+      15
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Pommes de terre",
+      300
+     ],
+     [
+      "Lait",
+      50
+     ],
+     [
+      "Petits pois",
+      120
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poisson blanc",
+      145
+     ],
+     [
+      "Farine",
+      10
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Pommes de terre",
+      150
+     ],
+     [
+      "Lait",
+      40
+     ],
+     [
+      "Petits pois",
+      145
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   }
+  },
+  {
+   "id": "gratin-de-courgettes-au-porc-hache-mozzarella",
+   "nom": "Gratin de courgettes au porc haché (mozzarella)",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Porc haché",
+      140
+     ],
+     [
+      "Courgettes",
+      300
+     ],
+     [
+      "Tomates concassées",
+      80
+     ],
+     [
+      "Mozzarella râpée",
+      25
+     ],
+     [
+      "Riz (sec)",
+      70
+     ]
+    ],
+    "aurelie": [
+     [
+      "Porc haché",
+      110
+     ],
+     [
+      "Courgettes",
+      360
+     ],
+     [
+      "Tomates concassées",
+      95
+     ],
+     [
+      "Mozzarella râpée",
+      20
+     ],
+     [
+      "Riz (sec)",
+      35
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Porc haché",
+     "vers": [
+      {
+       "a": "Steak haché",
+       "nom": "Gratin de courgettes au bœuf haché (mozzarella)"
+      }
+     ]
+    },
+    {
+     "de": "Mozzarella râpée",
+     "vers": [
+      {
+       "a": "Emmental râpé",
+       "nom": "Gratin de courgettes au porc haché (emmental)"
+      },
+      {
+       "a": "Cheddar",
+       "nom": "Gratin de courgettes au porc haché (cheddar)"
+      },
+      {
+       "a": null,
+       "nom": "Gratin de courgettes au porc haché (sans fromage)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "tomates-farcies-au-porc-hache-riz",
+   "nom": "Tomates farcies au porc haché, riz",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Porc haché",
+      140
+     ],
+     [
+      "Tomates",
+      280
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Riz (sec)",
+      80
+     ]
+    ],
+    "aurelie": [
+     [
+      "Porc haché",
+      110
+     ],
+     [
+      "Tomates",
+      335
+     ],
+     [
+      "Oignons",
+      35
+     ],
+     [
+      "Riz (sec)",
+      40
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Porc haché",
+     "vers": [
+      {
+       "a": "Steak haché",
+       "nom": "Tomates farcies au bœuf haché, riz"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "courgettes-farcies-au-buf-hache-semoule",
+   "nom": "Courgettes farcies au bœuf haché, semoule",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Steak haché",
+      140
+     ],
+     [
+      "Courgettes",
+      300
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Semoule",
+      75
+     ]
+    ],
+    "aurelie": [
+     [
+      "Steak haché",
+      110
+     ],
+     [
+      "Courgettes",
+      360
+     ],
+     [
+      "Oignons",
+      35
+     ],
+     [
+      "Semoule",
+      40
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Steak haché",
+     "vers": [
+      {
+       "a": "Porc haché",
+       "nom": "Courgettes farcies au porc haché, semoule"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "omelette-jambon-champignons-pommes-de-terre-sautees",
+   "nom": "Omelette jambon-champignons, pommes de terre sautées",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Jambon",
+      60
+     ],
+     [
+      "Œufs",
+      3
+     ],
+     [
+      "Champignons",
+      100
+     ],
+     [
+      "Pommes de terre",
+      280
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Jambon",
+      50
+     ],
+     [
+      "Œufs",
+      2
+     ],
+     [
+      "Champignons",
+      120
+     ],
+     [
+      "Pommes de terre",
+      140
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Jambon",
+     "vers": [
+      {
+       "a": "Lardons",
+       "nom": "Omelette lardons-champignons, pommes de terre sautées"
+      },
+      {
+       "a": "Bacon",
+       "nom": "Omelette bacon-champignons, pommes de terre sautées"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "poelee-de-pommes-de-terre-lardons-haricots-verts",
+   "nom": "Poêlée de pommes de terre, lardons, haricots verts",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Lardons",
+      90
+     ],
+     [
+      "Pommes de terre",
+      320
+     ],
+     [
+      "Haricots verts",
+      150
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ],
+    "aurelie": [
+     [
+      "Lardons",
+      70
+     ],
+     [
+      "Pommes de terre",
+      160
+     ],
+     [
+      "Haricots verts",
+      180
+     ],
+     [
+      "Oignons",
+      35
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Lardons",
+     "vers": [
+      {
+       "a": "Bacon",
+       "nom": "Poêlée de pommes de terre, bacon, haricots verts"
+      },
+      {
+       "a": "Jambon",
+       "nom": "Poêlée de pommes de terre, jambon, haricots verts"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gratin-de-poireaux-au-jambon-mozzarella-riz",
+   "nom": "Gratin de poireaux au jambon (mozzarella), riz",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Jambon",
+      100
+     ],
+     [
+      "Poireaux",
+      250
+     ],
+     [
+      "Crème fraîche",
+      30
+     ],
+     [
+      "Mozzarella râpée",
+      25
+     ],
+     [
+      "Riz (sec)",
+      70
+     ]
+    ],
+    "aurelie": [
+     [
+      "Jambon",
+      80
+     ],
+     [
+      "Poireaux",
+      300
+     ],
+     [
+      "Crème fraîche",
+      20
+     ],
+     [
+      "Mozzarella râpée",
+      20
+     ],
+     [
+      "Riz (sec)",
+      35
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Mozzarella râpée",
+     "vers": [
+      {
+       "a": "Emmental râpé",
+       "nom": "Gratin de poireaux au jambon (emmental), riz"
+      },
+      {
+       "a": "Cheddar",
+       "nom": "Gratin de poireaux au jambon (cheddar), riz"
+      },
+      {
+       "a": null,
+       "nom": "Gratin de poireaux au jambon (sans fromage), riz"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "poisson-blanc-sauce-citron-puree-de-patate-douce-brocoli",
+   "nom": "Poisson blanc sauce citron, purée de patate douce, brocoli",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poisson blanc",
+      180
+     ],
+     [
+      "Patates douces",
+      300
+     ],
+     [
+      "Brocoli",
+      150
+     ],
+     [
+      "Crème fraîche",
+      15
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poisson blanc",
+      145
+     ],
+     [
+      "Patates douces",
+      150
+     ],
+     [
+      "Brocoli",
+      180
+     ],
+     [
+      "Crème fraîche",
+      10
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poisson blanc",
+     "vers": [
+      {
+       "a": "Crevettes",
+       "nom": "Crevettes sauce citron, purée de patate douce, brocoli"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pilons-de-poulet-au-four-patates-douces-brocoli",
+   "nom": "Pilons de poulet au four, patates douces, brocoli",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Pilons de poulet",
+      260
+     ],
+     [
+      "Patates douces",
+      320
+     ],
+     [
+      "Brocoli",
+      150
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Pilons de poulet",
+      210
+     ],
+     [
+      "Patates douces",
+      160
+     ],
+     [
+      "Brocoli",
+      180
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Pilons de poulet",
+     "vers": [
+      {
+       "a": "Poulet",
+       "nom": "Poulet au four, patates douces, brocoli",
+       "f": 0.65
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "echine-de-porc-grillee-pommes-de-terre-sautees-haricots-verts",
+   "nom": "Échine de porc grillée, pommes de terre sautées, haricots verts",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Porc (échine)",
+      170
+     ],
+     [
+      "Pommes de terre",
+      300
+     ],
+     [
+      "Haricots verts",
+      150
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Porc (échine)",
+      135
+     ],
+     [
+      "Pommes de terre",
+      150
+     ],
+     [
+      "Haricots verts",
+      180
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   }
+  },
+  {
+   "id": "steak-hache-puree-maison-carottes",
+   "nom": "Steak haché, purée maison, carottes",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Steak haché",
+      150
+     ],
+     [
+      "Pommes de terre",
+      320
+     ],
+     [
+      "Lait",
+      60
+     ],
+     [
+      "Carottes",
+      150
+     ]
+    ],
+    "aurelie": [
+     [
+      "Steak haché",
+      120
+     ],
+     [
+      "Pommes de terre",
+      160
+     ],
+     [
+      "Lait",
+      45
+     ],
+     [
+      "Carottes",
+      180
+     ]
+    ]
+   }
+  },
+  {
+   "id": "spaghetti-bolognaise-au-buf-hache",
+   "nom": "Spaghetti bolognaise au bœuf haché",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Steak haché",
+      140
+     ],
+     [
+      "Tomates concassées",
+      120
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Carottes",
+      50
+     ],
+     [
+      "Pâtes (sèches)",
+      90
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ],
+    "aurelie": [
+     [
+      "Steak haché",
+      110
+     ],
+     [
+      "Tomates concassées",
+      145
+     ],
+     [
+      "Oignons",
+      35
+     ],
+     [
+      "Carottes",
+      60
+     ],
+     [
+      "Pâtes (sèches)",
+      45
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Steak haché",
+     "vers": [
+      {
+       "a": "Porc haché",
+       "nom": "Spaghetti bolognaise au porc haché"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pates-a-l-arrabbiata-au-chorizo",
+   "nom": "Pâtes à l'arrabbiata au chorizo",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Chorizo",
+      60
+     ],
+     [
+      "Jambon",
+      50
+     ],
+     [
+      "Tomates concassées",
+      120
+     ],
+     [
+      "Pâtes (sèches)",
+      90
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ],
+    "aurelie": [
+     [
+      "Chorizo",
+      50
+     ],
+     [
+      "Jambon",
+      40
+     ],
+     [
+      "Tomates concassées",
+      145
+     ],
+     [
+      "Pâtes (sèches)",
+      45
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   }
+  },
+  {
+   "id": "pates-au-thon-tomates-et-poivrons",
+   "nom": "Pâtes au thon, tomates et poivrons",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Thon (conserve)",
+      120
+     ],
+     [
+      "Tomates concassées",
+      100
+     ],
+     [
+      "Poivrons",
+      80
+     ],
+     [
+      "Pâtes (sèches)",
+      90
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ],
+    "aurelie": [
+     [
+      "Thon (conserve)",
+      95
+     ],
+     [
+      "Tomates concassées",
+      120
+     ],
+     [
+      "Poivrons",
+      95
+     ],
+     [
+      "Pâtes (sèches)",
+      45
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   }
+  },
+  {
+   "id": "risotto-poulet-champignons",
+   "nom": "Risotto poulet-champignons",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      150
+     ],
+     [
+      "Riz (sec)",
+      85
+     ],
+     [
+      "Champignons",
+      100
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Crème fraîche",
+      20
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      120
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Champignons",
+      120
+     ],
+     [
+      "Oignons",
+      35
+     ],
+     [
+      "Crème fraîche",
+      15
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Dinde (escalope)",
+       "nom": "Risotto dinde-champignons"
+      },
+      {
+       "a": "Porc (échine)",
+       "nom": "Risotto porc-champignons"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pizza-maison-au-jambon-mozzarella-fraiche-salade",
+   "nom": "Pizza maison au jambon (mozzarella fraîche), salade",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Jambon",
+      70
+     ],
+     [
+      "Pâte à pizza",
+      130
+     ],
+     [
+      "Tomates concassées",
+      60
+     ],
+     [
+      "Champignons",
+      50
+     ],
+     [
+      "Mozzarella (boule)",
+      60
+     ],
+     [
+      "Salade",
+      60
+     ]
+    ],
+    "aurelie": [
+     [
+      "Jambon",
+      55
+     ],
+     [
+      "Pâte à pizza",
+      65
+     ],
+     [
+      "Tomates concassées",
+      70
+     ],
+     [
+      "Champignons",
+      60
+     ],
+     [
+      "Mozzarella (boule)",
+      45
+     ],
+     [
+      "Salade",
+      70
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Jambon",
+     "vers": [
+      {
+       "a": "Chorizo",
+       "nom": "Pizza maison au chorizo (mozzarella fraîche), salade"
+      },
+      {
+       "a": "Thon (conserve)",
+       "nom": "Pizza maison au thon (mozzarella fraîche), salade"
+      }
+     ]
+    },
+    {
+     "de": "Mozzarella (boule)",
+     "vers": [
+      {
+       "a": "Mozzarella râpée",
+       "nom": "Pizza maison au jambon (mozzarella), salade"
+      },
+      {
+       "a": "Emmental râpé",
+       "nom": "Pizza maison au jambon (emmental), salade"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pizza-chorizo-poivrons-mozzarella-salade",
+   "nom": "Pizza chorizo-poivrons (mozzarella), salade",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Chorizo",
+      60
+     ],
+     [
+      "Pâte à pizza",
+      130
+     ],
+     [
+      "Tomates concassées",
+      60
+     ],
+     [
+      "Poivrons",
+      70
+     ],
+     [
+      "Mozzarella râpée",
+      50
+     ],
+     [
+      "Salade",
+      60
+     ]
+    ],
+    "aurelie": [
+     [
+      "Chorizo",
+      50
+     ],
+     [
+      "Pâte à pizza",
+      65
+     ],
+     [
+      "Tomates concassées",
+      70
+     ],
+     [
+      "Poivrons",
+      85
+     ],
+     [
+      "Mozzarella râpée",
+      40
+     ],
+     [
+      "Salade",
+      70
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Mozzarella râpée",
+     "vers": [
+      {
+       "a": "Mozzarella (boule)",
+       "nom": "Pizza chorizo-poivrons (mozzarella fraîche), salade"
+      },
+      {
+       "a": "Emmental râpé",
+       "nom": "Pizza chorizo-poivrons (emmental), salade"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gratin-de-pates-au-jambon-mozzarella",
+   "nom": "Gratin de pâtes au jambon (mozzarella)",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Jambon",
+      100
+     ],
+     [
+      "Pâtes (sèches)",
+      85
+     ],
+     [
+      "Lait",
+      80
+     ],
+     [
+      "Farine",
+      10
+     ],
+     [
+      "Mozzarella râpée",
+      25
+     ],
+     [
+      "Brocoli",
+      120
+     ]
+    ],
+    "aurelie": [
+     [
+      "Jambon",
+      80
+     ],
+     [
+      "Pâtes (sèches)",
+      40
+     ],
+     [
+      "Lait",
+      60
+     ],
+     [
+      "Farine",
+      5
+     ],
+     [
+      "Mozzarella râpée",
+      20
+     ],
+     [
+      "Brocoli",
+      145
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Mozzarella râpée",
+     "vers": [
+      {
+       "a": "Emmental râpé",
+       "nom": "Gratin de pâtes au jambon (emmental)"
+      },
+      {
+       "a": "Cheddar",
+       "nom": "Gratin de pâtes au jambon (cheddar)"
+      },
+      {
+       "a": null,
+       "nom": "Gratin de pâtes au jambon (sans fromage)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "escalope-milanaise-de-dinde-spaghetti-a-la-tomate",
+   "nom": "Escalope milanaise de dinde, spaghetti à la tomate",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Dinde (escalope)",
+      160
+     ],
+     [
+      "Farine",
+      15
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Pâtes (sèches)",
+      85
+     ],
+     [
+      "Tomates concassées",
+      100
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Dinde (escalope)",
+      130
+     ],
+     [
+      "Farine",
+      10
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Pâtes (sèches)",
+      40
+     ],
+     [
+      "Tomates concassées",
+      120
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Dinde (escalope)",
+     "vers": [
+      {
+       "a": "Poulet",
+       "nom": "Escalope milanaise de poulet, spaghetti à la tomate"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "minestrone-au-jambon-et-aux-pates",
+   "nom": "Minestrone au jambon et aux pâtes",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Jambon",
+      90
+     ],
+     [
+      "Courgettes",
+      100
+     ],
+     [
+      "Carottes",
+      80
+     ],
+     [
+      "Haricots blancs (égouttés)",
+      70
+     ],
+     [
+      "Tomates concassées",
+      100
+     ],
+     [
+      "Pâtes (sèches)",
+      50
+     ]
+    ],
+    "aurelie": [
+     [
+      "Jambon",
+      70
+     ],
+     [
+      "Courgettes",
+      120
+     ],
+     [
+      "Carottes",
+      95
+     ],
+     [
+      "Haricots blancs (égouttés)",
+      35
+     ],
+     [
+      "Tomates concassées",
+      120
+     ],
+     [
+      "Pâtes (sèches)",
+      25
+     ]
+    ]
+   }
+  },
+  {
+   "id": "boulettes-de-buf-a-la-tomate-pates",
+   "nom": "Boulettes de bœuf à la tomate, pâtes",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      160
+     ],
+     [
+      "Tomates concassées",
+      130
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Pâtes (sèches)",
+      85
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      130
+     ],
+     [
+      "Tomates concassées",
+      155
+     ],
+     [
+      "Oignons",
+      35
+     ],
+     [
+      "Pâtes (sèches)",
+      40
+     ]
+    ]
+   }
+  },
+  {
+   "id": "lasagnes-au-buf-hache-et-aux-epinards-mozzarella",
+   "nom": "Lasagnes au bœuf haché et aux épinards (mozzarella)",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Steak haché",
+      130
+     ],
+     [
+      "Pâtes à lasagnes (sèches)",
+      80
+     ],
+     [
+      "Épinards",
+      150
+     ],
+     [
+      "Tomates concassées",
+      100
+     ],
+     [
+      "Lait",
+      80
+     ],
+     [
+      "Mozzarella râpée",
+      30
+     ]
+    ],
+    "aurelie": [
+     [
+      "Steak haché",
+      105
+     ],
+     [
+      "Pâtes à lasagnes (sèches)",
+      40
+     ],
+     [
+      "Épinards",
+      180
+     ],
+     [
+      "Tomates concassées",
+      120
+     ],
+     [
+      "Lait",
+      60
+     ],
+     [
+      "Mozzarella râpée",
+      20
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Steak haché",
+     "vers": [
+      {
+       "a": "Porc haché",
+       "nom": "Lasagnes au porc haché et aux épinards (mozzarella)"
+      }
+     ]
+    },
+    {
+     "de": "Mozzarella râpée",
+     "vers": [
+      {
+       "a": "Mozzarella (boule)",
+       "nom": "Lasagnes au bœuf haché et aux épinards (mozzarella fraîche)"
+      },
+      {
+       "a": "Emmental râpé",
+       "nom": "Lasagnes au bœuf haché et aux épinards (emmental)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "saute-de-poulet-au-brocoli-riz",
+   "nom": "Sauté de poulet au brocoli, riz",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      160
+     ],
+     [
+      "Brocoli",
+      180
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Riz (sec)",
+      85
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      130
+     ],
+     [
+      "Brocoli",
+      215
+     ],
+     [
+      "Oignons",
+      35
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Bœuf",
+       "nom": "Sauté de bœuf au brocoli, riz"
+      },
+      {
+       "a": "Porc (échine)",
+       "nom": "Sauté de porc au brocoli, riz"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "nouilles-sautees-poulet-et-legumes",
+   "nom": "Nouilles sautées, poulet et légumes",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      150
+     ],
+     [
+      "Nouilles chinoises",
+      85
+     ],
+     [
+      "Carottes",
+      80
+     ],
+     [
+      "Chou",
+      100
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      120
+     ],
+     [
+      "Nouilles chinoises",
+      40
+     ],
+     [
+      "Carottes",
+      95
+     ],
+     [
+      "Chou",
+      120
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Dinde (escalope)",
+       "nom": "Nouilles sautées, dinde et légumes"
+      },
+      {
+       "a": "Porc (échine)",
+       "nom": "Nouilles sautées, porc et légumes"
+      },
+      {
+       "a": "Crevettes",
+       "nom": "Nouilles sautées, crevettes et légumes"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "riz-cantonais-au-jambon",
+   "nom": "Riz cantonais au jambon",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Jambon",
+      80
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Riz (sec)",
+      85
+     ],
+     [
+      "Petits pois",
+      80
+     ],
+     [
+      "Oignons",
+      20
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Jambon",
+      65
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Petits pois",
+      95
+     ],
+     [
+      "Oignons",
+      25
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   }
+  },
+  {
+   "id": "porc-au-caramel-riz-haricots-verts",
+   "nom": "Porc au caramel, riz, haricots verts",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Porc (échine)",
+      160
+     ],
+     [
+      "Oignons",
+      40
+     ],
+     [
+      "Riz (sec)",
+      85
+     ],
+     [
+      "Haricots verts",
+      150
+     ]
+    ],
+    "aurelie": [
+     [
+      "Porc (échine)",
+      130
+     ],
+     [
+      "Oignons",
+      50
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Haricots verts",
+      180
+     ]
+    ]
+   }
+  },
+  {
+   "id": "buf-aux-oignons-riz",
+   "nom": "Bœuf aux oignons, riz",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      160
+     ],
+     [
+      "Oignons",
+      100
+     ],
+     [
+      "Poivrons",
+      60
+     ],
+     [
+      "Riz (sec)",
+      85
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      130
+     ],
+     [
+      "Oignons",
+      120
+     ],
+     [
+      "Poivrons",
+      70
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   }
+  },
+  {
+   "id": "curry-de-poulet-au-lait-de-coco-riz",
+   "nom": "Curry de poulet au lait de coco, riz",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      160
+     ],
+     [
+      "Lait de coco",
+      60
+     ],
+     [
+      "Carottes",
+      80
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Riz (sec)",
+      85
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      130
+     ],
+     [
+      "Lait de coco",
+      45
+     ],
+     [
+      "Carottes",
+      95
+     ],
+     [
+      "Oignons",
+      35
+     ],
+     [
+      "Riz (sec)",
+      40
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Dinde (escalope)",
+       "nom": "Curry de dinde au lait de coco, riz"
+      },
+      {
+       "a": "Porc (échine)",
+       "nom": "Curry de porc au lait de coco, riz"
+      },
+      {
+       "a": "Crevettes",
+       "nom": "Curry de crevettes au lait de coco, riz"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "crevettes-sautees-a-l-ail-nouilles-poivrons",
+   "nom": "Crevettes sautées à l'ail, nouilles, poivrons",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Crevettes",
+      170
+     ],
+     [
+      "Nouilles chinoises",
+      85
+     ],
+     [
+      "Poivrons",
+      100
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Crevettes",
+      135
+     ],
+     [
+      "Nouilles chinoises",
+      40
+     ],
+     [
+      "Poivrons",
+      120
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   }
+  },
+  {
+   "id": "poisson-vapeur-au-gingembre-riz-chou-saute",
+   "nom": "Poisson vapeur au gingembre, riz, chou sauté",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poisson blanc",
+      180
+     ],
+     [
+      "Riz (sec)",
+      85
+     ],
+     [
+      "Chou",
+      150
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poisson blanc",
+      145
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Chou",
+      180
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   }
+  },
+  {
+   "id": "bo-bun-au-buf",
+   "nom": "Bò bún au bœuf",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      150
+     ],
+     [
+      "Nouilles chinoises",
+      70
+     ],
+     [
+      "Salade",
+      60
+     ],
+     [
+      "Carottes",
+      80
+     ],
+     [
+      "Concombre",
+      80
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      120
+     ],
+     [
+      "Nouilles chinoises",
+      35
+     ],
+     [
+      "Salade",
+      70
+     ],
+     [
+      "Carottes",
+      95
+     ],
+     [
+      "Concombre",
+      95
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   }
+  },
+  {
+   "id": "pad-thai-poulet",
+   "nom": "Pad thaï, poulet",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      140
+     ],
+     [
+      "Nouilles chinoises",
+      85
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Carottes",
+      60
+     ],
+     [
+      "Chou",
+      60
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      110
+     ],
+     [
+      "Nouilles chinoises",
+      40
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Carottes",
+      70
+     ],
+     [
+      "Chou",
+      70
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Crevettes",
+       "nom": "Pad thaï, crevettes"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "curry-de-buf-aux-patates-douces",
+   "nom": "Curry de bœuf aux patates douces",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Bœuf",
+      160
+     ],
+     [
+      "Patates douces",
+      280
+     ],
+     [
+      "Lait de coco",
+      50
+     ],
+     [
+      "Oignons",
+      30
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bœuf",
+      130
+     ],
+     [
+      "Patates douces",
+      140
+     ],
+     [
+      "Lait de coco",
+      40
+     ],
+     [
+      "Oignons",
+      35
+     ]
+    ]
+   }
+  },
+  {
+   "id": "bibimbap-au-buf-hache-uf-epinards",
+   "nom": "Bibimbap au bœuf haché, œuf, épinards",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Steak haché",
+      130
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Riz (sec)",
+      85
+     ],
+     [
+      "Épinards",
+      120
+     ],
+     [
+      "Carottes",
+      60
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ],
+    "aurelie": [
+     [
+      "Steak haché",
+      105
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Épinards",
+      145
+     ],
+     [
+      "Carottes",
+      70
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Steak haché",
+     "vers": [
+      {
+       "a": "Porc haché",
+       "nom": "Bibimbap au porc haché, œuf, épinards"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "chili-con-carne-au-buf-hache-riz",
+   "nom": "Chili con carne au bœuf haché, riz",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Steak haché",
+      140
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      100
+     ],
+     [
+      "Tomates concassées",
+      120
+     ],
+     [
+      "Poivrons",
+      60
+     ],
+     [
+      "Riz (sec)",
+      70
+     ]
+    ],
+    "aurelie": [
+     [
+      "Steak haché",
+      110
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      50
+     ],
+     [
+      "Tomates concassées",
+      145
+     ],
+     [
+      "Poivrons",
+      70
+     ],
+     [
+      "Riz (sec)",
+      35
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Steak haché",
+     "vers": [
+      {
+       "a": "Porc haché",
+       "nom": "Chili con carne au porc haché, riz"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "poulet-tikka-au-yaourt-riz-concombre",
+   "nom": "Poulet tikka au yaourt, riz, concombre",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      160
+     ],
+     [
+      "Yaourt nature",
+      60
+     ],
+     [
+      "Riz (sec)",
+      85
+     ],
+     [
+      "Concombre",
+      100
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      130
+     ],
+     [
+      "Yaourt nature",
+      45
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Concombre",
+      120
+     ]
+    ]
+   }
+  },
+  {
+   "id": "enchiladas-de-poulet-cheddar",
+   "nom": "Enchiladas de poulet (cheddar)",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      140
+     ],
+     [
+      "Wraps",
+      2
+     ],
+     [
+      "Tomates concassées",
+      100
+     ],
+     [
+      "Poivrons",
+      60
+     ],
+     [
+      "Cheddar",
+      30
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      110
+     ],
+     [
+      "Wraps",
+      1
+     ],
+     [
+      "Tomates concassées",
+      120
+     ],
+     [
+      "Poivrons",
+      70
+     ],
+     [
+      "Cheddar",
+      20
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Steak haché",
+       "nom": "Enchiladas de bœuf haché (cheddar)"
+      }
+     ]
+    },
+    {
+     "de": "Cheddar",
+     "vers": [
+      {
+       "a": "Mozzarella râpée",
+       "nom": "Enchiladas de poulet (mozzarella)"
+      },
+      {
+       "a": "Emmental râpé",
+       "nom": "Enchiladas de poulet (emmental)"
+      },
+      {
+       "a": null,
+       "nom": "Enchiladas de poulet (sans fromage)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "quesadillas-au-poulet-cheddar-salade",
+   "nom": "Quesadillas au poulet (cheddar), salade",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      130
+     ],
+     [
+      "Wraps",
+      2
+     ],
+     [
+      "Poivrons",
+      60
+     ],
+     [
+      "Maïs",
+      50
+     ],
+     [
+      "Cheddar",
+      35
+     ],
+     [
+      "Salade",
+      50
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      105
+     ],
+     [
+      "Wraps",
+      1
+     ],
+     [
+      "Poivrons",
+      70
+     ],
+     [
+      "Maïs",
+      60
+     ],
+     [
+      "Cheddar",
+      25
+     ],
+     [
+      "Salade",
+      60
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Jambon",
+       "nom": "Quesadillas au jambon (cheddar), salade"
+      }
+     ]
+    },
+    {
+     "de": "Cheddar",
+     "vers": [
+      {
+       "a": "Emmental râpé",
+       "nom": "Quesadillas au poulet (emmental), salade"
+      },
+      {
+       "a": "Mozzarella râpée",
+       "nom": "Quesadillas au poulet (mozzarella), salade"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "burritos-au-poulet-riz-haricots-rouges",
+   "nom": "Burritos au poulet, riz, haricots rouges",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      140
+     ],
+     [
+      "Wraps",
+      2
+     ],
+     [
+      "Riz (sec)",
+      50
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      70
+     ],
+     [
+      "Tomates",
+      80
+     ],
+     [
+      "Salade",
+      40
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      110
+     ],
+     [
+      "Wraps",
+      1
+     ],
+     [
+      "Riz (sec)",
+      25
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      35
+     ],
+     [
+      "Tomates",
+      95
+     ],
+     [
+      "Salade",
+      50
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Steak haché",
+       "nom": "Burritos au bœuf haché, riz, haricots rouges"
+      },
+      {
+       "a": "Porc haché",
+       "nom": "Burritos au porc haché, riz, haricots rouges"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bowl-mexicain-poulet-riz-mais-avocat",
+   "nom": "Bowl mexicain, poulet, riz, maïs, avocat",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      150
+     ],
+     [
+      "Riz (sec)",
+      75
+     ],
+     [
+      "Maïs",
+      60
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      60
+     ],
+     [
+      "Avocat (chair)",
+      50
+     ],
+     [
+      "Tomates",
+      80
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      120
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Maïs",
+      70
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      30
+     ],
+     [
+      "Avocat (chair)",
+      60
+     ],
+     [
+      "Tomates",
+      95
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Steak haché",
+       "nom": "Bowl mexicain, bœuf haché, riz, maïs, avocat"
+      },
+      {
+       "a": "Crevettes",
+       "nom": "Bowl mexicain, crevettes, riz, maïs, avocat"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "patates-douces-farcies-au-chili-buf-hache",
+   "nom": "Patates douces farcies au chili (bœuf haché)",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Steak haché",
+      130
+     ],
+     [
+      "Patates douces",
+      320
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      60
+     ],
+     [
+      "Tomates concassées",
+      80
+     ]
+    ],
+    "aurelie": [
+     [
+      "Steak haché",
+      105
+     ],
+     [
+      "Patates douces",
+      160
+     ],
+     [
+      "Haricots rouges (égouttés)",
+      30
+     ],
+     [
+      "Tomates concassées",
+      95
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Steak haché",
+     "vers": [
+      {
+       "a": "Porc haché",
+       "nom": "Patates douces farcies au chili (porc haché)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "wrap-de-poulet-croustillant-crudites",
+   "nom": "Wrap de poulet croustillant, crudités",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      140
+     ],
+     [
+      "Farine",
+      15
+     ],
+     [
+      "Wraps",
+      2
+     ],
+     [
+      "Salade",
+      50
+     ],
+     [
+      "Tomates",
+      80
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      110
+     ],
+     [
+      "Farine",
+      10
+     ],
+     [
+      "Wraps",
+      1
+     ],
+     [
+      "Salade",
+      60
+     ],
+     [
+      "Tomates",
+      95
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Dinde (escalope)",
+       "nom": "Wrap de dinde croustillant, crudités"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "couscous-poulet-merguez",
+   "nom": "Couscous poulet-merguez",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      100
+     ],
+     [
+      "Merguez",
+      60
+     ],
+     [
+      "Semoule",
+      80
+     ],
+     [
+      "Carottes",
+      80
+     ],
+     [
+      "Courgettes",
+      100
+     ],
+     [
+      "Pois chiches (égouttés)",
+      60
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      80
+     ],
+     [
+      "Merguez",
+      50
+     ],
+     [
+      "Semoule",
+      40
+     ],
+     [
+      "Carottes",
+      95
+     ],
+     [
+      "Courgettes",
+      120
+     ],
+     [
+      "Pois chiches (égouttés)",
+      30
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Dinde (escalope)",
+       "nom": "Couscous dinde-merguez"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "tajine-de-poulet-aux-legumes-semoule",
+   "nom": "Tajine de poulet aux légumes, semoule",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      160
+     ],
+     [
+      "Carottes",
+      100
+     ],
+     [
+      "Courgettes",
+      100
+     ],
+     [
+      "Oignons",
+      40
+     ],
+     [
+      "Semoule",
+      75
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      130
+     ],
+     [
+      "Carottes",
+      120
+     ],
+     [
+      "Courgettes",
+      120
+     ],
+     [
+      "Oignons",
+      50
+     ],
+     [
+      "Semoule",
+      40
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Bœuf",
+       "nom": "Tajine de bœuf aux légumes, semoule"
+      },
+      {
+       "a": "Porc (échine)",
+       "nom": "Tajine de porc aux légumes, semoule"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "kefta-de-buf-semoule-salade-tomate-concombre",
+   "nom": "Kefta de bœuf, semoule, salade tomate-concombre",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Steak haché",
+      150
+     ],
+     [
+      "Oignons",
+      20
+     ],
+     [
+      "Semoule",
+      75
+     ],
+     [
+      "Tomates",
+      100
+     ],
+     [
+      "Concombre",
+      100
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ],
+    "aurelie": [
+     [
+      "Steak haché",
+      120
+     ],
+     [
+      "Oignons",
+      25
+     ],
+     [
+      "Semoule",
+      40
+     ],
+     [
+      "Tomates",
+      120
+     ],
+     [
+      "Concombre",
+      120
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   }
+  },
+  {
+   "id": "brochettes-de-dinde-marinees-boulgour-salade",
+   "nom": "Brochettes de dinde marinées, boulgour, salade",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Dinde (escalope)",
+      160
+     ],
+     [
+      "Yaourt nature",
+      30
+     ],
+     [
+      "Boulgour",
+      80
+     ],
+     [
+      "Salade",
+      60
+     ],
+     [
+      "Tomates",
+      80
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ],
+    "aurelie": [
+     [
+      "Dinde (escalope)",
+      130
+     ],
+     [
+      "Yaourt nature",
+      20
+     ],
+     [
+      "Boulgour",
+      40
+     ],
+     [
+      "Salade",
+      70
+     ],
+     [
+      "Tomates",
+      95
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Dinde (escalope)",
+     "vers": [
+      {
+       "a": "Poulet",
+       "nom": "Brochettes de poulet marinées, boulgour, salade"
+      },
+      {
+       "a": "Porc (échine)",
+       "nom": "Brochettes de porc marinées, boulgour, salade"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "moussaka-au-buf-hache-mozzarella",
+   "nom": "Moussaka au bœuf haché (mozzarella)",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Steak haché",
+      140
+     ],
+     [
+      "Aubergines",
+      250
+     ],
+     [
+      "Tomates concassées",
+      80
+     ],
+     [
+      "Lait",
+      80
+     ],
+     [
+      "Farine",
+      10
+     ],
+     [
+      "Mozzarella râpée",
+      25
+     ],
+     [
+      "Pommes de terre",
+      150
+     ]
+    ],
+    "aurelie": [
+     [
+      "Steak haché",
+      110
+     ],
+     [
+      "Aubergines",
+      300
+     ],
+     [
+      "Tomates concassées",
+      95
+     ],
+     [
+      "Lait",
+      60
+     ],
+     [
+      "Farine",
+      5
+     ],
+     [
+      "Mozzarella râpée",
+      20
+     ],
+     [
+      "Pommes de terre",
+      75
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Steak haché",
+     "vers": [
+      {
+       "a": "Porc haché",
+       "nom": "Moussaka au porc haché (mozzarella)"
+      }
+     ]
+    },
+    {
+     "de": "Mozzarella râpée",
+     "vers": [
+      {
+       "a": "Emmental râpé",
+       "nom": "Moussaka au bœuf haché (emmental)"
+      },
+      {
+       "a": "Cheddar",
+       "nom": "Moussaka au bœuf haché (cheddar)"
+      },
+      {
+       "a": null,
+       "nom": "Moussaka au bœuf haché (sans fromage)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "poulet-au-citron-pommes-de-terre-courgettes",
+   "nom": "Poulet au citron, pommes de terre, courgettes",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      160
+     ],
+     [
+      "Pommes de terre",
+      300
+     ],
+     [
+      "Courgettes",
+      150
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      130
+     ],
+     [
+      "Pommes de terre",
+      150
+     ],
+     [
+      "Courgettes",
+      180
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Dinde (escalope)",
+       "nom": "Dinde au citron, pommes de terre, courgettes"
+      },
+      {
+       "a": "Porc (échine)",
+       "nom": "Porc au citron, pommes de terre, courgettes"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "merguez-grillees-semoule-legumes",
+   "nom": "Merguez grillées, semoule, légumes",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Merguez",
+      150
+     ],
+     [
+      "Semoule",
+      80
+     ],
+     [
+      "Courgettes",
+      100
+     ],
+     [
+      "Carottes",
+      80
+     ],
+     [
+      "Pois chiches (égouttés)",
+      50
+     ]
+    ],
+    "aurelie": [
+     [
+      "Merguez",
+      120
+     ],
+     [
+      "Semoule",
+      40
+     ],
+     [
+      "Courgettes",
+      120
+     ],
+     [
+      "Carottes",
+      95
+     ],
+     [
+      "Pois chiches (égouttés)",
+      25
+     ]
+    ]
+   }
+  },
+  {
+   "id": "chakchouka-merguez-pain-complet",
+   "nom": "Chakchouka, merguez, pain complet",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Merguez",
+      80
+     ],
+     [
+      "Œufs",
+      2
+     ],
+     [
+      "Poivrons",
+      120
+     ],
+     [
+      "Tomates concassées",
+      120
+     ],
+     [
+      "Pain complet",
+      80
+     ]
+    ],
+    "aurelie": [
+     [
+      "Merguez",
+      65
+     ],
+     [
+      "Œufs",
+      2
+     ],
+     [
+      "Poivrons",
+      145
+     ],
+     [
+      "Tomates concassées",
+      145
+     ],
+     [
+      "Pain complet",
+      40
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Merguez",
+     "vers": [
+      {
+       "a": "Chorizo",
+       "nom": "Chakchouka, chorizo, pain complet"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "taboule-poulet",
+   "nom": "Taboulé, poulet",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      150
+     ],
+     [
+      "Semoule",
+      75
+     ],
+     [
+      "Tomates",
+      100
+     ],
+     [
+      "Concombre",
+      100
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      120
+     ],
+     [
+      "Semoule",
+      40
+     ],
+     [
+      "Tomates",
+      120
+     ],
+     [
+      "Concombre",
+      120
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Thon (conserve)",
+       "nom": "Taboulé, thon"
+      },
+      {
+       "a": "Crevettes",
+       "nom": "Taboulé, crevettes"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "kebab-maison-de-dinde-crudites-frites-au-four",
+   "nom": "Kebab maison de dinde, crudités, frites au four",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Dinde (escalope)",
+      140
+     ],
+     [
+      "Wraps",
+      2
+     ],
+     [
+      "Salade",
+      50
+     ],
+     [
+      "Tomates",
+      60
+     ],
+     [
+      "Oignons",
+      20
+     ],
+     [
+      "Yaourt nature",
+      30
+     ],
+     [
+      "Pommes de terre",
+      150
+     ]
+    ],
+    "aurelie": [
+     [
+      "Dinde (escalope)",
+      110
+     ],
+     [
+      "Wraps",
+      1
+     ],
+     [
+      "Salade",
+      60
+     ],
+     [
+      "Tomates",
+      70
+     ],
+     [
+      "Oignons",
+      25
+     ],
+     [
+      "Yaourt nature",
+      20
+     ],
+     [
+      "Pommes de terre",
+      75
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Dinde (escalope)",
+     "vers": [
+      {
+       "a": "Poulet",
+       "nom": "Kebab maison de poulet, crudités, frites au four"
+      },
+      {
+       "a": "Porc (échine)",
+       "nom": "Kebab maison de porc, crudités, frites au four"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "burger-bacon-oignons-cheddar-frites-au-four",
+   "nom": "Burger bacon-oignons (cheddar), frites au four",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Steak haché",
+      120
+     ],
+     [
+      "Bacon",
+      30
+     ],
+     [
+      "Pains burger",
+      1
+     ],
+     [
+      "Cheddar",
+      20
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Salade",
+      30
+     ],
+     [
+      "Pommes de terre",
+      220
+     ]
+    ],
+    "aurelie": [
+     [
+      "Steak haché",
+      95
+     ],
+     [
+      "Bacon",
+      25
+     ],
+     [
+      "Pains burger",
+      1
+     ],
+     [
+      "Cheddar",
+      15
+     ],
+     [
+      "Oignons",
+      35
+     ],
+     [
+      "Salade",
+      35
+     ],
+     [
+      "Pommes de terre",
+      110
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Cheddar",
+     "vers": [
+      {
+       "a": "Emmental râpé",
+       "nom": "Burger bacon-oignons (emmental), frites au four"
+      },
+      {
+       "a": null,
+       "nom": "Burger bacon-oignons (sans fromage), frites au four"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "fish-and-chips-coleslaw",
+   "nom": "Fish and chips, coleslaw",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir",
+    "poisson"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poisson blanc",
+      180
+     ],
+     [
+      "Farine",
+      20
+     ],
+     [
+      "Pommes de terre",
+      300
+     ],
+     [
+      "Chou",
+      80
+     ],
+     [
+      "Carottes",
+      50
+     ],
+     [
+      "Huile",
+      15
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poisson blanc",
+      145
+     ],
+     [
+      "Farine",
+      10
+     ],
+     [
+      "Pommes de terre",
+      150
+     ],
+     [
+      "Chou",
+      95
+     ],
+     [
+      "Carottes",
+      60
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   }
+  },
+  {
+   "id": "poulet-frit-frites-au-four-coleslaw",
+   "nom": "Poulet frit, frites au four, coleslaw",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Pilons de poulet",
+      260
+     ],
+     [
+      "Farine",
+      20
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Pommes de terre",
+      280
+     ],
+     [
+      "Chou",
+      80
+     ],
+     [
+      "Carottes",
+      50
+     ],
+     [
+      "Huile",
+      15
+     ]
+    ],
+    "aurelie": [
+     [
+      "Pilons de poulet",
+      210
+     ],
+     [
+      "Farine",
+      10
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Pommes de terre",
+      140
+     ],
+     [
+      "Chou",
+      95
+     ],
+     [
+      "Carottes",
+      60
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   }
+  },
+  {
+   "id": "nuggets-de-poulet-maison-frites-au-four-crudites",
+   "nom": "Nuggets de poulet maison, frites au four, crudités",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      150
+     ],
+     [
+      "Farine",
+      20
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Pommes de terre",
+      280
+     ],
+     [
+      "Carottes",
+      80
+     ],
+     [
+      "Huile",
+      12
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      120
+     ],
+     [
+      "Farine",
+      10
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Pommes de terre",
+      140
+     ],
+     [
+      "Carottes",
+      95
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Dinde (escalope)",
+       "nom": "Nuggets de dinde maison, frites au four, crudités"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "tartiflette-lardons-emmental-salade",
+   "nom": "Tartiflette, lardons (emmental), salade",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Lardons",
+      80
+     ],
+     [
+      "Pommes de terre",
+      320
+     ],
+     [
+      "Oignons",
+      40
+     ],
+     [
+      "Crème fraîche",
+      30
+     ],
+     [
+      "Emmental râpé",
+      30
+     ],
+     [
+      "Salade",
+      60
+     ]
+    ],
+    "aurelie": [
+     [
+      "Lardons",
+      65
+     ],
+     [
+      "Pommes de terre",
+      160
+     ],
+     [
+      "Oignons",
+      50
+     ],
+     [
+      "Crème fraîche",
+      20
+     ],
+     [
+      "Emmental râpé",
+      20
+     ],
+     [
+      "Salade",
+      70
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Lardons",
+     "vers": [
+      {
+       "a": "Bacon",
+       "nom": "Tartiflette, bacon (emmental), salade"
+      }
+     ]
+    },
+    {
+     "de": "Emmental râpé",
+     "vers": [
+      {
+       "a": "Mozzarella râpée",
+       "nom": "Tartiflette, lardons (mozzarella), salade"
+      },
+      {
+       "a": "Cheddar",
+       "nom": "Tartiflette, lardons (cheddar), salade"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cotes-de-porc-grillees-patates-douces-salade",
+   "nom": "Côtes de porc grillées, patates douces, salade",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Porc (échine)",
+      170
+     ],
+     [
+      "Patates douces",
+      300
+     ],
+     [
+      "Salade",
+      60
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Porc (échine)",
+      135
+     ],
+     [
+      "Patates douces",
+      150
+     ],
+     [
+      "Salade",
+      70
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   }
+  },
+  {
+   "id": "brochettes-de-poulet-et-legumes-grilles-pommes-de-terre",
+   "nom": "Brochettes de poulet et légumes grillés, pommes de terre",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      150
+     ],
+     [
+      "Poivrons",
+      80
+     ],
+     [
+      "Courgettes",
+      80
+     ],
+     [
+      "Oignons",
+      30
+     ],
+     [
+      "Pommes de terre",
+      300
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      120
+     ],
+     [
+      "Poivrons",
+      95
+     ],
+     [
+      "Courgettes",
+      95
+     ],
+     [
+      "Oignons",
+      35
+     ],
+     [
+      "Pommes de terre",
+      150
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Dinde (escalope)",
+       "nom": "Brochettes de dinde et légumes grillés, pommes de terre"
+      },
+      {
+       "a": "Porc (échine)",
+       "nom": "Brochettes de porc et légumes grillés, pommes de terre"
+      },
+      {
+       "a": "Merguez",
+       "nom": "Brochettes de merguez et légumes grillés, pommes de terre"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "croque-madame-emmental-frites-au-four",
+   "nom": "Croque-madame (emmental), frites au four",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "plaisir"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Jambon",
+      60
+     ],
+     [
+      "Pain de mie",
+      100
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Emmental râpé",
+      25
+     ],
+     [
+      "Pommes de terre",
+      150
+     ]
+    ],
+    "aurelie": [
+     [
+      "Jambon",
+      50
+     ],
+     [
+      "Pain de mie",
+      50
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Emmental râpé",
+      20
+     ],
+     [
+      "Pommes de terre",
+      75
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Emmental râpé",
+     "vers": [
+      {
+       "a": "Mozzarella râpée",
+       "nom": "Croque-madame (mozzarella), frites au four"
+      },
+      {
+       "a": "Cheddar",
+       "nom": "Croque-madame (cheddar), frites au four"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "salade-cesar-poulet-emmental",
+   "nom": "Salade César, poulet (emmental)",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      150
+     ],
+     [
+      "Salade",
+      100
+     ],
+     [
+      "Pain complet",
+      50
+     ],
+     [
+      "Emmental râpé",
+      15
+     ],
+     [
+      "Tomates",
+      80
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      120
+     ],
+     [
+      "Salade",
+      120
+     ],
+     [
+      "Pain complet",
+      25
+     ],
+     [
+      "Emmental râpé",
+      10
+     ],
+     [
+      "Tomates",
+      95
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Dinde (escalope)",
+       "nom": "Salade César, dinde (emmental)"
+      },
+      {
+       "a": "Crevettes",
+       "nom": "Salade César, crevettes (emmental)"
+      }
+     ]
+    },
+    {
+     "de": "Emmental râpé",
+     "vers": [
+      {
+       "a": "Mozzarella râpée",
+       "nom": "Salade César, poulet (mozzarella)"
+      },
+      {
+       "a": "Cheddar",
+       "nom": "Salade César, poulet (cheddar)"
+      },
+      {
+       "a": null,
+       "nom": "Salade César, poulet (sans fromage)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "salade-nicoise-au-thon",
+   "nom": "Salade niçoise au thon",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Thon (conserve)",
+      120
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Tomates",
+      120
+     ],
+     [
+      "Haricots verts",
+      100
+     ],
+     [
+      "Pommes de terre",
+      220
+     ],
+     [
+      "Salade",
+      50
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Thon (conserve)",
+      95
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Tomates",
+      145
+     ],
+     [
+      "Haricots verts",
+      120
+     ],
+     [
+      "Pommes de terre",
+      110
+     ],
+     [
+      "Salade",
+      60
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   }
+  },
+  {
+   "id": "poke-bowl-thon-riz-avocat-concombre",
+   "nom": "Poke bowl, thon, riz, avocat, concombre",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Thon (conserve)",
+      120
+     ],
+     [
+      "Riz (sec)",
+      80
+     ],
+     [
+      "Avocat (chair)",
+      60
+     ],
+     [
+      "Concombre",
+      80
+     ],
+     [
+      "Carottes",
+      60
+     ],
+     [
+      "Maïs",
+      40
+     ]
+    ],
+    "aurelie": [
+     [
+      "Thon (conserve)",
+      95
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Avocat (chair)",
+      70
+     ],
+     [
+      "Concombre",
+      95
+     ],
+     [
+      "Carottes",
+      70
+     ],
+     [
+      "Maïs",
+      50
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Thon (conserve)",
+     "vers": [
+      {
+       "a": "Poisson blanc",
+       "nom": "Poke bowl, poisson blanc, riz, avocat, concombre"
+      },
+      {
+       "a": "Crevettes",
+       "nom": "Poke bowl, crevettes, riz, avocat, concombre"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "salade-de-riz-au-thon-mais-tomates",
+   "nom": "Salade de riz au thon, maïs, tomates",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [
+    "poisson"
+   ],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Thon (conserve)",
+      120
+     ],
+     [
+      "Riz (sec)",
+      80
+     ],
+     [
+      "Maïs",
+      60
+     ],
+     [
+      "Tomates",
+      100
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Thon (conserve)",
+      95
+     ],
+     [
+      "Riz (sec)",
+      40
+     ],
+     [
+      "Maïs",
+      70
+     ],
+     [
+      "Tomates",
+      120
+     ],
+     [
+      "Œufs",
+      1
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   }
+  },
+  {
+   "id": "salade-de-pates-poulet-tomates-mais",
+   "nom": "Salade de pâtes, poulet, tomates, maïs",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      140
+     ],
+     [
+      "Pâtes (sèches)",
+      80
+     ],
+     [
+      "Tomates",
+      100
+     ],
+     [
+      "Maïs",
+      50
+     ],
+     [
+      "Concombre",
+      80
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      110
+     ],
+     [
+      "Pâtes (sèches)",
+      40
+     ],
+     [
+      "Tomates",
+      120
+     ],
+     [
+      "Maïs",
+      60
+     ],
+     [
+      "Concombre",
+      95
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Jambon",
+       "nom": "Salade de pâtes, jambon, tomates, maïs"
+      },
+      {
+       "a": "Thon (conserve)",
+       "nom": "Salade de pâtes, thon, tomates, maïs"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "salade-de-lentilles-lardons-carottes",
+   "nom": "Salade de lentilles, lardons, carottes",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Lardons",
+      80
+     ],
+     [
+      "Lentilles vertes (sèches)",
+      70
+     ],
+     [
+      "Carottes",
+      100
+     ],
+     [
+      "Oignons",
+      20
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Lardons",
+      65
+     ],
+     [
+      "Lentilles vertes (sèches)",
+      35
+     ],
+     [
+      "Carottes",
+      120
+     ],
+     [
+      "Oignons",
+      25
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Lardons",
+     "vers": [
+      {
+       "a": "Boucané",
+       "nom": "Salade de lentilles, boucané, carottes"
+      },
+      {
+       "a": "Jambon",
+       "nom": "Salade de lentilles, jambon, carottes"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "buddha-bowl-dinde-patate-douce-brocoli",
+   "nom": "Buddha bowl, dinde, patate douce, brocoli",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Dinde (escalope)",
+      150
+     ],
+     [
+      "Patates douces",
+      280
+     ],
+     [
+      "Brocoli",
+      150
+     ],
+     [
+      "Pois chiches (égouttés)",
+      50
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Dinde (escalope)",
+      120
+     ],
+     [
+      "Patates douces",
+      140
+     ],
+     [
+      "Brocoli",
+      180
+     ],
+     [
+      "Pois chiches (égouttés)",
+      25
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Dinde (escalope)",
+     "vers": [
+      {
+       "a": "Poulet",
+       "nom": "Buddha bowl, poulet, patate douce, brocoli"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "salade-de-pommes-de-terre-jambon-haricots-verts",
+   "nom": "Salade de pommes de terre, jambon, haricots verts",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Jambon",
+      100
+     ],
+     [
+      "Pommes de terre",
+      300
+     ],
+     [
+      "Haricots verts",
+      120
+     ],
+     [
+      "Oignons",
+      20
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Jambon",
+      80
+     ],
+     [
+      "Pommes de terre",
+      150
+     ],
+     [
+      "Haricots verts",
+      145
+     ],
+     [
+      "Oignons",
+      25
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Jambon",
+     "vers": [
+      {
+       "a": "Saucisses fumées",
+       "nom": "Salade de pommes de terre, saucisses fumées, haricots verts"
+      },
+      {
+       "a": "Thon (conserve)",
+       "nom": "Salade de pommes de terre, thon, haricots verts"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "salade-de-boulgour-poulet-concombre-tomates",
+   "nom": "Salade de boulgour, poulet, concombre, tomates",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      140
+     ],
+     [
+      "Boulgour",
+      80
+     ],
+     [
+      "Concombre",
+      100
+     ],
+     [
+      "Tomates",
+      100
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      110
+     ],
+     [
+      "Boulgour",
+      40
+     ],
+     [
+      "Concombre",
+      120
+     ],
+     [
+      "Tomates",
+      120
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Crevettes",
+       "nom": "Salade de boulgour, crevettes, concombre, tomates"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "wrap-froid-poulet-avocat-crudites",
+   "nom": "Wrap froid, poulet, avocat, crudités",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      130
+     ],
+     [
+      "Wraps",
+      2
+     ],
+     [
+      "Avocat (chair)",
+      50
+     ],
+     [
+      "Salade",
+      40
+     ],
+     [
+      "Carottes",
+      60
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      105
+     ],
+     [
+      "Wraps",
+      1
+     ],
+     [
+      "Avocat (chair)",
+      60
+     ],
+     [
+      "Salade",
+      50
+     ],
+     [
+      "Carottes",
+      70
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Jambon",
+       "nom": "Wrap froid, jambon, avocat, crudités"
+      },
+      {
+       "a": "Thon (conserve)",
+       "nom": "Wrap froid, thon, avocat, crudités"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "salade-de-semoule-pois-chiches-poulet",
+   "nom": "Salade de semoule, pois chiches, poulet",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Poulet",
+      130
+     ],
+     [
+      "Semoule",
+      70
+     ],
+     [
+      "Pois chiches (égouttés)",
+      60
+     ],
+     [
+      "Tomates",
+      100
+     ],
+     [
+      "Concombre",
+      80
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ],
+    "aurelie": [
+     [
+      "Poulet",
+      105
+     ],
+     [
+      "Semoule",
+      35
+     ],
+     [
+      "Pois chiches (égouttés)",
+      30
+     ],
+     [
+      "Tomates",
+      120
+     ],
+     [
+      "Concombre",
+      95
+     ],
+     [
+      "Huile",
+      10
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Poulet",
+     "vers": [
+      {
+       "a": "Merguez",
+       "nom": "Salade de semoule, pois chiches, merguez"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "salade-tiede-de-patates-douces-bacon-epinards",
+   "nom": "Salade tiède de patates douces, bacon, épinards",
+   "repas": [
+    "dej",
+    "din"
+   ],
+   "tags": [],
+   "source": "claude-2026-10-05",
+   "portions": {
+    "nicolas": [
+     [
+      "Bacon",
+      70
+     ],
+     [
+      "Patates douces",
+      300
+     ],
+     [
+      "Épinards",
+      120
+     ],
+     [
+      "Oignons",
+      20
+     ],
+     [
+      "Huile",
+      8
+     ]
+    ],
+    "aurelie": [
+     [
+      "Bacon",
+      55
+     ],
+     [
+      "Patates douces",
+      150
+     ],
+     [
+      "Épinards",
+      145
+     ],
+     [
+      "Oignons",
+      25
+     ],
+     [
+      "Huile",
+      5
+     ]
+    ]
+   },
+   "variantes": [
+    {
+     "de": "Bacon",
+     "vers": [
+      {
+       "a": "Lardons",
+       "nom": "Salade tiède de patates douces, lardons, épinards"
+      },
+      {
+       "a": "Jambon",
+       "nom": "Salade tiède de patates douces, jambon, épinards"
+      }
+     ]
+    }
+   ]
   }
  ]
 }

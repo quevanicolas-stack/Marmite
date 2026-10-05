@@ -7,7 +7,9 @@ const catalogue = lire("catalogue.json").produits, recettes = lire("recettes.jso
 const reference = lire("mois", "2026-10.json");
 const erreurs = [];
 const verif = (ok, msg) => { if (!ok) erreurs.push(msg); };
-const famille = id => { const r = recettes.find(x => x.id === id); return (r.nom || r.id).split(/[,(+]/)[0].trim().toLowerCase(); };
+// plats et variantes dépliées (une variante garde la famille de son plat d'origine)
+const toutes = Moteur.deplierVariantes(recettes, catalogue);
+const famille = id => Moteur.famille(toutes.find(x => x.id === id));
 
 function composer(annee, mois, graine, extra) {
   return Moteur.composerMois(Object.assign({ catalogue, recettes, reglages, annee, mois, graine, moisReference: reference, stockDepart: {} }, extra || {}));
@@ -115,7 +117,7 @@ verif(achatLentilles.length === 0, "lentilles achetées alors qu'il y en a 5 kg 
   const vus = [];
   for (const j of r2.mois.plan) for (const x of j.meals) if (x.k === "dej" || x.k === "din") vus.push([j.d, famille(x.recette)]);
   for (const [d1, f1] of vus) for (const [d2, f2] of vus) if (d2 > d1 && f1 === f2 && d2 - d1 < reglages.ecartMinJours) verif(false, `réajusté : « ${f1} » les ${d1} et ${d2}`);
-  const tag = t => r2.mois.plan.reduce((s, j) => s + j.meals.filter(x => (x.k === "dej" || x.k === "din") && recettes.find(r => r.id === x.recette).tags.includes(t)).length, 0);
+  const tag = t => r2.mois.plan.reduce((s, j) => s + j.meals.filter(x => (x.k === "dej" || x.k === "din") && toutes.find(r => r.id === x.recette).tags.includes(t)).length, 0);
   verif(tag("poisson") === 8 && tag("plaisir") === 6, `réajusté : ${tag("poisson")} poissons, ${tag("plaisir")} plaisirs`);
   console.log(`réajustement : projection ${r2.budget.projection} € → ${r2.budget.projectionApres} € (budget ${budget} €, dépensé ${r2.budget.depense} €)`);
 }
@@ -127,6 +129,29 @@ verif(o.kcalMin === 1808 && o.kcalMax === 1908 && o.prot === 110, `objectifs apr
 // âge des produits frais : 8 jours au 1er novembre (dernière course le 24 octobre), 0 le jour d'une course
 const cal = Moteur.calendrier(new Date(Date.UTC(2026, 10, 1)), 30, reglages);
 verif(cal.age(1) === 8 && cal.age(3) === 0 && cal.age(9) === 6, `âge des frais : ${cal.age(1)}, ${cal.age(3)}, ${cal.age(9)}`);
+
+// variantes : une viande ou un fromage interchangeable donne un plat de plus, de la même famille
+{
+  const g = toutes.find(r => r.id === "gratin-de-pommes-de-terre-au-jambon-mozzarella~emmental-rape");
+  verif(g && g.portions.nicolas.some(([a]) => a === "Emmental râpé") && !g.portions.nicolas.some(([a]) => a === "Mozzarella râpée"), "variante emmental du gratin");
+  verif(g && g.famille === Moteur.famille(recettes.find(r => r.id === "gratin-de-pommes-de-terre-au-jambon-mozzarella")), "la variante ne garde pas la famille du plat");
+  const sans = toutes.find(r => r.id === "gratin-de-pommes-de-terre-au-jambon-mozzarella~sans-mozzarella-rapee");
+  verif(sans && !sans.portions.nicolas.some(([a]) => a === "Mozzarella râpée"), "variante sans fromage");
+  const thon = toutes.find(r => r.id.startsWith("pizza-maison-au-jambon") && r.id.endsWith("~thon-conserve"));
+  verif(thon && thon.tags.includes("poisson") && thon.tags.includes("plaisir"), "la pizza au thon n'est pas comptée en poisson");
+  const pilons = toutes.find(r => r.id.startsWith("pilons-de-poulet-au-four") && r.id.endsWith("~poulet"));
+  verif(pilons && pilons.portions.nicolas.find(([a]) => a === "Poulet")[1] === 170, "facteur pilons → poulet (260 g avec os → 170 g)");
+  verif(toutes.length >= recettes.length + 140, `${toutes.length} plats après dépliage`);
+}
+// produits exclus : plus aucun plat qui en contient (petits-déjeuners exceptés), leurs variantes restent
+{
+  const exclus = ["Poulet", "Mozzarella râpée"];
+  const { mois: m, bilan: b } = composer(2026, 11, 3, { exclureProduits: exclus });
+  const trouves = m.plan.flatMap(j => j.meals.filter(x => x.k !== "pdj").flatMap(x => x.items.nicolas.filter(([a]) => exclus.includes(a)).map(([a]) => j.d + x.k + " " + a)));
+  verif(!trouves.length, `produits exclus servis : ${trouves.slice(0, 5)}`);
+  verif(b.quotas.poisson === reglages.quotas.poisson && b.quotas.plaisir === reglages.quotas.plaisir, `quotas avec exclusions : ${b.quotas.poisson} poissons, ${b.quotas.plaisir} plaisirs`);
+  verif(Moteur.deplierVariantes(recettes, catalogue, exclus).some(r => r.id === "gratin-de-pommes-de-terre-au-jambon-mozzarella~emmental-rape"), "la variante sans le produit exclu a disparu");
+}
 
 console.log("erreurs", erreurs);
 process.exit(erreurs.length ? 1 : 0);

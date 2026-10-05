@@ -1168,6 +1168,827 @@
     "estime": true
    },
    "note": "Prix à saisir. Pizza du 11."
+  },
+  "Bacon": {
+   "rayon": "Viande",
+   "achat": "à la coupe, au gramme",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 24.18,
+   "nut": [
+    100,
+    "g",
+    130,
+    21
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 10,
+    "lieu": "frigo",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Bacon fumé Montagne Noire à la coupe. Prix au kilo déduit du ticket du 01/10/2026 (2,66 €), poids estimé à 110 g : à corriger avec l'étiquette.",
+   "prixEstime": true,
+   "pasAchat": 1,
+   "animal": true,
+   "substituts": [
+    "Lardons",
+    "Jambon"
+   ]
+  },
+  "Dinde (escalope)": {
+   "rayon": "Viande",
+   "achat": "barquette 500 g",
+   "cond": 500,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 6.5,
+   "nut": [
+    100,
+    "g",
+    110,
+    24
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 3,
+    "lieu": "frigo",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Se congèle le jour de l'achat. Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "animal": true,
+   "substituts": [
+    "Poulet"
+   ]
+  },
+  "Porc (échine)": {
+   "rayon": "Viande",
+   "achat": "barquette 600 g",
+   "cond": 600,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 6.9,
+   "nut": [
+    100,
+    "g",
+    200,
+    19
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 3,
+    "lieu": "frigo",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Échine ou côtes, se congèle. Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "animal": true,
+   "substituts": [
+    "Poulet",
+    "Dinde (escalope)"
+   ]
+  },
+  "Steak haché": {
+   "rayon": "Viande",
+   "achat": "4 × 100 g surgelés",
+   "cond": 400,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 4.9,
+   "nut": [
+    100,
+    "g",
+    215,
+    18
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 120,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "animal": true,
+   "substituts": [
+    "Porc haché"
+   ]
+  },
+  "Merguez": {
+   "rayon": "Viande",
+   "achat": "paquet de 6 (330 g)",
+   "cond": 330,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 4.2,
+   "nut": [
+    100,
+    "g",
+    300,
+    15
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 90,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "animal": true,
+   "substituts": [
+    "Saucisses (porc)"
+   ]
+  },
+  "Saucisses fumées": {
+   "rayon": "Viande",
+   "achat": "paquet de 4 (280 g)",
+   "cond": 280,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 4.5,
+   "nut": [
+    100,
+    "g",
+    290,
+    14
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 21,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "animal": true,
+   "substituts": [
+    "Saucisses (porc)"
+   ]
+  },
+  "Boucané": {
+   "rayon": "Viande",
+   "achat": "barquette 400 g",
+   "cond": 400,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 7.9,
+   "nut": [
+    100,
+    "g",
+    310,
+    16
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 21,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Poitrine fumée créole. Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "animal": true,
+   "substituts": [
+    "Lardons"
+   ]
+  },
+  "Pilons de poulet": {
+   "rayon": "Viande",
+   "achat": "sachet 1 kg surgelé",
+   "cond": 1000,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 3.79,
+   "nut": [
+    100,
+    "g",
+    120,
+    12.5
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 120,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Poids avec les os (65 % de viande). Prix du ticket du 01/10/2026. Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "animal": true,
+   "substituts": [
+    "Poulet"
+   ]
+  },
+  "Thon (conserve)": {
+   "rayon": "Poisson",
+   "achat": "boîte 140 g égouttés",
+   "cond": 140,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 2.2,
+   "nut": [
+    100,
+    "g",
+    115,
+    26
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 730,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Au naturel. Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "animal": true,
+   "substituts": [
+    "Poisson blanc"
+   ]
+  },
+  "Crevettes": {
+   "rayon": "Poisson",
+   "achat": "sachet 400 g surgelé",
+   "cond": 400,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 6.9,
+   "nut": [
+    100,
+    "g",
+    90,
+    20
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 120,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "animal": true,
+   "substituts": [
+    "Poisson blanc"
+   ]
+  },
+  "Morue salée": {
+   "rayon": "Poisson",
+   "achat": "barquette 400 g",
+   "cond": 400,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 9.5,
+   "nut": [
+    100,
+    "g",
+    110,
+    25
+   ],
+   "role": "proteine",
+   "conservation": {
+    "jours": 60,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Poids dessalé ; dessaler 12 h. Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "animal": true,
+   "substituts": [
+    "Poisson blanc"
+   ]
+  },
+  "Emmental râpé": {
+   "rayon": "Œufs et laitages",
+   "achat": "sachet 200 g",
+   "cond": 200,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 2.6,
+   "nut": [
+    100,
+    "g",
+    380,
+    28
+   ],
+   "role": "autre",
+   "conservation": {
+    "jours": 30,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "substituts": [
+    "Mozzarella râpée",
+    "Cheddar"
+   ]
+  },
+  "Mozzarella (boule)": {
+   "rayon": "Œufs et laitages",
+   "achat": "boule 125 g",
+   "cond": 125,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.1,
+   "nut": [
+    100,
+    "g",
+    250,
+    18
+   ],
+   "role": "autre",
+   "conservation": {
+    "jours": 15,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "substituts": [
+    "Mozzarella râpée"
+   ]
+  },
+  "Crème fraîche": {
+   "rayon": "Œufs et laitages",
+   "achat": "pot 200 g",
+   "cond": 200,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.65,
+   "nut": [
+    100,
+    "g",
+    290,
+    2.4
+   ],
+   "role": "matiere_grasse",
+   "conservation": {
+    "jours": 21,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true
+  },
+  "Lait de coco": {
+   "rayon": "Épicerie",
+   "achat": "boîte 400 ml",
+   "cond": 400,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.9,
+   "nut": [
+    100,
+    "ml",
+    190,
+    1.9
+   ],
+   "role": "matiere_grasse",
+   "conservation": {
+    "jours": 730,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true
+  },
+  "Tomates concassées": {
+   "rayon": "Épicerie",
+   "achat": "boîte 400 g",
+   "cond": 400,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.1,
+   "nut": [
+    100,
+    "g",
+    25,
+    1.2
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 730,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "substituts": [
+    "Tomates"
+   ]
+  },
+  "Pois chiches (égouttés)": {
+   "rayon": "Féculents",
+   "achat": "boîte 400 g (265 g égouttés)",
+   "cond": 265,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.2,
+   "nut": [
+    100,
+    "g",
+    140,
+    7.5
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 730,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "substituts": [
+    "Haricots blancs (égouttés)"
+   ]
+  },
+  "Lentilles vertes (sèches)": {
+   "rayon": "Féculents",
+   "achat": "paquet 500 g",
+   "cond": 500,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 2.1,
+   "nut": [
+    100,
+    "g",
+    330,
+    24
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 365,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true
+  },
+  "Semoule": {
+   "rayon": "Féculents",
+   "achat": "paquet 1 kg",
+   "cond": 1000,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.9,
+   "nut": [
+    100,
+    "g",
+    360,
+    12
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 365,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "substituts": [
+    "Riz (sec)"
+   ]
+  },
+  "Boulgour": {
+   "rayon": "Féculents",
+   "achat": "paquet 500 g",
+   "cond": 500,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 2.3,
+   "nut": [
+    100,
+    "g",
+    350,
+    12
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 365,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "substituts": [
+    "Semoule"
+   ]
+  },
+  "Nouilles chinoises": {
+   "rayon": "Féculents",
+   "achat": "paquet 250 g",
+   "cond": 250,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.6,
+   "nut": [
+    100,
+    "g",
+    360,
+    11
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 365,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "substituts": [
+    "Pâtes (sèches)"
+   ]
+  },
+  "Pâte à pizza": {
+   "rayon": "Féculents",
+   "achat": "pâte 260 g",
+   "cond": 260,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.9,
+   "nut": [
+    100,
+    "g",
+    280,
+    8
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 21,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true
+  },
+  "Pâte brisée": {
+   "rayon": "Féculents",
+   "achat": "pâte 230 g",
+   "cond": 230,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.3,
+   "nut": [
+    100,
+    "g",
+    400,
+    6
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 21,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true
+  },
+  "Pain de mie": {
+   "rayon": "Pain",
+   "achat": "paquet 500 g",
+   "cond": 500,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.9,
+   "nut": [
+    100,
+    "g",
+    260,
+    8.5
+   ],
+   "role": "feculent",
+   "conservation": {
+    "jours": 10,
+    "lieu": "placard",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "substituts": [
+    "Pain complet"
+   ]
+  },
+  "Brocoli": {
+   "rayon": "Légumes",
+   "achat": "sachet 1 kg surgelé",
+   "cond": 1000,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 2.6,
+   "nut": [
+    100,
+    "g",
+    34,
+    2.8
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 180,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "substituts": [
+    "Haricots verts"
+   ]
+  },
+  "Épinards": {
+   "rayon": "Légumes",
+   "achat": "sachet 1 kg surgelé",
+   "cond": 1000,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 2.4,
+   "nut": [
+    100,
+    "g",
+    25,
+    3
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 180,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true
+  },
+  "Petits pois": {
+   "rayon": "Légumes",
+   "achat": "sachet 1 kg surgelé",
+   "cond": 1000,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 2.5,
+   "nut": [
+    100,
+    "g",
+    80,
+    5.4
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 180,
+    "lieu": "congélateur",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "substituts": [
+    "Haricots verts"
+   ]
+  },
+  "Chou": {
+   "rayon": "Légumes",
+   "achat": "vrac (g)",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 1.99,
+   "nut": [
+    100,
+    "g",
+    25,
+    1.3
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 14,
+    "lieu": "frigo",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "pasAchat": 50
+  },
+  "Chouchou": {
+   "rayon": "Légumes",
+   "achat": "vrac (g)",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 2.49,
+   "nut": [
+    100,
+    "g",
+    20,
+    0.8
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 10,
+    "lieu": "frigo",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "pasAchat": 50,
+   "substituts": [
+    "Courgettes"
+   ]
+  },
+  "Citrouille": {
+   "rayon": "Légumes",
+   "achat": "vrac (g)",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 1.99,
+   "nut": [
+    100,
+    "g",
+    26,
+    1
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 14,
+    "lieu": "placard",
+    "frais": false,
+    "estime": true
+   },
+   "note": "Giraumon. Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "pasAchat": 50
+  },
+  "Poireaux": {
+   "rayon": "Légumes",
+   "achat": "vrac (g)",
+   "cond": 1,
+   "vrac": 1,
+   "rend": 1,
+   "prix": 3.49,
+   "nut": [
+    100,
+    "g",
+    30,
+    1.5
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 10,
+    "lieu": "frigo",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true,
+   "pasAchat": 50
+  },
+  "Concombre": {
+   "rayon": "Légumes",
+   "achat": "pièce ~300 g",
+   "cond": 300,
+   "vrac": 0,
+   "rend": 1,
+   "prix": 1.2,
+   "nut": [
+    100,
+    "g",
+    13,
+    0.6
+   ],
+   "role": "legume",
+   "conservation": {
+    "jours": 7,
+    "lieu": "frigo",
+    "frais": true,
+    "estime": true
+   },
+   "note": "Prix estimé le 05/10/2026 : se corrige au premier prix payé.",
+   "prixEstime": true
   }
  }
 }

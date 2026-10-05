@@ -29,6 +29,8 @@ def assembler():
         "catalogue": catalogue,
         "recettes": lire("recettes.json")["recettes"],
         "reglages": lire("reglages.json"),
+        # tickets de caisse à reporter dans les courses (importés une fois dans l'app, annulables)
+        "tickets": [lire("tickets", f) for f in sorted(os.listdir(os.path.join(DON, "tickets"))) if f.endswith(".json")],
     }
 
 

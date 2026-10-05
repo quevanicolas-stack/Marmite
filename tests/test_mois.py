@@ -15,6 +15,7 @@ async def main():
         pg = await ctx.new_page()
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.route("**/fonts.g*/**", lambda r: r.abort())
+        await pg.add_init_script("try { localStorage.setItem('marmite-tickets', 'manuel'); } catch (e) {}")   # ticket non reporté (testé dans test_achats.py)
         await pg.goto(PAGE); await pg.wait_for_timeout(300)
         # octobre suivi : une coche, un article acheté
         await pg.evaluate("E.personnes.nicolas.coches['d2-dej'] = true; E.foyer.achats['c1-Poulet'] = true; sauver(); rendre();")
@@ -34,7 +35,8 @@ async def main():
         verif("Changer le déjeuner" in await pg.inner_text("#couche"), "feuille de choix absente")
         await pg.click("button[data-choix-filtre='plaisir']")
         noms = await pg.locator(".choix-plat b").all_inner_texts()
-        verif(noms and all(n in ("Burger maison, potatoes au four, crudités", "Pizza maison bœuf, poivrons, champignons + salade", "Barbecue bœuf-poulet, pommes de terre, légumes grillés", "Steak frites + salade", "Saucisses grillées, frites au four, haricots verts") for n in noms), f"filtre plaisir : {noms}")
+        plaisirs = await pg.evaluate("recettesListe().filter(r => r.tags.includes('plaisir')).map(r => r.nom)")
+        verif(len(noms) >= 20 and all(n in plaisirs for n in noms), f"filtre plaisir : {noms}")
         await pg.fill("#choix-q", "steak"); await pg.dispatch_event("#choix-q", "input")
         verif(await pg.locator(".choix-plat").count() == 1, "recherche « steak » : un seul plat attendu")
         await pg.click("button[data-choix-id='steak-frites-salade']")

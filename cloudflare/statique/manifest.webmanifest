@@ -1,0 +1,16 @@
+{
+  "name": "Miamm",
+  "short_name": "Miamm",
+  "description": "Le menu de la semaine, les courses et le budget du foyer",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FFFBF2",
+  "theme_color": "#3B1F4A",
+  "icons": [
+    { "src": "/icone-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icone-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icone-512-masquable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

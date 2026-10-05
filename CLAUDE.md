@@ -71,7 +71,8 @@ Il contient 8 onglets et environ 3 860 formules. Il est généré par `python/bu
 
 - **Publiée** : https://claude.ai/artifact/8Ez5pJQH4tzZ49GJLgvpB5. C'est une page hébergée par claude.ai, qui appartient au compte de Nico.
 - **Capacités d'exécution déclarées** : `db`, pour les données privées synchronisées sur tous ses appareils ; `sample`, pour les appels à Claude de l'assistant ; `user`, pour l'identifiant.
-- **Mise à jour** : republier `app/marmite.html` avec l'outil Artifact (action publish, avec l'`url` ci-dessus), sans redéclarer les capacités. Les sessions Claude Code web disposent de cet outil ; lire d'abord la version en ligne (action read) pour vérifier qu'elle n'a pas bougé. Republiée le 30/09/2026 depuis Claude Code (version 8 : glisser-déposer sur ordinateur, plein écran ; version 7 : cases et prix corrigés, repas remplaçable depuis la bibliothèque ; version 6 : le chef prépare le mois, archives ; version 5 : courses hebdomadaires, budget réel, quantité achetée, stock réel, budget du foyer, planning selon le stock ; version 4 : prix, dépassement, poubelle, jambon au gramme) ; elle correspond à `app/marmite.html`. Titre de la page : « Marmite ». Partage : « toute personne ayant le lien » (réglé dans le menu Partager de la page) ; chaque compte voit ses propres données (`db` par utilisateur).
+- **Mise à jour** : republier `app/marmite.html` avec l'outil Artifact (action publish, avec l'`url` ci-dessus), sans redéclarer les capacités. Les sessions Claude Code web disposent de cet outil ; lire d'abord la version en ligne (action read) pour vérifier qu'elle n'a pas bougé. Republiée le 05/10/2026 depuis Claude Code (version 12 : copier / importer les données, base de la version Cloudflare ; version 11 : bibliothèque de 100 plats avec variantes, produits exclus ; version 10 : ajouter un produit, valider le panier, achat spontané, ticket du 1er octobre reporté ; version 9 : Aujourd'hui réorganisé, mode magasin, Ajuster sans débordement ; version 8 : glisser-déposer sur ordinateur, plein écran ; version 7 : cases et prix corrigés, repas remplaçable depuis la bibliothèque ; version 6 : le chef prépare le mois, archives ; version 5 : courses hebdomadaires, budget réel, quantité achetée, stock réel, budget du foyer, planning selon le stock ; version 4 : prix, dépassement, poubelle, jambon au gramme) ; elle correspond à `app/marmite.html`. Titre de la page : « Marmite ». Partage : « toute personne ayant le lien » (réglé dans le menu Partager de la page) ; chaque compte voit ses propres données (`db` par utilisateur).
+- **Cloudflare** : le dossier `cloudflare/` sert désormais **Miamm** (section 9), pas Marmite. Marmite garde son mode « serveur du foyer » dans le code (détection `/api/etat` avec `marmite:true`), inactif. Profil → Données → « Copier les données » / « Importer des données » reste utile pour passer d'un appareil à l'autre.
 - **En local** : ouvrir `app/marmite.html` suffit. Les données passent alors en localStorage et l'assistant est indisponible, car `window.claude` est absent. Tout le reste fonctionne.
 
 ### Construire
@@ -88,6 +89,8 @@ python3 decouper.py                       # migration faite une fois : appdata.j
 # Chaîne courante :
 cd ../app && python3 construire.py        # template + blocs de donnees/ → app/marmite.html
 cd .. && for t in tests/*.py; do python3 $t || break; done && node tests/test_moteur.js
+cd cloudflare && npm install && python3 preparer.py && npx wrangler dev --var CODE_FOYER:essai
+                                          # version Cloudflare en local (tests/test_cloudflare.py le fait seul)
 node outils/proposer_mois.js 2026-11 [graine] [--jours N] [--invites N] [--budget €] [--debut aaaa-mm-jj]
                                           # proposition du moteur → donnees/propositions/<id>.json + résumé
 ```
@@ -122,10 +125,9 @@ L'app reprend exactement la palette du site Fluent & Forward d'Aurélie :
 - **Vocabulaire** : l'app ne parle jamais de Claude. Les propositions viennent du **chef** : « J'ai faim, demandez au chef », « Le chef prépare votre menu », « Proposé par le chef ».
 - **Aujourd'hui** :
   - navigation entre les 21 jours et bandeaux du jour (courses du jour, jour plaisir, plan pas encore commencé) ;
-  - « assiette » en SVG : 4 arcs, un par repas, plus opaques une fois cochés, avec les kcal mangées au centre ;
-  - jauges kcal, protéines et coût ;
-  - 4 fiches repas avec **Ajuster**, **Changer** et **Je l'ai fait** ;
-  - un bouton « J'ai faim, demandez au chef » qui vise le créneau de l'heure actuelle.
+  - **bilan** en bande collante (`bilanMini`) : elle reste en haut de l'écran au défilement, sans cacher les fiches. Petit anneau des 4 repas (plus épais et opaques une fois cochés), kcal et protéines mangées sur prévues ; un toucher l'ouvre (repas cochés, objectifs) ;
+  - fiches dans cet ordre (`ordreRepas`) : le **repas du moment** en haut (créneau de l'heure, pastille « Maintenant » ; sur un autre jour, le premier repas pas fait), puis le bouton « J'ai faim, demandez au chef », puis les repas restants, puis les **repas faits, repliés** en une ligne (un toucher les déplie, « Replier » les referme) ;
+  - chaque fiche : ingrédients, kcal et protéines (petits chiffres), **Ajuster**, **Changer** et **Je l'ai fait**. **Aucun prix** sur cet écran ni dans Ajuster (l'écart d'un repas ajusté est en kcal).
 - **Ajuster** :
   - chaque quantité s'édite au clavier ou avec − et + (pas de 5 g, 10 ml ou 1 unité) ;
   - un ingrédient se retire, un ingrédient du catalogue s'ajoute ;
@@ -135,14 +137,19 @@ L'app reprend exactement la palette du site Fluent & Forward d'Aurélie :
   - Carte **« Le chef prépare votre mois »** (début de mois) : mois (les 3 suivants), nombre de jours, **budget du mois** (par défaut celui du mois en cours, sinon la somme des budgets des profils ramenée à la durée) et invités. Le moteur compose le mois à partir de ce qu'il restera à la maison à la fin du mois en cours (`stockReel(NB_JOURS + 1)`) ; la proposition montre les courses du mois face au budget (et le dépassement si le chef n'y arrive pas), les quotas poisson et plaisir, les kcal et protéines moyennes, **ce qu'il faut acheter chaque semaine** (une ligne par course, aux jours des réglages), ce qu'il faut avant la première course et le planning. **Chaque repas de la proposition se touche pour être remplacé** : une feuille ouvre la bibliothèque filtrée sur ce créneau (plats avec viande ou poisson pour midi et soir, desserts pour le dessert), avec recherche, filtres Viande / Poisson / Plaisir, coût pour deux, et « déjà le … » si la même famille de plat est prévue à moins de 5 jours ; le choix recalcule portions, courses et bilan sans toucher aux autres repas (`Moteur.grilleDuMois` + `composerMois({ grilleImposee })`). **Sur ordinateur** (écran d'au moins 960 px avec souris), une colonne « Bibliothèque » à droite de la proposition (recherche, filtres Viande / Poisson / Plaisir / Desserts) permet de **glisser un plat sur un repas** ; un dessert ne se dépose que sur un dessert, un plat que sur midi ou soir. Même chose dans « Refaire le planning selon le stock ». « Valider ce mois » demande une confirmation dans la page, puis **archive le mois affiché** (`E.archives[id]` : coches, remplacements, achats, prix payés, quantités, décisions, poubelle, planning refait) et active le nouveau (`E.mois`). Un mois archivé se rouvre (« Rouvrir »), le mois affiché étant archivé à son tour.
   - Carte **« Refaire le planning selon le stock »** (en cours de mois, si des aliments ont disparu ou n'ont pas pu être achetés) : bouton « Demander au chef un planning selon le stock ». Le moteur (`app/moteur.js`, injecté dans la page par `construire.py` à la place de `__MOTEUR__`) recompose les jours à partir du premier jour libre (aujourd'hui si aucun repas n'y est coché, sinon demain ; réglable), avec le **stock réel** (`stockReel`), les prix validés (`Moteur.avecPrix`), les objectifs et dernières pesées des profils, l'historique des 5 derniers jours, des invités et un budget facultatifs, et une forte priorité au stock (`poidsStock: 3, penaliteManque: 1`). La proposition affiche les produits du stock utilisés, le coût des courses à venir, les kcal et protéines moyennes, ce qu'il faut acheter avant la prochaine course et le menu jour par jour ; « Une autre idée, chef » change la graine. « Appliquer ce planning » écrit les repas des deux personnes (`remplacements` avec `genere:true`) et remplace les courses non commencées par celles du moteur (`foyer.generation`) ; les courses gardées dont le jour est passé ne gardent que leurs articles cochés (le reste n'a pas été trouvé ou a été laissé). « Revenir au planning d'avant » rétablit tout.
 - **Courses** : trois onglets, **Listes**, **À la maison** et **Prix**. Toutes les courses passent par `COURSES()` (celles des données, ou celles d'un menu généré).
-  - **Listes** : une puce par course (octobre : 1er, 8 et 15, avec articles cochés / total). Cocher un article (toucher n'importe où sur la ligne, sauf les champs) **valide son prix** : son montant passe dans le réel. Chaque ligne indique le **besoin** de la période et une **quantité achetée** modifiable (conditionnements, ou grammes en vrac ; `foyer.quantites`), qui vaut par défaut la quantité prévue ; le prix payé se tape dans le champ de la ligne (l'estimation sert d'indication ; saisir un prix coche l'article). Totaux : payé (cochés), reste à acheter, part de la personne active. Sous les totaux : la **consommation prévue du foyer** (somme des `totalPrevu`, aux derniers prix validés) face au budget du foyer (somme des budgets des profils), et les achats du cycle (payés + à venir). **Dès que la consommation prévue dépasse le budget**, un panneau propose, sur ce qu'il reste à acheter : **Retirer** une ligne (hors protéines, féculents et hors repas), **Changer des aliments** (échanges `substituts` du catalogue, quantité équivalente en protéines pour une protéine, en kcal pour un féculent, même poids sinon ; seuls les échanges qui font gagner plus de 0,30 € sont proposés), ou **Accepter** le dépassement. Un choix s'applique tout de suite à la liste (`itemsCourse`) et aux repas de la période de la course à partir d'aujourd'hui, pour les deux personnes (remplacements `ajuste:true, modif:id`) ; « Annuler » rétablit l'état d'avant. Un dépassement accepté ne repropose rien tant qu'il ne grandit pas de plus de 1 €. Le même panneau apparaît en haut de l'onglet Budget. Un prix payé devient le prix unitaire du produit dans toute l'app. Magasin, totaux, part de la personne active.
-  - **À la maison** : ce qu'il reste réellement (`stockReel(j)` : stock de départ + articles cochés − repas des jours passés − poubelle ; un article non coché n'est pas à la maison). Colonnes : le jour (« Sam. 3 oct. »), puis « Le 21 au soir » prévu avec toutes les courses de la liste. Plus de colonne d'écart. Ruptures en premier, valeur de ce qui est à la maison, repas ajustés. Chaque ligne en stock a une **poubelle** : on saisit la quantité jetée, elle sort du stock à partir de ce jour (jamais d'office), et la carte « À la poubelle » liste les pertes avec leur valeur et un bouton Annuler.
+  - **Mode magasin** (par défaut, `localStorage["marmite-courses"]`, bouton « Mode magasin » pour passer au détail) : une ligne épurée par article, grande case, nom, quantité à acheter et prix. **La case coche** l'article ; **toucher le reste de la ligne ouvre le détail** (besoin, part de la personne active, quantité achetée, prix payé). En tête, une seule ligne : articles au panier, payé, reste ; le panneau de dépassement n'apparaît que s'il y a un dépassement à trancher.
+  - **Ajouter un produit** (bas de chaque liste, les deux modes) : feuille de recherche dans le catalogue ; si le produit n'existe pas, « Nouveau produit » (nom, rayon, paquet ou vrac, contenu, prix, kcal et protéines facultatives, viande/poisson) enregistré dans `foyer.produits` et ajouté au catalogue de la page (`integrerProduits`). La ligne va dans `foyer.ajouts[cid]` (clé `c<cid>-+<id>`), retirable. Un produit déjà prévu n'est pas doublé : sa ligne s'ouvre.
+  - **Valider le panier** (bas de liste, confirmation qui liste les non-cochés) : `foyer.validees[cid]`. Ce qui n'est pas coché est **non acheté** : sorti du bilan de la course (reste à acheter 0), du stock prévu et des propositions face au dépassement ; étiquette « pas acheté ». Bandeau « Panier validé » avec **« Refaire le planning selon les achats »** (ouvre la proposition du chef selon le stock réel, à partir du premier jour libre) et « Rouvrir le panier ».
+  - **Tickets de caisse** (`donnees/tickets/*.json`, injectés dans `DONNEES.tickets`) : reportés **une fois, tout seuls**, dans leur course si elle n'est pas commencée (aucune case cochée, panier non validé) et si le mois du ticket est le mois actif. Lignes cochées, quantités et prix payés du ticket, produits hors liste ajoutés, prix de référence mis à jour (`source:"paye"`) ; `foyer.imports[id]` garde clé par clé ce qui a été remplacé, et « Annuler le report du ticket » ne défait que ça. `localStorage["marmite-tickets"] = "manuel"` suspend le report (utilisé par les tests).
+  - **Listes** (mode détaillé) : une puce par course (octobre : 1er, 8 et 15, avec articles cochés / total). Cocher un article (toucher n'importe où sur la ligne, sauf les champs) **valide son prix** : son montant passe dans le réel. Chaque ligne indique le **besoin** de la période et une **quantité achetée** modifiable (conditionnements, ou grammes en vrac ; `foyer.quantites`), qui vaut par défaut la quantité prévue ; le prix payé se tape dans le champ de la ligne (l'estimation sert d'indication ; saisir un prix coche l'article). Totaux : payé (cochés), reste à acheter, part de la personne active. Sous les totaux : la **consommation prévue du foyer** (somme des `totalPrevu`, aux derniers prix validés) face au budget du foyer (somme des budgets des profils), et les achats du cycle (payés + à venir). **Dès que la consommation prévue dépasse le budget**, un panneau propose, sur ce qu'il reste à acheter : **Retirer** une ligne (hors protéines, féculents et hors repas), **Changer des aliments** (échanges `substituts` du catalogue, quantité équivalente en protéines pour une protéine, en kcal pour un féculent, même poids sinon ; seuls les échanges qui font gagner plus de 0,30 € sont proposés), ou **Accepter** le dépassement. Un choix s'applique tout de suite à la liste (`itemsCourse`) et aux repas de la période de la course à partir d'aujourd'hui, pour les deux personnes (remplacements `ajuste:true, modif:id`) ; « Annuler » rétablit l'état d'avant. Un dépassement accepté ne repropose rien tant qu'il ne grandit pas de plus de 1 €. Le même panneau apparaît en haut de l'onglet Budget. Un prix payé devient le prix unitaire du produit dans toute l'app. Magasin, totaux, part de la personne active.
+  - **À la maison** : bouton **« Ajouter un achat (courses spontanées) »** : produit (catalogue ou nouveau), quantité, prix payé ; la ligne est rattachée à la course du moment, cochée (`spontane:true`, date), elle entre au stock et dans le budget ; carte « Achats hors liste » avec Annuler. Ce qu'il reste réellement (`stockReel(j)` : stock de départ + articles cochés − repas des jours passés − poubelle ; un article non coché n'est pas à la maison). Colonnes : le jour (« Sam. 3 oct. »), puis « Le 21 au soir » prévu avec toutes les courses de la liste. Plus de colonne d'écart. Ruptures en premier, valeur de ce qui est à la maison, repas ajustés. Chaque ligne en stock a une **poubelle** : on saisit la quantité jetée, elle sort du stock à partir de ce jour (jamais d'office), et la carte « À la poubelle » liste les pertes avec leur valeur et un bouton Annuler.
   - **Prix** : le prix de chaque produit, par rayon (au conditionnement, ou au kilo pour le vrac), modifiable. Un prix modifié (`source:"saisi"`) ou déduit d'un prix payé (`source:"paye"`) va dans `foyer.prix` et remplace celui du catalogue partout ; « Rétablir » revient au prix d'origine. Les produits aux prix estimés portent l'étiquette « estimé ».
 - **Budget** :
   - **Budget du foyer** en tête (somme des budgets des profils) : barre payé (vert) + reste à acheter (or) face au budget, et pour chacun la part de la personne active ; consommation prévue du foyer ;
   - puis le panneau de dépassement s'il y a lieu, et la **part de la personne active** : prévu face à son budget, déjà consommé, reste à manger, part payée, économie face à la liste initiale ;
   - courbe cumulée sur 21 jours, tableau par course, prix payés face aux prix estimés.
-- **Profil** : poids avec courbe et pesées, budget et référence, objectifs kcal et protéines, liste « à éviter », état de la synchronisation, remise à zéro.
+- **Profil** : poids avec courbe et pesées, budget et référence, objectifs kcal et protéines, **produits exclus des menus** (pour le foyer, `foyer.exclus` : le chef ne propose plus de plat qui en contient, il garde les variantes qui le remplacent ; nombre de plats possibles affiché), liste « à éviter » (texte libre, pour « J'ai faim »), état de la synchronisation, remise à zéro.
+- **Bibliothèque dans l'app** : `recettesListe()` (plats et variantes dépliés, sans les produits exclus) nourrit « Changer » à la préparation du mois et la colonne Bibliothèque sur ordinateur ; `recetteParId()` retrouve n'importe quel plat, exclu ou non.
 
 ### L'assistant « J'ai faim » / « Changer »
 
@@ -184,8 +191,14 @@ Schéma version 2. Il est stocké dans `localStorage["marmite-nicolas"]` (le nom
     modifs:   [{ id, type: "retrait" | "substitution", cid, a, b, f, gain, date, avant }],  // choix face à un dépassement
     depassementAccepte: 12.5,                                   // dépassement accepté (€)
     quantites: { "c1-Poulet": 3 },                              // quantité achetée modifiée (unité d'achat)
-    generation: { depuis, jourRefait, date, graine, invites, gardees, courses, avant, modifsAvant, precedente }   // planning refait par le chef
+    generation: { depuis, jourRefait, date, graine, invites, gardees, courses, avant, modifsAvant, precedente },   // planning refait par le chef
+    produits: { "Crème fraîche": { rayon, achat, cond, vrac, prix, nut, animal } },        // produits créés dans l'app
+    ajouts:   { 2: [{ id, a, buy, spontane, date, ticket }] },                              // lignes ajoutées à une course, achats spontanés
+    validees: { 1: "2026-10-02" },                                                          // paniers validés
+    imports:  { "leclerc-2026-10-01": { date, course, avant } },                            // tickets reportés (ou { annule:true })
+    exclus:   ["Poulet"]                                                                    // produits que le chef ne propose jamais
   },
+  // version Cloudflare : ce même document, une seule fois pour le foyer (table docs, clé « foyer », avec rev)
   mois: { id, titre, debut, jours, invites, plan, courses, share, stockDepart, budget, graine, date },   // mois préparé par le chef (absent : octobre)
   archives: { "2026-10": { titre, date, foyer: { achats, payes, … }, personnes: { nicolas: { coches, remplacements } }, mois } },
   personnes: {
@@ -200,15 +213,14 @@ Schéma version 2. Il est stocké dans `localStorage["marmite-nicolas"]` (le nom
 }
 ```
 
-La fonction `charger()` convertit l'ancien format de la version 1, où tout était à plat et ne concernait que Nicolas. Elle **copie en profondeur** ce qu'elle reçoit : les données du compte en ligne peuvent arriver verrouillées en écriture, et sans copie, cocher une case ou saisir un prix échouait sans bruit (bug corrigé le 30/09/2026, couvert par `tests/test_glisser.py              ordinateur : bibliothèque à glisser sur un repas, dessert sur dessert, bouton Plein écran
-tests/test_compte.py`).
+La fonction `charger()` convertit l'ancien format de la version 1, où tout était à plat et ne concernait que Nicolas. Elle **copie en profondeur** ce qu'elle reçoit : les données du compte en ligne peuvent arriver verrouillées en écriture, et sans copie, cocher une case ou saisir un prix échouait sans bruit (bug corrigé le 30/09/2026, couvert par `tests/test_compte.py`).
 
 ### Blocs de données (`donnees/`)
 
 Depuis le 30/09/2026, les données sont découpées en blocs, source de vérité pour l'app :
 
 - `catalogue.json` → `produits[aliment]` : `rayon`, `achat`, `cond`, `vrac`, `rend`, `prix`, `nut` (`[base, unité, kcal, protéines]` ou `null` pour les produits hors repas), `role` (`proteine`, `feculent`, `legume`, `matiere_grasse`, `autre`), `conservation` (`jours` après achat, `lieu`, `frais` si 10 jours ou moins, `estime:true` tant que Nico n'a pas corrigé), `note`. L'ordre suit la table nutritionnelle : l'app s'en sert pour l'affichage et la recherche d'aliments.
-- `recettes.json` → `recettes[]` : `id`, `nom`, `repas` (`pdj`, `dej`, `din`, `des`), `tags` (`poisson`, `plaisir`, `restes`), `source`, `portions` de référence par personne, `suit` et `delaiMaxJours` pour les plats de restes. Les 45 plats d'octobre forment la bibliothèque de départ, plus les 6 de Nico du 30/09 ; les petits-déjeuners ont un `nomParPersonne`.
+- `recettes.json` → `recettes[]` : `id`, `nom`, `repas` (`pdj`, `dej`, `din`, `des`), `tags` (`poisson`, `plaisir`, `restes`), `source`, `portions` de référence par personne, `suit` et `delaiMaxJours` pour les plats de restes, `variantes` (`[{ de, vers: [{ a, nom, f? }] }]` : ingrédient interchangeable, `a: null` = sans, `f` = facteur de quantité). Les 45 plats d'octobre, les 6 de Nico du 30/09 et **100 plats écrits le 05/10** (`source: "claude-2026-10-05"`, générés par `outils/bibliotheque.py`, 147 variantes : 298 plats une fois dépliés) ; les petits-déjeuners ont un `nomParPersonne`. Carte lisible : `docs/bibliotheque.md`.
 
 Les blocs sont désormais enrichis à la main : `python/decouper.py` refuse de les écraser sans `--force`.
 - `mois/<aaaa-mm>.json` : `id`, `titre`, `debut`, `fin`, `jours`, `note`, `stockDepart`, `share`, `plan` (chaque repas porte l'`id` de sa `recette`), `courses`. Octobre est `2026-10.json`.
@@ -257,7 +269,7 @@ Les blocs sont désormais enrichis à la main : `python/decouper.py` refuse de l
 - **Liste de courses fixe.** Ajuster ou remplacer un repas ne la recalcule pas. Seul l'onglet « À la maison » reflète la réalité.
 - **Stock estimé.** Un repas non coché compte quand même comme mangé. Les pertes et le grignotage ne sont pas vus. Condiments et épices ne sont pas suivis.
 - **Octobre acheté au plus juste.** Beaucoup d'aliments finissent à 0 g le 21 (tomates, pommes de terre, patates douces, riz, lentilles…). Toute portion en plus sur l'un d'eux crée une rupture.
-- **Pas de vraie notification.** Une page web fermée ne peut pas sonner sur le téléphone.
+- **Pas de vraie notification sur claude.ai.** Une page web fermée ne peut pas sonner sur le téléphone ; la version Cloudflare le fait (Web Push).
 - **Référence d'Aurélie.** Les 208,94 € ont été recopiés depuis Nicolas et restent à confirmer.
 
 ## 6. Prochaine étape : programmer le mois suivant
@@ -317,6 +329,7 @@ Nico veut enchaîner sans tout régénérer en Python, et être prévenu avant l
 - **Période** : un mois calendaire par défaut, ou `debut` + `jours` (par exemple du 22 au 31 octobre). Courses aux jours du mois des réglages, ou aux dates `joursCourses`. Quotas des réglages pour un mois entier, au prorata sinon. L'« âge » d'un jour = jours écoulés depuis la dernière course. Avant la première course, le moteur privilégie les plats faisables avec le stock de départ.
 - **Invités** : `invites` convives en plus ; la portion d'un invité est la moyenne de Nicolas et d'Aurélie. Ils entrent dans les courses (`needI`) et dans le coût, pas dans `share`.
 - **Plats retenus** : déjeuners et dîners avec au moins un produit `animal` du catalogue.
+- **Variantes et produits exclus** : `Moteur.deplierVariantes(recettes, catalogue, exclus)` déplie chaque variante en plat (`id` = `<plat>~<produit>`, même `famille` que le plat d'origine, donc jamais à moins de 5 jours de lui ; étiquette poisson recalculée d'après les ingrédients). `exclureProduits` (entrée de `composerMois`, `foyer.exclus` dans l'app) retire tout plat qui contient un produit exclu, sauf les petits-déjeuners ; les variantes qui le remplacent restent. Un repas plaisir au poisson (fish and chips, pizza au thon) compte dans le quota poisson.
 - **Composition** : les plaisirs d'abord (déjeuners du week-end, répartis sur le mois, glace en dessert), puis les poissons (répartis, en alternant déjeuner et dîner), puis le reste jour par jour. Chaque candidat reçoit un score : famille de plat déjà placée à moins de `ecartMinJours` exclue (les variantes d'un même plat, « Bœuf sauté asiatique, … », forment une famille) ; pénalités pour les produits frais au-delà de leur conservation, la même protéine ou le même féculent deux fois dans la journée, les répétitions, le coût ; bonus pour le stock de départ. Un tirage à graine départage : même graine, même mois. Les plats `restes` suivent leur plat d'origine (`suit`, `delaiMaxJours`). Desserts selon la répartition du mois de référence ; petits-déjeuners fixes.
 - **Portions** : par personne et par jour, protéines des plats principaux calées sur l'objectif (facteur 0,85 à 1,4), puis féculents calés sur le milieu de la fourchette de kcal (0,5 à 1,6) ; arrondis à 5 g ou à l'unité. `objectifs(profil, poids)` retire environ 14 kcal par kg perdu.
 - **Courses** : chaque course achète le besoin de sa période moins le stock, arrondi au conditionnement (vrac : `pasAchat` du produit, 50 g par défaut, 1 g pour le jambon ; rendement compris). Tous les restes passent à la période suivante ; le frais plus vieux que sa conservation estimée est seulement signalé (`fraisAVerifier`), pour l'inventaire.
@@ -329,13 +342,14 @@ Nico veut enchaîner sans tout régénérer en Python, et être prévenu avant l
 - **Moteur branché dans l'app** : il devra prendre `foyer.prix` en priorité (`Moteur.avecPrix`) et lancer `reajuster` après chaque course validée, en proposant la nouvelle suite du mois plutôt qu'en l'imposant.
 
 - **Conditionnements à confirmer** : avocat compté à 350 g de chair, salade entière (300 g), champignons en barquette de 250 g : leurs restes s'accumulent d'une semaine à l'autre.
-- **Bibliothèque encore dominée par le poulet** : 40 plats principaux avec viande ou poisson (restes compris), 5 plats plaisir (burger, pizza, barbecue, steak frites, saucisses-frites) pour 6 repas plaisir par mois.
+- **Bibliothèque** : 138 plats principaux avec viande ou poisson (restes à part), 285 avec les variantes ; créole, française, italienne, asiatique, tex-mex, méditerranéenne, salades. Prix des 30 produits ajoutés le 05/10 estimés.
 - **Prix des nouveaux produits** (saucisses, porc haché, chorizo, haricots) estimés : à corriger au premier achat.
 - **Tomates, salade et champignons** dépassent leur conservation estimée en fin de semaine ; le petit-déjeuner d'Aurélie (tomate) et celui de Nicolas (banane) aussi.
 
 - **Du 1er au 2 novembre** : avant la première course du 3, ces deux jours vivent sur le stock restant, qui dépend de la période en attente du 22 au 31 octobre.
 - **Conservation** : les durées du catalogue sont des estimations (`estime:true`) à faire corriger par Nico ; elles décident de ce qui est frais et de la course où chaque produit est acheté.
-- **Repas plaisir** : 6 par mois, soit le double du rythme d'octobre (3 en 21 jours). La bibliothèque n'en compte que 3 (burger, pizza, barbecue) : il faudra en ajouter, sinon le même plat revient trop souvent.
+- **Repas plaisir** : 6 par mois. Depuis le 05/10, 20 plats plaisir (49 avec les variantes) : la répétition n'est plus un problème.
+- **Fromage** : Nicolas l'évite sauf pizza, lasagnes et burger ; plusieurs gratins et croques en contiennent. Chaque plat au fromage a une variante « sans fromage » ; si besoin, exclure les fromages dans Profil.
 
 ### Contrainte technique
 
@@ -360,6 +374,13 @@ Les données sont dans un seul document `db`. Avec plusieurs mois et une bibliot
 7. **Réflexion sur le cycle suivant** (section 6).
 8. **Décisions du 30/09/2026** : cycle mensuel, 4 courses par mois, Claude limité à un appel par mois pour enrichir la bibliothèque, inventaire validé avant chaque course (vérification facultative). Repo rangé : le contenu des zips est versionné fichier par fichier. Puis : « J'ai faim » en deux voies (bibliothèque locale ou « Nouveauté » via Claude), période du 22 au 31 octobre en attente, quotas de 8 poissons et 6 plaisirs, jours de courses dans les réglages (le premier le 3), vérification mensuelle du frais acceptée. Données découpées en blocs.
 9. **Décisions du 30/09/2026, suite** : protéine animale à chaque déjeuner et dîner, aucune perte d'office (poubelle), jambon au gramme, préparation le 30, génération paramétrable (jours, invités, budget). Puis : porc réintégré, 6 plats ajoutés (saucisses-frites, steak frites, hachis parmentier bœuf-porc, cassoulet, riz mexicain poulet ou bœuf), ligne de courses cochable en entier, onglet « Prix » pour modifier les prix, prix modifiable directement sur la ligne de course, projection du cycle, réajustement du budget par le moteur après chaque course. Puis : face à un dépassement, choix proposé sur le moment (retirer, changer des aliments, accepter), appliqué dès octobre ; app republiée. Puis : courses hebdomadaires dès octobre, cocher = prix validé (budget réel), quantité achetée modifiable, « À la maison » en stock réel du jour, budget du foyer avec la part de chacun, « le chef » au lieu de Claude, menu du chef selon le stock dans Planning. Puis : préparation du mois par le chef (planning + courses de chaque semaine pour le budget du mois), validation avec archive du mois précédent ; « refaire selon le stock » réservé au cours de mois. Puis : correction du bug des cases et des prix (données du compte copiées au chargement), repas de la proposition remplaçable depuis la bibliothèque. Puis : glisser-déposer depuis la bibliothèque sur ordinateur, bouton Plein écran pour masquer la barre de claude.ai.
+10. **Décisions du 01/10/2026** : PR fusionnée dans `main`. Aujourd'hui : repas du moment en haut, « J'ai faim » juste dessous, bilan réduit en bande collante, repas faits repliés, plus de prix, chiffres plus petits. Courses : mode magasin épuré, détail au toucher. Débordement d'Ajuster corrigé (liste déroulante et noms longs). Hébergement Cloudflare à l'étude (connecteur reconnecté ; pas d'outil de déploiement dans le connecteur).
+11. **Décisions du 02/10/2026** (après les courses du 1er) : ajouter un produit à une liste (catalogue ou nouveau), valider le panier (non coché = non acheté) puis refaire le planning selon les achats, ajouter un achat spontané au stock. Ticket Leclerc du 1er reporté dans la Course 1, alimentaire seulement (ni grignotage, ni alcool, ni sodas) : pilons comptés en poulet (650 g de viande), boulettes en bœuf, bacon nouveau produit (à la coupe, poids estimé 110 g), jambon 246 g, cheddar 126 g, café 1 kg, eau 9 L.
+12. **Décisions du 05/10/2026** : pas d'aspiration de Marmiton (conditions d'utilisation, droit des bases de données) ; 100 plats écrits pour Marmite, pas plus de créole que le reste, avec des **variantes** (une viande pour une autre, un fromage pour un autre ou sans) qui multiplient les plats et servent aux **produits exclus**. 30 produits ajoutés au catalogue (dinde, échine de porc, steak haché, merguez, saucisses fumées, boucané, pilons, thon, crevettes, morue, emmental, mozzarella, crème, lait de coco, tomates concassées, pois chiches, lentilles sèches, semoule, boulgour, nouilles, pâtes à pizza et brisée, pain de mie, brocoli, épinards, petits pois, chou, chouchou, citrouille, poireaux, concombre).
+
+13. **Décisions du 05/10/2026, suite** : passage sur Cloudflare validé (« fais tout »). Worker + D1, chef par l'API Anthropic côté serveur, rappels Web Push, déploiement par GitHub Actions ; la version claude.ai reste en service pendant la transition (copier / importer les données).
+14. **Décisions du 05/10/2026, fin** : nouveau nom (d'abord Popote) et DA plus gourmande (aubergine, safran, paprika, basilic ; Bricolage Grotesque et Outfit ; maquettes : https://claude.ai/artifact/PVQLMr3TPCJ7trND4Duw9B). Comptes pour soi et des proches, **sur invitation**, connexion par **clé d'accès** ; deux voies : **Sur mesure** (personnes, objectifs de poids, budget) et **Express** (photo du ticket, jours, personnes). Prix de départ : le catalogue actuel en estimation, corrigé par les tickets. Miamm est construit à part (`miamm/`), Marmite reste en service jusqu'à la bascule.
+15. **Décisions du 05/10/2026, soir** : l'app s'appelle **MIAMM** (écrit « miamm. » dans l'app, comme la maquette Popote). Version d'essai sans compte publiée sur claude.ai : https://claude.ai/artifact/6rrg7UpLjZ4xkb8okrbPS5. Base D1 « miamm » (les bases « marmite-foyer » et « popote », vides, ont été supprimées).
 
 ## 8. Arborescence
 
@@ -370,7 +391,7 @@ app/marmite_template.html          source de l'app (modifier ici)
 app/marmite.html                   app assemblée (même comportement que la version publiée ; DONNEES contient en plus les blocs)
 app/construire.py                  template + données → marmite.html
 donnees/catalogue.json             produits : prix, nutrition, rôle, conservation
-donnees/recettes.json              bibliothèque de recettes (45 plats d'octobre + 6 de Nico)
+donnees/recettes.json              bibliothèque de recettes (45 plats d'octobre + 6 de Nico + 100 du 05/10, avec variantes)
 donnees/mois/2026-10.json          le mois d'octobre : planning, courses, stock de départ
 donnees/reglages.json              jours des courses, quotas, inventaire, place de Claude
 donnees/appdata.json               archive d'octobre, source du découpage (ne plus modifier)
@@ -389,6 +410,12 @@ tests/test_moteur.js               règles du mois (quotas, écart, protéine an
 tests/test_donnees.py              blocs de données cohérents, app nourrie à l'identique
 tests/test_mois.py                 préparation du mois : proposition, repas changé depuis la bibliothèque, budget, courses par semaine, validation, archive, rechargement, réouverture
 tests/test_glisser.py              ordinateur : bibliothèque à glisser sur un repas, dessert sur dessert, bouton Plein écran
+outils/bibliotheque.py             100 plats et leurs variantes, produits nouveaux → recettes.json, catalogue.json, docs/bibliotheque.md
+docs/bibliotheque.md               carte des plats par cuisine, avec variantes (pour piocher des idées)
+tests/test_bibliotheque.py         variantes dans « Changer », produits exclus dans Profil puis absents du mois
+tests/test_achats.py               ticket reporté puis annulé, valider le panier, refaire le planning selon les achats, ajouter un produit (catalogue, nouveau), achat spontané
+donnees/tickets/                   tickets de caisse à reporter (2026-10-01-leclerc.json : 36 lignes alimentaires, 124,31 €)
+tests/test_ecrans.py               Aujourd'hui (bilan collant, repas du moment, repas faits repliés, aucun prix), mode magasin, Ajuster sans débordement à 360 px
 tests/test_compte.py               données du compte verrouillées en écriture : cases, prix payés, prix modifiés et repas cochés marchent et partent vers le compte
 tests/test_generation.py           menu du chef selon le stock : proposition, application, courses recalculées, retour, aucune mention de Claude
 outils/courses_octobre.js          octobre repassé en courses hebdomadaires (fait le 30/09/2026)
@@ -398,4 +425,58 @@ tests/test_poubelle.py             case cochée en touchant la ligne, poubelle d
 tests/test_ajustement_stock.py     ajustement d'un repas, retour au plan, stock
 tests/test_assistant_personnes_theme.py   Nicolas/Aurélie, thème, assistant simulé, remplacement à 2
 docs/prototype-beta-resume.md      résumé du prototype de l'app grand public
+miamm/app.html                    Miamm : source de l'app (une page, sans framework)
+miamm/moteur.js                   moteur de Miamm : N personnes, objectifs calculés, Express (priorité au stock)
+miamm/construire.py               app.html + moteur.js + blocs de donnees/ → miamm/miamm.html (non versionné)
+cloudflare/wrangler.toml           Worker « miamm » : page (public/), D1 « miamm », cron des rappels
+cloudflare/src/worker.js           API : comptes, invitations, sessions, foyers (révision), chef, tickets, rappels
+cloudflare/src/cles.js             vérification des clés d'accès (WebAuthn : CBOR, COSE, ES256 / RS256)
+cloudflare/preparer.py             construit Miamm → public/index.html (+ manifeste, icônes, service worker)
+cloudflare/statique/               service worker, manifeste, icônes de Miamm
+.github/workflows/cloudflare.yml   mise en ligne de Miamm à chaque fusion dans main
+tests/test_miamm.py               wrangler dev + clé d'accès simulée : invitation, compte, sur mesure, foyer partagé, connexion, tickets, Express, rappels
+tests/test_miamm_moteur.js        moteur de Miamm : objectifs, N personnes, enfant, invités, budget, Express, exclusions, graine
 ```
+
+## 9. Miamm (05/10/2026)
+
+L'app pour soi et ses proches qui succède à Marmite. Code dans `miamm/` (front) et `cloudflare/` (serveur). Pas encore en ligne : il faut les secrets du dépôt GitHub (voir `.github/workflows/cloudflare.yml`), puis une fusion dans `main`.
+
+### Construire et tester
+
+```bash
+python3 miamm/construire.py                 # → miamm/miamm.html (s'ouvre aussi en fichier : mode d'essai, sans compte)
+node tests/test_miamm_moteur.js
+cd cloudflare && npm install && cd .. && python3 tests/test_miamm.py    # wrangler dev en local, clé d'accès simulée
+```
+
+### Comptes et foyers (`cloudflare/src/worker.js`, base D1 « miamm »)
+
+- **Sur invitation** : le secret `INVITATION_INITIALE` (réutilisable) crée le premier compte et son foyer ; ensuite, depuis Foyer → Inviter, un code à usage unique « Dans mon foyer » (même menu, mêmes courses) ou « Un proche » (il crée son foyer).
+- **Clé d'accès** (WebAuthn, clé découvrable) : `/api/inscription/debut|fin`, `/api/connexion/debut|fin`, `/api/cle/debut|fin` (nouvel appareil). La vérification est faite à la main dans `cles.js` (pas de dépendance). Le nom de domaine sert d'identifiant (rpId) : en local, `localhost`, jamais une adresse IP.
+- **Code de secours** (16 caractères, montré une seule fois, haché en base, renouvelé à chaque usage) : `/api/secours`.
+- **Session** : cookie `miamm_session` HttpOnly, SameSite=Lax, Secure (sauf localhost), 180 jours ; requêtes qui modifient : même origine et JSON.
+- **Document du foyer** : `docs` clé `foyer:<id>`, avec révision ; l'app fusionne à trois en cas de conflit (même logique que Marmite).
+- **Garde-fous de dépense** : 30 appels « chef » et 15 tickets par foyer et par jour.
+
+### Le front (`miamm/app.html`)
+
+- **DA** : aubergine `#3B1F4A`, safran `#F5B700`, paprika `#E4572E`, basilic `#7DB46C`, crème `#FFFBF2` ; Bricolage Grotesque (titres) et Outfit (texte) ; clair et sombre (`localStorage["miamm-theme"]`). Icônes à tracé, pas d'emoji. L'app ne parle jamais de Claude : c'est « le chef ».
+- **Écrans** : accueil (invitation, connexion, code de secours) → choix **Sur mesure** / **Express** → proposition (bilan, courses, menu ; chaque plat se change depuis la bibliothèque ; « Une autre idée, chef ») → l'app : Aujourd'hui (portions par personne, « Je l'ai fait »), Menu, Courses (cases, prix payé, « Ajouter un ticket de caisse »), Stock (ce matin + ce qui manque pour 3 jours), Foyer (personnes, invitations, rappels, compte).
+- **Sur mesure** : personnes (sexe, âge, taille, poids, objectif, activité, petit-déjeuner sucré / salé / aucun, « pas de régime »), durée 7 à 30 jours, budget du mois (ramené à la durée), jour des courses (la première a lieu le jour du début), produits exclus.
+- **Express** : photo du ticket (réduite à 1 800 px, JPEG) → `/api/ticket` (schéma JSON : libellé, aliment du catalogue, nombre, poids, prix, alimentaire) → lignes à vérifier → jours, adultes, enfants, « huile, épices, sauces à la maison », desserts → menu à partir du stock (`priorite:"stock"`) et liste « À compléter ». Les prix du ticket deviennent les prix de référence (`doc.prix`, source `ticket`).
+- **Document** : `{ version, personnes, reglages: { budget, jourCourses, jours, debut, exclus, desserts }, periode, bilan, mode, suivi: { coches, achats, payes, remplacements }, prix, ajouts, tickets, archives }`.
+
+### Le moteur (`miamm/moteur.js`)
+
+Dérivé de celui de Marmite (même composition : quotas poisson et plaisir au prorata de 8 et 6 par 30 jours, écart de 5 jours, protéine animale midi et soir, variantes, exclusions, budget en plusieurs passes), pour N personnes :
+- `objectifs(p)` : Mifflin-St Jeor × activité ; perte : 500 kcal de moins (au plus 25 % du maintien, plancher 1 200 / 1 500 kcal, rien avant 18 ans ni avec « pas de régime ») ; protéines 1,4 g par kg visé. Retombe sur les cibles de Nicolas et Aurélie à 100 kcal près.
+- Chaque personne part de la portion de référence « grande » (Nicolas) ou « petite » (Aurélie) selon son objectif ; les petits appétits (moins de 1 350 kcal) ont toute la portion réduite d'abord.
+- Sortie : `periode.plan[j].meals[k].items[<id>]`, `courses[c].items[i].need[<id>]`, `parts[aliment][<id>]` ; une course « À compléter » (id 0) quand il manque quelque chose avant la première course.
+
+### À faire
+
+- « J'ai faim » dans Miamm (la route `/api/chef` existe, l'écran pas encore) ; refaire le menu selon le stock en cours de période ; panneau de dépassement ; poubelle.
+- Reprendre le suivi de Marmite dans Miamm (Nico et Aurélie repartent d'un menu Sur mesure ; une conversion n'est pas écrite).
+- Besoins des enfants : la formule adulte est approximative (portions réduites, sans déficit).
+- Politique de confidentialité avant d'ouvrir au-delà des proches (poids et objectifs sont des données de santé au sens du RGPD).
