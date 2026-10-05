@@ -161,6 +161,18 @@ async def main():
             await c.click("button[data-action=valider]"); await c.wait_for_selector("nav button[data-vue=jour]")
             await c.wait_for_function("S.rev >= 1 && !S.envoi", timeout=10000)
             verif(await c.evaluate("P().plan[0].meals.length") >= 3, "menu express vide")
+            r = await c.evaluate("statsJour(jourDuPlan(), qui())")
+            verif(r["kcal"] > 500, f"Aujourd'hui sans calories : {r}")
+            # un menu express composé pour d'autres convives que le foyer : les portions restent lisibles
+            r = await c.evaluate("(() => { D().personnes = [Object.assign(PERSONNE0(), { id: 'pX', nom: 'Léa', age: 30 })]; delete P().profils; rendre(); return { qui: qui(), kcal: statsJour(jourDuPlan(), qui()).kcal }; })()")
+            verif(r["qui"] == "a1" and r["kcal"] > 500, f"portions introuvables quand le foyer diffère du menu : {r}")
+            # refaire le menu avec ce qu'il y a à la maison
+            await c.click("nav button[data-vue=stock]")
+            await c.click("button[data-action=refaire-stock]")
+            r = await c.evaluate("({ mode: S.proposition.mode, debut: S.proposition.periode.debut, utilises: S.proposition.bilan.stockUtilise.length })")
+            verif(r["mode"] == "stock" and r["utilises"] >= 2, f"menu refait avec le stock : {r}")
+            await c.click("button[data-action=valider]"); await c.wait_for_selector("nav button[data-vue=jour]")
+            verif(await c.evaluate("P().profils.length === P().personnes.length && statsJour(jourDuPlan(), qui()).kcal > 500"), "menu refait sans profils ou sans calories")
             verif(await a.evaluate("(async () => (await api('/api/foyer')).d.doc.mode)()") == "mesure", "le foyer de Nicolas a été touché par celui de Léa")
 
             # 7. rappels du foyer de Nicolas envoyés par le cron
