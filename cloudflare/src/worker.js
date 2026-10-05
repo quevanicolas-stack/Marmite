@@ -1,7 +1,7 @@
 // Miamm sur Cloudflare : sert la page (public/) et l'API.
 //  Comptes : clés d'accès (WebAuthn), sur invitation ; un code de secours par compte ; session en cookie HttpOnly.
 //  Foyers : un document par foyer, avec révision (deux téléphones peuvent enregistrer, l'app fusionne).
-//  Le chef : « J'ai faim » (/api/chef) et la lecture des tickets de caisse en photo (/api/ticket), via l'API Anthropic.
+//  Le chef : « J'ai faim » (/api/chef) et la lecture des tickets de caisse en photo ou en PDF (/api/ticket), via l'API Anthropic.
 //  Rappels : Web Push signé VAPID, par foyer, envoyés par le cron (wrangler.toml).
 import Anthropic from "@anthropic-ai/sdk";
 import { b64url, verifierInscription, verifierConnexion } from "./cles.js";
@@ -141,13 +141,16 @@ async function appelJson(env, contenu, schema, effort) {
       messages: [{ role: "user", content: contenu }],
     });
     if (rep.stop_reason === "refusal") return erreur("refus", "Le chef n'a pas voulu répondre à cette demande.", 422);
+    if (rep.stop_reason === "max_tokens") { console.error("chef : réponse coupée", rep.usage); return erreur("invalid_json", "Réponse trop longue, réessaie.", 502); }
     const texte = rep.content.filter(b => b.type === "text").map(b => b.text).join("");
-    try { return json(JSON.parse(texte)); } catch (e) { return erreur("invalid_json", "Réponse illisible.", 502); }
+    try { return json(JSON.parse(texte)); } catch (e) { console.error("chef : JSON illisible", texte.slice(0, 300)); return erreur("invalid_json", "Réponse illisible.", 502); }
   } catch (e) {
-    if (e instanceof Anthropic.RateLimitError) return erreur("rate_limited", "Trop de demandes.", 429);
+    console.error("chef :", e && e.status, e && e.message);
+    if (e instanceof Anthropic.RateLimitError) return erreur("rate_limited", "Trop de demandes, réessaie dans une minute.", 429);
     if (e instanceof Anthropic.AuthenticationError) return erreur("indisponible", "Clé du chef refusée.", 503);
-    if (e instanceof Anthropic.APIError) return erreur("chef", "Le chef n'a pas pu répondre.", 502);
-    throw e;
+    if (e instanceof Anthropic.PermissionDeniedError) return erreur("indisponible", "Clé du chef sans accès à ce modèle.", 503);
+    if (e instanceof Anthropic.APIError) return erreur("chef", `Le chef n'a pas pu répondre (${e.status || "réseau"} : ${String(e.message || "").slice(0, 160)}).`, 502);
+    return erreur("chef", "Le chef n'a pas pu répondre (" + String(e && e.message || e).slice(0, 160) + ").", 502);
   }
 }
 const SCHEMA_PLATS = {
@@ -173,26 +176,34 @@ const SCHEMA_TICKET = {
       } } },
   },
 };
-async function chef(req, env, compte) {
+async function chef(corps, env, compte) {
   if (!env.ANTHROPIC_API_KEY) return erreur("indisponible", "Le chef n'est pas branché sur ce serveur.", 503);
-  const { consigne } = await req.json().catch(() => ({}));
+  const { consigne } = corps;
   if (typeof consigne !== "string" || !consigne.trim() || consigne.length > 60000) return erreur("requete", "Consigne manquante ou trop longue.", 400);
   if (await limite(env, "chef-" + compte.foyer, +(env.CHEF_PAR_JOUR || 30))) return erreur("rate_limited", "Le chef a assez travaillé pour aujourd'hui.", 429);
   return appelJson(env, consigne, SCHEMA_PLATS, "low");
 }
-async function ticket(req, env, compte) {
+// photo (JPEG, PNG, WebP) ou PDF du ticket, en data URI ; pas d'expression régulière sur le contenu (plusieurs centaines
+// de Ko) : le temps de calcul d'un Worker est compté
+const TYPES_TICKET = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+async function ticket(corps, env, compte) {
   if (!env.ANTHROPIC_API_KEY) return erreur("indisponible", "La lecture des tickets n'est pas branchée sur ce serveur.", 503);
-  const { image, catalogue } = await req.json().catch(() => ({}));
-  const m = /^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/.exec(image || "");
-  if (!m || m[2].length > 7_000_000) return erreur("requete", "Photo absente ou trop lourde.", 400);
+  const { image, catalogue } = corps;
+  const v = typeof image === "string" ? image.indexOf(";base64,") : -1, type = v > 5 ? image.slice(5, v) : "";
+  if (!TYPES_TICKET.includes(type) || !image.startsWith("data:")) return erreur("requete", "Envoie une photo ou un PDF du ticket.", 400);
+  const data = image.slice(v + 8);
+  if (!data || data.length > 9_000_000) return erreur("requete", "Fichier absent ou trop lourd (6 Mo au plus).", 400);
   if (await limite(env, "ticket-" + compte.foyer, +(env.TICKETS_PAR_JOUR || 15))) return erreur("rate_limited", "Assez de tickets pour aujourd'hui.", 429);
   const noms = (Array.isArray(catalogue) ? catalogue : []).filter(x => typeof x === "string").slice(0, 400);
-  const consigne = `Voici la photo d'un ticket de caisse de supermarché. Relève chaque ligne d'article.
+  const consigne = `Voici un ticket de caisse de supermarché (photo ou PDF). Relève chaque ligne d'article.
 Pour chaque ligne : le libellé imprimé, le nombre d'articles, le poids en grammes s'il est imprimé (produits à la coupe, au poids, ou poids écrit dans le libellé), le montant payé remises déduites, et si c'est de l'alimentaire (boissons sucrées, alcool, hygiène, entretien = non alimentaire).
 Rapproche chaque ligne alimentaire d'un nom de ce catalogue quand c'est clairement le même produit (une marque ou une variante du même produit compte ; « filet de poulet » → « Poulet ») ; sinon laisse aliment vide.
 Catalogue : ${noms.join(" ; ")}
 Donne aussi le magasin, la date (aaaa-mm-jj) et le total payé.`;
-  return appelJson(env, [{ type: "image", source: { type: "base64", media_type: m[1], data: m[2] } }, { type: "text", text: consigne }], SCHEMA_TICKET, "medium");
+  const piece = type === "application/pdf"
+    ? { type: "document", source: { type: "base64", media_type: type, data } }
+    : { type: "image", source: { type: "base64", media_type: type, data } };
+  return appelJson(env, [piece, { type: "text", text: consigne }], SCHEMA_TICKET, "low");
 }
 
 /* ---------- Routeur ---------- */
@@ -315,8 +326,8 @@ async function api(req, env) {
     if (!r.meta.changes) { const l = await lire(env, cleFoyer); return json({ code: "conflit", doc: l ? l.valeur : null, rev: l ? l.rev : 0 }, 409); }
     return json({ rev: (rev || 0) + 1 });
   }
-  if (chemin === "/api/chef" && m === "POST") return chef(new Request(req.url, { method: "POST", body: JSON.stringify(corps) }), env, compte);
-  if (chemin === "/api/ticket" && m === "POST") return ticket(new Request(req.url, { method: "POST", body: JSON.stringify(corps) }), env, compte);
+  if (chemin === "/api/chef" && m === "POST") return chef(corps, env, compte);
+  if (chemin === "/api/ticket" && m === "POST") return ticket(corps, env, compte);
   if (chemin === "/api/abonnement" && m === "POST") {
     const ab = corps.abonnement;
     // les navigateurs donnent toujours une adresse https ; http n'est admis que vers la machine locale (tests)

@@ -27,7 +27,8 @@ class Faux(BaseHTTPRequestHandler):
         n = int(self.headers.get("content-length") or 0); corps = self.rfile.read(n) if n else b""
         RECUS.append((self.path, dict(self.headers), corps))
         if self.path.startswith("/v1/messages"):
-            image = b'"type":"image"' in corps.replace(b" ", b"")
+            c2 = corps.replace(b" ", b"")
+            image = b'"type":"image"' in c2 or b'"type":"document"' in c2
             texte = json.dumps(TICKET if image else {"plats": []})
             rep = {"id": "msg_test", "type": "message", "role": "assistant", "model": "claude-opus-5-5", "stop_reason": "end_turn",
                    "content": [{"type": "text", "text": texte}], "usage": {"input_tokens": 1, "output_tokens": 1}}
@@ -139,8 +140,16 @@ async def main():
             c, errs_c = await telephone()
             await inscrire(c, code2, "Léa")
             await c.click("button[data-action=express]")
-            await c.set_input_files("input[data-photo=express]", str(CF / "statique" / "icone-512.png"))
+            # le ticket en PDF (celui qu'envoie le magasin), pas en photo
+            pdf = pathlib.Path(tempfile.mkdtemp()) / "ticket.pdf"
+            pdf.write_bytes(b"%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj 2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj 3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 200 400]>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF\n")
+            avant = len(RECUS)
+            await c.set_input_files("input[data-photo=express]", str(pdf))
             await c.wait_for_selector("text=E.Leclerc Saint-Pierre", timeout=15000)
+            appel = next((json.loads(c2) for chemin, h, c2 in RECUS[avant:] if chemin.startswith("/v1/messages")), None)
+            piece = appel and appel["messages"][0]["content"][0]
+            verif(piece and piece["type"] == "document" and piece["source"]["media_type"] == "application/pdf", f"ticket PDF envoyé comme document : {piece and piece['type']}")
+            verif(await c.locator("input[data-photo][capture]").count() == 0, "le champ du ticket force encore l'appareil photo (pas de PDF possible)")
             r = await c.evaluate("S.express.lignes.map(l => [l.a, l.q])")
             verif(r == [["Poulet", 1200], ["Riz (sec)", 2000], ["Courgettes", 900], ["Œufs", 12], ["", 0]], f"lignes du ticket : {r}")
             await c.click("button[data-action=plus][data-cle=enfants]")
