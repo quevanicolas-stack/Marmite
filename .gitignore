@@ -4,3 +4,4 @@ __pycache__/
 # fichiers de verrouillage des tableurs
 ~$*.xlsx
 .~lock.*#
+captures/
