@@ -11,7 +11,7 @@ SOURCE = base64.b64encode((ICI / "mascotte-source.jpg").read_bytes()).decode()
 
 PAGE = """<!doctype html><html><head>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&display=swap" rel="stylesheet">
-</head><body style="margin:0"><img id="m" src="data:image/jpeg;base64,%s"><img id="s" src="data:image/jpeg;base64,%s"><img id="k" src="data:image/jpeg;base64,%s"><canvas id="c"></canvas>
+</head><body style="margin:0"><img id="m" src="data:image/jpeg;base64,%s"><img id="s" src="data:image/jpeg;base64,%s"><img id="k" src="data:image/png;base64,%s"><canvas id="c"></canvas>
 <script>
 const AUB = "#3B1F4A", SAF = "#F5B700", PAP = "#E4572E", BAS = "#7DB46C", CRE = "#FFFBF2";
 // détourage : remplissage depuis les bords sur le blanc pur, bord adouci
@@ -118,9 +118,12 @@ function detourerDamier(img) {
   x.putImageData(d, 0, 0);
   return c;
 }
-// le chef aux courses : détouré, recadré au plus juste
-function scene(img, damier, largeur) {
-  const t = damier ? detourerDamier(img) : detourer(img), x = t.getContext("2d"), d = x.getImageData(0, 0, t.width, t.height).data;
+// le chef aux courses : recadré au plus juste (image déjà transparente : « png » ; sinon détourée)
+function scene(img, mode, largeur) {
+  let t;
+  if (mode === "png") { t = document.createElement("canvas"); t.width = img.naturalWidth; t.height = img.naturalHeight; t.getContext("2d").drawImage(img, 0, 0); }
+  else t = mode === "damier" ? detourerDamier(img) : detourer(img);
+  const x = t.getContext("2d"), d = x.getImageData(0, 0, t.width, t.height).data;
   let x0 = t.width, y0 = t.height, x1 = 0, y1 = 0;
   for (let j = 0; j < t.height; j++) for (let i = 0; i < t.width; i++) if (d[(j * t.width + i) * 4 + 3] > 40) { x0 = Math.min(x0, i); x1 = Math.max(x1, i); y0 = Math.min(y0, j); y1 = Math.max(y1, j); }
   const w = x1 - x0 + 1, h = y1 - y0 + 1, k = largeur / w, c = document.createElement("canvas");
@@ -139,7 +142,7 @@ function medaillon(img, taille, cx, cy, rayon) {
   return c.toDataURL("image/webp", 0.86);
 }
 async function pret() { await document.fonts.load('800 40px "Bricolage Grotesque"'); const m = document.getElementById("m"); await m.decode(); window.MASCOTTE = detourer(m); await document.getElementById('s').decode(); await document.getElementById('k').decode(); return document.fonts.check('800 40px "Bricolage Grotesque"'); }
-</script></body></html>""" % (SOURCE, base64.b64encode((ICI / "chef-stock-source.jpg").read_bytes()).decode(), base64.b64encode((ICI / "chef-courses-source.jpg").read_bytes()).decode())
+</script></body></html>""" % (SOURCE, base64.b64encode((ICI / "chef-stock-source.jpg").read_bytes()).decode(), base64.b64encode((ICI / "chef-courses-source.png").read_bytes()).decode())
 
 SORTIES = [
     # nom, largeur, hauteur, options (proportions de la largeur / hauteur)
@@ -163,7 +166,7 @@ async def main():
             chemin.write_bytes(base64.b64decode(url.split(",", 1)[1]))
             print(chemin.relative_to(ICI.parent.parent), w, "×", h)
         # illustrations des onglets Courses (le caddie, détouré) et Stock (le frigo, en médaillon), en WebP embarqué
-        caddie = await pg.evaluate("scene(document.getElementById('k'), true, 360)")
+        caddie = await pg.evaluate("scene(document.getElementById('k'), 'png', 360)")
         frigo = await pg.evaluate("medaillon(document.getElementById('s'), 300, 512, 470, 430)")
         for nom, url in (("chef-courses", caddie), ("chef-stock", frigo)):
             (ICI / f"{nom}.txt").write_text(url)

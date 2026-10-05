@@ -429,7 +429,7 @@ docs/prototype-beta-resume.md      résumé du prototype de l'app grand public
 miamm/app.html                    Miamm : source de l'app (une page, sans framework)
 miamm/moteur.js                   moteur de Miamm : N personnes, objectifs calculés, Express (priorité au stock)
 miamm/construire.py               app.html + moteur.js + badge + blocs de donnees/ → miamm/miamm.html (non versionné)
-miamm/logo/                       mascotte-source.jpg, chef-courses-source.jpg, chef-stock-source.jpg, fabriquer.py (détourage blanc ou faux damier, badge, médaillon, icônes), logo-rond.png, logo-complet.png, badge-192, chef-courses, chef-stock (.txt embarqués dans la page)
+miamm/logo/                       mascotte-source.jpg, chef-courses-source.png (vrai PNG transparent), chef-stock-source.jpg, fabriquer.py (détourage blanc ou faux damier, badge, médaillon, icônes), logo-rond.png, logo-complet.png, badge-192, chef-courses, chef-stock (.txt embarqués dans la page)
 cloudflare/wrangler.toml           Worker « miamm » : page (public/), D1 « miamm », cron des rappels
 cloudflare/src/worker.js           API : comptes, invitations, sessions, foyers (révision), chef, tickets, rappels
 cloudflare/src/cles.js             vérification des clés d'accès (WebAuthn : CBOR, COSE, ES256 / RS256)
