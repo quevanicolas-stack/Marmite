@@ -149,8 +149,10 @@ async function appelJson(env, contenu, schema, effort) {
     if (e instanceof Anthropic.RateLimitError) return erreur("rate_limited", "Trop de demandes, réessaie dans une minute.", 429);
     if (e instanceof Anthropic.AuthenticationError) return erreur("indisponible", "Clé du chef refusée.", 503);
     if (e instanceof Anthropic.PermissionDeniedError) return erreur("indisponible", "Clé du chef sans accès à ce modèle.", 503);
-    if (e instanceof Anthropic.APIError) return erreur("chef", `Le chef n'a pas pu répondre (${e.status || "réseau"} : ${String(e.message || "").slice(0, 160)}).`, 502);
-    return erreur("chef", "Le chef n'a pas pu répondre (" + String(e && e.message || e).slice(0, 160) + ").", 502);
+    // le détail brut (qui nomme le fournisseur) reste dans les journaux ; l'app ne montre qu'un motif en français
+    if (e instanceof Anthropic.BadRequestError && /credit balance/i.test(e.message || "")) return erreur("credit", "Le chef est en pause : le crédit du service est épuisé (à recharger par l'administrateur).", 503);
+    if (e instanceof Anthropic.APIError) return erreur("chef", `Le chef n'a pas pu répondre (erreur ${e.status || "réseau"}), réessaie plus tard.`, 502);
+    return erreur("chef", "Le chef n'a pas pu répondre, réessaie plus tard.", 502);
   }
 }
 const SCHEMA_PLATS = {
