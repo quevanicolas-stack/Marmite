@@ -71,7 +71,7 @@ Il contient 8 onglets et environ 3 860 formules. Il est généré par `python/bu
 
 - **Publiée** : https://claude.ai/artifact/8Ez5pJQH4tzZ49GJLgvpB5. C'est une page hébergée par claude.ai, qui appartient au compte de Nico.
 - **Capacités d'exécution déclarées** : `db`, pour les données privées synchronisées sur tous ses appareils ; `sample`, pour les appels à Claude de l'assistant ; `user`, pour l'identifiant.
-- **Mise à jour** : republier `app/marmite.html` avec l'outil Artifact (action publish, avec l'`url` ci-dessus), sans redéclarer les capacités. Les sessions Claude Code web disposent de cet outil ; lire d'abord la version en ligne (action read) pour vérifier qu'elle n'a pas bougé. Republiée le 02/10/2026 depuis Claude Code (version 10 : ajouter un produit, valider le panier, achat spontané, ticket du 1er octobre reporté ; version 9 : Aujourd'hui réorganisé, mode magasin, Ajuster sans débordement ; version 8 : glisser-déposer sur ordinateur, plein écran ; version 7 : cases et prix corrigés, repas remplaçable depuis la bibliothèque ; version 6 : le chef prépare le mois, archives ; version 5 : courses hebdomadaires, budget réel, quantité achetée, stock réel, budget du foyer, planning selon le stock ; version 4 : prix, dépassement, poubelle, jambon au gramme) ; elle correspond à `app/marmite.html`. Titre de la page : « Marmite ». Partage : « toute personne ayant le lien » (réglé dans le menu Partager de la page) ; chaque compte voit ses propres données (`db` par utilisateur).
+- **Mise à jour** : republier `app/marmite.html` avec l'outil Artifact (action publish, avec l'`url` ci-dessus), sans redéclarer les capacités. Les sessions Claude Code web disposent de cet outil ; lire d'abord la version en ligne (action read) pour vérifier qu'elle n'a pas bougé. Republiée le 05/10/2026 depuis Claude Code (version 11 : bibliothèque de 100 plats avec variantes, produits exclus ; version 10 : ajouter un produit, valider le panier, achat spontané, ticket du 1er octobre reporté ; version 9 : Aujourd'hui réorganisé, mode magasin, Ajuster sans débordement ; version 8 : glisser-déposer sur ordinateur, plein écran ; version 7 : cases et prix corrigés, repas remplaçable depuis la bibliothèque ; version 6 : le chef prépare le mois, archives ; version 5 : courses hebdomadaires, budget réel, quantité achetée, stock réel, budget du foyer, planning selon le stock ; version 4 : prix, dépassement, poubelle, jambon au gramme) ; elle correspond à `app/marmite.html`. Titre de la page : « Marmite ». Partage : « toute personne ayant le lien » (réglé dans le menu Partager de la page) ; chaque compte voit ses propres données (`db` par utilisateur).
 - **En local** : ouvrir `app/marmite.html` suffit. Les données passent alors en localStorage et l'assistant est indisponible, car `window.claude` est absent. Tout le reste fonctionne.
 
 ### Construire
@@ -145,7 +145,8 @@ L'app reprend exactement la palette du site Fluent & Forward d'Aurélie :
   - **Budget du foyer** en tête (somme des budgets des profils) : barre payé (vert) + reste à acheter (or) face au budget, et pour chacun la part de la personne active ; consommation prévue du foyer ;
   - puis le panneau de dépassement s'il y a lieu, et la **part de la personne active** : prévu face à son budget, déjà consommé, reste à manger, part payée, économie face à la liste initiale ;
   - courbe cumulée sur 21 jours, tableau par course, prix payés face aux prix estimés.
-- **Profil** : poids avec courbe et pesées, budget et référence, objectifs kcal et protéines, liste « à éviter », état de la synchronisation, remise à zéro.
+- **Profil** : poids avec courbe et pesées, budget et référence, objectifs kcal et protéines, **produits exclus des menus** (pour le foyer, `foyer.exclus` : le chef ne propose plus de plat qui en contient, il garde les variantes qui le remplacent ; nombre de plats possibles affiché), liste « à éviter » (texte libre, pour « J'ai faim »), état de la synchronisation, remise à zéro.
+- **Bibliothèque dans l'app** : `recettesListe()` (plats et variantes dépliés, sans les produits exclus) nourrit « Changer » à la préparation du mois et la colonne Bibliothèque sur ordinateur ; `recetteParId()` retrouve n'importe quel plat, exclu ou non.
 
 ### L'assistant « J'ai faim » / « Changer »
 
@@ -191,7 +192,8 @@ Schéma version 2. Il est stocké dans `localStorage["marmite-nicolas"]` (le nom
     produits: { "Crème fraîche": { rayon, achat, cond, vrac, prix, nut, animal } },        // produits créés dans l'app
     ajouts:   { 2: [{ id, a, buy, spontane, date, ticket }] },                              // lignes ajoutées à une course, achats spontanés
     validees: { 1: "2026-10-02" },                                                          // paniers validés
-    imports:  { "leclerc-2026-10-01": { date, course, avant } }                             // tickets reportés (ou { annule:true })
+    imports:  { "leclerc-2026-10-01": { date, course, avant } },                            // tickets reportés (ou { annule:true })
+    exclus:   ["Poulet"]                                                                    // produits que le chef ne propose jamais
   },
   mois: { id, titre, debut, jours, invites, plan, courses, share, stockDepart, budget, graine, date },   // mois préparé par le chef (absent : octobre)
   archives: { "2026-10": { titre, date, foyer: { achats, payes, … }, personnes: { nicolas: { coches, remplacements } }, mois } },
@@ -214,7 +216,7 @@ La fonction `charger()` convertit l'ancien format de la version 1, où tout éta
 Depuis le 30/09/2026, les données sont découpées en blocs, source de vérité pour l'app :
 
 - `catalogue.json` → `produits[aliment]` : `rayon`, `achat`, `cond`, `vrac`, `rend`, `prix`, `nut` (`[base, unité, kcal, protéines]` ou `null` pour les produits hors repas), `role` (`proteine`, `feculent`, `legume`, `matiere_grasse`, `autre`), `conservation` (`jours` après achat, `lieu`, `frais` si 10 jours ou moins, `estime:true` tant que Nico n'a pas corrigé), `note`. L'ordre suit la table nutritionnelle : l'app s'en sert pour l'affichage et la recherche d'aliments.
-- `recettes.json` → `recettes[]` : `id`, `nom`, `repas` (`pdj`, `dej`, `din`, `des`), `tags` (`poisson`, `plaisir`, `restes`), `source`, `portions` de référence par personne, `suit` et `delaiMaxJours` pour les plats de restes. Les 45 plats d'octobre forment la bibliothèque de départ, plus les 6 de Nico du 30/09 ; les petits-déjeuners ont un `nomParPersonne`.
+- `recettes.json` → `recettes[]` : `id`, `nom`, `repas` (`pdj`, `dej`, `din`, `des`), `tags` (`poisson`, `plaisir`, `restes`), `source`, `portions` de référence par personne, `suit` et `delaiMaxJours` pour les plats de restes, `variantes` (`[{ de, vers: [{ a, nom, f? }] }]` : ingrédient interchangeable, `a: null` = sans, `f` = facteur de quantité). Les 45 plats d'octobre, les 6 de Nico du 30/09 et **100 plats écrits le 05/10** (`source: "claude-2026-10-05"`, générés par `outils/bibliotheque.py`, 147 variantes : 298 plats une fois dépliés) ; les petits-déjeuners ont un `nomParPersonne`. Carte lisible : `docs/bibliotheque.md`.
 
 Les blocs sont désormais enrichis à la main : `python/decouper.py` refuse de les écraser sans `--force`.
 - `mois/<aaaa-mm>.json` : `id`, `titre`, `debut`, `fin`, `jours`, `note`, `stockDepart`, `share`, `plan` (chaque repas porte l'`id` de sa `recette`), `courses`. Octobre est `2026-10.json`.
@@ -323,6 +325,7 @@ Nico veut enchaîner sans tout régénérer en Python, et être prévenu avant l
 - **Période** : un mois calendaire par défaut, ou `debut` + `jours` (par exemple du 22 au 31 octobre). Courses aux jours du mois des réglages, ou aux dates `joursCourses`. Quotas des réglages pour un mois entier, au prorata sinon. L'« âge » d'un jour = jours écoulés depuis la dernière course. Avant la première course, le moteur privilégie les plats faisables avec le stock de départ.
 - **Invités** : `invites` convives en plus ; la portion d'un invité est la moyenne de Nicolas et d'Aurélie. Ils entrent dans les courses (`needI`) et dans le coût, pas dans `share`.
 - **Plats retenus** : déjeuners et dîners avec au moins un produit `animal` du catalogue.
+- **Variantes et produits exclus** : `Moteur.deplierVariantes(recettes, catalogue, exclus)` déplie chaque variante en plat (`id` = `<plat>~<produit>`, même `famille` que le plat d'origine, donc jamais à moins de 5 jours de lui ; étiquette poisson recalculée d'après les ingrédients). `exclureProduits` (entrée de `composerMois`, `foyer.exclus` dans l'app) retire tout plat qui contient un produit exclu, sauf les petits-déjeuners ; les variantes qui le remplacent restent. Un repas plaisir au poisson (fish and chips, pizza au thon) compte dans le quota poisson.
 - **Composition** : les plaisirs d'abord (déjeuners du week-end, répartis sur le mois, glace en dessert), puis les poissons (répartis, en alternant déjeuner et dîner), puis le reste jour par jour. Chaque candidat reçoit un score : famille de plat déjà placée à moins de `ecartMinJours` exclue (les variantes d'un même plat, « Bœuf sauté asiatique, … », forment une famille) ; pénalités pour les produits frais au-delà de leur conservation, la même protéine ou le même féculent deux fois dans la journée, les répétitions, le coût ; bonus pour le stock de départ. Un tirage à graine départage : même graine, même mois. Les plats `restes` suivent leur plat d'origine (`suit`, `delaiMaxJours`). Desserts selon la répartition du mois de référence ; petits-déjeuners fixes.
 - **Portions** : par personne et par jour, protéines des plats principaux calées sur l'objectif (facteur 0,85 à 1,4), puis féculents calés sur le milieu de la fourchette de kcal (0,5 à 1,6) ; arrondis à 5 g ou à l'unité. `objectifs(profil, poids)` retire environ 14 kcal par kg perdu.
 - **Courses** : chaque course achète le besoin de sa période moins le stock, arrondi au conditionnement (vrac : `pasAchat` du produit, 50 g par défaut, 1 g pour le jambon ; rendement compris). Tous les restes passent à la période suivante ; le frais plus vieux que sa conservation estimée est seulement signalé (`fraisAVerifier`), pour l'inventaire.
@@ -335,13 +338,14 @@ Nico veut enchaîner sans tout régénérer en Python, et être prévenu avant l
 - **Moteur branché dans l'app** : il devra prendre `foyer.prix` en priorité (`Moteur.avecPrix`) et lancer `reajuster` après chaque course validée, en proposant la nouvelle suite du mois plutôt qu'en l'imposant.
 
 - **Conditionnements à confirmer** : avocat compté à 350 g de chair, salade entière (300 g), champignons en barquette de 250 g : leurs restes s'accumulent d'une semaine à l'autre.
-- **Bibliothèque encore dominée par le poulet** : 40 plats principaux avec viande ou poisson (restes compris), 5 plats plaisir (burger, pizza, barbecue, steak frites, saucisses-frites) pour 6 repas plaisir par mois.
+- **Bibliothèque** : 138 plats principaux avec viande ou poisson (restes à part), 285 avec les variantes ; créole, française, italienne, asiatique, tex-mex, méditerranéenne, salades. Prix des 30 produits ajoutés le 05/10 estimés.
 - **Prix des nouveaux produits** (saucisses, porc haché, chorizo, haricots) estimés : à corriger au premier achat.
 - **Tomates, salade et champignons** dépassent leur conservation estimée en fin de semaine ; le petit-déjeuner d'Aurélie (tomate) et celui de Nicolas (banane) aussi.
 
 - **Du 1er au 2 novembre** : avant la première course du 3, ces deux jours vivent sur le stock restant, qui dépend de la période en attente du 22 au 31 octobre.
 - **Conservation** : les durées du catalogue sont des estimations (`estime:true`) à faire corriger par Nico ; elles décident de ce qui est frais et de la course où chaque produit est acheté.
-- **Repas plaisir** : 6 par mois, soit le double du rythme d'octobre (3 en 21 jours). La bibliothèque n'en compte que 3 (burger, pizza, barbecue) : il faudra en ajouter, sinon le même plat revient trop souvent.
+- **Repas plaisir** : 6 par mois. Depuis le 05/10, 20 plats plaisir (49 avec les variantes) : la répétition n'est plus un problème.
+- **Fromage** : Nicolas l'évite sauf pizza, lasagnes et burger ; plusieurs gratins et croques en contiennent. Chaque plat au fromage a une variante « sans fromage » ; si besoin, exclure les fromages dans Profil.
 
 ### Contrainte technique
 
@@ -368,6 +372,7 @@ Les données sont dans un seul document `db`. Avec plusieurs mois et une bibliot
 9. **Décisions du 30/09/2026, suite** : protéine animale à chaque déjeuner et dîner, aucune perte d'office (poubelle), jambon au gramme, préparation le 30, génération paramétrable (jours, invités, budget). Puis : porc réintégré, 6 plats ajoutés (saucisses-frites, steak frites, hachis parmentier bœuf-porc, cassoulet, riz mexicain poulet ou bœuf), ligne de courses cochable en entier, onglet « Prix » pour modifier les prix, prix modifiable directement sur la ligne de course, projection du cycle, réajustement du budget par le moteur après chaque course. Puis : face à un dépassement, choix proposé sur le moment (retirer, changer des aliments, accepter), appliqué dès octobre ; app republiée. Puis : courses hebdomadaires dès octobre, cocher = prix validé (budget réel), quantité achetée modifiable, « À la maison » en stock réel du jour, budget du foyer avec la part de chacun, « le chef » au lieu de Claude, menu du chef selon le stock dans Planning. Puis : préparation du mois par le chef (planning + courses de chaque semaine pour le budget du mois), validation avec archive du mois précédent ; « refaire selon le stock » réservé au cours de mois. Puis : correction du bug des cases et des prix (données du compte copiées au chargement), repas de la proposition remplaçable depuis la bibliothèque. Puis : glisser-déposer depuis la bibliothèque sur ordinateur, bouton Plein écran pour masquer la barre de claude.ai.
 10. **Décisions du 01/10/2026** : PR fusionnée dans `main`. Aujourd'hui : repas du moment en haut, « J'ai faim » juste dessous, bilan réduit en bande collante, repas faits repliés, plus de prix, chiffres plus petits. Courses : mode magasin épuré, détail au toucher. Débordement d'Ajuster corrigé (liste déroulante et noms longs). Hébergement Cloudflare à l'étude (connecteur reconnecté ; pas d'outil de déploiement dans le connecteur).
 11. **Décisions du 02/10/2026** (après les courses du 1er) : ajouter un produit à une liste (catalogue ou nouveau), valider le panier (non coché = non acheté) puis refaire le planning selon les achats, ajouter un achat spontané au stock. Ticket Leclerc du 1er reporté dans la Course 1, alimentaire seulement (ni grignotage, ni alcool, ni sodas) : pilons comptés en poulet (650 g de viande), boulettes en bœuf, bacon nouveau produit (à la coupe, poids estimé 110 g), jambon 246 g, cheddar 126 g, café 1 kg, eau 9 L.
+12. **Décisions du 05/10/2026** : pas d'aspiration de Marmiton (conditions d'utilisation, droit des bases de données) ; 100 plats écrits pour Marmite, pas plus de créole que le reste, avec des **variantes** (une viande pour une autre, un fromage pour un autre ou sans) qui multiplient les plats et servent aux **produits exclus**. 30 produits ajoutés au catalogue (dinde, échine de porc, steak haché, merguez, saucisses fumées, boucané, pilons, thon, crevettes, morue, emmental, mozzarella, crème, lait de coco, tomates concassées, pois chiches, lentilles sèches, semoule, boulgour, nouilles, pâtes à pizza et brisée, pain de mie, brocoli, épinards, petits pois, chou, chouchou, citrouille, poireaux, concombre).
 
 ## 8. Arborescence
 
@@ -378,7 +383,7 @@ app/marmite_template.html          source de l'app (modifier ici)
 app/marmite.html                   app assemblée (même comportement que la version publiée ; DONNEES contient en plus les blocs)
 app/construire.py                  template + données → marmite.html
 donnees/catalogue.json             produits : prix, nutrition, rôle, conservation
-donnees/recettes.json              bibliothèque de recettes (45 plats d'octobre + 6 de Nico)
+donnees/recettes.json              bibliothèque de recettes (45 plats d'octobre + 6 de Nico + 100 du 05/10, avec variantes)
 donnees/mois/2026-10.json          le mois d'octobre : planning, courses, stock de départ
 donnees/reglages.json              jours des courses, quotas, inventaire, place de Claude
 donnees/appdata.json               archive d'octobre, source du découpage (ne plus modifier)
@@ -397,6 +402,9 @@ tests/test_moteur.js               règles du mois (quotas, écart, protéine an
 tests/test_donnees.py              blocs de données cohérents, app nourrie à l'identique
 tests/test_mois.py                 préparation du mois : proposition, repas changé depuis la bibliothèque, budget, courses par semaine, validation, archive, rechargement, réouverture
 tests/test_glisser.py              ordinateur : bibliothèque à glisser sur un repas, dessert sur dessert, bouton Plein écran
+outils/bibliotheque.py             100 plats et leurs variantes, produits nouveaux → recettes.json, catalogue.json, docs/bibliotheque.md
+docs/bibliotheque.md               carte des plats par cuisine, avec variantes (pour piocher des idées)
+tests/test_bibliotheque.py         variantes dans « Changer », produits exclus dans Profil puis absents du mois
 tests/test_achats.py               ticket reporté puis annulé, valider le panier, refaire le planning selon les achats, ajouter un produit (catalogue, nouveau), achat spontané
 donnees/tickets/                   tickets de caisse à reporter (2026-10-01-leclerc.json : 36 lignes alimentaires, 124,31 €)
 tests/test_ecrans.py               Aujourd'hui (bilan collant, repas du moment, repas faits repliés, aucun prix), mode magasin, Ajuster sans débordement à 360 px

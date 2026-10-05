@@ -68,15 +68,15 @@ async def main():
         await pg.click("button[data-ajout-ok]")
         verif(await pg.evaluate("itemsCourse(COURSES()[1]).some(x => x.a === 'Chorizo' && x.ajout && x.buy === 2)"), "Chorizo non ajouté à la Course 2")
         await pg.click("button[data-ajout-ouvrir='liste']")
-        await pg.fill("#ajout-q", "Crème fraîche"); await pg.dispatch_event("#ajout-q", "input")
+        await pg.fill("#ajout-q", "Fromage blanc"); await pg.dispatch_event("#ajout-q", "input")
         await pg.click("button[data-ajout-nouveau]")
-        verif(await pg.locator("#np-nom").input_value() == "Crème fraîche", "le nom cherché n'est pas repris")
+        verif(await pg.locator("#np-nom").input_value() == "Fromage blanc", "le nom cherché n'est pas repris")
         verif(await pg.evaluate("[...document.querySelectorAll('.feuille-ia input, .feuille-ia select')].every(e => e.getBoundingClientRect().right <= innerWidth)"), "le formulaire du nouveau produit sort de l'écran")
         await pg.select_option("#np-rayon", "Œufs et laitages")
         await pg.fill("#np-cond", "200"); await pg.fill("#np-prix", "1.65"); await pg.fill("#np-kcal", "290"); await pg.fill("#np-prot", "2.4")
         await pg.click("button[data-ajout-creer]")
         await pg.click("button[data-ajout-ok]")
-        r = await pg.evaluate("({ cat: DONNEES.cat['Crème fraîche'], nut: DONNEES.nut['Crème fraîche'], ligne: itemsCourse(COURSES()[1]).some(x => x.a === 'Crème fraîche'), garde: !!E.foyer.produits['Crème fraîche'] })")
+        r = await pg.evaluate("({ cat: DONNEES.cat['Fromage blanc'], nut: DONNEES.nut['Fromage blanc'], ligne: itemsCourse(COURSES()[1]).some(x => x.a === 'Fromage blanc'), garde: !!E.foyer.produits['Fromage blanc'] })")
         verif(r["cat"] and r["cat"]["cond"] == 200 and r["cat"]["prix"] == 1.65 and r["nut"] == [100, "g", 290, 2.4], f"nouveau produit mal créé : {r}")
         verif(r["ligne"] and r["garde"], "nouveau produit absent de la liste ou non enregistré")
         # un produit déjà prévu n'est pas doublé
@@ -112,7 +112,7 @@ async def main():
         await pg.click("button[data-ticket-annuler]")
         r = await pg.evaluate("""({ faits: itemsCourse(COURSES()[0]).filter(x => !x.spontane && E.foyer.achats[cleLigne(1, x)]).length,
           ajouts: itemsCourse(COURSES()[0]).filter(x => x.ajout && !x.spontane).length, imp: E.foyer.imports['leclerc-2026-10-01'],
-          oeufs: itemsCourse(COURSES()[0]).some(x => x.spontane && x.a === 'Œufs'), creme: itemsCourse(COURSES()[1]).some(x => x.a === 'Crème fraîche'),
+          oeufs: itemsCourse(COURSES()[0]).some(x => x.spontane && x.a === 'Œufs'), creme: itemsCourse(COURSES()[1]).some(x => x.a === 'Fromage blanc'),
           prix: E.foyer.prix['Jambon'] || null })""")
         verif(r["faits"] == 0 and r["ajouts"] == 0 and r["imp"].get("annule"), f"annulation du ticket incomplète : {r}")
         verif(r["oeufs"] and r["creme"], "annuler le ticket a effacé les achats faits depuis")

@@ -283,7 +283,7 @@ h3{ font-size:18px; font-weight:700; }
 .totaux .chiffre{ font-size:20px; display:block; }
 .totaux .discret{ font-size:12px; }
 .champ{ display:flex; flex-direction:column; gap:4px; font-size:13px; font-weight:700; color:var(--brume); }
-.champ input,.champ select{ border:1px solid var(--trait); background:var(--surface); border-radius:12px; padding:10px 12px; font-size:16px; color:var(--encre); font-weight:500; }
+.champ input,.champ select{ width:100%; min-width:0; border:1px solid var(--trait); background:var(--surface); border-radius:12px; padding:10px 12px; font-size:16px; color:var(--encre); font-weight:500; }
 .cat-titre{ font-family:var(--titre); font-weight:700; font-size:16px; margin:22px 0 6px; color:var(--titre-c); }
 .article{ display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:12px; align-items:center; padding:10px 4px; border-bottom:1px solid var(--trait); cursor:pointer; -webkit-tap-highlight-color:transparent; }
 .article .saisie{ cursor:default; }
@@ -357,9 +357,10 @@ table.tab .n{ text-align:right; }
 .surcout{ color:var(--alerte); font-weight:700; }
 
 /* ---------- Profil ---------- */
-.grille-2{ display:grid; gap:12px; margin-top:16px; }
+.grille-2{ display:grid; grid-template-columns:minmax(0,1fr); gap:12px; margin-top:16px; }
+.grille-2 > *{ min-width:0; }
 .grille-2 .carte{ margin-top:0; }
-@media (min-width:640px){ .grille-2{ grid-template-columns:1fr 1fr; } }
+@media (min-width:640px){ .grille-2{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); } }
 .puces{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
 .puce{ display:inline-flex; align-items:center; gap:6px; border:1px solid var(--trait); background:var(--surface); border-radius:999px; padding:6px 12px; font-size:14px; font-weight:700; }
 .puce[aria-pressed="true"]{ background:var(--primaire); border-color:var(--primaire); color:var(--sur-primaire); }
@@ -367,6 +368,7 @@ table.tab .n{ text-align:right; }
 .ligne-saisie{ display:flex; gap:8px; margin-top:10px; align-items:flex-end; min-width:0; }
 .ligne-saisie .champ{ min-width:0; }
 .ligne-saisie .champ{ flex:1; }
+.ligne-saisie .champ select, .ligne-saisie .champ input{ width:100%; min-width:0; }
 .etat-sync{ display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:700; }
 .etat-sync i{ width:9px; height:9px; border-radius:50%; background:var(--or); }
 .etat-sync.ok i{ background:var(--ok); }
@@ -377,7 +379,7 @@ table.tab .n{ text-align:right; }
 @media (min-width:700px){ .voile{ align-items:center; } .feuille-ia{ border-radius:26px; } }
 .feuille-ia .tete{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:12px; }
 .form-ia{ display:grid; gap:16px; }
-.form-ia .rangee{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.form-ia .rangee{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px; }
 .compteur{ display:flex; align-items:center; gap:10px; }
 .compteur button{ width:40px; height:40px; border-radius:50%; border:1px solid var(--trait); background:var(--surface); font-size:20px; font-weight:700; padding:0; }
 .compteur output{ font-family:var(--titre); font-weight:800; font-size:24px; min-width:28px; text-align:center; }
@@ -465,7 +467,7 @@ const UNITES_SPECIALES = { "Café": "g", "Eau (bouteilles 5 L)": "L" };
 const DEFAUT = {
   version: 2,
   foyer: { achats: {}, payes: {}, prix: {}, magasins: {}, pertes: [], modifs: [], depassementAccepte: 0, quantites: {}, generation: null,
-    produits: {}, ajouts: {}, validees: {}, imports: {} },   // produits créés dans l'app ; lignes ajoutées à une course (ou achats spontanés) ; paniers validés ; tickets reportés   // quantites : quantité achetée modifiée, par ligne   // pertes : produits jetés ; modifs : retraits et échanges décidés face à un dépassement
+    produits: {}, ajouts: {}, validees: {}, imports: {}, exclus: [] },   // exclus : produits que le chef ne propose jamais   // produits créés dans l'app ; lignes ajoutées à une course (ou achats spontanés) ; paniers validés ; tickets reportés   // quantites : quantité achetée modifiée, par ligne   // pertes : produits jetés ; modifs : retraits et échanges décidés face à un dépassement
   personnes: {
     nicolas: { coches: {}, remplacements: {}, pesees: [], profil: { poids: 85, cible: 80, taille: 180, age: 38, budget: 180, reference: 208.94,
       kcalMin: 1850, kcalMax: 1950, prot: 110, eviter: ["fromage (sauf pizza, lasagnes, burger)", "poisson gras", "trop de laitages"] } },
@@ -969,7 +971,7 @@ function genererMenu(j0, graine, invites, budget) {
   const profils = {}, poidsActuels = {};
   for (const p of Object.keys(PERSONNES)) { profils[p] = { ...P(p).profil, budgetJours: NB_JOURS }; poidsActuels[p] = dernierPoids(p); }
   const entrees = {
-    catalogue: Moteur.avecPrix(DONNEES.catalogue, E.foyer.prix), recettes: DONNEES.recettes, reglages: DONNEES.reglages,
+    catalogue: Moteur.avecPrix(DONNEES.catalogue, E.foyer.prix), recettes: DONNEES.recettes, reglages: DONNEES.reglages, exclureProduits: E.foyer.exclus || [],
     debut: iso(dateDuJour(j0)), jours: NB_JOURS - j0 + 1, joursCourses, stockDepart: stock, historique,
     profils, poidsActuels, invites, budget: budget || undefined, graine, moisReference: { plan: PLAN },
     poidsStock: 3, penaliteManque: 1,
@@ -1035,7 +1037,7 @@ function genererMoisSuivant() {
   const profils = {}, poidsActuels = {};
   for (const p of Object.keys(PERSONNES)) { profils[p] = { ...P(p).profil, budgetJours: 21 }; poidsActuels[p] = dernierPoids(p); }
   const entrees = {
-    catalogue: Moteur.avecPrix(DONNEES.catalogue, E.foyer.prix), recettes: DONNEES.recettes, reglages: DONNEES.reglages,
+    catalogue: Moteur.avecPrix(DONNEES.catalogue, E.foyer.prix), recettes: DONNEES.recettes, reglages: DONNEES.reglages, exclureProduits: E.foyer.exclus || [],
     debut: gen.debut, jours: gen.jours, invites: gen.invites, budget: gen.budget, graine: gen.graine,
     stockDepart: stock, profils, poidsActuels, moisReference: { plan: PLAN },
   };
@@ -1071,7 +1073,7 @@ let biblio = { q: "", filtre: "tous" };
 function blocMenu(plan, j0) { return `<div class="gen-grille"><div class="gen-col">${listeMenu(plan, j0)}</div>${panneauBiblio()}</div>`; }
 function recettesBiblio() {
   const q = biblio.q.trim().toLowerCase(), f = biblio.filtre;
-  return DONNEES.recettes.filter(r => {
+  return recettesListe().filter(r => {
     const principal = r.repas.includes("dej") || r.repas.includes("din"), dessert = r.repas.includes("des");
     if (!principal && !dessert) return false;
     if (principal && !r.portions.nicolas.some(([a]) => DONNEES.catalogue[a] && DONNEES.catalogue[a].animal)) return false;
@@ -1100,7 +1102,7 @@ function panneauBiblio() {
 }
 // Dépôt d'un plat de la bibliothèque sur un repas : un dessert va sur un dessert, un plat sur midi ou soir
 function deposer(cle, id) {
-  const k = cle.split("-")[1], r = DONNEES.recettes.find(x => x.id === id); if (!r || !gen || !gen.res) return;
+  const k = cle.split("-")[1], r = recetteParId(id); if (!r || !gen || !gen.res) return;
   const principal = r.repas.includes("dej") || r.repas.includes("din");
   if (k === "des" ? !r.repas.includes("des") : !principal) return toast(k === "des" ? "Glisse un dessert sur un dessert" : "Glisse un plat sur le midi ou le soir");
   choix = { cle }; remplacerRepas(id);
@@ -1118,11 +1120,14 @@ const LABEL_REPAS = { pdj: "Petit-déj.", dej: "Midi", din: "Soir", des: "Desser
 
 /* ---------- Changer un repas de la proposition : bibliothèque filtrée ---------- */
 let choix = null;   // { cle: "j-k", filtre, q }
-const familleDe = r => (r.nom || r.id).split(/[,(+]/)[0].trim().toLowerCase();
+const familleDe = r => Moteur.famille(r);
+// Bibliothèque : plats et variantes dépliées (un ingrédient interchangeable donne un plat de plus), sans les produits exclus
+function recettesListe() { return Moteur.deplierVariantes(DONNEES.recettes, DONNEES.catalogue, E.foyer.exclus || []); }
+function recetteParId(id) { return Moteur.deplierVariantes(DONNEES.recettes, DONNEES.catalogue).find(x => x.id === id); }
 function candidatsChoix() {
   const [j, k] = choix.cle.split("-"), d = +j, plan = gen.res.mois.plan;
   const estPrincipal = k === "dej" || k === "din";
-  let l = DONNEES.recettes.filter(r => r.repas.includes(k) || (estPrincipal && (r.repas.includes("dej") || r.repas.includes("din"))));
+  let l = recettesListe().filter(r => r.repas.includes(k) || (estPrincipal && (r.repas.includes("dej") || r.repas.includes("din"))));
   if (estPrincipal) l = l.filter(r => r.portions.nicolas.some(([a]) => DONNEES.catalogue[a] && DONNEES.catalogue[a].animal));
   const f = choix.filtre, q = choix.q.trim().toLowerCase();
   if (f === "poisson") l = l.filter(r => r.tags.includes("poisson"));
@@ -1133,7 +1138,7 @@ function candidatsChoix() {
   const ecart = DONNEES.reglages.ecartMinJours || 5, proches = {};
   for (const jj of plan) for (const m of jj.meals) {
     if (`${jj.d}-${m.k}` === choix.cle || !(m.k === "dej" || m.k === "din") || Math.abs(jj.d - d) >= ecart) continue;
-    const r = DONNEES.recettes.find(x => x.id === m.recette); if (r) (proches[familleDe(r)] = proches[familleDe(r)] || []).push(jj.d);
+    const r = recetteParId(m.recette); if (r) (proches[familleDe(r)] = proches[familleDe(r)] || []).push(jj.d);
   }
   return l.map(r => ({ r, proche: estPrincipal ? proches[familleDe(r)] : null,
     cout: ["nicolas", "aurelie"].reduce((s, p) => s + r.portions[p].reduce((t, [a, x]) => t + (prixUnitaire(a) || 0) * x, 0), 0) }))
@@ -1170,7 +1175,7 @@ function remplacerRepas(id) {
   res.entrees = old.entrees;
   if (old.stock) { Object.assign(res, { stock: old.stock, gardees: old.gardees }); completerStock(res); }
   gen.res = res; gen.confirmer = false;
-  const r = DONNEES.recettes.find(x => x.id === id);
+  const r = recetteParId(id);
   choix = null; rendreChoix(); rendre(); toast("Repas changé : " + (r.nom || id));
 }
 function carteMois() {
@@ -1778,6 +1783,12 @@ function vueProfil() {
         <div class="rangee"><label class="champ">Poids de départ (kg)<input type="number" step="0.1" data-profil="poids" value="${pr.poids}"></label>
           <label class="champ">Objectif (kg)<input type="number" step="0.1" data-profil="cible" value="${pr.cible}"></label></div>
       </div></section>
+    <section class="carte"><h3>Produits exclus des menus</h3>
+      <p class="discret petit" style="margin:4px 0 0">Pour tout le foyer. Le chef ne propose plus aucun plat qui en contient ; il garde les variantes qui le remplacent (dinde au lieu de poulet, emmental au lieu de mozzarella). Les petits-déjeuners ne changent pas.</p>
+      <div class="puces">${(E.foyer.exclus || []).map(a => `<span class="puce">${echap(a)}<button data-exclu-retirer="${echap(a)}" aria-label="Ne plus exclure ${echap(a)}">×</button></span>`).join("") || `<span class="discret petit">Aucun.</span>`}</div>
+      <div class="ligne-saisie"><label class="champ">Exclure<select id="ajout-exclu">${Object.keys(DONNEES.nut).filter(a => !(E.foyer.exclus || []).includes(a)).sort((x, y) => x.localeCompare(y, "fr")).map(a => `<option>${echap(a)}</option>`).join("")}</select></label>
+        <button class="bouton leger" data-action="exclure">Exclure</button></div>
+      <p class="discret petit" style="margin:8px 0 0">${recettesListe().filter(r => r.repas.includes("dej") || r.repas.includes("din")).length} plats possibles dans la bibliothèque.</p></section>
     <section class="carte"><h3>Ce que le chef doit éviter</h3>
       <div class="puces">${eviter}</div>
       <div class="ligne-saisie"><label class="champ">Ajouter<input type="text" id="ajout-eviter" placeholder="Ex. coriandre"></label><button class="bouton leger" data-action="eviter">Ajouter</button></div></section>
@@ -2045,6 +2056,7 @@ function action(b) {
   if (d.retour) { delete P().remplacements["d" + jourSel + "-" + d.retour]; sauver(); rendre(); return toast("Repas du plan rétabli"); }
   if (d.envie) { lireForm(); ia.envie = d.envie; return rendreIA(); }
   if (d.choisir) return choisir(+d.choisir);
+  if (d.excluRetirer) { E.foyer.exclus = (E.foyer.exclus || []).filter(a => a !== d.excluRetirer); sauver(); return rendre(); }
   if (d.retirer) { P().profil.eviter.splice(+d.retirer, 1); sauver(); return rendre(); }
   switch (d.action) {
     case "theme": {
@@ -2067,6 +2079,7 @@ function action(b) {
       const auj = new Date().toISOString().slice(0, 10);
       P().pesees = P().pesees.filter(x => x.date !== auj).concat([{ date: auj, kg: v }]); sauver(); rendre(); return toast("Pesée enregistrée");
     }
+    case "exclure": { const v = (document.getElementById("ajout-exclu") || {}).value; if (!v) return; E.foyer.exclus = (E.foyer.exclus || []).concat(v); sauver(); toast(v + " exclu des menus"); return rendre(); }
     case "eviter": { const v = document.getElementById("ajout-eviter").value.trim(); if (!v) return; P().profil.eviter.push(v); sauver(); return rendre(); }
     case "reset":
       if (confirm("Effacer les coches, remplacements et pesées " + de() + " ?")) { E.personnes[actif] = structuredClone(DEFAUT.personnes[actif]); sauver(); rendre(); toast("Suivi remis à zéro"); }
