@@ -11,7 +11,7 @@ SOURCE = base64.b64encode((ICI / "mascotte-source.jpg").read_bytes()).decode()
 
 PAGE = """<!doctype html><html><head>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&display=swap" rel="stylesheet">
-</head><body style="margin:0"><img id="m" src="data:image/jpeg;base64,%s"><img id="s" src="data:image/jpeg;base64,%s"><img id="k" src="data:image/png;base64,%s"><canvas id="c"></canvas>
+</head><body style="margin:0"><img id="m" src="data:image/jpeg;base64,%s"><img id="s" src="data:image/webp;base64,%s"><img id="k" src="data:image/png;base64,%s"><canvas id="c"></canvas>
 <script>
 const AUB = "#3B1F4A", SAF = "#F5B700", PAP = "#E4572E", BAS = "#7DB46C", CRE = "#FFFBF2";
 // détourage : remplissage depuis les bords sur le blanc pur, bord adouci
@@ -142,7 +142,7 @@ function medaillon(img, taille, cx, cy, rayon) {
   return c.toDataURL("image/webp", 0.86);
 }
 async function pret() { await document.fonts.load('800 40px "Bricolage Grotesque"'); const m = document.getElementById("m"); await m.decode(); window.MASCOTTE = detourer(m); await document.getElementById('s').decode(); await document.getElementById('k').decode(); return document.fonts.check('800 40px "Bricolage Grotesque"'); }
-</script></body></html>""" % (SOURCE, base64.b64encode((ICI / "chef-stock-source.jpg").read_bytes()).decode(), base64.b64encode((ICI / "chef-courses-source.png").read_bytes()).decode())
+</script></body></html>""" % (SOURCE, base64.b64encode((ICI / "chef-stock-source.webp").read_bytes()).decode(), base64.b64encode((ICI / "chef-courses-source.png").read_bytes()).decode())
 
 SORTIES = [
     # nom, largeur, hauteur, options (proportions de la largeur / hauteur)
