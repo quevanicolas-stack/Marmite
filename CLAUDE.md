@@ -460,6 +460,7 @@ cd cloudflare && npm install && cd .. && python3 tests/test_miamm.py    # wrangl
 - **Session** : cookie `miamm_session` HttpOnly, SameSite=Lax, Secure (sauf localhost), 180 jours ; requêtes qui modifient : même origine et JSON.
 - **Document du foyer** : `docs` clé `foyer:<id>`, avec révision ; l'app fusionne à trois en cas de conflit (même logique que Marmite).
 - **Garde-fous de dépense** : 30 appels « chef » et 15 tickets par foyer et par jour.
+- **Temps de calcul** : le corps JSON n'est lu qu'une fois et le contenu du ticket n'est pas parcouru par une expression régulière (limite de CPU des Workers). Les erreurs du chef sont renvoyées avec leur code et journalisées (`[observability]` dans `wrangler.toml`, journaux dans le tableau de bord Cloudflare).
 
 ### Le front (`miamm/app.html`)
 
@@ -467,7 +468,7 @@ cd cloudflare && npm install && cd .. && python3 tests/test_miamm.py    # wrangl
 - **DA** : aubergine `#3B1F4A`, safran `#F5B700`, paprika `#E4572E`, basilic `#7DB46C`, crème `#FFFBF2` ; Bricolage Grotesque (titres) et Outfit (texte) ; clair et sombre (`localStorage["miamm-theme"]`). Icônes à tracé, pas d'emoji. L'app ne parle jamais de Claude : c'est « le chef ».
 - **Écrans** : accueil = un gros bouton « On mange quoi cette semaine ? » (appareil photo, « Scanner mon ticket » : menu express, connexion par la clé d'abord si besoin), puis « Se connecter », « Première fois ? J'ai une invitation » (masqué sur un appareil déjà connecté, `localStorage["miamm-deja"]`) et le code de secours en petit → choix (même gros bouton express, puis **Sur mesure**) ; l'express reste en tête de l'onglet Menu → proposition (bilan, courses, menu ; chaque plat se change depuis la bibliothèque ; « Une autre idée, chef ») → l'app : Aujourd'hui (portions par personne, « Je l'ai fait »), Menu, Courses (cases, prix payé, « Ajouter un ticket de caisse »), Stock (ce matin + ce qui manque pour 3 jours), Foyer (personnes, invitations, rappels, compte).
 - **Sur mesure** : personnes (sexe, âge, taille, poids, objectif, activité, petit-déjeuner sucré / salé / aucun, « pas de régime »), durée 7 à 30 jours, budget du mois (ramené à la durée), jour des courses (la première a lieu le jour du début), produits exclus.
-- **Express** : photo du ticket (réduite à 1 800 px, JPEG) → `/api/ticket` (schéma JSON : libellé, aliment du catalogue, nombre, poids, prix, alimentaire) → lignes à vérifier → jours, adultes, enfants, « huile, épices, sauces à la maison », desserts → menu à partir du stock (`priorite:"stock"`) et liste « À compléter ». Les prix du ticket deviennent les prix de référence (`doc.prix`, source `ticket`).
+- **Express** : photo du ticket (réduite à 1 800 px, JPEG) ou PDF envoyé par le magasin (6 Mo au plus, envoyé tel quel en bloc `document`) → `/api/ticket` (schéma JSON : libellé, aliment du catalogue, nombre, poids, prix, alimentaire) → lignes à vérifier → jours, adultes, enfants, « huile, épices, sauces à la maison », desserts → menu à partir du stock (`priorite:"stock"`) et liste « À compléter ». Les prix du ticket deviennent les prix de référence (`doc.prix`, source `ticket`).
 - **Document** : `{ version, personnes, reglages: { budget, jourCourses, jours, debut, exclus, desserts }, periode, bilan, mode, suivi: { coches, achats, payes, remplacements }, prix, ajouts, tickets, archives }`.
 
 ### Le moteur (`miamm/moteur.js`)

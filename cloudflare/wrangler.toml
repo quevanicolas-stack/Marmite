@@ -27,3 +27,7 @@ TICKETS_PAR_JOUR = "15"
 
 # Secrets (jamais dans ce fichier) : INVITATION_INITIALE (le premier code d'invitation, réutilisable),
 # ANTHROPIC_API_KEY (lecture des tickets et « J'ai faim » ; sans elle, tout le reste marche).
+
+# Journaux du Worker (erreurs du chef, lecture des tickets), visibles dans le tableau de bord Cloudflare.
+[observability]
+enabled = true

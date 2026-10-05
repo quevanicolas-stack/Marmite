@@ -436,7 +436,7 @@ async function lirePhoto(fichier) {
   const max = 1800, f = Math.min(1, max / Math.max(img.width, img.height));
   const c = document.createElement("canvas"); c.width = Math.round(img.width * f); c.height = Math.round(img.height * f);
   c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
-  return c.toDataURL("image/jpeg", 0.82);
+  return c.toDataURL("image/jpeg", 0.78);
 }
 function lignesDuTicket(t) {
   return (t.lignes || []).filter(l => l.alimentaire).map(l => {
@@ -450,11 +450,23 @@ function lignesDuTicket(t) {
     return { libelle: l.libelle, a, nombre, poids, prix: +l.prix || 0, q: Math.round(q) };
   });
 }
+// un PDF (ticket envoyé par le magasin) part tel quel ; une photo est réduite avant l'envoi
+const lireFichier = fichier => new Promise((ok, ko) => { const l = new FileReader(); l.onload = () => ok(l.result); l.onerror = ko; l.readAsDataURL(fichier); });
+const estPdf = fichier => fichier.type === "application/pdf" || /\.pdf$/i.test(fichier.name || "");
 async function envoyerTicket(fichier) {
   if (!S.serveur || !S.chef) { toast("La lecture des tickets n'est pas disponible ici"); return null; }
-  const image = await lirePhoto(fichier);
-  const r = await api("/api/ticket", { image, catalogue: Object.keys(CAT0) });
-  if (!r.ok) { toast(r.d.message || "Ticket illisible, réessaie avec une photo plus nette"); return null; }
+  let image;
+  if (estPdf(fichier)) {
+    if (fichier.size > 6e6) { toast("PDF trop lourd (6 Mo au plus)"); return null; }
+    image = (await lireFichier(fichier)).replace(/^data:[^;]*;/, "data:application/pdf;");
+  } else {
+    try { image = await lirePhoto(fichier); } catch (e) { toast("Cette image ne s'ouvre pas : prends une photo ou choisis un PDF"); return null; }
+  }
+  const r = await api("/api/ticket", { image, catalogue: Object.keys(CAT0) }).catch(() => ({ ok: false, status: 0, d: {} }));
+  if (!r.ok) {
+    toast(r.d.message || (r.status ? `Le serveur n'a pas pu lire le ticket (erreur ${r.status}), réessaie` : "Pas de connexion, réessaie"));
+    return null;
+  }
   return r.d;
 }
 
@@ -619,10 +631,10 @@ function ecranExpress() {
     <h1 style="margin-bottom:14px">Express</h1>
     ${x.lignes.length ? `<div class="carte"><div class="rangee" style="justify-content:space-between"><h3>${x.ticket ? echap(x.ticket.magasin || "Ticket") : "Ce que tu as"}</h3><span class="discret petit">${x.lignes.filter(l => l.a).length} produits${x.ticket && x.ticket.total ? " · " + euros(x.ticket.total) : ""}</span></div>
         ${lignes}
-        <div class="rangee" style="margin-top:10px"><button class="lien" data-action="ligne-ajouter">Ajouter un produit</button>${S.chef ? `<label class="lien" style="cursor:pointer">Autre ticket<input type="file" accept="image/*" capture="environment" data-photo="express" class="sr"></label>` : ""}</div></div>`
-      : `<label class="photo-zone" style="position:relative;margin-bottom:14px"><span class="ico">${ICONES.photo}</span><b style="font-family:var(--titre);font-size:22px">Photo du ticket</b>
-        <span class="discret">${S.chef ? "Les produits, les quantités et les prix sont lus sur le ticket." : "La lecture des tickets n'est pas disponible ici : ajoute les produits à la main."}</span>
-        ${S.chef ? `<input type="file" accept="image/*" capture="environment" data-photo="express">` : ""}</label>
+        <div class="rangee" style="margin-top:10px"><button class="lien" data-action="ligne-ajouter">Ajouter un produit</button>${S.chef ? `<label class="lien" style="cursor:pointer">Autre ticket<input type="file" accept="image/*,application/pdf" data-photo="express" class="sr"></label>` : ""}</div></div>`
+      : `<label class="photo-zone" style="position:relative;margin-bottom:14px"><span class="ico">${ICONES.photo}</span><b style="font-family:var(--titre);font-size:22px">Photo ou PDF du ticket</b>
+        <span class="discret">${S.chef ? "Prends-le en photo, ou choisis le PDF envoyé par le magasin : produits, quantités et prix sont lus dessus." : "La lecture des tickets n'est pas disponible ici : ajoute les produits à la main."}</span>
+        ${S.chef ? `<input type="file" accept="image/*,application/pdf" data-photo="express">` : ""}</label>
         <button class="lien" data-action="ligne-ajouter">Ajouter les produits à la main</button>`}
     ${compteur("jours", x.jours + (x.jours > 1 ? " jours" : " jour"), "Jours à couvrir")}
     <div class="grille-2">${compteur("adultes", x.adultes, "Adultes")}${compteur("enfants", x.enfants, "Enfants")}</div>
@@ -770,7 +782,7 @@ function vueCourses() {
     <div class="carte"><p class="discret petit" style="margin:0 0 4px">${echap(c.couvre || "")}</p>${lignes}</div>
     ${boutonTicket()}</div>`;
 }
-const boutonTicket = () => S.chef ? `<label class="bouton plein leger" style="cursor:pointer">Ajouter un ticket de caisse<input type="file" accept="image/*" capture="environment" data-photo="courses" class="sr"></label>` : "";
+const boutonTicket = () => S.chef ? `<label class="bouton plein leger" style="cursor:pointer">Ajouter un ticket de caisse<input type="file" accept="image/*,application/pdf" data-photo="courses" class="sr"></label>` : "";
 function vueStock() {
   const p = P(), j = jourDuPlan(), s = stockReel(j), besoin3 = {};
   for (let d = j; d < Math.min(p.jours, j + 3) + 1 && d <= p.jours; d++) for (const m of p.plan[d - 1].meals) for (const [qid, it] of Object.entries(repas(d, m.k).items)) for (const [a, q] of it) besoin3[a] = (besoin3[a] || 0) + q * (qid === "invites" ? (p.invites || 0) : 1);
