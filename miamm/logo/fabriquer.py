@@ -11,15 +11,18 @@ SOURCE = base64.b64encode((ICI / "mascotte-source.jpg").read_bytes()).decode()
 
 PAGE = """<!doctype html><html><head>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&display=swap" rel="stylesheet">
-</head><body style="margin:0"><img id="m" src="data:image/jpeg;base64,%s"><canvas id="c"></canvas>
+</head><body style="margin:0"><img id="m" src="data:image/jpeg;base64,%s"><img id="s" src="data:image/jpeg;base64,%s"><img id="k" src="data:image/jpeg;base64,%s"><canvas id="c"></canvas>
 <script>
 const AUB = "#3B1F4A", SAF = "#F5B700", PAP = "#E4572E", BAS = "#7DB46C", CRE = "#FFFBF2";
 // détourage : remplissage depuis les bords sur le blanc pur, bord adouci
-function detourer(img) {
+// damier : le faux fond « transparent » que dessinent certains générateurs (cases grises et blanches, sans couleur)
+function detourer(img, damier) {
   const c = document.createElement("canvas"), w = c.width = img.naturalWidth, h = c.height = img.naturalHeight, x = c.getContext("2d");
   x.drawImage(img, 0, 0);
   const d = x.getImageData(0, 0, w, h), p = d.data, vu = new Uint8Array(w * h), pile = [];
-  const blanc = i => p[i * 4] > 246 && p[i * 4 + 1] > 246 && p[i * 4 + 2] > 246;
+  const blanc = damier
+    ? i => { const r = p[i * 4], g = p[i * 4 + 1], b = p[i * 4 + 2], mx = Math.max(r, g, b), mn = Math.min(r, g, b); return mx - mn <= 8 && (mn >= 236 || (mn >= 188 && mx <= 214)); }
+    : i => p[i * 4] > 246 && p[i * 4 + 1] > 246 && p[i * 4 + 2] > 246;
   for (let i = 0; i < w; i++) { pile.push(i, (h - 1) * w + i); } for (let j = 0; j < h; j++) { pile.push(j * w, j * w + w - 1); }
   while (pile.length) {
     const i = pile.pop(); if (vu[i] || !blanc(i)) continue; vu[i] = 1;
@@ -71,8 +74,72 @@ function rendre(w, h, opts) {
   }
   return c.toDataURL("image/png");
 }
-async function pret() { await document.fonts.load('800 40px "Bricolage Grotesque"'); const m = document.getElementById("m"); await m.decode(); window.MASCOTTE = detourer(m); return document.fonts.check('800 40px "Bricolage Grotesque"'); }
-</script></body></html>""" % SOURCE
+// faux damier (cases grises vers 200 et blanches vers 254, sans couleur) : un pixel neutre de l'une de ces deux valeurs
+// est du fond quand son voisinage contient bien les deux sortes de cases (une texture de damier) ; la chemise et le
+// ticket, teintés, restent ; un fil de caddie posé sur une case grise disparaît avec elle (invisible en petit)
+function detourerDamier(img) {
+  const c = document.createElement("canvas"), w = c.width = img.naturalWidth, h = c.height = img.naturalHeight, x = c.getContext("2d");
+  x.drawImage(img, 0, 0);
+  const d = x.getImageData(0, 0, w, h), p = d.data, G = new Uint8Array(w * h), B = new Uint8Array(w * h), T = new Uint8Array(w * h);
+  for (let k = 0; k < w * h; k++) {
+    const r = p[k * 4], g = p[k * 4 + 1], b = p[k * 4 + 2], mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+    if (mx - mn > 10) continue;
+    if (mn >= 186 && mx <= 214) G[k] = 1; else if (mn >= 236) B[k] = 1; else if (mn > 214) T[k] = 1;
+  }
+  const table = M => { const S = new Uint32Array((w + 1) * (h + 1)); for (let j = 0; j < h; j++) { let l = 0; for (let i = 0; i < w; i++) { l += M[j * w + i]; S[(j + 1) * (w + 1) + i + 1] = S[j * (w + 1) + i + 1] + l; } } return S; };
+  const SG = table(G), SB = table(B);
+  const part = (S, i, j, R) => { const a0 = Math.max(0, i - R), b0 = Math.max(0, j - R), a1 = Math.min(w, i + R + 1), b1 = Math.min(h, j + R + 1);
+    return (S[b1 * (w + 1) + a1] - S[b0 * (w + 1) + a1] - S[b1 * (w + 1) + a0] + S[b0 * (w + 1) + a0]) / ((a1 - a0) * (b1 - b0)); };
+  for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) {
+    const k = j * w + i; if (!G[k] && !B[k] && !T[k]) continue;
+    const fg = part(SG, i, j, 9), fb = part(SB, i, j, 9);
+    if ((G[k] || B[k]) ? (fg > 0.18 && fb > 0.18) : (fg + fb > 0.6 && fg > 0.12 && fb > 0.12)) p[k * 4 + 3] = 0;
+  }
+  // restes du damier (points aux coins des cases, éclats) : on ne garde que les grands morceaux opaques
+  const lab = new Int32Array(w * h), tailles = [0], pile = [];
+  for (let k0 = 0; k0 < w * h; k0++) {
+    if (lab[k0] || p[k0 * 4 + 3] === 0) continue;
+    const id = tailles.length; let n = 0; pile.push(k0); lab[k0] = id;
+    while (pile.length) { const k = pile.pop(); n++; const a = k %% w, b2 = (k / w) | 0;
+      for (const q of [a > 0 ? k - 1 : -1, a < w - 1 ? k + 1 : -1, b2 > 0 ? k - w : -1, b2 < h - 1 ? k + w : -1]) if (q >= 0 && !lab[q] && p[q * 4 + 3] !== 0) { lab[q] = id; pile.push(q); } }
+    tailles.push(n);
+  }
+  for (let k = 0; k < w * h; k++) if (lab[k] && tailles[lab[k]] < 3500) p[k * 4 + 3] = 0;
+  // liseré clair au bord de la découpe (visible en thème sombre) : trois passes d'érosion sur les pixels neutres clairs
+  for (let passe = 0; passe < 3; passe++) {
+    const a0 = new Uint8Array(w * h); for (let k = 0; k < w * h; k++) a0[k] = p[k * 4 + 3] === 0 ? 1 : 0;
+    for (let j = 1; j < h - 1; j++) for (let i = 1; i < w - 1; i++) {
+      const k = j * w + i; if (a0[k]) continue;
+      if (!(a0[k - 1] || a0[k + 1] || a0[k - w] || a0[k + w])) continue;
+      const r = p[k * 4], g = p[k * 4 + 1], b = p[k * 4 + 2], mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+      if (mn > 170 && mx - mn < 18) p[k * 4 + 3] = 0;
+    }
+  }
+  x.putImageData(d, 0, 0);
+  return c;
+}
+// le chef aux courses : détouré, recadré au plus juste
+function scene(img, damier, largeur) {
+  const t = damier ? detourerDamier(img) : detourer(img), x = t.getContext("2d"), d = x.getImageData(0, 0, t.width, t.height).data;
+  let x0 = t.width, y0 = t.height, x1 = 0, y1 = 0;
+  for (let j = 0; j < t.height; j++) for (let i = 0; i < t.width; i++) if (d[(j * t.width + i) * 4 + 3] > 40) { x0 = Math.min(x0, i); x1 = Math.max(x1, i); y0 = Math.min(y0, j); y1 = Math.max(y1, j); }
+  const w = x1 - x0 + 1, h = y1 - y0 + 1, k = largeur / w, c = document.createElement("canvas");
+  c.width = largeur; c.height = Math.round(h * k);
+  c.getContext("2d").drawImage(t, x0, y0, w, h, 0, 0, c.width, c.height);
+  return c.toDataURL("image/webp", 0.86);
+}
+// le chef au stock : la scène (frigo) gardée dans un médaillon aux couleurs de la DA
+function medaillon(img, taille, cx, cy, rayon) {
+  const c = document.createElement("canvas"); c.width = c.height = taille; const x = c.getContext("2d"), r = taille / 2;
+  x.beginPath(); x.arc(r, r, r * .97, 0, 7); x.fillStyle = AUB; x.fill();
+  x.beginPath(); x.arc(r, r, r * .9, 0, 7); x.fillStyle = PAP; x.fill();
+  x.save(); x.beginPath(); x.arc(r, r, r * .8, 0, 7); x.clip();
+  x.drawImage(img, cx - rayon, cy - rayon, rayon * 2, rayon * 2, r - r * .8, r - r * .8, r * 1.6, r * 1.6); x.restore();
+  x.lineWidth = r * .035; x.strokeStyle = CRE; x.beginPath(); x.arc(r, r, r * .8, 0, 7); x.stroke();
+  return c.toDataURL("image/webp", 0.86);
+}
+async function pret() { await document.fonts.load('800 40px "Bricolage Grotesque"'); const m = document.getElementById("m"); await m.decode(); window.MASCOTTE = detourer(m); await document.getElementById('s').decode(); await document.getElementById('k').decode(); return document.fonts.check('800 40px "Bricolage Grotesque"'); }
+</script></body></html>""" % (SOURCE, base64.b64encode((ICI / "chef-stock-source.jpg").read_bytes()).decode(), base64.b64encode((ICI / "chef-courses-source.jpg").read_bytes()).decode())
 
 SORTIES = [
     # nom, largeur, hauteur, options (proportions de la largeur / hauteur)
@@ -95,6 +162,13 @@ async def main():
             url = await pg.evaluate("([w, h, o]) => rendre(w, h, o)", [w, h, o])
             chemin.write_bytes(base64.b64decode(url.split(",", 1)[1]))
             print(chemin.relative_to(ICI.parent.parent), w, "×", h)
+        # illustrations des onglets Courses (le caddie, détouré) et Stock (le frigo, en médaillon), en WebP embarqué
+        caddie = await pg.evaluate("scene(document.getElementById('k'), true, 360)")
+        frigo = await pg.evaluate("medaillon(document.getElementById('s'), 300, 512, 470, 430)")
+        for nom, url in (("chef-courses", caddie), ("chef-stock", frigo)):
+            (ICI / f"{nom}.txt").write_text(url)
+            (ICI / f"{nom}.webp").write_bytes(base64.b64decode(url.split(",", 1)[1]))
+            print(f"miamm/logo/{nom}.webp", len(url) // 1024, "Ko embarqués")
         await b.close()
     # version embarquée dans la page (data URI), pour l'en-tête
     (ICI / "badge-192.txt").write_text("data:image/png;base64," + base64.b64encode((ICI / "badge-192.png").read_bytes()).decode())
