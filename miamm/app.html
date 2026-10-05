@@ -64,8 +64,18 @@ a{ color:var(--primaire); }
 .choix-mode p{ margin:6px 0 0; font-size:16px; line-height:1.35; }
 .mode-mesure{ background:var(--aubergine); color:#FFFBF2; }
 .mode-express{ background:var(--surface); color:var(--encre); border:3px solid var(--encre) !important; }
-.hero{ position:relative; border-radius:32px; background:var(--safran); color:#24112E; padding:22px; min-height:220px; overflow:hidden; display:flex; align-items:flex-end; margin-bottom:16px; }
-.hero h1{ position:relative; font-size:40px; line-height:.98; max-width:260px; }
+.hero{ position:relative; border-radius:32px; background:var(--safran); color:#24112E; padding:22px; min-height:220px; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end; align-items:flex-start; gap:10px; margin-bottom:16px; }
+button.hero{ width:100%; border:none; text-align:left; font:inherit; min-height:300px; padding-top:150px; box-shadow:0 6px 0 #C99600; transition:transform .12s, box-shadow .12s; }
+button.hero:active{ transform:translateY(4px); box-shadow:0 2px 0 #C99600; }
+button.hero:focus-visible{ outline:4px solid var(--aubergine); outline-offset:3px; }
+.hero h1{ position:relative; font-size:40px; line-height:.98; max-width:250px; }
+.hero h1 + .sous{ margin-top:-2px; }
+button.hero h1{ max-width:none; font-size:38px; }
+.hero .sous{ position:relative; font-size:16px; font-weight:500; max-width:240px; line-height:1.3; }
+.hero .appel{ position:relative; display:inline-flex; align-items:center; gap:8px; background:var(--aubergine); color:#FFFBF2; border-radius:999px; padding:10px 16px; font-weight:700; font-size:16px; }
+.hero .appareil{ position:absolute; right:34px; top:30px; width:96px; height:96px; border-radius:50%; background:#FFFBF2; display:flex; align-items:center; justify-content:center; color:var(--aubergine); box-shadow:0 0 0 10px var(--basilic); }
+.hero .appareil svg{ width:46px; height:46px; }
+@media (prefers-reduced-motion: reduce){ button.hero{ transition:none; } }
 .hero .b1{ position:absolute; right:-40px; top:-40px; width:200px; height:200px; border-radius:50%; background:var(--paprika); }
 .hero .b2{ position:absolute; right:40px; top:40px; width:90px; height:90px; border-radius:50%; background:#FFFBF2; }
 .hero .b3{ position:absolute; right:64px; top:64px; width:42px; height:42px; border-radius:50%; background:var(--basilic); }
@@ -293,10 +303,11 @@ async function inscrire(invitation, nom) {
   const b = await api("/api/inscription/fin", { id: a.d.id, reponse: enTexte(c) });
   if (!b.ok) return toast(b.d.message || "Inscription refusée");
   S.compte = b.d.compte; S.secours = b.d.secours; S.doc = DOC0(); S.base = null; S.rev = 0;
+  try { localStorage.setItem("miamm-deja", "1"); } catch (e) {}
   await tirer();
   S.ecran = "secours"; rendre();
 }
-async function connecter() {
+async function connecter(ensuite) {
   if (!clesDispo()) return toast("Ce navigateur ne gère pas les clés d'accès");
   const a = await api("/api/connexion/debut", {});
   if (!a.ok) return toast("Connexion impossible");
@@ -304,6 +315,8 @@ async function connecter() {
   const b = await api("/api/connexion/fin", { id: a.d.id, reponse: enTexte(c) });
   if (!b.ok) return toast(b.d.message || "Clé refusée");
   S.compte = b.d.compte; S.base = null; await tirer();
+  try { localStorage.setItem("miamm-deja", "1"); } catch (e) {}
+  if (ensuite === "express") return demarrerExpress();
   S.ecran = D().periode ? "app" : "choix"; rendre();
 }
 async function ajouterCle() {
@@ -471,15 +484,23 @@ function rendre() {
   app().innerHTML = (vues[e] || ecranAccueil)();
   if (e === "app") app().insertAdjacentHTML("beforeend", nav());
 }
+// Le gros bouton de l'accueil : le menu express à partir du ticket de caisse (photo)
+const boutonExpress = () => `<button class="hero" data-action="express" aria-label="On mange quoi cette semaine ? Scanner mon ticket de caisse">
+    <div class="b1"></div><span class="appareil">${ICONES.photo}</span>
+    <h1>On mange quoi cette semaine ?</h1>
+    <span class="sous">Scanne ton ticket de caisse, le chef fait le menu avec ce que tu as acheté.</span>
+    <span class="appel">Scanner mon ticket ${ICONES.fleche.replace('width="26" height="26"', 'width="20" height="20"')}</span></button>`;
+function dejaVenu() { try { return localStorage.getItem("miamm-deja") === "1"; } catch (e) { return false; } }
 function ecranAccueil() {
+  // l'invitation ne sert qu'une fois : sur un appareil où quelqu'un s'est déjà connecté, on ne la propose plus en grand
   return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div>
-    <div class="hero"><div class="b1"></div><div class="b2"></div><div class="b3"></div><h1>On mange quoi cette semaine ?</h1></div>
+    ${boutonExpress()}
     <div class="pile">
-      <button class="bouton plein" data-action="aller" data-ecran="inscription">J'ai une invitation</button>
-      <button class="bouton plein contour" data-action="connexion">Se connecter avec ma clé d'accès</button>
-      <button class="lien" data-action="secours">J'ai perdu mon téléphone (code de secours)</button>
-    </div>
-    <p class="discret petit" style="margin-top:22px">Miamm compose le menu de ton foyer à partir de tes courses, de ton budget et de tes objectifs, puis la liste de courses qui va avec.</p></div>`;
+      <button class="bouton plein" data-action="connexion">Se connecter</button>
+      ${dejaVenu() ? "" : `<button class="bouton plein leger" data-action="aller" data-ecran="inscription">Première fois ? J'ai une invitation</button>`}
+      <button class="lien petit" data-action="secours" style="align-self:center">Téléphone perdu ? Code de secours</button>
+      ${dejaVenu() ? `<button class="lien petit" data-action="aller" data-ecran="inscription" style="align-self:center">Créer un autre compte avec une invitation</button>` : ""}
+    </div></div>`;
 }
 function ecranInscription() {
   return `<div class="page"><div class="entete"><button class="rond" data-action="aller" data-ecran="accueil" aria-label="Retour">${ICONES.gauche}</button>${marque()}</div>
@@ -502,14 +523,10 @@ function ecranSecours() {
 function ecranChoix() {
   const prenom = S.compte && !S.compte.local ? echap(S.compte.nom) : "";
   return `<div class="page"><div class="entete">${marque()}<div class="rangee">${boutonTheme()}${D().periode ? `<button class="rond" data-action="aller" data-ecran="app" aria-label="Retour au menu">${ICONES.gauche}</button>` : ""}</div></div>
-    <h1 style="margin-bottom:6px">${prenom ? `Salut ${prenom} !` : "Bienvenue !"}</h1>
-    <p class="discret" style="margin:0 0 16px">Comment on prépare le menu ?</p>
-    <div class="pile">
-      <button class="choix-mode mode-mesure" data-action="aller" data-ecran="surmesure"><span class="t">Sur mesure ${ICONES.fleche}</span>
-        <p>Les personnes du foyer, leurs objectifs de poids, le budget du mois. Un menu calculé au gramme, avec les courses de chaque semaine.</p></button>
-      <button class="choix-mode mode-express" data-action="express"><span class="t">Express ${ICONES.fleche}</span>
-        <p>La photo du ticket, le nombre de jours et de personnes. Le chef fait avec ce que tu as acheté.</p></button>
-    </div>
+    <p class="discret" style="margin:0 0 12px">${prenom ? `Salut ${prenom} !` : "Bienvenue !"}</p>
+    ${boutonExpress()}
+    <button class="choix-mode mode-mesure" data-action="aller" data-ecran="surmesure"><span class="t">Sur mesure ${ICONES.fleche}</span>
+      <p>Les personnes du foyer, leurs objectifs de poids, le budget du mois. Un menu calculé au gramme, avec les courses de chaque semaine.</p></button>
     ${S.compte && S.compte.local ? `<p class="discret petit" style="margin-top:18px">Version d'essai : les données restent sur cet appareil, la lecture des tickets n'est pas disponible.</p>` : ""}</div>`;
 }
 
@@ -713,8 +730,9 @@ function vueMenu() {
       <div class="plats">${j.meals.filter(m => m.k !== "pdj").map(m => { const r = repas(j.d, m.k); return `<button class="plat-btn" data-action="${j.d >= auj ? "changer" : "voir"}" data-j="${j.d}" data-k="${m.k}" data-cible="periode"><b>${Moteur.LABELS[m.k]}${j.tag === "plaisir" && m.k === "dej" ? '<span class="tag">plaisir</span>' : ""}${D().suivi.coches[`d${j.d}-${m.k}`] ? " · fait" : ""}</b>${echap(r.plat)}</button>`; }).join("")}</div></div>`).join("");
   return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div>
     <h1 style="margin-bottom:4px">${echap(p.titre)}</h1><p class="discret" style="margin:0 0 14px">${p.personnes.map(x => echap(nomDe(x.id))).join(", ")}${p.invites ? ` + ${p.invites} invités` : ""}</p>
+    <div class="pile" style="margin-bottom:14px"><button class="bouton plein accent" data-action="express">${ICONES.photo.replace('width="30" height="30"', 'width="22" height="22"')} Nouveau menu express : scanner un ticket</button></div>
     <div class="carte">${jours}</div>
-    <button class="bouton plein leger" data-action="nouveau-menu">Préparer un nouveau menu</button></div>`;
+    <button class="bouton plein leger" data-action="aller" data-ecran="surmesure">Nouveau menu sur mesure</button></div>`;
 }
 function vueCourses() {
   const p = P(), courses = p.courses;
@@ -769,6 +787,11 @@ function vueFoyer() {
       <button class="bouton contour" data-action="deconnexion">Se déconnecter</button></div>` : ""}</div>`;
 }
 
+function demarrerExpress() {
+  S.express = { etape: "saisie", lignes: [], jours: 7, adultes: Math.max(1, D().personnes.filter(p => +p.age >= 18).length || 2), enfants: D().personnes.filter(p => +p.age < 18).length, placard: true, desserts: true, ticket: null };
+  S.ecran = "express"; window.scrollTo(0, 0); rendre();
+}
+
 /* ---------- Événements ---------- */
 async function action(b) {
   const d = b.dataset;
@@ -790,7 +813,7 @@ async function action(b) {
     }
     case "copier-secours": try { await navigator.clipboard.writeText(S.secours); toast("Copié"); } catch (e) { toast("Sélectionne le code pour le copier"); } return;
     case "secours-ok": S.secours = null; S.ecran = D().periode ? "app" : "choix"; return rendre();
-    case "express": S.express = { etape: "saisie", lignes: [], jours: 7, adultes: Math.max(1, D().personnes.length || 2), enfants: 0, placard: true, desserts: true, ticket: null }; S.ecran = "express"; return rendre();
+    case "express": return S.compte ? demarrerExpress() : connecter("express");
     case "moins": case "plus": {
       const x = S.express, k = d.cle, v = x[k] + (d.action === "plus" ? 1 : -1);
       x[k] = Math.max(k === "enfants" ? 0 : 1, Math.min(k === "jours" ? 14 : 12, v)); return rendre();
