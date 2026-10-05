@@ -36,6 +36,11 @@ a{ color:var(--primaire); }
 .marque{ font-family:var(--titre); font-weight:800; font-size:28px; letter-spacing:-1px; color:var(--primaire); display:inline-flex; align-items:center; gap:8px; }
 .badge-marque{ width:46px; height:46px; margin:-6px 0; }
 .chef{ display:block; }
+.tete-vue{ display:flex; align-items:flex-end; justify-content:space-between; gap:10px; margin-bottom:12px; }
+.tete-vue > div{ min-width:0; }
+.tete-vue img{ flex-shrink:0; display:block; }
+.tete-vue .caddie{ width:150px; height:auto; margin:-10px -6px -6px 0; }
+.tete-vue .frigo{ width:112px; height:112px; margin-top:-8px; }
 .attente .chef{ animation:pop 1.2s ease-in-out infinite; }
 .signe-chef{ display:flex; align-items:center; gap:10px; }
 .signe-chef img{ width:52px; height:52px; flex-shrink:0; }
@@ -166,7 +171,8 @@ button.hero h1{ max-width:none; font-size:38px; }
 <div id="app"></div>
 <div id="couche"></div>
 <script>const DONNEES = __DATA__;
-const BADGE = "__BADGE__";   // la mascotte du chef dans son badge (miamm/logo/fabriquer.py)</script>
+const BADGE = "__BADGE__";   // la mascotte du chef dans son badge (miamm/logo/fabriquer.py)
+const CHEF_COURSES = "__CHEF_COURSES__", CHEF_STOCK = "__CHEF_STOCK__";   // le chef au caddie, le chef au frigo</script>
 <script>__MOTEUR__</script>
 <script>
 "use strict";
@@ -745,7 +751,8 @@ function vueMenu() {
 }
 function vueCourses() {
   const p = P(), courses = p.courses;
-  if (!courses.length) return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div><h1>Courses</h1><p class="discret">Rien à acheter pour ce menu.</p>${boutonTicket()}</div>`;
+  const teteCourses = sous => `<div class="tete-vue"><div><h1>Courses</h1>${sous ? `<p class="discret" style="margin:6px 0 0">${sous}</p>` : ""}</div><img class="caddie" src="${CHEF_COURSES}" alt="Le chef pousse son caddie"></div>`;
+  if (!courses.length) return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div>${teteCourses("Rien à acheter pour ce menu.")}${boutonTicket()}</div>`;
   const cid = courses.some(c => c.id === S.courseSel) ? S.courseSel : (courses.find(c => c.items.some(it => !D().suivi.achats[cleLigne(c.id, it.a)])) || courses[0]).id;
   const c = courses.find(x => x.id === cid), b = bilanCourses();
   const lignes = c.items.map(it => {
@@ -756,7 +763,7 @@ function vueCourses() {
   }).join("");
   const budget = D().bilan && D().bilan.cout.budget;
   return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div>
-    <h1 style="margin-bottom:12px">Courses</h1>
+    ${teteCourses("")}
     <div class="puces" style="margin-bottom:12px">${courses.map(x => `<button class="puce" data-action="course" data-id="${x.id}" aria-pressed="${x.id === cid}">${echap(x.titre)}${x.complement ? "" : " · " + deIso(x.date).getDate() + " " + MOISC[deIso(x.date).getMonth()]}</button>`).join("")}</div>
     <div class="carte pleine"><div class="chiffres"><div><b>${euros(b.paye)}</b><span class="petit">payé</span></div><div><b>${euros(b.reste)}</b><span class="petit">reste à acheter</span></div>${budget ? `<div><b>${euros(budget)}</b><span class="petit">budget</span></div>` : ""}</div>
       ${budget ? `<div class="barre" style="margin-top:12px;background:rgba(255,255,255,.2)"><i class="${b.paye + b.reste > budget ? "trop" : ""}" style="width:${Math.min(100, (b.paye + b.reste) / budget * 100)}%"></i></div>` : ""}</div>
@@ -770,7 +777,7 @@ function vueStock() {
   const manque = Object.entries(besoin3).filter(([a, q]) => q > (s[a] || 0) + 0.5).map(([a, q]) => `<li><span>${echap(a)}</span><span>il manque ${fmtQ(a, q - Math.max(0, s[a] || 0))}</span></li>`).join("");
   const dispo = Object.entries(s).filter(([, q]) => q > 0.5).sort((x, y) => x[0].localeCompare(y[0], "fr")).map(([a, q]) => `<li><span>${echap(a)}</span><span>${fmtQ(a, Math.round(q))}</span></li>`).join("");
   return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div>
-    <h1 style="margin-bottom:4px">À la maison</h1><p class="discret" style="margin:0 0 14px">Ce matin, d'après les courses cochées et les repas passés.</p>
+    <div class="tete-vue"><div><h1>À la maison</h1><p class="discret" style="margin:6px 0 0">Ce matin, d'après les courses cochées et les repas passés.</p></div><img class="frigo" src="${CHEF_STOCK}" alt="Le chef vérifie son stock"></div>
     ${manque ? `<div class="carte"><h3 style="margin-bottom:8px">Pour les 3 prochains jours</h3><ul class="ingr">${manque}</ul></div>` : ""}
     <div class="carte"><ul class="ingr">${dispo || `<li class="discret">Rien en stock.</li>`}</ul></div>
     ${boutonTicket()}</div>`;

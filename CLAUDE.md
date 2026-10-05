@@ -381,7 +381,7 @@ Les données sont dans un seul document `db`. Avec plusieurs mois et une bibliot
 13. **Décisions du 05/10/2026, suite** : passage sur Cloudflare validé (« fais tout »). Worker + D1, chef par l'API Anthropic côté serveur, rappels Web Push, déploiement par GitHub Actions ; la version claude.ai reste en service pendant la transition (copier / importer les données).
 14. **Décisions du 05/10/2026, fin** : nouveau nom (d'abord Popote) et DA plus gourmande (aubergine, safran, paprika, basilic ; Bricolage Grotesque et Outfit ; maquettes : https://claude.ai/artifact/PVQLMr3TPCJ7trND4Duw9B). Comptes pour soi et des proches, **sur invitation**, connexion par **clé d'accès** ; deux voies : **Sur mesure** (personnes, objectifs de poids, budget) et **Express** (photo du ticket, jours, personnes). Prix de départ : le catalogue actuel en estimation, corrigé par les tickets. Miamm est construit à part (`miamm/`), Marmite reste en service jusqu'à la bascule.
 15. **Décisions du 05/10/2026, soir** : l'app s'appelle **MIAMM** (écrit « miamm. » dans l'app, comme la maquette Popote). Version d'essai sans compte publiée sur claude.ai : https://claude.ai/artifact/6rrg7UpLjZ4xkb8okrbPS5. **En ligne** : https://miamm.queva-nicolas.workers.dev (déployé par GitHub Actions le 05/10/2026). Base D1 « miamm » (les bases « marmite-foyer » et « popote », vides, ont été supprimées).
-16. **Décisions du 05/10/2026, nuit** : la **mascotte** (Nico en cartoon grassouillet, tablier safran, ticket et marmite) devient le logo : badge rond aux couleurs de la DA, la tête qui dépasse (`miamm/logo/`). Elle apparaît dans l'en-tête, dans le gros bouton de l'accueil (avec une pastille appareil photo), sur les écrans d'attente du chef et sur « Proposé par le chef » ; icônes de l'app refaites avec elle.
+16. **Décisions du 05/10/2026, nuit** : la **mascotte** (Nico en cartoon grassouillet, tablier safran, ticket et marmite) devient le logo : badge rond aux couleurs de la DA, la tête qui dépasse (`miamm/logo/`). Elle apparaît dans l'en-tête, dans le gros bouton de l'accueil (avec une pastille appareil photo), sur les écrans d'attente du chef et sur « Proposé par le chef » ; icônes de l'app refaites avec elle. Puis deux scènes : le chef au caddie (en tête de Courses, faux damier détouré) et le chef au frigo (en médaillon, en tête de Stock).
 
 ## 8. Arborescence
 
@@ -429,7 +429,7 @@ docs/prototype-beta-resume.md      résumé du prototype de l'app grand public
 miamm/app.html                    Miamm : source de l'app (une page, sans framework)
 miamm/moteur.js                   moteur de Miamm : N personnes, objectifs calculés, Express (priorité au stock)
 miamm/construire.py               app.html + moteur.js + badge + blocs de donnees/ → miamm/miamm.html (non versionné)
-miamm/logo/                       mascotte-source.jpg, fabriquer.py (détourage, badge, icônes), logo-rond.png, logo-complet.png, badge-192 (embarqué dans la page)
+miamm/logo/                       mascotte-source.jpg, chef-courses-source.jpg, chef-stock-source.jpg, fabriquer.py (détourage blanc ou faux damier, badge, médaillon, icônes), logo-rond.png, logo-complet.png, badge-192, chef-courses, chef-stock (.txt embarqués dans la page)
 cloudflare/wrangler.toml           Worker « miamm » : page (public/), D1 « miamm », cron des rappels
 cloudflare/src/worker.js           API : comptes, invitations, sessions, foyers (révision), chef, tickets, rappels
 cloudflare/src/cles.js             vérification des clés d'accès (WebAuthn : CBOR, COSE, ES256 / RS256)
@@ -463,7 +463,7 @@ cd cloudflare && npm install && cd .. && python3 tests/test_miamm.py    # wrangl
 
 ### Le front (`miamm/app.html`)
 
-- **Mascotte** : le chef (`BADGE`, data URI injecté par `construire.py` depuis `miamm/logo/badge-192.txt`), à refaire avec `python3 miamm/logo/fabriquer.py` si l'image change.
+- **Mascotte** : le chef (`BADGE`, `CHEF_COURSES`, `CHEF_STOCK`, data URI injectés par `construire.py` depuis `miamm/logo/*.txt`), à refaire avec `python3 miamm/logo/fabriquer.py` si l'image change.
 - **DA** : aubergine `#3B1F4A`, safran `#F5B700`, paprika `#E4572E`, basilic `#7DB46C`, crème `#FFFBF2` ; Bricolage Grotesque (titres) et Outfit (texte) ; clair et sombre (`localStorage["miamm-theme"]`). Icônes à tracé, pas d'emoji. L'app ne parle jamais de Claude : c'est « le chef ».
 - **Écrans** : accueil = un gros bouton « On mange quoi cette semaine ? » (appareil photo, « Scanner mon ticket » : menu express, connexion par la clé d'abord si besoin), puis « Se connecter », « Première fois ? J'ai une invitation » (masqué sur un appareil déjà connecté, `localStorage["miamm-deja"]`) et le code de secours en petit → choix (même gros bouton express, puis **Sur mesure**) ; l'express reste en tête de l'onglet Menu → proposition (bilan, courses, menu ; chaque plat se change depuis la bibliothèque ; « Une autre idée, chef ») → l'app : Aujourd'hui (portions par personne, « Je l'ai fait »), Menu, Courses (cases, prix payé, « Ajouter un ticket de caisse »), Stock (ce matin + ce qui manque pour 3 jours), Foyer (personnes, invitations, rappels, compte).
 - **Sur mesure** : personnes (sexe, âge, taille, poids, objectif, activité, petit-déjeuner sucré / salé / aucun, « pas de régime »), durée 7 à 30 jours, budget du mois (ramené à la durée), jour des courses (la première a lieu le jour du début), produits exclus.
