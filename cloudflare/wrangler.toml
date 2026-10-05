@@ -1,5 +1,5 @@
-# Marmite sur Cloudflare : la page (public/, préparée par preparer.py) et l'API du foyer (src/worker.js).
-name = "marmite"
+# Popote sur Cloudflare : la page (public/, préparée par preparer.py) et l'API (src/worker.js).
+name = "popote"
 main = "src/worker.js"
 compatibility_date = "2026-06-01"
 compatibility_flags = ["nodejs_compat"]
@@ -9,11 +9,11 @@ directory = "./public"
 binding = "ASSETS"
 run_worker_first = ["/api/*"]
 
-# Le document du foyer, les abonnements aux rappels et les clés d'envoi.
+# Comptes, clés d'accès, sessions, invitations, documents des foyers, abonnements aux rappels.
 [[d1_databases]]
 binding = "BASE"
-database_name = "marmite-foyer"
-database_id = "8005c9f9-4ad8-44fc-9371-f241f202c209"
+database_name = "popote"
+database_id = "1b8f7f59-a056-4d80-b72b-6f5c4d93eb60"
 
 # Rappels envoyés à 18 h, heure de La Réunion (UTC+4).
 [triggers]
@@ -23,5 +23,7 @@ crons = ["0 14 * * *"]
 FUSEAU = "Indian/Reunion"
 CONTACT = "https://github.com/quevanicolas-stack/Marmite"
 CHEF_PAR_JOUR = "30"
+TICKETS_PAR_JOUR = "15"
 
-# Secrets (jamais dans ce fichier) : CODE_FOYER (obligatoire), ANTHROPIC_API_KEY (facultatif, pour le chef).
+# Secrets (jamais dans ce fichier) : INVITATION_INITIALE (le premier code d'invitation, réutilisable),
+# ANTHROPIC_API_KEY (lecture des tickets et « J'ai faim » ; sans elle, tout le reste marche).

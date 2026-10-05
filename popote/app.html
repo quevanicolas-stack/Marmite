@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Popote</title>
+<meta name="description" content="Le menu de la semaine, les courses et le budget du foyer.">
+<script>try { const t = localStorage.getItem("popote-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --aubergine:#3B1F4A; --safran:#F5B700; --paprika:#E4572E; --basilic:#7DB46C; --creme:#FFFBF2;
+  --fond:var(--creme); --surface:#FFFFFF; --surface-2:#FFF1D6; --encre:#24112E; --doux:#5E4A66; --trait:#EBDDC6;
+  --primaire:var(--aubergine); --sur-primaire:#FFFBF2; --accent:var(--safran); --sur-accent:#24112E; --alerte:#B43A16; --ok:#3F7A31;
+  --titre:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif; --texte:"Outfit", "Segoe UI", system-ui, sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --fond:#1C1022; --surface:#29172F; --surface-2:#341E3C; --encre:#FFF6E5; --doux:#D3C1D8; --trait:#4A3152;
+  --primaire:#F5B700; --sur-primaire:#24112E; --accent:#F5B700; --alerte:#FF9B7A; --ok:#A5D795; color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --fond:#1C1022; --surface:#29172F; --surface-2:#341E3C; --encre:#FFF6E5; --doux:#D3C1D8; --trait:#4A3152;
+  --primaire:#F5B700; --sur-primaire:#24112E; --accent:#F5B700; --alerte:#FF9B7A; --ok:#A5D795; color-scheme:dark; }
+*{ box-sizing:border-box; }
+html,body{ margin:0; background:var(--fond); color:var(--encre); font:16px/1.45 var(--texte); -webkit-text-size-adjust:100%; }
+button,input,select,textarea{ font:inherit; color:inherit; }
+button{ cursor:pointer; }
+h1,h2,h3{ font-family:var(--titre); font-weight:800; letter-spacing:-.02em; margin:0; line-height:1.08; }
+h1{ font-size:34px; } h2{ font-size:24px; } h3{ font-size:19px; }
+a{ color:var(--primaire); }
+.page{ max-width:720px; margin:0 auto; padding:18px 16px calc(96px + env(safe-area-inset-bottom,0px)); }
+.sans-nav .page{ padding-bottom:40px; }
+.entete{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:16px; }
+.marque{ font-family:var(--titre); font-weight:800; font-size:28px; letter-spacing:-1px; color:var(--primaire); }
+.marque i{ font-style:normal; color:var(--paprika); }
+.rond{ width:44px; height:44px; border-radius:50%; border:2px solid var(--trait); background:var(--surface); display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rond svg{ width:20px; height:20px; }
+.carte{ background:var(--surface); border-radius:24px; padding:18px; margin-bottom:14px; border:1px solid var(--trait); }
+.carte.pleine{ background:var(--primaire); color:var(--sur-primaire); border:none; }
+.carte.safran{ background:var(--safran); color:#24112E; border:none; }
+.discret{ color:var(--doux); } .petit{ font-size:14px; }
+.bouton{ display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:52px; padding:12px 20px; border-radius:18px; border:none; background:var(--primaire); color:var(--sur-primaire); font-weight:700; font-size:17px; text-decoration:none; }
+.bouton.plein{ width:100%; }
+.bouton.accent{ background:var(--accent); color:var(--sur-accent); }
+.bouton.leger{ background:var(--surface-2); color:var(--encre); }
+.bouton.contour{ background:transparent; color:var(--encre); border:2px solid var(--encre); }
+.bouton[disabled]{ opacity:.5; cursor:default; }
+.lien{ background:none; border:none; padding:6px 0; color:var(--primaire); font-weight:600; text-decoration:underline; text-underline-offset:3px; }
+.pile{ display:flex; flex-direction:column; gap:12px; }
+.rangee{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.grille-2{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px; }
+.grille-2 > *{ min-width:0; }
+.champ{ display:flex; flex-direction:column; gap:6px; font-size:14px; font-weight:600; color:var(--doux); min-width:0; }
+.champ input,.champ select,.champ textarea{ width:100%; min-width:0; min-height:48px; padding:10px 14px; border-radius:14px; border:2px solid var(--trait); background:var(--surface); color:var(--encre); font-size:16px; font-weight:500; }
+.champ input:focus,.champ select:focus{ outline:none; border-color:var(--primaire); }
+.puces{ display:flex; flex-wrap:wrap; gap:8px; }
+.puce{ border:2px solid var(--trait); background:transparent; border-radius:999px; padding:8px 14px; font-size:15px; font-weight:500; min-height:40px; }
+.puce[aria-pressed="true"]{ background:var(--primaire); color:var(--sur-primaire); border-color:var(--primaire); }
+.puce .x{ margin-left:6px; font-weight:700; }
+.choix-mode{ display:block; text-align:left; width:100%; border-radius:28px; padding:20px; border:none; }
+.choix-mode .t{ display:flex; justify-content:space-between; align-items:center; font-family:var(--titre); font-weight:800; font-size:25px; }
+.choix-mode p{ margin:6px 0 0; font-size:16px; line-height:1.35; }
+.mode-mesure{ background:var(--aubergine); color:#FFFBF2; }
+.mode-express{ background:var(--surface); color:var(--encre); border:3px solid var(--encre) !important; }
+.hero{ position:relative; border-radius:32px; background:var(--safran); color:#24112E; padding:22px; min-height:220px; overflow:hidden; display:flex; align-items:flex-end; margin-bottom:16px; }
+.hero h1{ position:relative; font-size:40px; line-height:.98; max-width:260px; }
+.hero .b1{ position:absolute; right:-40px; top:-40px; width:200px; height:200px; border-radius:50%; background:var(--paprika); }
+.hero .b2{ position:absolute; right:40px; top:40px; width:90px; height:90px; border-radius:50%; background:#FFFBF2; }
+.hero .b3{ position:absolute; right:64px; top:64px; width:42px; height:42px; border-radius:50%; background:var(--basilic); }
+.compteur{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+.compteur .val{ font-family:var(--titre); font-weight:800; font-size:30px; }
+.compteur .btns{ display:flex; gap:8px; }
+.compteur .btns button{ width:48px; height:48px; border-radius:50%; border:2px solid var(--encre); background:transparent; font-size:22px; line-height:1; }
+.compteur .btns button.plus{ background:var(--encre); color:var(--fond); }
+.etiquette{ font-size:13px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--doux); }
+.chiffres{ display:flex; gap:18px; flex-wrap:wrap; }
+.chiffres b{ font-family:var(--titre); font-size:24px; display:block; }
+.barre{ height:10px; border-radius:6px; background:var(--surface-2); overflow:hidden; }
+.barre i{ display:block; height:100%; background:var(--basilic); border-radius:6px; }
+.barre i.trop{ background:var(--paprika); }
+.repas{ background:var(--surface); border-radius:24px; padding:16px; margin-bottom:12px; border:1px solid var(--trait); }
+.repas.fait{ opacity:.7; }
+.repas .k{ font-size:13px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+.k-pdj{ color:#B07F00; } .k-dej{ color:var(--paprika); } .k-din{ color:#6B4A8A; } .k-des{ color:#3F7A31; }
+:root[data-theme="dark"] .k-din{ color:#C7A6E0; } @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .k-din{ color:#C7A6E0; } :root:not([data-theme="light"]) .k-pdj{ color:var(--safran); } }
+:root[data-theme="dark"] .k-pdj{ color:var(--safran); }
+.repas h3{ margin:4px 0 8px; }
+.ingr{ list-style:none; margin:0; padding:0; }
+.ingr li{ display:flex; justify-content:space-between; gap:10px; padding:4px 0; border-bottom:1px dashed var(--trait); font-size:15px; }
+.ingr li:last-child{ border-bottom:none; }
+.ingr li span:last-child{ color:var(--doux); white-space:nowrap; }
+.actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; align-items:center; }
+.fait-btn{ display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:8px 16px; border-radius:999px; border:2px solid var(--encre); background:transparent; font-weight:600; }
+.fait-btn[aria-pressed="true"]{ background:var(--basilic); border-color:var(--basilic); color:#1B2E14; }
+.jour-nav{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; }
+.jour-nav h1{ font-size:30px; }
+.qui{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+.ligne-jour{ display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-bottom:1px solid var(--trait); }
+.ligne-jour:last-child{ border-bottom:none; }
+.ligne-jour .date{ width:58px; flex-shrink:0; font-family:var(--titre); font-weight:800; line-height:1.05; }
+.ligne-jour .date small{ display:block; font-family:var(--texte); font-weight:500; font-size:13px; color:var(--doux); text-transform:capitalize; }
+.ligne-jour .plats{ display:flex; flex-direction:column; gap:6px; min-width:0; flex:1; }
+.plat-btn{ text-align:left; border:none; background:var(--surface-2); border-radius:14px; padding:8px 12px; font-size:15px; min-height:40px; width:100%; }
+.plat-btn b{ display:block; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--doux); }
+.tag{ display:inline-block; font-size:12px; font-weight:700; border-radius:999px; padding:2px 8px; background:var(--safran); color:#24112E; margin-left:6px; vertical-align:middle; }
+.tag.poisson{ background:#BFE0F2; color:#0E3550; }
+.article{ display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--trait); }
+.article:last-child{ border-bottom:none; }
+.case{ width:34px; height:34px; border-radius:10px; border:2px solid var(--encre); background:transparent; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.case[aria-pressed="true"]{ background:var(--basilic); border-color:var(--basilic); }
+.case svg{ width:20px; height:20px; }
+.article .nom{ flex:1; min-width:0; }
+.article .nom small{ display:block; color:var(--doux); font-size:13px; }
+.article .prix{ width:92px; flex-shrink:0; }
+.article .prix input{ width:100%; min-height:42px; border-radius:12px; border:2px solid var(--trait); background:var(--surface); padding:6px 8px; text-align:right; font-size:16px; }
+.article.coche .nom{ text-decoration:line-through; color:var(--doux); }
+.nav{ position:fixed; left:0; right:0; bottom:0; background:var(--surface); border-top:1px solid var(--trait); display:flex; justify-content:center; padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px)); z-index:20; }
+.nav .in{ display:flex; width:100%; max-width:720px; }
+.nav button{ flex:1; background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 2px; font-size:12px; font-weight:600; color:var(--doux); min-height:54px; }
+.nav button svg{ width:24px; height:24px; }
+.nav button[aria-current="page"]{ color:var(--primaire); }
+.voile{ position:fixed; inset:0; background:rgba(36,17,46,.55); z-index:40; display:flex; align-items:flex-end; justify-content:center; }
+.feuille{ background:var(--fond); width:100%; max-width:640px; max-height:92vh; overflow:auto; border-radius:28px 28px 0 0; padding:20px 16px calc(24px + env(safe-area-inset-bottom,0px)); }
+@media (min-width:700px){ .voile{ align-items:center; } .feuille{ border-radius:28px; } }
+.feuille .tete{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:14px; }
+.liste-choix{ list-style:none; margin:10px 0 0; padding:0; display:flex; flex-direction:column; gap:8px; }
+.liste-choix button{ width:100%; text-align:left; border:2px solid var(--trait); background:var(--surface); border-radius:16px; padding:10px 14px; min-height:52px; }
+.liste-choix small{ display:block; color:var(--doux); }
+.attente{ display:flex; flex-direction:column; align-items:center; gap:14px; padding:40px 10px; text-align:center; }
+.marmite-anim{ width:64px; height:64px; border-radius:50%; background:var(--safran); position:relative; animation:pop 1.2s ease-in-out infinite; }
+@keyframes pop{ 50%{ transform:scale(1.12); } }
+@media (prefers-reduced-motion: reduce){ .marmite-anim{ animation:none; } }
+.secours{ font-family:var(--titre); font-weight:800; font-size:26px; letter-spacing:.06em; text-align:center; background:var(--surface-2); border-radius:18px; padding:16px; word-break:break-all; }
+.alerte{ color:var(--alerte); font-weight:600; }
+.toast{ position:fixed; left:50%; bottom:calc(90px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); background:var(--encre); color:var(--fond); padding:12px 18px; border-radius:16px; z-index:60; font-weight:600; max-width:calc(100% - 32px); }
+.photo-zone{ border:3px dashed var(--primaire); border-radius:28px; padding:24px 18px; display:flex; flex-direction:column; align-items:center; gap:10px; background:var(--surface); text-align:center; cursor:pointer; }
+.photo-zone .ico{ width:64px; height:64px; border-radius:50%; background:var(--safran); display:flex; align-items:center; justify-content:center; color:#24112E; }
+.photo-zone input{ position:absolute; width:1px; height:1px; opacity:0; }
+.ligne-ticket{ display:grid; grid-template-columns:minmax(0,1fr) 92px; gap:8px; align-items:center; padding:10px 0; border-bottom:1px solid var(--trait); }
+.ligne-ticket select{ width:100%; min-height:42px; border-radius:12px; border:2px solid var(--trait); background:var(--surface); padding:4px 8px; font-size:15px; }
+.ligne-ticket .lib{ grid-column:1 / -1; font-size:13px; color:var(--doux); }
+.ligne-ticket .q{ text-align:right; font-size:14px; color:var(--doux); }
+.sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="couche"></div>
+<script>const DONNEES = __DATA__;</script>
+<script>__MOTEUR__</script>
+<script>
+"use strict";
+/* ============================================================
+   Popote — l'app (une seule page, sans framework)
+   Serveur : /api (comptes par clé d'accès, document du foyer). Sans serveur (fichier ouvert en local) :
+   mode d'essai, données sur l'appareil, sans compte ni lecture de ticket.
+   ============================================================ */
+const CAT0 = DONNEES.catalogue, RECETTES = DONNEES.recettes, REGLAGES = DONNEES.reglages;
+const ALIMENTS = Object.keys(CAT0).filter(a => CAT0[a].nut);
+const JOURS = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
+const MOISC = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+const ICONES = {
+  jour: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/></svg>',
+  menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>',
+  courses: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.5 11h-11z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>',
+  stock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M3 10l2-5h14l2 5"/><path d="M10 14h4"/></svg>',
+  foyer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5M15 15c3 0 6 1.5 6 4"/></svg>',
+  gauche: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+  droite: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
+  fleche: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  photo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
+  coche: '<svg viewBox="0 0 24 24" fill="none" stroke="#1B2E14" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>',
+  lune: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  soleil: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+};
+
+/* ---------- Outils ---------- */
+const echap = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const nb = (x, d = 0) => (Math.round(x * 10 ** d) / 10 ** d).toLocaleString("fr-FR", { minimumFractionDigits: d, maximumFractionDigits: d });
+const euros = x => nb(x, 2) + " €";
+const cloneJ = o => JSON.parse(JSON.stringify(o));
+const isoJour = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const deIso = s => { const [a, m, j] = s.split("-").map(Number); return new Date(a, m - 1, j, 12); };
+const ajouterJours = (s, n) => { const d = deIso(s); d.setDate(d.getDate() + n); return isoJour(d); };
+const libelleDate = s => { const d = deIso(s), j = JOURS[d.getDay()]; return `${j[0].toUpperCase() + j.slice(1)} ${d.getDate() === 1 ? "1er" : d.getDate()} ${MOISC[d.getMonth()]}`; };
+const aujourdhui = () => isoJour(new Date());
+const unite = a => { const n = CAT0[a] && CAT0[a].nut; return n ? n[1] : "g"; };
+const fmtQ = (a, q) => { const u = unite(a); return u === "unité" ? nb(q) + " ×" : nb(q) + " " + u; };
+function toast(t) { document.querySelectorAll(".toast").forEach(x => x.remove()); const d = document.createElement("div"); d.className = "toast"; d.setAttribute("role", "status"); d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2400); }
+const b64 = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const deB64 = s => Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((s.length + 3) % 4)), c => c.charCodeAt(0));
+
+/* ---------- État ---------- */
+const DOC0 = () => ({ version: 1, personnes: [], reglages: { budget: null, jourCourses: 6, jours: 7, exclus: [], desserts: true },
+  periode: null, bilan: null, mode: null, suivi: { coches: {}, achats: {}, payes: {}, remplacements: {} }, prix: {}, ajouts: [], tickets: [], archives: [] });
+const S = { serveur: false, chef: false, vapid: null, compte: null, doc: DOC0(), rev: 0, base: null, ecran: "chargement", vue: "jour", jour: null, qui: null,
+  brouillon: null, proposition: null, express: null, courseSel: null, envoi: false, encore: false, minuterie: null, secours: null };
+const D = () => S.doc;
+const CAT = () => Moteur.avecPrix(Object.assign({}, CAT0, D().produits || {}), D().prix);
+const prixU = a => Moteur.prixUnitaire(CAT(), a);
+
+/* ---------- Serveur ---------- */
+async function api(chemin, corps, methode) {
+  const r = await fetch(chemin, { method: methode || (corps ? "POST" : "GET"), headers: corps ? { "content-type": "application/json" } : {}, body: corps ? JSON.stringify(corps) : undefined, credentials: "same-origin", cache: "no-store" });
+  let d = {}; try { d = await r.json(); } catch (e) {}
+  if (r.status === 401 && S.compte) { S.compte = null; S.ecran = "accueil"; rendre(); }
+  return { ok: r.ok, status: r.status, d };
+}
+const estObjet = o => o && typeof o === "object" && !Array.isArray(o);
+// Fusion à trois : ce qui n'a changé que d'un côté est gardé ; un champ changé des deux côtés garde la valeur locale.
+function fusionner(b, l, d) {
+  const s = JSON.stringify;
+  if (s(l) === s(b)) return d;
+  if (s(d) === s(b) || s(l) === s(d)) return l;
+  if (!estObjet(l) || !estObjet(d)) return l;
+  const o = {}, bb = estObjet(b) ? b : {};
+  for (const k of new Set([...Object.keys(l), ...Object.keys(d)])) {
+    if (!(k in l)) { if (s(d[k]) !== s(bb[k])) o[k] = d[k]; continue; }
+    if (!(k in d)) { if (s(l[k]) !== s(bb[k])) o[k] = l[k]; continue; }
+    o[k] = fusionner(bb[k], l[k], d[k]);
+  }
+  return o;
+}
+function recevoir(doc, rev) { S.doc = Object.assign(DOC0(), doc); S.rev = rev; S.base = cloneJ(doc); localSauver(); }
+function localSauver() { try { localStorage.setItem("popote-doc", JSON.stringify(S.doc)); } catch (e) {} }
+function sauver() {
+  localSauver();
+  if (!S.serveur || !S.compte) return;
+  clearTimeout(S.minuterie); S.minuterie = setTimeout(envoyer, 600);
+}
+async function envoyer() {
+  if (S.envoi) { S.encore = true; return; }
+  S.envoi = true;
+  try {
+    for (let essai = 0; essai < 4; essai++) {
+      const doc = cloneJ(S.doc);
+      const r = await api("/api/foyer", { doc, rev: S.rev }, "PUT");
+      if (r.ok) { S.rev = r.d.rev; S.base = doc; envoyerRappels(); break; }
+      if (r.status !== 409) break;
+      const f = fusionner(S.base || r.d.doc, doc, r.d.doc);
+      recevoir(f, r.d.rev); S.base = cloneJ(r.d.doc); rendre();
+    }
+  } catch (e) {}
+  S.envoi = false;
+  if (S.encore) { S.encore = false; envoyer(); }
+}
+async function tirer() {
+  if (!S.serveur || !S.compte) return;
+  const r = await api("/api/foyer");
+  if (!r.ok) return;
+  if (!r.d.doc) { S.rev = 0; S.base = null; return envoyer(); }
+  if (!S.base) recevoir(r.d.doc, r.d.rev);
+  else if (r.d.rev !== S.rev) {
+    const f = fusionner(S.base, cloneJ(S.doc), r.d.doc);
+    recevoir(f, r.d.rev); S.base = cloneJ(r.d.doc);
+    if (JSON.stringify(f) !== JSON.stringify(r.d.doc)) await envoyer();
+  }
+}
+document.onvisibilitychange = () => { if (document.visibilityState === "visible" && S.compte && !S.envoi) tirer().then(rendre); };
+
+async function demarrer() {
+  if (/^https?:$/.test(location.protocol)) try {
+    const r = await fetch("/api/etat", { cache: "no-store", credentials: "same-origin" });
+    if (r.ok) { const e = await r.json(); if (e.popote) Object.assign(S, { serveur: true, chef: !!e.chef, vapid: e.vapid, compte: e.compte }); }
+  } catch (e) {}
+  if (!S.serveur) {   // mode d'essai : tout sur l'appareil
+    try { const l = localStorage.getItem("popote-doc"); if (l) S.doc = Object.assign(DOC0(), JSON.parse(l)); } catch (e) {}
+    S.compte = { id: "local", nom: "Moi", local: true };
+  } else if (S.compte) {
+    try { const l = localStorage.getItem("popote-doc"); if (l) S.doc = Object.assign(DOC0(), JSON.parse(l)); } catch (e) {}
+    await tirer();
+  }
+  S.ecran = !S.compte ? "accueil" : (D().periode ? "app" : (D().personnes.length || !S.serveur ? "choix" : "choix"));
+  rendre();
+}
+
+/* ---------- Clés d'accès ---------- */
+const enOctets = o => { o = cloneJ(o); o.challenge = deB64(o.challenge); if (o.user) o.user.id = deB64(o.user.id); return o; };
+const enTexte = c => {
+  const r = { id: c.id, type: c.type, response: { clientDataJSON: b64(c.response.clientDataJSON) } };
+  if (c.response.attestationObject) r.response.attestationObject = b64(c.response.attestationObject);
+  if (c.response.authenticatorData) { r.response.authenticatorData = b64(c.response.authenticatorData); r.response.signature = b64(c.response.signature); if (c.response.userHandle) r.response.userHandle = b64(c.response.userHandle); }
+  return r;
+};
+const clesDispo = () => !!(window.PublicKeyCredential && navigator.credentials);
+async function inscrire(invitation, nom) {
+  if (!clesDispo()) return toast("Ce navigateur ne gère pas les clés d'accès");
+  const a = await api("/api/inscription/debut", { invitation, nom });
+  if (!a.ok) return toast(a.d.message || "Invitation refusée");
+  let c; try { c = await navigator.credentials.create({ publicKey: enOctets(a.d.options) }); } catch (e) { return toast("Clé d'accès annulée"); }
+  const b = await api("/api/inscription/fin", { id: a.d.id, reponse: enTexte(c) });
+  if (!b.ok) return toast(b.d.message || "Inscription refusée");
+  S.compte = b.d.compte; S.secours = b.d.secours; S.doc = DOC0(); S.base = null; S.rev = 0;
+  await tirer();
+  S.ecran = "secours"; rendre();
+}
+async function connecter() {
+  if (!clesDispo()) return toast("Ce navigateur ne gère pas les clés d'accès");
+  const a = await api("/api/connexion/debut", {});
+  if (!a.ok) return toast("Connexion impossible");
+  let c; try { c = await navigator.credentials.get({ publicKey: enOctets(a.d.options) }); } catch (e) { return toast("Connexion annulée"); }
+  const b = await api("/api/connexion/fin", { id: a.d.id, reponse: enTexte(c) });
+  if (!b.ok) return toast(b.d.message || "Clé refusée");
+  S.compte = b.d.compte; S.base = null; await tirer();
+  S.ecran = D().periode ? "app" : "choix"; rendre();
+}
+async function ajouterCle() {
+  const a = await api("/api/cle/debut", {});
+  if (!a.ok) return toast("Impossible pour le moment");
+  let c; try { c = await navigator.credentials.create({ publicKey: enOctets(a.d.options) }); } catch (e) { return toast("Clé d'accès annulée"); }
+  const b = await api("/api/cle/fin", { id: a.d.id, reponse: enTexte(c) });
+  toast(b.ok ? "Clé ajoutée sur cet appareil" : (b.d.message || "Clé refusée"));
+}
+
+/* ---------- Personnes et objectifs ---------- */
+const PERSONNE0 = () => ({ id: "p" + Math.random().toString(36).slice(2, 8), nom: "", sexe: "f", age: 35, taille: 165, poids: 65, cible: 65, activite: "leger", pdj: "sale", sansRegime: false });
+const objectifsDe = p => Moteur.objectifs(p);
+function texteObjectif(p) {
+  const o = objectifsDe(p), r = o.rythmeKgSemaine;
+  const sens = r < 0 ? `perte d'environ ${nb(-r, 1)} kg par semaine` : r > 0 ? `prise d'environ ${nb(r, 1)} kg par semaine` : "poids stable";
+  return `${nb(o.kcalMin)} à ${nb(o.kcalMax)} kcal, ${o.prot} g de protéines par jour · ${sens}`;
+}
+const nomDe = id => ((D().personnes.find(p => p.id === id) || (S.proposition && S.proposition.periode.personnes.find(p => p.id === id)) || {}).nom) || "Invité";
+
+/* ---------- Période active : repas, stock, courses ---------- */
+const P = () => D().periode;
+const jourIndex = iso => { const p = P(); if (!p) return 1; const n = Math.round((deIso(iso) - deIso(p.debut)) / 86400000) + 1; return Math.max(1, Math.min(p.jours, n)); };
+const jourDuPlan = () => jourIndex(aujourdhui());
+function repas(j, k) {
+  const r = D().suivi.remplacements[`${j}-${k}`];
+  const m = P().plan[j - 1].meals.find(x => x.k === k);
+  return r ? Object.assign({}, m, r) : m;
+}
+const quantiteAchat = (a, buy) => { const c = CAT()[a]; if (!c) return 0; return c.vrac ? buy * (c.rend || 1) : buy * c.cond; };
+const cleLigne = (cid, a) => `c${cid}-${a}`;
+const qui = () => S.qui && D().personnes.some(p => p.id === S.qui) ? S.qui : (D().personnes[0] || {}).id;
+// stock réel au matin du jour j : départ + articles cochés des courses passées + achats ajoutés − repas des jours d'avant
+function stockReel(j) {
+  const p = P(), s = Object.assign({}, p.stockDepart || {}), date = p.plan[Math.min(j, p.jours) - 1].date;
+  for (const c of p.courses) if (c.date <= date || c.complement) for (const it of c.items) if (D().suivi.achats[cleLigne(c.id, it.a)]) s[it.a] = (s[it.a] || 0) + quantiteAchat(it.a, it.buy);
+  for (const x of D().ajouts) if (x.date <= date) s[x.a] = (s[x.a] || 0) + x.q;
+  for (let d = 1; d < j; d++) for (const m of p.plan[d - 1].meals) {
+    const r = repas(d, m.k);
+    for (const [qid, items] of Object.entries(r.items)) for (const [a, q] of items) s[a] = (s[a] || 0) - q * (qid === "invites" ? (p.invites || 0) : 1);
+  }
+  return s;
+}
+function statsJour(j, pid) {
+  let kcal = 0, prot = 0, fkcal = 0, fprot = 0;
+  for (const m of P().plan[j - 1].meals) {
+    const r = repas(j, m.k), t = Moteur.totaux(CAT(), r.items[pid] || []);
+    kcal += t.kcal; prot += t.prot;
+    if (D().suivi.coches[`d${j}-${m.k}`]) { fkcal += t.kcal; fprot += t.prot; }
+  }
+  return { kcal, prot, fkcal, fprot };
+}
+function bilanCourses() {
+  let paye = 0, reste = 0;
+  for (const c of P().courses) for (const it of c.items) {
+    const k = cleLigne(c.id, it.a);
+    if (D().suivi.achats[k]) paye += D().suivi.payes[k] != null ? +D().suivi.payes[k] : estimation(it);
+    else reste += estimation(it);
+  }
+  for (const x of D().ajouts) if (x.prix) paye += +x.prix;
+  return { paye, reste };
+}
+function estimation(it) { const c = CAT()[it.a]; if (!c || c.prix == null) return it.est || 0; return c.vrac ? it.buy / 1000 * c.prix : it.buy * c.prix; }
+function libelleAchat(it) { const c = CAT()[it.a] || {}; return c.vrac ? nb(it.buy) + " g" : nb(it.buy) + " × " + (c.achat || "paquet"); }
+
+/* ---------- Composer avec le moteur ---------- */
+function entreesMoteur(extra) {
+  return Object.assign({ catalogue: CAT(), recettes: RECETTES, reglages: REGLAGES, exclureProduits: D().reglages.exclus, avecDessert: D().reglages.desserts !== false }, extra);
+}
+const composerSurMesure = graine => Moteur.composer(Object.assign(composerMesureEntrees(), { graine: graine || 1 }));
+function personnesExpress(adultes, enfants) {
+  const l = [];
+  for (let i = 0; i < adultes; i++) l.push({ id: "a" + (i + 1), nom: adultes === 1 ? "Adulte" : "Adulte " + (i + 1), sexe: i % 2 ? "f" : "h", age: 35, taille: i % 2 ? 165 : 178, poids: i % 2 ? 62 : 78, cible: i % 2 ? 62 : 78, activite: "leger", pdj: i % 2 ? "sale" : "sucre" });
+  for (let i = 0; i < enfants; i++) l.push({ id: "e" + (i + 1), nom: enfants === 1 ? "Enfant" : "Enfant " + (i + 1), sexe: i % 2 ? "h" : "f", age: 9, taille: 135, poids: 30, cible: 30, activite: "modere", pdj: "sucre", sansRegime: true });
+  return l;
+}
+const composerExpress = graine => Moteur.composer(Object.assign(composerExpressEntrees(), { graine: graine || 1 }));
+function validerProposition() {
+  const pr = S.proposition, doc = D();
+  if (doc.periode) doc.archives = (doc.archives || []).concat([{ periode: { debut: doc.periode.debut, fin: doc.periode.fin, titre: doc.periode.titre }, bilan: doc.bilan && doc.bilan.cout, date: aujourdhui() }]).slice(-12);
+  doc.periode = pr.periode; doc.bilan = pr.bilan; doc.mode = pr.mode;
+  doc.suivi = { coches: {}, achats: {}, payes: {}, remplacements: {} };
+  doc.ajouts = [];
+  if (pr.mode === "express") {
+    doc.personnes = doc.personnes.length ? doc.personnes : pr.periode.personnes.map(p => Object.assign(PERSONNE0(), personnesExpress(S.express.adultes, S.express.enfants).find(x => x.id === p.id)));
+    // le stock de départ vient du ticket : ses prix deviennent les prix de référence
+    for (const l of S.express.lignes) if (l.a && l.prix > 0 && l.nombre > 0) majPrix(l);
+    if (S.express.ticket) doc.tickets = (doc.tickets || []).concat([{ date: aujourdhui(), magasin: S.express.ticket.magasin, total: S.express.ticket.total, lignes: S.express.lignes.filter(l => l.a).length }]).slice(-30);
+  }
+  S.proposition = null; S.express = null; S.ecran = "app"; S.vue = "jour"; S.jour = null;
+  sauver(); rendre(); toast("Menu validé, bon appétit");
+}
+function majPrix(l) {
+  const c = CAT0[l.a] || (D().produits || {})[l.a]; if (!c) return;
+  // au kilo en vrac ; au paquet sinon (ramené au contenu d'un paquet quand le poids est imprimé)
+  const prix = c.vrac ? (l.poids > 0 ? l.prix / l.poids * 1000 : null) : (l.poids > 0 && c.nut && c.nut[1] !== "unité" ? l.prix / l.poids * c.cond : l.prix / l.nombre);
+  if (prix && isFinite(prix)) D().prix[l.a] = { prix: Math.round(prix * 100) / 100, date: aujourdhui(), source: "ticket" };
+}
+
+/* ---------- Tickets de caisse ---------- */
+async function lirePhoto(fichier) {
+  const img = await new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = ko; i.src = URL.createObjectURL(fichier); });
+  const max = 1800, f = Math.min(1, max / Math.max(img.width, img.height));
+  const c = document.createElement("canvas"); c.width = Math.round(img.width * f); c.height = Math.round(img.height * f);
+  c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+  return c.toDataURL("image/jpeg", 0.82);
+}
+function lignesDuTicket(t) {
+  return (t.lignes || []).filter(l => l.alimentaire).map(l => {
+    const a = CAT0[l.aliment] ? l.aliment : "";
+    const c = CAT0[a];
+    const nombre = Math.max(0, +l.nombre || 1), poids = Math.max(0, +l.poids_g || 0);
+    // au poids : les grammes du ticket (500 g si le poids n'est pas imprimé) ; un produit en grammes dont le poids est
+    // imprimé (barquette de viande) : ce poids ; sinon le nombre de paquets × leur contenu
+    const parPoids = c && !c.vrac && poids > 0 && c.nut && c.nut[1] !== "unité";
+    const q = !c ? 0 : c.vrac ? (poids || nombre * 500) : parPoids ? poids : nombre * c.cond;
+    return { libelle: l.libelle, a, nombre, poids, prix: +l.prix || 0, q: Math.round(q) };
+  });
+}
+async function envoyerTicket(fichier) {
+  if (!S.serveur || !S.chef) { toast("La lecture des tickets n'est pas disponible ici"); return null; }
+  const image = await lirePhoto(fichier);
+  const r = await api("/api/ticket", { image, catalogue: Object.keys(CAT0) });
+  if (!r.ok) { toast(r.d.message || "Ticket illisible, réessaie avec une photo plus nette"); return null; }
+  return r.d;
+}
+
+/* ---------- Rappels ---------- */
+function rappelsAVenir() {
+  const p = P(); if (!p) return [];
+  const auj = aujourdhui(), l = [];
+  for (const c of p.courses) if (!c.complement) l.push({ date: ajouterJours(c.date, -1), titre: "Courses demain", texte: `${c.titre} : vérifie ce qu'il reste, puis la liste.` });
+  l.push({ date: ajouterJours(p.fin, -1), titre: "Menu bientôt fini", texte: "Ton menu se termine demain : le chef peut préparer le suivant." });
+  return l.filter(x => x.date >= auj).sort((x, y) => x.date.localeCompare(y.date));
+}
+let rappelsEnvoyes = "";
+async function envoyerRappels() {
+  const l = JSON.stringify(rappelsAVenir());
+  if (l === rappelsEnvoyes || !S.serveur) return;
+  const r = await api("/api/rappels", { rappels: JSON.parse(l) }, "PUT"); if (r.ok) rappelsEnvoyes = l;
+}
+async function activerRappels() {
+  if (!("serviceWorker" in navigator) || !("PushManager" in window)) return toast("Sur iPhone : ajoute d'abord Popote à l'écran d'accueil");
+  try {
+    if (await Notification.requestPermission() !== "granted") return toast("Notifications refusées dans les réglages");
+    const reg = await navigator.serviceWorker.register("/sw.js"); await navigator.serviceWorker.ready;
+    const ab = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: deB64(S.vapid) });
+    await api("/api/abonnement", { abonnement: ab.toJSON() });
+    rappelsEnvoyes = ""; await envoyerRappels(); toast("Rappels activés sur cet appareil");
+  } catch (e) { toast("Les rappels n'ont pas pu être activés"); }
+}
+
+/* ---------- Rendu ---------- */
+const app = () => document.getElementById("app");
+function boutonTheme() {
+  const t = document.documentElement.dataset.theme, sombre = t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches);
+  return `<button class="rond" data-action="theme" aria-label="${sombre ? "Passer en clair" : "Passer en sombre"}">${sombre ? ICONES.soleil : ICONES.lune}</button>`;
+}
+const marque = () => `<span class="marque">popote<i>.</i></span>`;
+function rendre() {
+  const e = S.ecran;
+  document.body.classList.toggle("sans-nav", e !== "app");
+  const vues = { chargement: () => `<div class="page"><div class="attente"><div class="marmite-anim"></div></div></div>`, accueil: ecranAccueil, inscription: ecranInscription, secours: ecranSecours,
+    choix: ecranChoix, surmesure: ecranSurMesure, express: ecranExpress, proposition: ecranProposition, app: ecranApp };
+  app().innerHTML = (vues[e] || ecranAccueil)();
+  if (e === "app") app().insertAdjacentHTML("beforeend", nav());
+}
+function ecranAccueil() {
+  return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div>
+    <div class="hero"><div class="b1"></div><div class="b2"></div><div class="b3"></div><h1>On mange quoi cette semaine ?</h1></div>
+    <div class="pile">
+      <button class="bouton plein" data-action="aller" data-ecran="inscription">J'ai une invitation</button>
+      <button class="bouton plein contour" data-action="connexion">Se connecter avec ma clé d'accès</button>
+      <button class="lien" data-action="secours">J'ai perdu mon téléphone (code de secours)</button>
+    </div>
+    <p class="discret petit" style="margin-top:22px">Popote compose le menu de ton foyer à partir de tes courses, de ton budget et de tes objectifs, puis la liste de courses qui va avec.</p></div>`;
+}
+function ecranInscription() {
+  return `<div class="page"><div class="entete"><button class="rond" data-action="aller" data-ecran="accueil" aria-label="Retour">${ICONES.gauche}</button>${marque()}</div>
+    <h1 style="margin-bottom:8px">Créer mon compte</h1>
+    <p class="discret">Pas de mot de passe : une clé d'accès, ton visage ou ton empreinte sur ce téléphone.</p>
+    <form class="pile" data-form="inscription" style="margin-top:14px">
+      <label class="champ">Code d'invitation<input id="i-code" autocomplete="off" autocapitalize="characters" required placeholder="XXXX-XXXX"></label>
+      <label class="champ">Ton prénom<input id="i-nom" autocomplete="given-name" required maxlength="40"></label>
+      <button class="bouton plein" type="submit">Créer ma clé d'accès</button>
+    </form></div>`;
+}
+function ecranSecours() {
+  return `<div class="page"><div class="entete">${marque()}</div>
+    <h1 style="margin-bottom:8px">Ton code de secours</h1>
+    <p class="discret">Si tu perds ce téléphone, ce code te rend l'accès à ton compte. Note-le dans un endroit sûr : il ne sera plus affiché.</p>
+    <div class="secours" id="code-secours">${echap(S.secours || "")}</div>
+    <div class="pile" style="margin-top:16px"><button class="bouton plein leger" data-action="copier-secours">Copier le code</button>
+      <button class="bouton plein" data-action="secours-ok">C'est noté</button></div></div>`;
+}
+function ecranChoix() {
+  const prenom = S.compte && !S.compte.local ? echap(S.compte.nom) : "";
+  return `<div class="page"><div class="entete">${marque()}<div class="rangee">${boutonTheme()}${D().periode ? `<button class="rond" data-action="aller" data-ecran="app" aria-label="Retour au menu">${ICONES.gauche}</button>` : ""}</div></div>
+    <h1 style="margin-bottom:6px">${prenom ? `Salut ${prenom} !` : "Bienvenue !"}</h1>
+    <p class="discret" style="margin:0 0 16px">Comment on prépare le menu ?</p>
+    <div class="pile">
+      <button class="choix-mode mode-mesure" data-action="aller" data-ecran="surmesure"><span class="t">Sur mesure ${ICONES.fleche}</span>
+        <p>Les personnes du foyer, leurs objectifs de poids, le budget du mois. Un menu calculé au gramme, avec les courses de chaque semaine.</p></button>
+      <button class="choix-mode mode-express" data-action="express"><span class="t">Express ${ICONES.fleche}</span>
+        <p>La photo du ticket, le nombre de jours et de personnes. Le chef fait avec ce que tu as acheté.</p></button>
+    </div>
+    ${S.compte && S.compte.local ? `<p class="discret petit" style="margin-top:18px">Version d'essai : les données restent sur cet appareil, la lecture des tickets n'est pas disponible.</p>` : ""}</div>`;
+}
+
+/* ----- Sur mesure ----- */
+function ecranSurMesure() {
+  const g = D().reglages, pers = D().personnes;
+  const cartes = pers.map(p => `<div class="carte"><div class="rangee" style="justify-content:space-between"><h3>${echap(p.nom || "Sans prénom")}</h3>
+      <div class="rangee"><button class="lien" data-action="personne-modifier" data-id="${p.id}">Modifier</button><button class="lien" data-action="personne-retirer" data-id="${p.id}">Retirer</button></div></div>
+      <p class="discret petit" style="margin:6px 0 0">${p.age} ans · ${p.poids} kg${p.cible && +p.cible !== +p.poids ? " → " + p.cible + " kg" : ""}</p>
+      <p class="petit" style="margin:6px 0 0">${echap(texteObjectif(p))}</p></div>`).join("");
+  const exclus = (g.exclus || []).map(a => `<button class="puce" data-action="exclu-retirer" data-a="${echap(a)}" aria-label="Ne plus exclure ${echap(a)}">${echap(a)}<span class="x">×</span></button>`).join("");
+  return `<div class="page"><div class="entete"><button class="rond" data-action="aller" data-ecran="choix" aria-label="Retour">${ICONES.gauche}</button>${marque()}</div>
+    <h1 style="margin-bottom:14px">Sur mesure</h1>
+    <h2 style="margin:0 0 10px">Le foyer</h2>
+    ${cartes || `<p class="discret">Ajoute chaque personne qui mange à la maison.</p>`}
+    <button class="bouton plein leger" data-action="personne-ajouter">Ajouter une personne</button>
+    <h2 style="margin:22px 0 10px">Le menu</h2>
+    <div class="carte pile">
+      <div class="grille-2">
+        <label class="champ">Durée<select id="g-jours">${[7, 14, 21, 30].map(n => `<option value="${n}" ${+g.jours === n ? "selected" : ""}>${n} jours</option>`).join("")}</select></label>
+        <label class="champ">Budget du mois (€)<input id="g-budget" type="number" inputmode="decimal" min="0" step="10" value="${g.budget || ""}" placeholder="facultatif"></label>
+      </div>
+      <div class="grille-2">
+        <label class="champ">À partir du<input id="g-debut" type="date" value="${g.debut || ajouterJours(aujourdhui(), 1)}"></label>
+        <label class="champ">Jour des courses<select id="g-jc">${[1, 2, 3, 4, 5, 6, 0].map(d => `<option value="${d}" ${+g.jourCourses === d ? "selected" : ""}>${JOURS[d]}</option>`).join("")}</select></label>
+      </div>
+      <label class="rangee"><input type="checkbox" id="g-des" ${g.desserts !== false ? "checked" : ""} style="width:22px;height:22px"> Un dessert à chaque repas du soir et du midi</label>
+    </div>
+    <h2 style="margin:22px 0 10px">Jamais dans le menu</h2>
+    <div class="carte"><div class="puces">${exclus || `<span class="discret petit">Aucun produit exclu.</span>`}</div>
+      <div class="rangee" style="margin-top:12px"><label class="champ" style="flex:1"><span class="sr">Produit à exclure</span><select id="g-exclu">${ALIMENTS.filter(a => !(g.exclus || []).includes(a)).sort((x, y) => x.localeCompare(y, "fr")).map(a => `<option>${echap(a)}</option>`).join("")}</select></label>
+        <button class="bouton leger" data-action="exclu-ajouter">Exclure</button></div>
+      <p class="discret petit" style="margin:10px 0 0">Les plats qui en contiennent disparaissent ; leurs variantes (une autre viande, un autre fromage) restent.</p></div>
+    <button class="bouton plein accent" data-action="composer-mesure" ${pers.length ? "" : "disabled"} style="margin-top:8px">Le chef compose le menu</button></div>`;
+}
+function lireReglages() {
+  const g = D().reglages, v = id => (document.getElementById(id) || {}).value;
+  if (!document.getElementById("g-jours")) return;
+  g.jours = +v("g-jours") || 7; g.budget = v("g-budget") ? +v("g-budget") : null; g.debut = v("g-debut") || null; g.jourCourses = +v("g-jc");
+  g.desserts = document.getElementById("g-des").checked;
+}
+let edition = null;
+function feuillePersonne() {
+  const p = edition, c = document.getElementById("couche");
+  if (!p) { c.innerHTML = ""; return; }
+  const sel = (id, opts, v) => `<select id="${id}">${opts.map(([k, l]) => `<option value="${k}" ${String(v) === String(k) ? "selected" : ""}>${l}</option>`).join("")}</select>`;
+  c.innerHTML = `<div class="voile"><form class="feuille pile" data-form="personne" role="dialog" aria-modal="true" aria-labelledby="t-pers">
+    <div class="tete"><h2 id="t-pers">${p.nom ? echap(p.nom) : "Nouvelle personne"}</h2><button type="button" class="rond" data-action="fermer" aria-label="Fermer">×</button></div>
+    <label class="champ">Prénom<input id="p-nom" value="${echap(p.nom)}" required maxlength="30"></label>
+    <div class="grille-2"><label class="champ">Sexe${sel("p-sexe", [["f", "Femme"], ["h", "Homme"]], p.sexe)}</label><label class="champ">Âge<input id="p-age" type="number" inputmode="numeric" min="2" max="110" value="${p.age}"></label></div>
+    <div class="grille-2"><label class="champ">Taille (cm)<input id="p-taille" type="number" inputmode="numeric" min="80" max="230" value="${p.taille}"></label><label class="champ">Activité${sel("p-act", [["sedentaire", "Peu active"], ["leger", "Sport 1 à 3 fois"], ["modere", "Sport 3 à 5 fois"], ["actif", "Très active"]], p.activite)}</label></div>
+    <div class="grille-2"><label class="champ">Poids (kg)<input id="p-poids" type="number" inputmode="decimal" min="10" max="300" step="0.1" value="${p.poids}"></label><label class="champ">Objectif (kg)<input id="p-cible" type="number" inputmode="decimal" min="10" max="300" step="0.1" value="${p.cible}"></label></div>
+    <label class="champ">Petit-déjeuner${sel("p-pdj", [["sale", "Salé (œufs, jambon, pain, fruit)"], ["sucre", "Sucré (lait, avoine, banane, œuf)"], ["aucun", "Pas de petit-déjeuner"]], p.pdj)}</label>
+    <label class="rangee"><input type="checkbox" id="p-sans" ${p.sansRegime ? "checked" : ""} style="width:22px;height:22px"> Pas de régime (grossesse, raison médicale)</label>
+    <p class="discret petit" style="margin:0" id="p-apercu">${echap(texteObjectif(p))}</p>
+    <p class="discret petit" style="margin:0">Repères généraux, pas un avis médical. Pas de déficit avant 18 ans.</p>
+    <button class="bouton plein" type="submit">Enregistrer</button></form></div>`;
+}
+function lirePersonne() {
+  const v = id => document.getElementById(id).value, p = edition;
+  Object.assign(p, { nom: v("p-nom").trim(), sexe: v("p-sexe"), age: +v("p-age") || 35, taille: +v("p-taille") || 165, activite: v("p-act"), poids: +v("p-poids") || 65, cible: +v("p-cible") || +v("p-poids") || 65, pdj: v("p-pdj"), sansRegime: document.getElementById("p-sans").checked });
+  return p;
+}
+
+/* ----- Express ----- */
+function ecranExpress() {
+  const x = S.express;
+  if (x.etape === "lecture") return `<div class="page"><div class="attente"><div class="marmite-anim"></div><h2>Le chef lit ton ticket…</h2><p class="discret">Les produits, les quantités et les prix.</p></div></div>`;
+  const lignes = x.lignes.map((l, i) => `<div class="ligne-ticket"><span class="lib">${echap(l.libelle || "Produit ajouté")}${l.prix ? " · " + euros(l.prix) : ""}</span>
+      <label><span class="sr">Produit</span><select data-ligne="${i}"><option value="">Ignorer</option>${ALIMENTS.map(a => `<option ${a === l.a ? "selected" : ""}>${echap(a)}</option>`).join("")}</select></label>
+      <span class="q">${l.a ? fmtQ(l.a, l.q) : "—"}</span></div>`).join("");
+  const compteur = (cle, val, lib) => `<div class="carte compteur"><div><span class="etiquette">${lib}</span><div class="val">${val}</div></div>
+      <div class="btns"><button data-action="moins" data-cle="${cle}" aria-label="Moins">−</button><button class="plus" data-action="plus" data-cle="${cle}" aria-label="Plus">+</button></div></div>`;
+  return `<div class="page"><div class="entete"><button class="rond" data-action="aller" data-ecran="choix" aria-label="Retour">${ICONES.gauche}</button>${marque()}</div>
+    <h1 style="margin-bottom:14px">Express</h1>
+    ${x.lignes.length ? `<div class="carte"><div class="rangee" style="justify-content:space-between"><h3>${x.ticket ? echap(x.ticket.magasin || "Ticket") : "Ce que tu as"}</h3><span class="discret petit">${x.lignes.filter(l => l.a).length} produits${x.ticket && x.ticket.total ? " · " + euros(x.ticket.total) : ""}</span></div>
+        ${lignes}
+        <div class="rangee" style="margin-top:10px"><button class="lien" data-action="ligne-ajouter">Ajouter un produit</button>${S.chef ? `<label class="lien" style="cursor:pointer">Autre ticket<input type="file" accept="image/*" capture="environment" data-photo="express" class="sr"></label>` : ""}</div></div>`
+      : `<label class="photo-zone" style="position:relative;margin-bottom:14px"><span class="ico">${ICONES.photo}</span><b style="font-family:var(--titre);font-size:22px">Photo du ticket</b>
+        <span class="discret">${S.chef ? "Les produits, les quantités et les prix sont lus sur le ticket." : "La lecture des tickets n'est pas disponible ici : ajoute les produits à la main."}</span>
+        ${S.chef ? `<input type="file" accept="image/*" capture="environment" data-photo="express">` : ""}</label>
+        <button class="lien" data-action="ligne-ajouter">Ajouter les produits à la main</button>`}
+    ${compteur("jours", x.jours + (x.jours > 1 ? " jours" : " jour"), "Jours à couvrir")}
+    <div class="grille-2">${compteur("adultes", x.adultes, "Adultes")}${compteur("enfants", x.enfants, "Enfants")}</div>
+    <div class="puces" style="margin:4px 0 16px">
+      <button class="puce" data-action="bascule" data-cle="placard" aria-pressed="${x.placard}">Huile, épices, sauces à la maison</button>
+      <button class="puce" data-action="bascule" data-cle="desserts" aria-pressed="${x.desserts}">Desserts</button>
+    </div>
+    <button class="bouton plein accent" data-action="composer-express" ${x.lignes.some(l => l.a) ? "" : "disabled"}>Composer mon menu</button></div>`;
+}
+
+/* ----- Proposition ----- */
+function ecranProposition() {
+  const pr = S.proposition, b = pr.bilan, per = pr.periode;
+  const nut = per.personnes.map(p => { const n = b.nutrition[p.id]; return `<div><b>${nb(n.kcalMoyen)}</b><span class="discret petit">kcal/j ${echap(p.nom)} · ${n.protMoyen} g prot.</span></div>`; }).join("");
+  const budget = b.cout.budget;
+  const courses = per.courses.map(c => `<details class="carte"><summary><b>${echap(c.titre)}</b> · ${c.complement ? "" : echap(c.jour) + " · "}${c.items.length} articles · ${euros(c.items.reduce((s, i) => s + i.est, 0))}</summary>
+      <ul class="ingr" style="margin-top:10px">${c.items.map(i => `<li><span>${echap(i.a)}</span><span>${libelleAchat(i)}</span></li>`).join("")}</ul></details>`).join("");
+  const jours = per.plan.map(j => `<div class="ligne-jour"><div class="date">${deIso(j.date).getDate()}<small>${JOURS[deIso(j.date).getDay()].slice(0, 3)}.</small></div>
+      <div class="plats">${j.meals.filter(m => m.k !== "pdj").map(m => `<button class="plat-btn" data-action="changer" data-j="${j.d}" data-k="${m.k}"><b>${Moteur.LABELS[m.k]}${j.tag === "plaisir" && m.k === "dej" ? '<span class="tag">plaisir</span>' : ""}</b>${echap(m.plat)}</button>`).join("")}</div></div>`).join("");
+  const stockUtilise = pr.mode === "express" ? `<p class="petit" style="margin:8px 0 0">${b.stockUtilise.length} produits du ticket utilisés.</p>` : "";
+  return `<div class="page"><div class="entete"><button class="rond" data-action="aller" data-ecran="${pr.mode === "express" ? "express" : "surmesure"}" aria-label="Retour">${ICONES.gauche}</button>${marque()}</div>
+    <p class="etiquette" style="margin:0">Proposé par le chef</p>
+    <h1 style="margin:4px 0 14px">${echap(per.titre)}</h1>
+    <div class="carte pleine"><div class="chiffres"><div><b>${euros(b.cout.achats)}</b><span class="petit">${pr.mode === "express" ? "à compléter" : "de courses"}</span></div>${budget ? `<div><b>${euros(budget)}</b><span class="petit">budget</span></div>` : ""}</div>
+      ${budget && b.cout.achats > budget ? `<p class="petit" style="margin:8px 0 0">Le chef dépasse le budget de ${euros(b.cout.achats - budget)}. Retire un produit cher ou réduis la durée.</p>` : ""}${stockUtilise}</div>
+    <div class="carte"><div class="chiffres">${nut}</div><p class="discret petit" style="margin:10px 0 0">${b.quotas.poisson} repas de poisson, ${b.quotas.plaisir} repas plaisir, ${b.recettesUtilisees} plats différents.</p></div>
+    <h2 style="margin:18px 0 10px">${pr.mode === "express" ? "Ce qu'il faut compléter" : "Les courses"}</h2>
+    ${courses || `<p class="discret">Rien à acheter : tout est à la maison.</p>`}
+    <h2 style="margin:18px 0 6px">Le menu</h2>
+    <p class="discret petit" style="margin:0 0 6px">Touche un plat pour le changer.</p>
+    <div class="carte">${jours}</div>
+    <div class="pile"><button class="bouton plein accent" data-action="valider">Valider ce menu</button><button class="bouton plein leger" data-action="autre-idee">Une autre idée, chef</button></div></div>`;
+}
+let choix = null;   // { j, k, q, filtre, cible: "proposition" | "periode" }
+function feuilleChoix() {
+  const c = document.getElementById("couche");
+  if (!choix) { c.innerHTML = ""; return; }
+  const des = choix.k === "des", q = (choix.q || "").toLowerCase();
+  // un dessert pour un dessert ; un plat avec viande ou poisson pour le midi et le soir
+  let l = Moteur.deplierVariantes(RECETTES, CAT0, D().reglages.exclus)
+    .filter(r => des ? r.repas.includes("des") : (r.repas.includes("dej") || r.repas.includes("din")) && Object.values(r.portions)[0].some(([a]) => CAT0[a] && CAT0[a].animal));
+  if (choix.filtre === "poisson") l = l.filter(r => r.tags.includes("poisson"));
+  if (choix.filtre === "plaisir") l = l.filter(r => r.tags.includes("plaisir"));
+  if (choix.filtre === "viande") l = l.filter(r => !r.tags.includes("poisson"));
+  if (q) l = l.filter(r => r.nom.toLowerCase().includes(q));
+  l = l.slice(0, 60);
+  c.innerHTML = `<div class="voile"><div class="feuille" role="dialog" aria-modal="true" aria-labelledby="t-choix">
+    <div class="tete"><h2 id="t-choix">Changer le ${Moteur.LABELS[choix.k].toLowerCase()}</h2><button class="rond" data-action="fermer" aria-label="Fermer">×</button></div>
+    <label class="champ"><span class="sr">Chercher</span><input id="choix-q" type="search" placeholder="gratin, poulet, curry…" value="${echap(choix.q || "")}" data-saisie="choix"></label>
+    ${des ? "" : `<div class="puces" style="margin-top:10px">${[["", "Tout"], ["viande", "Viande"], ["poisson", "Poisson"], ["plaisir", "Plaisir"]].map(([f, t]) => `<button class="puce" data-action="choix-filtre" data-f="${f}" aria-pressed="${(choix.filtre || "") === f}">${t}</button>`).join("")}</div>`}
+    <ul class="liste-choix">${l.map(r => `<li><button data-action="choisir" data-id="${echap(r.id)}">${echap(r.nom)}${r.tags.includes("plaisir") ? '<span class="tag">plaisir</span>' : ""}${r.tags.includes("poisson") ? '<span class="tag poisson">poisson</span>' : ""}</button></li>`).join("") || `<li class="discret">Aucun plat.</li>`}</ul></div></div>`;
+}
+function appliquerChoix(id) {
+  if (choix.cible === "proposition") {
+    const pr = S.proposition, grille = Moteur.grilleDuPlan(pr.periode);
+    grille[`${choix.j}-${choix.k}`] = id;
+    const extra = pr.mode === "express" ? composerExpressEntrees() : composerMesureEntrees();
+    const res = Moteur.composer(Object.assign(extra, { grilleImposee: grille }));
+    S.proposition = Object.assign(res, { mode: pr.mode, graine: pr.graine });
+  } else {
+    // en cours de menu : seul ce repas change (les courses déjà prévues ne bougent pas)
+    const per = P(), grille = Moteur.grilleDuPlan(per);
+    grille[`${choix.j}-${choix.k}`] = id;
+    const res = Moteur.composer(entreesMoteur({ personnes: D().personnes.length ? D().personnes : per.personnes, debut: per.debut, jours: per.jours, joursCourses: [], invites: per.invites, grilleImposee: grille }));
+    const m = res.periode.plan[choix.j - 1].meals.find(x => x.k === choix.k);
+    if (m) D().suivi.remplacements[`${choix.j}-${choix.k}`] = { plat: m.plat, items: m.items, recette: m.recette };
+    sauver();
+  }
+  choix = null; feuilleChoix(); rendre(); toast("Plat changé");
+}
+function composerMesureEntrees() {
+  const g = D().reglages, debut = g.debut || ajouterJours(aujourdhui(), 1), jours = +g.jours || 7;
+  const joursCourses = [debut].concat(Moteur.joursDeCourses(debut, jours, +g.jourCourses).filter(d => d > ajouterJours(debut, 2)));
+  return entreesMoteur({ personnes: D().personnes, debut, jours, joursCourses, budget: g.budget ? +g.budget * jours / 30 : null });
+}
+function composerExpressEntrees() {
+  const x = S.express, stock = {};
+  for (const l of x.lignes) if (l.a && l.q > 0) stock[l.a] = (stock[l.a] || 0) + l.q;
+  for (const a of ["Huile", "Sauce soja", "Concentré de tomate", "Moutarde / ketchup", "Ail, gingembre, curcuma", "Farine", "Citrons"]) if (x.placard && CAT0[a]) stock[a] = (stock[a] || 0) + 5000;
+  return entreesMoteur({ personnes: personnesExpress(x.adultes, x.enfants), debut: aujourdhui(), jours: x.jours, joursCourses: [], stockDepart: stock, priorite: "stock", avecDessert: x.desserts });
+}
+
+/* ----- L'app ----- */
+const VUES = [["jour", "Aujourd'hui"], ["menu", "Menu"], ["courses", "Courses"], ["stock", "Stock"], ["foyer", "Foyer"]];
+function nav() { return `<nav class="nav" aria-label="Navigation"><div class="in">${VUES.map(([v, l]) => `<button data-vue="${v}" ${S.vue === v ? 'aria-current="page"' : ""}>${ICONES[v]}<span>${l}</span></button>`).join("")}</div></nav>`; }
+function ecranApp() {
+  if (!P()) { S.ecran = "choix"; return ecranChoix(); }
+  return ({ jour: vueJour, menu: vueMenu, courses: vueCourses, stock: vueStock, foyer: vueFoyer }[S.vue] || vueJour)();
+}
+function choixPersonne() {
+  const pers = P().personnes;
+  if (pers.length < 2) return "";
+  return `<div class="qui" role="group" aria-label="Portions de">${pers.map(p => `<button class="puce" data-action="qui" data-id="${p.id}" aria-pressed="${qui() === p.id}">${echap(nomDe(p.id))}</button>`).join("")}</div>`;
+}
+function vueJour() {
+  const p = P(), j = S.jour || jourDuPlan(), jour = p.plan[j - 1], pid = qui() || p.personnes[0].id;
+  const st = statsJour(j, pid), n = (D().bilan && D().bilan.nutrition[pid]) || null;
+  const fiches = jour.meals.map(m => {
+    const r = repas(j, m.k), fait = !!D().suivi.coches[`d${j}-${m.k}`];
+    const t = Moteur.totaux(CAT(), r.items[pid] || []);
+    const titre = m.k === "pdj" ? (r.noms && r.noms[pid]) || "Petit-déjeuner" : r.plat;
+    return `<article class="repas ${fait ? "fait" : ""}" id="r-${m.k}"><span class="k k-${m.k}">${Moteur.LABELS[m.k]}</span><h3>${echap(titre)}</h3>
+      <ul class="ingr">${(r.items[pid] || []).map(([a, q]) => `<li><span>${echap(a)}</span><span>${fmtQ(a, q)}</span></li>`).join("")}</ul>
+      <p class="discret petit" style="margin:8px 0 0">${nb(t.kcal)} kcal · ${nb(t.prot)} g de protéines</p>
+      <div class="actions"><button class="fait-btn" data-action="cocher" data-j="${j}" data-k="${m.k}" aria-pressed="${fait}">${fait ? "Fait" : "Je l'ai fait"}</button>
+        ${m.k !== "pdj" ? `<button class="lien" data-action="changer" data-j="${j}" data-k="${m.k}" data-cible="periode">Changer</button>` : ""}</div></article>`;
+  }).join("");
+  return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div>
+    <div class="jour-nav"><button class="rond" data-action="jour" data-d="${j - 1}" ${j <= 1 ? "disabled" : ""} aria-label="Jour précédent">${ICONES.gauche}</button>
+      <div style="text-align:center"><span class="etiquette">Jour ${j} sur ${p.jours}</span><h1>${libelleDate(jour.date)}</h1></div>
+      <button class="rond" data-action="jour" data-d="${j + 1}" ${j >= p.jours ? "disabled" : ""} aria-label="Jour suivant">${ICONES.droite}</button></div>
+    ${choixPersonne()}
+    <div class="carte"><div class="chiffres"><div><b>${nb(st.fkcal)}</b><span class="discret petit">/ ${nb(st.kcal)} kcal</span></div><div><b>${nb(st.fprot)}</b><span class="discret petit">/ ${nb(st.prot)} g prot.</span></div></div>
+      ${n ? `<p class="discret petit" style="margin:8px 0 0">Objectif : ${nb(n.objectifs.kcalMin)} à ${nb(n.objectifs.kcalMax)} kcal, ${n.objectifs.prot} g de protéines.</p>` : ""}</div>
+    ${fiches}</div>`;
+}
+function vueMenu() {
+  const p = P(), auj = jourDuPlan();
+  const jours = p.plan.map(j => `<div class="ligne-jour"><div class="date">${deIso(j.date).getDate()}<small>${JOURS[deIso(j.date).getDay()].slice(0, 3)}.</small></div>
+      <div class="plats">${j.meals.filter(m => m.k !== "pdj").map(m => { const r = repas(j.d, m.k); return `<button class="plat-btn" data-action="${j.d >= auj ? "changer" : "voir"}" data-j="${j.d}" data-k="${m.k}" data-cible="periode"><b>${Moteur.LABELS[m.k]}${j.tag === "plaisir" && m.k === "dej" ? '<span class="tag">plaisir</span>' : ""}${D().suivi.coches[`d${j.d}-${m.k}`] ? " · fait" : ""}</b>${echap(r.plat)}</button>`; }).join("")}</div></div>`).join("");
+  return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div>
+    <h1 style="margin-bottom:4px">${echap(p.titre)}</h1><p class="discret" style="margin:0 0 14px">${p.personnes.map(x => echap(nomDe(x.id))).join(", ")}${p.invites ? ` + ${p.invites} invités` : ""}</p>
+    <div class="carte">${jours}</div>
+    <button class="bouton plein leger" data-action="nouveau-menu">Préparer un nouveau menu</button></div>`;
+}
+function vueCourses() {
+  const p = P(), courses = p.courses;
+  if (!courses.length) return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div><h1>Courses</h1><p class="discret">Rien à acheter pour ce menu.</p>${boutonTicket()}</div>`;
+  const cid = courses.some(c => c.id === S.courseSel) ? S.courseSel : (courses.find(c => c.items.some(it => !D().suivi.achats[cleLigne(c.id, it.a)])) || courses[0]).id;
+  const c = courses.find(x => x.id === cid), b = bilanCourses();
+  const lignes = c.items.map(it => {
+    const k = cleLigne(c.id, it.a), coche = !!D().suivi.achats[k], paye = D().suivi.payes[k];
+    return `<div class="article ${coche ? "coche" : ""}"><button class="case" data-action="acheter" data-cle="${echap(k)}" aria-pressed="${coche}" aria-label="${coche ? "Décocher" : "Cocher"} ${echap(it.a)}">${coche ? ICONES.coche : ""}</button>
+      <div class="nom">${echap(it.a)}<small>${libelleAchat(it)} · env. ${euros(estimation(it))}</small></div>
+      <label class="prix"><span class="sr">Prix payé pour ${echap(it.a)}</span><input type="number" inputmode="decimal" step="0.01" min="0" placeholder="prix" value="${paye != null ? paye : ""}" data-paye="${echap(k)}"></label></div>`;
+  }).join("");
+  const budget = D().bilan && D().bilan.cout.budget;
+  return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div>
+    <h1 style="margin-bottom:12px">Courses</h1>
+    <div class="puces" style="margin-bottom:12px">${courses.map(x => `<button class="puce" data-action="course" data-id="${x.id}" aria-pressed="${x.id === cid}">${echap(x.titre)}${x.complement ? "" : " · " + deIso(x.date).getDate() + " " + MOISC[deIso(x.date).getMonth()]}</button>`).join("")}</div>
+    <div class="carte pleine"><div class="chiffres"><div><b>${euros(b.paye)}</b><span class="petit">payé</span></div><div><b>${euros(b.reste)}</b><span class="petit">reste à acheter</span></div>${budget ? `<div><b>${euros(budget)}</b><span class="petit">budget</span></div>` : ""}</div>
+      ${budget ? `<div class="barre" style="margin-top:12px;background:rgba(255,255,255,.2)"><i class="${b.paye + b.reste > budget ? "trop" : ""}" style="width:${Math.min(100, (b.paye + b.reste) / budget * 100)}%"></i></div>` : ""}</div>
+    <div class="carte"><p class="discret petit" style="margin:0 0 4px">${echap(c.couvre || "")}</p>${lignes}</div>
+    ${boutonTicket()}</div>`;
+}
+const boutonTicket = () => S.chef ? `<label class="bouton plein leger" style="cursor:pointer">Ajouter un ticket de caisse<input type="file" accept="image/*" capture="environment" data-photo="courses" class="sr"></label>` : "";
+function vueStock() {
+  const p = P(), j = jourDuPlan(), s = stockReel(j), besoin3 = {};
+  for (let d = j; d < Math.min(p.jours, j + 3) + 1 && d <= p.jours; d++) for (const m of p.plan[d - 1].meals) for (const [qid, it] of Object.entries(repas(d, m.k).items)) for (const [a, q] of it) besoin3[a] = (besoin3[a] || 0) + q * (qid === "invites" ? (p.invites || 0) : 1);
+  const manque = Object.entries(besoin3).filter(([a, q]) => q > (s[a] || 0) + 0.5).map(([a, q]) => `<li><span>${echap(a)}</span><span>il manque ${fmtQ(a, q - Math.max(0, s[a] || 0))}</span></li>`).join("");
+  const dispo = Object.entries(s).filter(([, q]) => q > 0.5).sort((x, y) => x[0].localeCompare(y[0], "fr")).map(([a, q]) => `<li><span>${echap(a)}</span><span>${fmtQ(a, Math.round(q))}</span></li>`).join("");
+  return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div>
+    <h1 style="margin-bottom:4px">À la maison</h1><p class="discret" style="margin:0 0 14px">Ce matin, d'après les courses cochées et les repas passés.</p>
+    ${manque ? `<div class="carte"><h3 style="margin-bottom:8px">Pour les 3 prochains jours</h3><ul class="ingr">${manque}</ul></div>` : ""}
+    <div class="carte"><ul class="ingr">${dispo || `<li class="discret">Rien en stock.</li>`}</ul></div>
+    ${boutonTicket()}</div>`;
+}
+function vueFoyer() {
+  const pers = D().personnes;
+  return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div>
+    <h1 style="margin-bottom:14px">Le foyer</h1>
+    ${pers.map(p => `<div class="carte"><div class="rangee" style="justify-content:space-between"><h3>${echap(p.nom)}</h3><button class="lien" data-action="personne-modifier" data-id="${p.id}">Modifier</button></div>
+      <p class="petit" style="margin:6px 0 0">${echap(texteObjectif(p))}</p></div>`).join("")}
+    <button class="bouton plein leger" data-action="personne-ajouter">Ajouter une personne</button>
+    <p class="discret petit">Les changements comptent pour le prochain menu.</p>
+    ${S.serveur ? `<h2 style="margin:22px 0 10px">Inviter</h2>
+    <div class="carte pile"><p class="petit" style="margin:0">Un code à donner : il sert une seule fois.</p>
+      <div class="grille-2"><button class="bouton leger" data-action="inviter" data-type="foyer">Dans mon foyer</button><button class="bouton leger" data-action="inviter" data-type="proche">Un proche (son foyer)</button></div>
+      <div id="invitation"></div></div>
+    <h2 style="margin:22px 0 10px">Rappels</h2>
+    <div class="carte pile"><p class="petit" style="margin:0">La veille de chaque course et la veille de la fin du menu, à 18 h.</p>
+      <button class="bouton leger" data-action="rappels">Activer les rappels sur ce téléphone</button></div>
+    <h2 style="margin:22px 0 10px">Mon compte</h2>
+    <div class="carte pile"><p class="petit" style="margin:0">Connecté : <b>${echap(S.compte.nom)}</b></p>
+      <button class="bouton leger" data-action="ajouter-cle">Ajouter une clé d'accès sur cet appareil</button>
+      <button class="bouton contour" data-action="deconnexion">Se déconnecter</button></div>` : ""}</div>`;
+}
+
+/* ---------- Événements ---------- */
+async function action(b) {
+  const d = b.dataset;
+  switch (d.action) {
+    case "aller": S.ecran = d.ecran; if (d.ecran === "app") S.vue = S.vue || "jour"; return rendre();
+    case "theme": {
+      const t = document.documentElement.dataset.theme, sombre = t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = sombre ? "light" : "dark"; try { localStorage.setItem("popote-theme", sombre ? "light" : "dark"); } catch (e) {}
+      return rendre();
+    }
+    case "connexion": return connecter();
+    case "secours": {
+      const code = prompt("Ton code de secours (16 caractères) :"); if (!code) return;
+      const r = await api("/api/secours", { code });
+      if (!r.ok) return toast(r.d.message || "Code inconnu");
+      S.compte = r.d.compte; S.secours = r.d.secours; S.base = null; await tirer();
+      toast("Compte retrouvé. Ajoute une clé d'accès sur ce téléphone.");
+      S.ecran = "secours"; return rendre();
+    }
+    case "copier-secours": try { await navigator.clipboard.writeText(S.secours); toast("Copié"); } catch (e) { toast("Sélectionne le code pour le copier"); } return;
+    case "secours-ok": S.secours = null; S.ecran = D().periode ? "app" : "choix"; return rendre();
+    case "express": S.express = { etape: "saisie", lignes: [], jours: 7, adultes: Math.max(1, D().personnes.length || 2), enfants: 0, placard: true, desserts: true, ticket: null }; S.ecran = "express"; return rendre();
+    case "moins": case "plus": {
+      const x = S.express, k = d.cle, v = x[k] + (d.action === "plus" ? 1 : -1);
+      x[k] = Math.max(k === "enfants" ? 0 : 1, Math.min(k === "jours" ? 14 : 12, v)); return rendre();
+    }
+    case "bascule": S.express[d.cle] = !S.express[d.cle]; return rendre();
+    case "ligne-ajouter": S.express.lignes.push({ libelle: "", a: ALIMENTS[0], nombre: 1, poids: 0, prix: 0, q: CAT0[ALIMENTS[0]].vrac ? 500 : CAT0[ALIMENTS[0]].cond }); return rendre();
+    case "composer-express": { const res = composerExpress(1); S.proposition = Object.assign(res, { mode: "express", graine: 1 }); S.ecran = "proposition"; return rendre(); }
+    case "composer-mesure": {
+      lireReglages(); sauver();
+      const res = composerSurMesure(1); S.proposition = Object.assign(res, { mode: "mesure", graine: 1 }); S.ecran = "proposition"; return rendre();
+    }
+    case "autre-idee": {
+      const g = (S.proposition.graine || 1) + 1, mode = S.proposition.mode;
+      S.proposition = Object.assign(mode === "express" ? composerExpress(g) : composerSurMesure(g), { mode, graine: g }); window.scrollTo(0, 0); return rendre();
+    }
+    case "valider": return validerProposition();
+    case "personne-ajouter": edition = PERSONNE0(); return feuillePersonne();
+    case "personne-modifier": edition = cloneJ(D().personnes.find(p => p.id === d.id)); return feuillePersonne();
+    case "personne-retirer": D().personnes = D().personnes.filter(p => p.id !== d.id); sauver(); return rendre();
+    case "exclu-ajouter": { lireReglages(); const v = document.getElementById("g-exclu").value; D().reglages.exclus = (D().reglages.exclus || []).concat(v); sauver(); return rendre(); }
+    case "exclu-retirer": lireReglages(); D().reglages.exclus = (D().reglages.exclus || []).filter(a => a !== d.a); sauver(); return rendre();
+    case "fermer": edition = null; choix = null; document.getElementById("couche").innerHTML = ""; return;
+    case "changer": choix = { j: +d.j, k: d.k, q: "", filtre: "", cible: d.cible || "proposition" }; return feuilleChoix();
+    case "voir": return toast("Ce jour est passé");
+    case "choix-filtre": choix.filtre = d.f; return feuilleChoix();
+    case "choisir": return appliquerChoix(d.id);
+    case "cocher": { const k = `d${d.j}-${d.k}`; if (D().suivi.coches[k]) delete D().suivi.coches[k]; else D().suivi.coches[k] = true; sauver(); return rendre(); }
+    case "jour": S.jour = Math.max(1, Math.min(P().jours, +d.d)); return rendre();
+    case "qui": S.qui = d.id; return rendre();
+    case "course": S.courseSel = +d.id; return rendre();
+    case "acheter": { const k = d.cle; if (D().suivi.achats[k]) delete D().suivi.achats[k]; else D().suivi.achats[k] = true; sauver(); return rendre(); }
+    case "nouveau-menu": S.ecran = "choix"; return rendre();
+    case "inviter": {
+      const r = await api("/api/invitations", { type: d.type });
+      const el = document.getElementById("invitation");
+      if (r.ok && el) el.innerHTML = `<div class="secours">${echap(r.d.code)}</div><p class="discret petit" style="margin:8px 0 0">${r.d.type === "foyer" ? "La personne rejoindra ton foyer : mêmes menus, mêmes courses." : "La personne créera son propre foyer."}</p>`;
+      return;
+    }
+    case "rappels": return activerRappels();
+    case "ajouter-cle": return ajouterCle();
+    case "deconnexion": await api("/api/deconnexion", {}); S.compte = null; S.doc = DOC0(); S.base = null; try { localStorage.removeItem("popote-doc"); } catch (e) {} S.ecran = "accueil"; return rendre();
+  }
+}
+document.onclick = e => {
+  const v = e.target.closest(".voile"); if (v && e.target === v) { edition = null; choix = null; document.getElementById("couche").innerHTML = ""; return; }
+  const b = e.target.closest("[data-action]"); if (b && !b.disabled) return action(b);
+  const n = e.target.closest("[data-vue]"); if (n) { S.vue = n.dataset.vue; S.jour = null; window.scrollTo(0, 0); return rendre(); }
+};
+document.onsubmit = e => {
+  e.preventDefault();
+  const f = e.target.dataset.form;
+  if (f === "inscription") return inscrire(document.getElementById("i-code").value, document.getElementById("i-nom").value);
+  if (f === "personne") {
+    const p = lirePersonne(); if (!p.nom) return toast("Donne un prénom");
+    const i = D().personnes.findIndex(x => x.id === p.id);
+    if (i >= 0) D().personnes[i] = p; else D().personnes.push(p);
+    if (S.ecran === "surmesure") lireReglages();
+    edition = null; document.getElementById("couche").innerHTML = ""; sauver(); rendre();
+  }
+};
+document.oninput = e => {
+  const t = e.target;
+  if (t.dataset.saisie === "choix") { choix.q = t.value; feuilleChoix(); const i = document.getElementById("choix-q"); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }
+  if (t.closest("[data-form=personne]") && edition) { try { const p = lirePersonne(); document.getElementById("p-apercu").textContent = texteObjectif(p); } catch (err) {} }
+};
+document.onchange = async e => {
+  const t = e.target;
+  if (t.dataset.ligne != null) { const l = S.express.lignes[+t.dataset.ligne], a = t.value; l.a = a; if (a) { const c = CAT0[a]; l.q = c.vrac ? (l.poids || 500) : Math.max(1, l.nombre) * c.cond; } return rendre(); }
+  if (t.dataset.paye != null) {
+    const k = t.dataset.paye, v = parseFloat(String(t.value).replace(",", "."));
+    if (isNaN(v)) delete D().suivi.payes[k]; else { D().suivi.payes[k] = v; D().suivi.achats[k] = true; }
+    sauver(); return rendre();
+  }
+  if (t.dataset.photo && t.files && t.files[0]) {
+    const ou = t.dataset.photo, fichier = t.files[0];
+    if (ou === "express") { S.express.etape = "lecture"; rendre(); }
+    const ticket = await envoyerTicket(fichier);
+    if (ou === "express") {
+      S.express.etape = "saisie";
+      if (ticket) { S.express.ticket = { magasin: ticket.magasin, total: ticket.total, date: ticket.date }; S.express.lignes = S.express.lignes.concat(lignesDuTicket(ticket)); }
+      return rendre();
+    }
+    if (ticket) return integrerTicket(ticket);
+  }
+};
+// Ticket ajouté en cours de menu : coche les articles prévus de la course la plus proche, le reste entre au stock
+function integrerTicket(t) {
+  const lignes = lignesDuTicket(t).filter(l => l.a), p = P(), auj = aujourdhui();
+  const course = p.courses.filter(c => c.date <= auj || c.complement).slice(-1)[0] || p.courses[0];
+  let coches = 0, ajoutes = 0;
+  for (const l of lignes) {
+    const it = course && course.items.find(x => x.a === l.a);
+    if (it) { const k = cleLigne(course.id, it.a); D().suivi.achats[k] = true; if (l.prix) D().suivi.payes[k] = l.prix; coches++; }
+    else { D().ajouts.push({ a: l.a, q: l.q, prix: l.prix, date: auj }); ajoutes++; }
+    if (l.prix > 0) majPrix(l);
+  }
+  D().tickets = (D().tickets || []).concat([{ date: auj, magasin: t.magasin, total: t.total, lignes: lignes.length }]).slice(-30);
+  sauver(); rendre(); toast(`Ticket ajouté : ${coches} articles cochés, ${ajoutes} au stock`);
+}
+document.onkeydown = e => { if (e.key === "Escape" && (edition || choix)) { edition = null; choix = null; document.getElementById("couche").innerHTML = ""; } };
+
+demarrer();
+</script>
+</body>
+</html>
