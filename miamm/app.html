@@ -112,6 +112,18 @@ button.hero h1{ max-width:none; font-size:38px; }
 .ingr{ list-style:none; margin:0; padding:0; }
 .ingr li{ display:flex; justify-content:space-between; gap:10px; padding:4px 0; border-bottom:1px dashed var(--trait); font-size:15px; }
 .ingr li:last-child{ border-bottom:none; }
+.ligne-stock{ align-items:center; }
+.chrono .go{ width:72px; height:72px; flex-shrink:0; border-radius:50%; border:none; background:var(--paprika, #E4572E); color:#fff; font:800 22px var(--titre); cursor:pointer; box-shadow:0 6px 18px rgba(228,87,46,.35); }
+.chrono.en-cours #chrono-t{ font-variant-numeric:tabular-nums; }
+.ligne-stock label{ display:flex; align-items:center; gap:6px; }
+.ligne-stock input{ width:84px; min-height:38px; padding:4px 8px; border-radius:10px; border:2px solid var(--trait); background:var(--surface); text-align:right; font-size:15px; }
+.ligne-stock small{ width:24px; color:var(--doux); }
+.ajout-stock{ display:grid; grid-template-columns:minmax(0,1fr) 76px auto; gap:8px; margin-top:12px; align-items:center; }
+.ajout-stock select,.ajout-stock input{ width:100%; min-height:42px; border-radius:12px; border:2px solid var(--trait); background:var(--surface); padding:4px 8px; font-size:15px; }
+.ajuste-l{ display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px; align-items:center; padding:8px 0; border-bottom:1px solid var(--trait); }
+.ajuste-l .qte{ display:flex; align-items:center; gap:4px; }
+.ajuste-l .qte input{ width:68px; min-height:40px; border-radius:10px; border:2px solid var(--trait); background:var(--surface); text-align:center; font-size:15px; }
+.ajuste-l .qte button{ width:40px; height:40px; border-radius:50%; border:2px solid var(--trait); background:var(--surface); font-size:18px; cursor:pointer; }
 .ingr li span:last-child{ color:var(--doux); white-space:nowrap; }
 .actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; align-items:center; }
 .fait-btn{ display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:8px 16px; border-radius:999px; border:2px solid var(--encre); background:transparent; font-weight:600; }
@@ -373,17 +385,31 @@ function profilsPeriode() {
   const a = ids.filter(id => /^a/.test(id)).length, e = ids.filter(id => /^e/.test(id)).length;
   return personnesExpress(Math.max(1, a), e).filter(x => ids.includes(x.id));
 }
-// stock réel au matin du jour j : départ + articles cochés des courses passées + achats ajoutés − repas des jours d'avant
+// stock réel au matin du jour j : départ + articles cochés des courses passées + achats ajoutés − repas des jours d'avant.
+// Un inventaire (stock remis à zéro ou corrigé à la main, D().inventaire) remplace tout ce qui le précède :
+// à partir de lui, seuls comptent les achats faits après et les repas pas encore cochés au moment de l'inventaire.
+const quand = v => typeof v === "number" ? v : 0;   // cochage ou ajout horodaté ; les anciens (true, sans t) datent d'avant tout inventaire
 function stockReel(j) {
-  const p = P(), s = Object.assign({}, p.stockDepart || {}), date = j > p.jours ? ajouterJours(p.fin, 1) : p.plan[j - 1].date;
-  for (const c of p.courses) if (c.date <= date || c.complement) for (const it of c.items) if (D().suivi.achats[cleLigne(c.id, it.a)]) s[it.a] = (s[it.a] || 0) + quantiteAchat(it.a, it.buy);
-  for (const x of D().ajouts) if (x.date <= date) s[x.a] = (s[x.a] || 0) + x.q;
-  for (let d = 1; d < j; d++) for (const m of p.plan[d - 1].meals) {
+  const p = P(), date = j > p.jours ? ajouterJours(p.fin, 1) : p.plan[j - 1].date;
+  const inv = D().inventaire && D().inventaire.periode === p.debut ? D().inventaire : null, depuis = inv && j >= inv.jour ? inv : null;
+  const s = Object.assign({}, depuis ? depuis.stock : p.stockDepart || {}), apres = t => !depuis || quand(t) > depuis.t;
+  for (const c of p.courses) if (c.date <= date || c.complement) for (const it of c.items) { const v = D().suivi.achats[cleLigne(c.id, it.a)]; if (v && apres(v)) s[it.a] = (s[it.a] || 0) + quantiteAchat(it.a, it.buy); }
+  for (const x of D().ajouts) if (x.date <= date && apres(x.t)) s[x.a] = (s[x.a] || 0) + x.q;
+  for (let d = depuis ? depuis.jour : 1; d < j; d++) for (const m of p.plan[d - 1].meals) {
+    if (depuis && d === depuis.jour && depuis.faits.includes(m.k)) continue;
     const r = repas(d, m.k);
     for (const [qid, items] of Object.entries(r.items)) for (const [a, q] of items) s[a] = (s[a] || 0) - q * (qid === "invites" ? (p.invites || 0) : 1);
   }
   return s;
 }
+// fixe le stock de maintenant (remise à zéro, correction d'une ligne) : il sert de point de départ pour la suite
+function fixerStock(stock) {
+  const p = P(), j = Math.min(jourDuPlan(), p.jours);
+  const propre = {}; for (const [a, q] of Object.entries(stock)) if (q > 0.5) propre[a] = Math.round(q);
+  D().inventaire = { periode: p.debut, jour: j, t: Date.now(), date: aujourdhui(), faits: p.plan[j - 1].meals.filter(m => D().suivi.coches[`d${j}-${m.k}`]).map(m => m.k), stock: propre };
+  sauver();
+}
+function stockMaintenant() { const s = stockReel(jourDuPlan()), o = {}; for (const [a, q] of Object.entries(s)) if (q > 0.5) o[a] = q; return o; }
 function statsJour(j, pid) {
   let kcal = 0, prot = 0, fkcal = 0, fprot = 0;
   for (const m of P().plan[j - 1].meals) {
@@ -424,7 +450,7 @@ function validerProposition() {
   const profils = pr.mode === "stock" ? convivesStock() : pr.mode === "express" ? convivesExpress(S.express) : doc.personnes;
   doc.periode = Object.assign({}, pr.periode, { profils: cloneJ(profils) }); doc.bilan = pr.bilan; doc.mode = pr.mode;
   doc.suivi = { coches: {}, achats: {}, payes: {}, remplacements: {} };
-  doc.ajouts = [];
+  doc.ajouts = []; doc.inventaire = null;
   if (pr.mode === "express") {
     doc.personnes = doc.personnes.length ? doc.personnes : pr.periode.personnes.map(p => Object.assign(PERSONNE0(), personnesExpress(S.express.adultes, S.express.enfants).find(x => x.id === p.id)));
     // le stock de départ vient du ticket : ses prix deviennent les prix de référence
@@ -439,6 +465,96 @@ function majPrix(l) {
   // au kilo en vrac ; au paquet sinon (ramené au contenu d'un paquet quand le poids est imprimé)
   const prix = c.vrac ? (l.poids > 0 ? l.prix / l.poids * 1000 : null) : (l.poids > 0 && c.nut && c.nut[1] !== "unité" ? l.prix / l.poids * c.cond : l.prix / l.nombre);
   if (prix && isFinite(prix)) D().prix[l.a] = { prix: Math.round(prix * 100) / 100, date: aujourdhui(), source: "ticket" };
+}
+
+/* ---------- Chrono et pas pendant les courses ---------- */
+// Le chrono part au « Go » et survit à un rechargement (localStorage) ; les pas sont comptés par l'accéléromètre du
+// téléphone tant que l'app reste ouverte, écran allumé (un site ne peut pas compter les pas en arrière-plan).
+let chrono = (() => { try { return JSON.parse(localStorage.getItem("miamm-chrono")) || null; } catch (e) { return null; } })();
+let tic = null, verrouEcran = null, mouv = null;
+const pasDispo = () => typeof DeviceMotionEvent !== "undefined";
+const duree = ms => { const t = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(t / 3600), m = Math.floor(t / 60) % 60, sec = t % 60; return (h ? h + ":" + String(m).padStart(2, "0") : String(m).padStart(2, "0")) + ":" + String(sec).padStart(2, "0"); };
+const garderChrono = () => { try { chrono ? localStorage.setItem("miamm-chrono", JSON.stringify(chrono)) : localStorage.removeItem("miamm-chrono"); } catch (e) {} };
+function afficherChrono() {
+  const t = document.getElementById("chrono-t"), n = document.getElementById("chrono-pas");
+  if (t && chrono) t.textContent = duree(Date.now() - chrono.debut);
+  if (n && chrono) n.textContent = nb(chrono.pas);
+}
+// détection d'un pas : pic de l'accélération au-dessus de sa moyenne glissante, au plus un pas toutes les 300 ms
+function ecouterPas() {
+  if (mouv || !pasDispo()) return;
+  let moyenne = 9.8, haut = false, dernier = 0;
+  mouv = e => {
+    const a = e.accelerationIncludingGravity; if (!a || a.x == null || !chrono) return;
+    const m = Math.sqrt(a.x * a.x + a.y * a.y + a.z * a.z), maintenant = Date.now();
+    moyenne = moyenne * 0.9 + m * 0.1;
+    const ecart = m - moyenne;
+    if (!haut && ecart > 1.2 && maintenant - dernier > 300) { haut = true; dernier = maintenant; chrono.pas++; if (chrono.pas % 10 === 0) garderChrono(); afficherChrono(); }
+    else if (haut && ecart < 0.3) haut = false;
+  };
+  addEventListener("devicemotion", mouv);
+}
+function relancerChrono() {
+  if (!chrono || tic) return;
+  tic = setInterval(afficherChrono, 1000); ecouterPas();
+  if (navigator.wakeLock) navigator.wakeLock.request("screen").then(v => { verrouEcran = v; }).catch(() => {});
+}
+async function demarrerChrono(cid) {
+  // iPhone : l'accès aux mouvements se demande au toucher du bouton
+  if (pasDispo() && typeof DeviceMotionEvent.requestPermission === "function") { try { await DeviceMotionEvent.requestPermission(); } catch (e) {} }
+  chrono = { debut: Date.now(), pas: 0, cid }; garderChrono(); relancerChrono(); rendre();
+}
+function arreterChrono() {
+  if (!chrono) return;
+  const fin = { duree: Date.now() - chrono.debut, pas: chrono.pas, date: aujourdhui() };
+  D().suivi.chronos = Object.assign({}, D().suivi.chronos, { [chrono.cid]: fin });
+  clearInterval(tic); tic = null;
+  if (mouv) { removeEventListener("devicemotion", mouv); mouv = null; }
+  if (verrouEcran) { verrouEcran.release().catch(() => {}); verrouEcran = null; }
+  chrono = null; garderChrono(); sauver(); rendre();
+  toast(`Courses faites en ${duree(fin.duree)}${fin.pas ? `, ${nb(fin.pas)} pas` : ""}`);
+}
+function carteChrono(cid) {
+  const der = (D().suivi.chronos || {})[cid];
+  if (chrono) { setTimeout(relancerChrono, 0); return `<div class="carte chrono en-cours"><div class="chiffres"><div><b id="chrono-t">${duree(Date.now() - chrono.debut)}</b><span class="petit">chrono</span></div><div><b id="chrono-pas">${nb(chrono.pas)}</b><span class="petit">${pasDispo() ? "pas" : "pas (non disponible ici)"}</span></div></div>
+      <p class="discret petit" style="margin:8px 0 10px">Garde l'app ouverte pendant les courses : les pas ne se comptent pas écran éteint.</p>
+      <button class="bouton plein accent" data-action="chrono-stop">Stop</button></div>`; }
+  return `<div class="carte chrono"><div class="rangee" style="justify-content:space-between;gap:12px"><div><h3 style="margin:0">Chrono des courses</h3><p class="discret petit" style="margin:4px 0 0">${der ? `Dernière fois : ${duree(der.duree)}${der.pas ? ` · ${nb(der.pas)} pas` : ""}` : "Temps passé et pas faits dans le magasin."}</p></div>
+      <button class="go" data-action="chrono-go" data-id="${cid}" aria-label="Démarrer le chrono">Go</button></div></div>`;
+}
+
+/* ---------- Ajuster un repas (quantités, ingrédients) ---------- */
+const pasDe = a => unite(a) === "unité" ? 1 : unite(a) === "ml" ? 10 : 5;
+function ouvrirAjuster(j, k) {
+  const pid = qui(), r = repas(j, k);
+  ajust = { j, k, pid, items: cloneJ(r.items[pid] || []) }; feuilleAjuster();
+}
+function feuilleAjuster() {
+  if (!ajust) return fermerCouche();
+  const { j, k, pid, items } = ajust, plan = (P().plan[j - 1].meals.find(m => m.k === k).items[pid]) || [];
+  const t = Moteur.totaux(CAT(), items), tp = Moteur.totaux(CAT(), plan), ecart = Math.round(t.kcal - tp.kcal);
+  const lignes = items.map(([a, q], i) => `<div class="ajuste-l"><span>${echap(a)}<br><small class="discret">${echap(unite(a) === "unité" ? "à l'unité" : unite(a))}</small></span>
+      <span class="qte"><button data-action="aj-pas" data-i="${i}" data-s="-1" aria-label="Moins de ${echap(a)}">−</button><input type="number" inputmode="decimal" min="0" value="${q}" data-ajq="${i}" aria-label="Quantité de ${echap(a)}"><button data-action="aj-pas" data-i="${i}" data-s="1" aria-label="Plus de ${echap(a)}">+</button><button data-action="aj-retirer" data-i="${i}" aria-label="Retirer ${echap(a)}">×</button></span></div>`).join("");
+  document.getElementById("couche").innerHTML = `<div class="voile"><div class="feuille" role="dialog" aria-modal="true" aria-labelledby="t-aj">
+    <div class="tete"><h2 id="t-aj">Ajuster · ${echap(Moteur.LABELS[k])}</h2><button class="rond" data-action="fermer" aria-label="Fermer">×</button></div>
+    <p class="discret petit" style="margin:0 0 6px">Portion de ${echap(nomDe(pid))} · ${nb(t.kcal)} kcal, ${nb(t.prot)} g de protéines${ecart ? ` (${ecart > 0 ? "+" : ""}${ecart} kcal par rapport au menu)` : ""}</p>
+    ${lignes || `<p class="discret">Aucun ingrédient.</p>`}
+    <div class="ajout-stock"><label><span class="sr">Ingrédient à ajouter</span><select id="aj-a">${ALIMENTS.map(a => `<option>${echap(a)}</option>`).join("")}</select></label>
+      <label><span class="sr">Quantité</span><input id="aj-q" type="number" inputmode="decimal" min="0" placeholder="qté"></label>
+      <button class="bouton leger" data-action="aj-ajouter">Ajouter</button></div>
+    <div class="pile" style="margin-top:14px"><button class="bouton plein accent" data-action="aj-ok">Enregistrer</button><button class="bouton plein leger" data-action="aj-plan">Revenir au menu prévu</button></div></div></div>`;
+}
+// enregistre la portion ajustée ; si tout redevient comme au menu, l'ajustement disparaît
+function enregistrerAjuster(versPlan) {
+  const { j, k, pid } = ajust, cle = `${j}-${k}`, m = P().plan[j - 1].meals.find(x => x.k === k);
+  const r = repas(j, k), items = cloneJ(r.items);
+  items[pid] = versPlan ? cloneJ(m.items[pid] || []) : ajust.items.filter(([, q]) => q > 0);
+  const remp = D().suivi.remplacements, ancien = remp[cle];
+  if (!ancien || ancien.ajuste) {
+    if (JSON.stringify(items) === JSON.stringify(m.items)) delete remp[cle];
+    else remp[cle] = { plat: m.plat, recette: m.recette, items, ajuste: true };
+  } else remp[cle] = Object.assign({}, ancien, { items });
+  sauver(); fermerCouche(); rendre(); toast(versPlan ? "Portion du menu rétablie" : "Repas ajusté");
 }
 
 /* ---------- Tickets de caisse ---------- */
@@ -479,7 +595,8 @@ const optionsTicket = ou => `<div class="pile">
     <button class="bouton plein leger" data-action="coller" data-ou="${ou}">Coller le texte d'une photo</button>
     ${S.lectureChef ? `<label class="bouton plein leger" style="cursor:pointer">Photo lue par le chef<input type="file" accept="image/*,application/pdf" data-photo="${ou}" class="sr"></label>` : ""}</div>`;
 let revue = null;   // ticket ajouté en cours de menu, à vérifier avant d'entrer au stock
-function fermerCouche() { edition = null; choix = null; revue = null; document.getElementById("couche").innerHTML = ""; }
+let ajust = null;   // repas en cours d'ajustement : { j, k, pid, items }
+function fermerCouche() { edition = null; choix = null; revue = null; ajust = null; document.getElementById("couche").innerHTML = ""; }
 function feuilleSource(ou) {
   document.getElementById("couche").innerHTML = `<div class="voile"><div class="feuille" role="dialog" aria-modal="true" aria-labelledby="t-src">
     <div class="tete"><h2 id="t-src">Ajouter un ticket</h2><button class="rond" data-action="fermer" aria-label="Fermer">×</button></div>
@@ -847,6 +964,7 @@ function vueJour() {
       <ul class="ingr">${(r.items[pid] || []).map(([a, q]) => `<li><span>${echap(a)}</span><span>${fmtQ(a, q)}</span></li>`).join("")}</ul>
       <p class="discret petit" style="margin:8px 0 0">${nb(t.kcal)} kcal · ${nb(t.prot)} g de protéines</p>
       <div class="actions"><button class="fait-btn" data-action="cocher" data-j="${j}" data-k="${m.k}" aria-pressed="${fait}">${fait ? "Fait" : "Je l'ai fait"}</button>
+        <button class="lien" data-action="ajuster" data-j="${j}" data-k="${m.k}">Ajuster</button>
         ${m.k !== "pdj" ? `<button class="lien" data-action="changer" data-j="${j}" data-k="${m.k}" data-cible="periode">Changer</button>` : ""}</div></article>`;
   }).join("");
   return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div>
@@ -883,6 +1001,7 @@ function vueCourses() {
   const budget = D().bilan && D().bilan.cout.budget;
   return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div>
     ${teteCourses("")}
+    ${carteChrono(cid)}
     <div class="puces" style="margin-bottom:12px">${courses.map(x => `<button class="puce" data-action="course" data-id="${x.id}" aria-pressed="${x.id === cid}">${echap(x.titre)}${x.complement ? "" : " · " + deIso(x.date).getDate() + " " + MOISC[deIso(x.date).getMonth()]}</button>`).join("")}</div>
     <div class="carte pleine"><div class="chiffres"><div><b>${euros(b.paye)}</b><span class="petit">payé</span></div><div><b>${euros(b.reste)}</b><span class="petit">reste à acheter</span></div>${budget ? `<div><b>${euros(budget)}</b><span class="petit">budget</span></div>` : ""}</div>
       ${budget ? `<div class="barre" style="margin-top:12px;background:rgba(255,255,255,.2)"><i class="${b.paye + b.reste > budget ? "trop" : ""}" style="width:${Math.min(100, (b.paye + b.reste) / budget * 100)}%"></i></div>` : ""}</div>
@@ -895,11 +1014,18 @@ function vueStock() {
   const p = P(), j = jourDuPlan(), s = stockReel(j), besoin3 = {};
   for (let d = j; d < Math.min(p.jours, j + 3) + 1 && d <= p.jours; d++) for (const m of p.plan[d - 1].meals) for (const [qid, it] of Object.entries(repas(d, m.k).items)) for (const [a, q] of it) besoin3[a] = (besoin3[a] || 0) + q * (qid === "invites" ? (p.invites || 0) : 1);
   const manque = Object.entries(besoin3).filter(([a, q]) => q > (s[a] || 0) + 0.5).map(([a, q]) => `<li><span>${echap(a)}</span><span>il manque ${fmtQ(a, q - Math.max(0, s[a] || 0))}</span></li>`).join("");
-  const dispo = Object.entries(s).filter(([, q]) => q > 0.5).sort((x, y) => x[0].localeCompare(y[0], "fr")).map(([a, q]) => `<li><span>${echap(a)}</span><span>${fmtQ(a, Math.round(q))}</span></li>`).join("");
+  const dispo = Object.entries(s).filter(([, q]) => q > 0.5).sort((x, y) => x[0].localeCompare(y[0], "fr")).map(([a, q]) => `<li class="ligne-stock"><span>${echap(a)}</span>
+      <label><span class="sr">Quantité de ${echap(a)}</span><input type="number" inputmode="decimal" min="0" step="${unite(a) === "unité" ? 1 : 10}" value="${Math.round(q)}" data-stock="${echap(a)}"><small>${unite(a) === "unité" ? "×" : echap(unite(a))}</small></label></li>`).join("");
+  const inv = D().inventaire && D().inventaire.periode === p.debut ? D().inventaire : null;
   return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div>
     <div class="tete-vue"><div><h1>À la maison</h1><p class="discret" style="margin:6px 0 0">Ce matin, d'après les courses cochées et les repas passés.</p></div><img class="frigo" src="${CHEF_STOCK}" alt="Le chef vérifie son stock"></div>
     ${manque ? `<div class="carte"><h3 style="margin-bottom:8px">Pour les 3 prochains jours</h3><ul class="ingr">${manque}</ul></div>` : ""}
-    <div class="carte"><ul class="ingr">${dispo || `<li class="discret">Rien en stock.</li>`}</ul></div>
+    <div class="carte">${inv ? `<p class="discret petit" style="margin:0 0 6px">Stock fixé à la main le ${libelleDate(inv.date).toLowerCase()} ; les achats et repas d'après sont comptés.</p>` : ""}
+      <ul class="ingr">${dispo || `<li class="discret">Rien en stock : ajoute tes produits ci-dessous, ou un ticket.</li>`}</ul>
+      <div class="ajout-stock"><label><span class="sr">Produit</span><select id="st-a">${ALIMENTS.map(a => `<option>${echap(a)}</option>`).join("")}</select></label>
+        <label><span class="sr">Quantité</span><input id="st-q" type="number" inputmode="decimal" min="0" placeholder="qté"></label>
+        <button class="bouton leger" data-action="stock-ajouter">Ajouter</button></div>
+      <button class="lien" style="margin-top:12px" data-action="stock-zero">Remettre le stock à zéro</button></div>
     ${carteRefaire()}
     ${boutonTicket()}</div>`;
 }
@@ -974,6 +1100,28 @@ async function action(b) {
     case "exclu-ajouter": { lireReglages(); const v = document.getElementById("g-exclu").value; D().reglages.exclus = (D().reglages.exclus || []).concat(v); sauver(); return rendre(); }
     case "exclu-retirer": lireReglages(); D().reglages.exclus = (D().reglages.exclus || []).filter(a => a !== d.a); sauver(); return rendre();
     case "fermer": return fermerCouche();
+    case "ajuster": return ouvrirAjuster(+d.j, d.k);
+    case "aj-pas": { const l = ajust.items[+d.i]; l[1] = Math.max(0, Math.round((l[1] + pasDe(l[0]) * +d.s) * 10) / 10); return feuilleAjuster(); }
+    case "aj-retirer": ajust.items.splice(+d.i, 1); return feuilleAjuster();
+    case "aj-ajouter": {
+      const a = document.getElementById("aj-a").value, q = parseFloat(String(document.getElementById("aj-q").value).replace(",", "."));
+      if (!(q > 0)) return toast("Indique une quantité");
+      const l = ajust.items.find(x => x[0] === a); if (l) l[1] += q; else ajust.items.push([a, q]);
+      return feuilleAjuster();
+    }
+    case "aj-ok": return enregistrerAjuster(false);
+    case "aj-plan": return enregistrerAjuster(true);
+    case "chrono-go": return demarrerChrono(+d.id);
+    case "chrono-stop": return arreterChrono();
+    case "stock-zero": {
+      if (!confirm("Remettre le stock à zéro ? Tu pourras ensuite ajouter tes produits à la main ou avec un ticket.")) return;
+      fixerStock({}); rendre(); return toast("Stock remis à zéro");
+    }
+    case "stock-ajouter": {
+      const a = document.getElementById("st-a").value, q = parseFloat(String(document.getElementById("st-q").value).replace(",", "."));
+      if (!(q > 0)) return toast("Indique une quantité");
+      const s = stockMaintenant(); s[a] = (s[a] || 0) + q; fixerStock(s); rendre(); return toast(`${a} ajouté au stock`);
+    }
     case "ticket": return feuilleSource(d.ou);
     case "coller": return feuilleCollage(d.ou);
     case "lire-texte": {
@@ -990,7 +1138,7 @@ async function action(b) {
     case "jour": S.jour = Math.max(1, Math.min(P().jours, +d.d)); return rendre();
     case "qui": S.qui = d.id; return rendre();
     case "course": S.courseSel = +d.id; return rendre();
-    case "acheter": { const k = d.cle; if (D().suivi.achats[k]) delete D().suivi.achats[k]; else D().suivi.achats[k] = true; sauver(); return rendre(); }
+    case "acheter": { const k = d.cle; if (D().suivi.achats[k]) delete D().suivi.achats[k]; else D().suivi.achats[k] = Date.now(); sauver(); return rendre(); }
     case "nouveau-menu": S.ecran = "choix"; return rendre();
     case "inviter": {
       const r = await api("/api/invitations", { type: d.type });
@@ -1028,6 +1176,11 @@ document.oninput = e => {
 document.onchange = async e => {
   const t = e.target;
   if (t.dataset.ligne != null) { const l = S.express.lignes[+t.dataset.ligne]; l.a = t.value; l.q = qDeLigne(l); if (l.libelle) apprendre(l.libelle, l.a); return rendre(); }
+  if (t.dataset.ajq != null && ajust) { const v = parseFloat(String(t.value).replace(",", ".")); ajust.items[+t.dataset.ajq][1] = isNaN(v) ? 0 : Math.max(0, v); return feuilleAjuster(); }
+  if (t.dataset.stock != null) {
+    const v = parseFloat(String(t.value).replace(",", ".")), s = stockMaintenant();
+    s[t.dataset.stock] = isNaN(v) ? 0 : Math.max(0, v); fixerStock(s); rendre(); return toast("Stock corrigé");
+  }
   if (t.dataset.revue != null && revue) { const l = revue.lignes[+t.dataset.revue]; l.a = t.value; l.q = qDeLigne(l); apprendre(l.libelle, l.a); return feuilleRevue(); }
   if (t.dataset.pdf && t.files && t.files[0]) {
     const ou = t.dataset.pdf, fichier = t.files[0];
@@ -1038,7 +1191,7 @@ document.onchange = async e => {
   }
   if (t.dataset.paye != null) {
     const k = t.dataset.paye, v = parseFloat(String(t.value).replace(",", "."));
-    if (isNaN(v)) delete D().suivi.payes[k]; else { D().suivi.payes[k] = v; D().suivi.achats[k] = true; }
+    if (isNaN(v)) delete D().suivi.payes[k]; else { D().suivi.payes[k] = v; if (!D().suivi.achats[k]) D().suivi.achats[k] = Date.now(); }
     sauver(); return rendre();
   }
   if (t.dataset.photo && t.files && t.files[0]) {
@@ -1058,8 +1211,8 @@ function integrerTicket(t, lignesVues) {
   let coches = 0, ajoutes = 0;
   for (const l of lignes) {
     const it = course && course.items.find(x => x.a === l.a);
-    if (it) { const k = cleLigne(course.id, it.a); D().suivi.achats[k] = true; if (l.prix) D().suivi.payes[k] = l.prix; coches++; }
-    else { D().ajouts.push({ a: l.a, q: l.q, prix: l.prix, date: auj }); ajoutes++; }
+    if (it) { const k = cleLigne(course.id, it.a); D().suivi.achats[k] = Date.now(); if (l.prix) D().suivi.payes[k] = l.prix; coches++; }
+    else { D().ajouts.push({ a: l.a, q: l.q, prix: l.prix, date: auj, t: Date.now() }); ajoutes++; }
     if (l.prix > 0) majPrix(l);
   }
   D().tickets = (D().tickets || []).concat([{ date: auj, magasin: t.magasin, total: t.total, lignes: lignes.length }]).slice(-30);

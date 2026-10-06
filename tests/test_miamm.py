@@ -208,6 +208,36 @@ async def main():
             await c.wait_for_selector("text=Ticket ajouté")
             verif(await c.evaluate("stockReel(jourDuPlan())['Citrouille'] > 0"), "ticket collé absent du stock")
             verif(not any(ch.startswith("/v1/messages") for ch, h, c2 in RECUS[avant:]), "le texte collé a été envoyé au chef")
+            # ajuster un repas dans Aujourd'hui, puis revenir au menu prévu
+            await c.click("nav button[data-vue=jour]")
+            await c.click("article#r-dej button[data-action=ajuster]")
+            await c.click("button[data-action=aj-pas][data-i='0'][data-s='1']")
+            await c.click("button[data-action=aj-ok]")
+            r = await c.evaluate("({ aj: !!(D().suivi.remplacements[jourDuPlan() + '-dej'] || {}).ajuste, q: repas(jourDuPlan(), 'dej').items[qui()][0][1] - P().plan[jourDuPlan() - 1].meals.find(m => m.k === 'dej').items[qui()][0][1] })")
+            verif(r["aj"] and r["q"] > 0, f"repas ajusté : {r}")
+            await c.click("article#r-dej button[data-action=ajuster]"); await c.click("button[data-action=aj-plan]")
+            verif(await c.evaluate("!D().suivi.remplacements[jourDuPlan() + '-dej']"), "retour au menu prévu raté")
+            # stock remis à zéro, puis refait à la main et par un ticket
+            await c.click("nav button[data-vue=stock]")
+            c.once("dialog", lambda dl: asyncio.ensure_future(dl.accept()))
+            await c.click("button[data-action=stock-zero]")
+            verif(await c.evaluate("Object.keys(stockMaintenant()).length") == 0, "stock pas remis à zéro")
+            await c.select_option("#st-a", "Poulet"); await c.fill("#st-q", "800"); await c.click("button[data-action=stock-ajouter]")
+            await c.fill("input[data-stock='Poulet']", "500"); await c.dispatch_event("input[data-stock='Poulet']", "change")
+            verif(await c.evaluate("JSON.stringify(stockMaintenant())") == '{"Poulet":500}', "stock refait à la main")
+            await c.click("button[data-action=ticket][data-ou=courses]"); await c.click("button[data-action=coller]")
+            await c.fill("#t-texte", "RIZ LONG GRAIN 1KG  1,49\nTOTAL 1,49")
+            await c.click("button[data-action=lire-texte]"); await c.click("button[data-action=revue-ok]")
+            verif(await c.evaluate("stockMaintenant()['Riz (sec)']") == 1000, "ticket après la remise à zéro absent du stock")
+            # chrono et pas pendant les courses
+            await c.click("nav button[data-vue=courses]")
+            await c.click("button[data-action=chrono-go]")
+            await c.evaluate("""(async () => { const ev = z => { const e = new Event('devicemotion'); e.accelerationIncludingGravity = { x: 0, y: 0, z }; dispatchEvent(e); };
+              for (let i = 0; i < 4; i++) { ev(9.8); ev(13); await new Promise(r => setTimeout(r, 320)); ev(9); } chrono.debut -= 65000; })()""")
+            await c.click("button[data-action=chrono-stop]")
+            r = await c.evaluate("Object.values(D().suivi.chronos)[0]")
+            verif(r and r["pas"] == 4 and r["duree"] >= 65000, f"chrono des courses : {r}")
+            verif(await c.evaluate("document.documentElement.scrollWidth <= innerWidth"), "Courses déborde à 360 px avec le chrono")
             verif(await a.evaluate("(async () => (await api('/api/foyer')).d.doc.mode)()") == "mesure", "le foyer de Nicolas a été touché par celui de Léa")
 
             # 7. rappels du foyer de Nicolas envoyés par le cron
