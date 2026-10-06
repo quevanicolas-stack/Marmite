@@ -27,6 +27,14 @@ def preparer():
     assert pdf.exists(), "pdfjs-dist absent : lancer npm install dans cloudflare/"
     (PUBLIC / "pdf").mkdir()
     for nom in ("pdf.min.mjs", "pdf.worker.min.mjs"): shutil.copy(pdf / nom, PUBLIC / "pdf" / nom)
+    # Tesseract (lecture des photos de ticket sur l'appareil) : script, worker, cœurs LSTM (un seul est téléchargé,
+    # selon le navigateur) et le français compact (« best_int », 0,7 Mo compressé)
+    nm = ICI / "node_modules"
+    (PUBLIC / "ocr").mkdir()
+    for nom in ("tesseract.min.js", "worker.min.js"): shutil.copy(nm / "tesseract.js" / "dist" / nom, PUBLIC / "ocr" / nom)
+    for nom in ("tesseract-core-lstm.wasm.js", "tesseract-core-simd-lstm.wasm.js", "tesseract-core-relaxedsimd-lstm.wasm.js"):
+        shutil.copy(nm / "tesseract.js-core" / nom, PUBLIC / "ocr" / nom)
+    shutil.copy(nm / "@tesseract.js-data" / "fra" / "4.0.0_best_int" / "fra.traineddata.gz", PUBLIC / "ocr" / "fra.traineddata.gz")
     print("public/ prêt :", ", ".join(sorted(p.name for p in PUBLIC.iterdir())))
 
 if __name__ == "__main__":

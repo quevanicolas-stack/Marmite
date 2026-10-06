@@ -214,6 +214,21 @@ async def main():
             await c.wait_for_selector("text=Ticket ajouté")
             verif(await c.evaluate("stockReel(jourDuPlan())['Citrouille'] > 0"), "ticket collé absent du stock")
             verif(not any(ch.startswith("/v1/messages") for ch, h, c2 in RECUS[avant:]), "le texte collé a été envoyé au chef")
+            # photo d'un ticket papier lue sur l'appareil (Tesseract servi par le Worker), sans appel au chef
+            pp = await c.context.new_page()
+            await pp.set_viewport_size({"width": 480, "height": 440})
+            await pp.set_content("<body style='margin:0;padding:24px;background:linear-gradient(120deg,#8a8a8a,#d8d8d8)'><div style='transform:rotate(-2deg);filter:blur(.5px);width:380px;padding:20px;background:#f6f5f0;font:17px monospace;line-height:1.5;white-space:pre'>LECLERC\nSTEAK HACHE 5%% X4      6,49\nOIGNONS JAUNES 1KG      1,79\nLESSIVE 2L              6,90\nPAPAYE                  2,10\nTOTAL A PAYER          17,28</div></body>")
+            image = pathlib.Path(tempfile.mkdtemp()) / "ticket.png"
+            image.write_bytes(await pp.screenshot()); await pp.close()
+            await c.click("nav button[data-vue=courses]")
+            await c.click("button[data-action=ticket][data-ou=courses]")
+            avant = len(RECUS)
+            await c.set_input_files("input[data-ocr=courses]", str(image))
+            await c.wait_for_selector("button[data-action=revue-ok]", timeout=60000)
+            r = await c.evaluate("revue.lignes.map(l => [l.a, l.prix])")
+            verif(["Steak haché", 6.49] in r and ["Oignons", 1.79] in r and not any(a == "" and p == 6.9 for a, p in r), f"photo du ticket lue : {r}")
+            verif(not any(ch.startswith("/v1/messages") for ch, h, c2 in RECUS[avant:]), "la photo a été envoyée au chef (payant)")
+            await c.click("button[data-action=revue-ok]"); await c.wait_for_selector("text=Ticket ajouté")
             # ajuster un repas dans Aujourd'hui, puis revenir au menu prévu
             await c.click("nav button[data-vue=jour]")
             await c.click("article#r-dej button[data-action=ajuster]")

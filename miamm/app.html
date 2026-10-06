@@ -188,6 +188,7 @@ button.hero h1{ max-width:none; font-size:38px; }
 .ligne-ticket{ display:grid; grid-template-columns:minmax(0,1fr) 92px; gap:8px; align-items:center; padding:10px 0; border-bottom:1px solid var(--trait); }
 .ligne-ticket select{ width:100%; min-height:42px; border-radius:12px; border:2px solid var(--trait); background:var(--surface); padding:4px 8px; font-size:15px; }
 .ligne-ticket .lib{ grid-column:1 / -1; font-size:13px; color:var(--doux); }
+.ligne-ticket.douteux select{ border-color:var(--paprika); }
 .ligne-ticket .q{ text-align:right; font-size:14px; color:var(--doux); }
 .sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
 </style>
@@ -595,6 +596,51 @@ async function textePdf(fichier) {
   return lignes.join("\n");
 }
 const lireTexteTicket = texte => LecteurTicket.lire(texte, ALIMENTS, D().appris || {});
+// Photo du ticket lue sur l'appareil, sans serveur ni coût : Tesseract (servi par le Worker dans /ocr/, environ 4 Mo
+// téléchargés à la première photo, puis gardés par le navigateur). Les lignes lues avec peu d'assurance sont marquées
+// « à vérifier » dans l'écran de correction.
+let lecteurOcr = null;
+function chargerScript(src) { return new Promise((ok, ko) => { const e = document.createElement("script"); e.src = src; e.onload = ok; e.onerror = ko; document.head.appendChild(e); }); }
+async function preparerOcr(progres) {
+  if (lecteurOcr) return lecteurOcr;
+  if (!window.Tesseract) await chargerScript("/ocr/tesseract.min.js");
+  lecteurOcr = await Tesseract.createWorker("fra", 1, { workerPath: "/ocr/worker.min.js", corePath: "/ocr/", langPath: "/ocr", gzip: true,
+    logger: m => { if (m.status === "recognizing text" && progres) progres(m.progress); } });
+  await lecteurOcr.setParameters({ tessedit_pageseg_mode: "6", preserve_interword_spaces: "1" });
+  return lecteurOcr;
+}
+// photo en niveaux de gris, contraste étiré, au plus 2 200 px de haut (un ticket est long et étroit)
+async function photoPourOcr(fichier) {
+  const img = await new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = ko; i.src = URL.createObjectURL(fichier); });
+  const f = Math.min(1, 2200 / Math.max(img.width, img.height)), c = document.createElement("canvas");
+  c.width = Math.round(img.width * f); c.height = Math.round(img.height * f);
+  const x = c.getContext("2d"); x.drawImage(img, 0, 0, c.width, c.height);
+  const d = x.getImageData(0, 0, c.width, c.height), p = d.data; let mn = 255, mx = 0;
+  for (let i = 0; i < p.length; i += 4) { const g = p[i] * .299 + p[i + 1] * .587 + p[i + 2] * .114; p[i] = g; if (g < mn) mn = g; if (g > mx) mx = g; }
+  const k = 255 / Math.max(1, mx - mn);
+  for (let i = 0; i < p.length; i += 4) { const g = Math.max(0, Math.min(255, (p[i] - mn) * k)); p[i] = p[i + 1] = p[i + 2] = g; }
+  x.putImageData(d, 0, 0);
+  return c;
+}
+async function lirePhotoTicket(fichier, progres) {
+  const lecteur = await preparerOcr(progres), image = await photoPourOcr(fichier);
+  const { data } = await lecteur.recognize(image, {}, { text: true, blocks: true });
+  const lignes = [];
+  for (const b of data.blocks || []) for (const pa of b.paragraphs || []) for (const l of pa.lines || []) lignes.push({ texte: (l.text || "").trim(), conf: l.confidence });
+  // confusions de lecture dans le prix en fin de ligne : O → 0, I l | → 1, S → 5, B → 8, point ou virgule doublés
+  const prixPropre = l => l.replace(/([0-9OoIl|SB]{1,4}\s?[.,]{1,2}\s?[0-9OoIl|SB]{2})(\s*(?:€|eur)?\s*[A-Z0-9]?)\s*$/i,
+    (m, p, fin) => p.replace(/[Oo]/g, "0").replace(/[Il|]/g, "1").replace(/S/g, "5").replace(/B/g, "8").replace(/\s/g, "").replace(/[.,]{2}/, ",") + fin);
+  const texte = (lignes.length ? lignes.map(l => l.texte) : (data.text || "").split("\n")).map(prixPropre).join("\n");
+  const t = lireTexteTicket(texte);
+  // une ligne d'article dont le texte a été lu avec moins de 75 % d'assurance est à vérifier
+  const faibles = lignes.filter(l => l.conf < 75).map(l => LecteurTicket.normaliser(l.texte));
+  for (const l of t.lignes) { const n = LecteurTicket.normaliser(l.libelle); l.douteux = !!n && faibles.some(f => f.includes(n)); }
+  return t;
+}
+function attenteOcr(pct) {
+  document.getElementById("couche").innerHTML = `<div class="voile"><div class="feuille" role="status" aria-live="polite"><div class="attente" style="min-height:0;padding:10px 0">${chef(110)}
+    <h2>Lecture du ticket…</h2><p class="discret">${pct == null ? "Préparation du lecteur (la première fois, quelques secondes)." : Math.round(pct * 100) + " %"}</p></div></div></div>`;
+}
 // ce que le foyer a appris corrige aussi la lecture du chef
 function corrigerParAppris(t) {
   const ap = D().appris || {};
@@ -607,7 +653,8 @@ function apprendre(libelle, a) {
   D().appris = Object.assign({}, D().appris, { [k]: a }); sauver();
 }
 const optionsTicket = ou => `<div class="pile">
-    <label class="bouton plein accent" style="cursor:pointer">PDF du magasin<input type="file" accept="application/pdf,.pdf" data-pdf="${ou}" class="sr"></label>
+    <label class="bouton plein accent" style="cursor:pointer">Prendre le ticket en photo<input type="file" accept="image/*" data-ocr="${ou}" class="sr"></label>
+    <label class="bouton plein leger" style="cursor:pointer">PDF du magasin<input type="file" accept="application/pdf,.pdf" data-pdf="${ou}" class="sr"></label>
     <button class="bouton plein leger" data-action="coller" data-ou="${ou}">Coller le texte d'une photo</button>
     ${S.lectureChef ? `<label class="bouton plein leger" style="cursor:pointer">Photo lue par le chef<input type="file" accept="image/*,application/pdf" data-photo="${ou}" class="sr"></label>` : ""}</div>`;
 let revue = null;   // ticket ajouté en cours de menu, à vérifier avant d'entrer au stock
@@ -616,7 +663,7 @@ function fermerCouche() { edition = null; choix = null; revue = null; ajust = nu
 function feuilleSource(ou) {
   document.getElementById("couche").innerHTML = `<div class="voile"><div class="feuille" role="dialog" aria-modal="true" aria-labelledby="t-src">
     <div class="tete"><h2 id="t-src">Ajouter un ticket</h2><button class="rond" data-action="fermer" aria-label="Fermer">×</button></div>
-    <p class="discret" style="margin:0 0 12px">Le PDF envoyé par le magasin est lu directement. Pour un ticket papier, copie son texte avec ton téléphone et colle-le.</p>
+    <p class="discret" style="margin:0 0 12px">Photo du ticket papier (lue sur ton téléphone, tu corriges ensuite), PDF du magasin, ou texte copié depuis une photo.</p>
     ${optionsTicket(ou)}</div></div>`;
 }
 function feuilleCollage(ou) {
@@ -629,12 +676,12 @@ function feuilleCollage(ou) {
 }
 function feuilleRevue() {
   if (!revue) return fermerCouche();
-  const l = revue.lignes.map((x, i) => `<div class="ligne-ticket"><span class="lib">${echap(x.libelle)}${x.prix ? " · " + euros(x.prix) : ""}</span>
+  const l = revue.lignes.map((x, i) => `<div class="ligne-ticket ${x.douteux ? "douteux" : ""}"><span class="lib">${echap(x.libelle)}${x.prix ? " · " + euros(x.prix) : ""}${x.douteux ? '<span class="tag">à vérifier</span>' : ""}</span>
       <label><span class="sr">Produit</span><select data-revue="${i}"><option value="">Ignorer</option>${ALIMENTS.map(a => `<option ${a === x.a ? "selected" : ""}>${echap(a)}</option>`).join("")}</select></label>
       <span class="q">${x.a ? fmtQ(x.a, x.q) : "—"}</span></div>`).join("");
   document.getElementById("couche").innerHTML = `<div class="voile"><div class="feuille" role="dialog" aria-modal="true" aria-labelledby="t-rev">
     <div class="tete"><h2 id="t-rev">${echap(revue.info.magasin || "Ticket")}${revue.info.total ? " · " + euros(revue.info.total) : ""}</h2><button class="rond" data-action="fermer" aria-label="Fermer">×</button></div>
-    <p class="discret petit" style="margin:0 0 6px">Vérifie les produits : chaque correction est retenue pour les prochains tickets du foyer.</p>
+    <p class="discret petit" style="margin:0 0 6px">Vérifie les produits${revue.lignes.some(x => x.douteux) ? " (surtout les lignes « à vérifier », mal lues sur la photo) et corrige les quantités dans le stock si besoin" : ""} : chaque correction est retenue pour les prochains tickets du foyer.</p>
     ${l || `<p class="discret">Aucune ligne d'article trouvée.</p>`}
     <button class="bouton plein accent" style="margin-top:14px" data-action="revue-ok" ${revue.lignes.some(x => x.a) ? "" : "disabled"}>Ajouter au stock</button></div></div>`;
 }
@@ -663,7 +710,7 @@ function lignesDuTicket(t) {
     // imprimé (barquette de viande) : ce poids ; sinon le nombre de paquets × leur contenu
     const parPoids = c && !c.vrac && poids > 0 && c.nut && c.nut[1] !== "unité";
     const q = !c ? 0 : c.vrac ? (poids || nombre * 500) : parPoids ? poids : nombre * c.cond;
-    return { libelle: l.libelle, a, nombre, poids, prix: +l.prix || 0, q: Math.round(q) };
+    return { libelle: l.libelle, a, nombre, poids, prix: +l.prix || 0, q: Math.round(q), douteux: !!l.douteux };
   });
 }
 // un PDF (ticket envoyé par le magasin) part tel quel ; une photo est réduite avant l'envoi
@@ -849,7 +896,7 @@ function lirePersonne() {
 function ecranExpress() {
   const x = S.express;
   if (x.etape === "lecture") return `<div class="page"><div class="attente">${chef(130)}<h2>Lecture du ticket…</h2><p class="discret">Les produits, les quantités et les prix.</p></div></div>`;
-  const lignes = x.lignes.map((l, i) => `<div class="ligne-ticket"><span class="lib">${echap(l.libelle || "Produit ajouté")}${l.prix ? " · " + euros(l.prix) : ""}</span>
+  const lignes = x.lignes.map((l, i) => `<div class="ligne-ticket ${l.douteux ? "douteux" : ""}"><span class="lib">${echap(l.libelle || "Produit ajouté")}${l.prix ? " · " + euros(l.prix) : ""}${l.douteux ? '<span class="tag">à vérifier</span>' : ""}</span>
       <label><span class="sr">Produit</span><select data-ligne="${i}"><option value="">Ignorer</option>${ALIMENTS.map(a => `<option ${a === l.a ? "selected" : ""}>${echap(a)}</option>`).join("")}</select></label>
       <span class="q">${l.a ? fmtQ(l.a, l.q) : "—"}</span></div>`).join("");
   const compteur = (cle, val, lib) => `<div class="carte compteur"><div><span class="etiquette">${lib}</span><div class="val">${val}</div></div>
@@ -860,7 +907,7 @@ function ecranExpress() {
         ${lignes}
         <div class="rangee" style="margin-top:10px"><button class="lien" data-action="ligne-ajouter">Ajouter un produit</button><button class="lien" data-action="ticket" data-ou="express">Autre ticket</button><button class="lien" data-action="express-neuf">Repartir de zéro</button></div></div>`
       : `<div class="photo-zone" style="margin-bottom:14px;cursor:default"><span class="ico">${ICONES.photo}</span><b style="font-family:var(--titre);font-size:22px">Ton ticket de caisse</b>
-        <span class="discret">Le PDF envoyé par le magasin, ou le texte d'une photo copié avec ton téléphone : produits, quantités et prix sont lus dessus.</span>
+        <span class="discret">Prends-le en photo bien à plat : produits, quantités et prix sont lus sur ton téléphone, et tu corriges ce qui a été mal lu. Le PDF du magasin marche aussi.</span>
         <div style="width:100%;margin-top:4px">${optionsTicket("express")}</div></div>
         <button class="lien" data-action="ligne-ajouter">Ajouter les produits à la main</button>`}
     ${compteur("jours", x.jours + (x.jours > 1 ? " jours" : " jour"), "Jours à couvrir")}
@@ -1206,13 +1253,23 @@ document.oninput = e => {
 };
 document.onchange = async e => {
   const t = e.target;
-  if (t.dataset.ligne != null) { const l = S.express.lignes[+t.dataset.ligne]; l.a = t.value; l.q = qDeLigne(l); if (l.libelle) apprendre(l.libelle, l.a); return rendre(); }
+  if (t.dataset.ligne != null) { const l = S.express.lignes[+t.dataset.ligne]; l.a = t.value; l.q = qDeLigne(l); l.douteux = false; if (l.libelle) apprendre(l.libelle, l.a); return rendre(); }
   if (t.dataset.ajq != null && ajust) { const v = parseFloat(String(t.value).replace(",", ".")); ajust.items[+t.dataset.ajq][1] = isNaN(v) ? 0 : Math.max(0, v); return feuilleAjuster(); }
   if (t.dataset.stock != null) {
     const v = parseFloat(String(t.value).replace(",", ".")), s = stockMaintenant();
     s[t.dataset.stock] = isNaN(v) ? 0 : Math.max(0, v); fixerStock(s); rendre(); return toast("Stock corrigé");
   }
-  if (t.dataset.revue != null && revue) { const l = revue.lignes[+t.dataset.revue]; l.a = t.value; l.q = qDeLigne(l); apprendre(l.libelle, l.a); return feuilleRevue(); }
+  if (t.dataset.revue != null && revue) { const l = revue.lignes[+t.dataset.revue]; l.a = t.value; l.q = qDeLigne(l); l.douteux = false; apprendre(l.libelle, l.a); return feuilleRevue(); }
+  if (t.dataset.ocr && t.files && t.files[0]) {
+    const ou = t.dataset.ocr, fichier = t.files[0];
+    attenteOcr(null);
+    let tk;
+    try { tk = await lirePhotoTicket(fichier, attenteOcr); }
+    catch (err) { fermerCouche(); return toast(location.protocol === "file:" ? "La lecture des photos demande l'app en ligne" : "Photo illisible : reprends-la bien à plat, ou colle le texte"); }
+    fermerCouche();
+    if (!tk.lignes.length) return toast("Aucune ligne d'article lue : reprends la photo plus près, bien à plat et éclairée");
+    return recevoirTicket(tk, ou);
+  }
   if (t.dataset.pdf && t.files && t.files[0]) {
     const ou = t.dataset.pdf, fichier = t.files[0];
     let texte = "";

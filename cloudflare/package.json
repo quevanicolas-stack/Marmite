@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.131.0",
-    "pdfjs-dist": "^6.4.299"
+    "@tesseract.js-data/fra": "^1.0.0",
+    "pdfjs-dist": "^6.4.299",
+    "tesseract.js": "^7.0.0"
   },
   "devDependencies": {
     "wrangler": "^4.147.0"
