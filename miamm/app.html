@@ -34,7 +34,15 @@ a{ color:var(--primaire); }
 .sans-nav .page{ padding-bottom:40px; }
 .entete{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:16px; }
 .marque{ font-family:var(--titre); font-weight:800; font-size:28px; letter-spacing:-1px; color:var(--primaire); display:inline-flex; align-items:center; gap:8px; }
-.badge-marque{ width:46px; height:46px; margin:-6px 0; }
+.badge-marque{ width:52px; height:52px; margin:-8px 0; object-fit:contain; }
+button.marque{ border:none; background:none; padding:0; cursor:pointer; font:inherit; font-family:var(--titre); font-weight:800; font-size:28px; letter-spacing:-1px; color:var(--primaire); }
+.maison-zone{ display:flex; flex-direction:column; align-items:center; gap:6px; margin:22px 0 8px; }
+.maison{ width:78px; height:78px; border-radius:50%; border:none; background:var(--aubergine); color:var(--safran); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 6px 0 #24112E, 0 0 0 5px var(--safran); transition:transform .12s, box-shadow .12s; }
+.maison:active{ transform:translateY(4px); box-shadow:0 2px 0 #24112E, 0 0 0 5px var(--safran); }
+.maison svg{ width:38px; height:38px; }
+.maison-zone span{ font-family:var(--titre); font-weight:800; color:var(--primaire); }
+.reprendre{ display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%; text-align:left; border:2px dashed var(--primaire); border-radius:20px; background:var(--surface); padding:14px 16px; margin-bottom:14px; font:inherit; color:inherit; cursor:pointer; }
+.reprendre b{ font-family:var(--titre); }
 .chef{ display:block; }
 .tete-vue{ display:flex; align-items:flex-end; justify-content:space-between; gap:10px; margin-bottom:12px; }
 .tete-vue > div{ min-width:0; }
@@ -212,6 +220,7 @@ const ICONES = {
   gauche: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
   droite: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
   fleche: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  maison: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="38" height="38"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1V10"/></svg>',
   qr: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" width="54" height="54"><path d="M3 7V4a1 1 0 0 1 1-1h3M17 3h3a1 1 0 0 1 1 1v3M21 17v3a1 1 0 0 1-1 1h-3M7 21H4a1 1 0 0 1-1-1v-3"/><rect x="6.5" y="6.5" width="4" height="4" rx=".6"/><rect x="13.5" y="6.5" width="4" height="4" rx=".6"/><rect x="6.5" y="13.5" width="4" height="4" rx=".6"/><path d="M13.5 13.5h1.5v1.5M17.5 13.5v1M13.5 17.5h4M16 16v1.5"/></svg>',
   photo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
   coche: '<svg viewBox="0 0 24 24" fill="none" stroke="#1B2E14" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>',
@@ -315,7 +324,8 @@ async function demarrer() {
     try { const l = localStorage.getItem("miamm-doc"); if (l) S.doc = Object.assign(DOC0(), JSON.parse(l)); } catch (e) {}
     await tirer();
   }
-  S.ecran = !S.compte ? "accueil" : (D().periode ? "app" : (D().personnes.length || !S.serveur ? "choix" : "choix"));
+  if (S.compte) try { const e = JSON.parse(localStorage.getItem("miamm-encours") || "null"); if (e) { S.express = e.express || null; S.proposition = e.proposition || null; } } catch (e) {}
+  S.ecran = S.compte ? "choix" : "accueil";
   rendre();
 }
 
@@ -350,7 +360,7 @@ async function connecter(ensuite) {
   S.compte = b.d.compte; S.base = null; await tirer();
   try { localStorage.setItem("miamm-deja", "1"); } catch (e) {}
   if (ensuite === "express") return demarrerExpress();
-  S.ecran = D().periode ? "app" : "choix"; rendre();
+  S.ecran = "choix"; rendre();
 }
 async function ajouterCle() {
   const a = await api("/api/cle/debut", {});
@@ -707,10 +717,16 @@ function boutonTheme() {
   const t = document.documentElement.dataset.theme, sombre = t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches);
   return `<button class="rond" data-action="theme" aria-label="${sombre ? "Passer en clair" : "Passer en sombre"}">${sombre ? ICONES.soleil : ICONES.lune}</button>`;
 }
-const marque = () => `<span class="marque"><img class="badge-marque" src="${BADGE}" alt=""><span>miamm<i>.</i></span></span>`;
+// le logo ramène à la page principale (« On mange quoi cette semaine ? ») depuis n'importe quel écran, sans rien perdre
+const marque = () => S.compte ? `<button class="marque" data-action="principale" aria-label="Page principale"><img class="badge-marque" src="${BADGE}" alt=""><span>miamm<i>.</i></span></button>`
+  : `<span class="marque"><img class="badge-marque" src="${BADGE}" alt=""><span>miamm<i>.</i></span></span>`;
 const chef = (taille = 120) => `<img class="chef" src="${BADGE}" alt="Le chef" width="${taille}" height="${taille}">`;
+function garderEnCours() {
+  try { S.express || S.proposition ? localStorage.setItem("miamm-encours", JSON.stringify({ express: S.express && S.express.etape === "lecture" ? Object.assign({}, S.express, { etape: "saisie" }) : S.express, proposition: S.proposition })) : localStorage.removeItem("miamm-encours"); } catch (e) {}
+}
 function rendre() {
   const e = S.ecran;
+  if (S.compte) garderEnCours();
   document.body.classList.toggle("sans-nav", e !== "app");
   const vues = { chargement: () => `<div class="page"><div class="attente">${chef(130)}</div></div>`, accueil: ecranAccueil, inscription: ecranInscription, secours: ecranSecours,
     choix: ecranChoix, surmesure: ecranSurMesure, express: ecranExpress, proposition: ecranProposition, app: ecranApp };
@@ -755,11 +771,16 @@ function ecranSecours() {
 }
 function ecranChoix() {
   const prenom = S.compte && !S.compte.local ? echap(S.compte.nom) : "";
-  return `<div class="page"><div class="entete">${marque()}<div class="rangee">${boutonTheme()}${D().periode ? `<button class="rond" data-action="aller" data-ecran="app" aria-label="Retour au menu">${ICONES.gauche}</button>` : ""}</div></div>
+  const x = S.express, enCours = S.proposition
+    ? `<button class="reprendre" data-action="reprendre" data-ecran="proposition"><span><b>Reprendre</b><br><span class="discret petit">Le menu proposé par le chef t'attend.</span></span>${ICONES.fleche}</button>`
+    : x && x.lignes.length ? `<button class="reprendre" data-action="reprendre" data-ecran="express"><span><b>Reprendre ton ticket</b><br><span class="discret petit">${(n => n + (n > 1 ? " produits déjà lus." : " produit déjà lu."))(x.lignes.filter(l => l.a).length)}</span></span>${ICONES.fleche}</button>` : "";
+  return `<div class="page"><div class="entete">${marque()}${boutonTheme()}</div>
     <p class="discret" style="margin:0 0 12px">${prenom ? `Salut ${prenom} !` : "Bienvenue !"}</p>
+    ${enCours}
     ${boutonExpress()}
     <button class="choix-mode mode-mesure" data-action="aller" data-ecran="surmesure"><span class="t">Sur mesure ${ICONES.fleche}</span>
       <p>Les personnes du foyer, leurs objectifs de poids, le budget du mois. Un menu calculé au gramme, avec les courses de chaque semaine.</p></button>
+    ${D().periode ? `<div class="maison-zone"><button class="maison" data-action="foyer" aria-label="Mon foyer : le menu en cours, les courses, le stock">${ICONES.maison}</button><span>Mon foyer</span></div>` : ""}
     ${S.compte && S.compte.local ? `<p class="discret petit" style="margin-top:18px">Version d'essai : les données restent sur cet appareil, la lecture des tickets n'est pas disponible.</p>` : ""}</div>`;
 }
 
@@ -837,7 +858,7 @@ function ecranExpress() {
     <h1 style="margin-bottom:14px">Express</h1>
     ${x.lignes.length ? `<div class="carte"><div class="rangee" style="justify-content:space-between"><h3>${x.ticket ? echap(x.ticket.magasin || "Ticket") : "Ce que tu as"}</h3><span class="discret petit">${x.lignes.filter(l => l.a).length} produits${x.ticket && x.ticket.total ? " · " + euros(x.ticket.total) : ""}</span></div>
         ${lignes}
-        <div class="rangee" style="margin-top:10px"><button class="lien" data-action="ligne-ajouter">Ajouter un produit</button><button class="lien" data-action="ticket" data-ou="express">Autre ticket</button></div></div>`
+        <div class="rangee" style="margin-top:10px"><button class="lien" data-action="ligne-ajouter">Ajouter un produit</button><button class="lien" data-action="ticket" data-ou="express">Autre ticket</button><button class="lien" data-action="express-neuf">Repartir de zéro</button></div></div>`
       : `<div class="photo-zone" style="margin-bottom:14px;cursor:default"><span class="ico">${ICONES.photo}</span><b style="font-family:var(--titre);font-size:22px">Ton ticket de caisse</b>
         <span class="discret">Le PDF envoyé par le magasin, ou le texte d'une photo copié avec ton téléphone : produits, quantités et prix sont lus dessus.</span>
         <div style="width:100%;margin-top:4px">${optionsTicket("express")}</div></div>
@@ -1081,8 +1102,12 @@ async function action(b) {
       S.ecran = "secours"; return rendre();
     }
     case "copier-secours": try { await navigator.clipboard.writeText(S.secours); toast("Copié"); } catch (e) { toast("Sélectionne le code pour le copier"); } return;
-    case "secours-ok": S.secours = null; S.ecran = D().periode ? "app" : "choix"; return rendre();
-    case "express": return S.compte ? demarrerExpress() : connecter("express");
+    case "secours-ok": S.secours = null; S.ecran = "choix"; return rendre();
+    case "express": if (!S.compte) return connecter("express"); if (S.express && S.express.lignes.length) { S.ecran = "express"; return rendre(); } return demarrerExpress();
+    case "express-neuf": return demarrerExpress();
+    case "principale": fermerCouche(); S.ecran = "choix"; window.scrollTo(0, 0); return rendre();
+    case "foyer": S.ecran = "app"; S.vue = S.vue || "jour"; window.scrollTo(0, 0); return rendre();
+    case "reprendre": S.ecran = d.ecran; window.scrollTo(0, 0); return rendre();
     case "moins": case "plus": {
       const x = S.express, k = d.cle, v = x[k] + (d.action === "plus" ? 1 : -1);
       x[k] = Math.max(k === "enfants" ? 0 : 1, Math.min(k === "jours" ? 14 : 12, v)); return rendre();
@@ -1154,7 +1179,7 @@ async function action(b) {
     }
     case "rappels": return activerRappels();
     case "ajouter-cle": return ajouterCle();
-    case "deconnexion": await api("/api/deconnexion", {}); S.compte = null; S.doc = DOC0(); S.base = null; try { localStorage.removeItem("miamm-doc"); } catch (e) {} S.ecran = "accueil"; return rendre();
+    case "deconnexion": await api("/api/deconnexion", {}); S.compte = null; S.doc = DOC0(); S.base = null; S.express = null; S.proposition = null; try { localStorage.removeItem("miamm-doc"); localStorage.removeItem("miamm-encours"); } catch (e) {} S.ecran = "accueil"; return rendre();
   }
 }
 document.onclick = e => {

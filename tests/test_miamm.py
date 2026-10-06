@@ -127,7 +127,8 @@ async def main():
             code = (await a.inner_text("#invitation .secours")).strip()
             bb, errs_b = await telephone()
             await inscrire(bb, code, "Aurélie")
-            await bb.wait_for_selector("nav button[data-vue=jour]", timeout=10000)
+            await bb.wait_for_selector("button[data-action=foyer]", timeout=10000)
+            await bb.click("button[data-action=foyer]"); await bb.wait_for_selector("nav button[data-vue=jour]")
             r = await bb.evaluate("({ plats: P().plan[0].meals.map(m => m.plat).join('|'), coche: Object.keys(D().suivi.coches).length, pers: D().personnes.length })")
             ra = await a.evaluate("P().plan[0].meals.map(m => m.plat).join('|')")
             verif(r["plats"] == ra and r["coche"] == 1 and r["pers"] == 2, f"le second membre ne voit pas le même foyer : {r}")
@@ -137,7 +138,12 @@ async def main():
             await a.click("button[data-action=deconnexion]"); await a.wait_for_selector("button[data-action=connexion]")
             verif(await a.locator("text=Première fois ? J'ai une invitation").count() == 0, "l'invitation est encore proposée en grand sur un appareil déjà connecté")
             await a.click("button[data-action=connexion]")
-            await a.wait_for_selector("nav button[data-vue=jour]", timeout=15000)
+            # la page principale s'ouvre ; le bouton maison mène au foyer, le logo ramène à la page principale
+            await a.wait_for_selector("button[data-action=foyer]", timeout=15000)
+            await a.click("button[data-action=foyer]"); await a.wait_for_selector("nav button[data-vue=jour]")
+            await a.click("nav button[data-vue=courses]"); await a.click("button[data-action=principale]")
+            await a.wait_for_selector("button.hero"); await a.click("button[data-action=foyer]")
+            verif(await a.evaluate("S.vue") == "courses", "retour au foyer sans revenir sur l'onglet quitté")
             verif(await a.evaluate("S.compte.nom") == "Nicolas", "connexion par la clé ratée")
 
             # 5. ticket ajouté aux courses : articles prévus cochés, le reste au stock, prix mis à jour
