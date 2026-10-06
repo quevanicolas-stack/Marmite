@@ -1,5 +1,5 @@
 """Prépare public/ pour Cloudflare : miamm/miamm.html (construit par miamm/construire.py) devient index.html,
-avec manifeste, icônes et service worker, plus les fichiers de statique/."""
+avec manifeste, icônes et service worker, plus les fichiers de statique/ et pdf.js (lecture des tickets PDF sur l'appareil)."""
 import pathlib, shutil, subprocess, sys
 ICI = pathlib.Path(__file__).resolve().parent
 PUBLIC = ICI / "public"
@@ -22,6 +22,11 @@ def preparer():
     PUBLIC.mkdir()
     (PUBLIC / "index.html").write_text(page.replace("</head>", TETE + "</head>"), encoding="utf-8")
     for f in (ICI / "statique").iterdir(): shutil.copy(f, PUBLIC / f.name)
+    # pdf.js (version « legacy », pour les Safari un peu anciens), installé par npm
+    pdf = ICI / "node_modules" / "pdfjs-dist" / "legacy" / "build"
+    assert pdf.exists(), "pdfjs-dist absent : lancer npm install dans cloudflare/"
+    (PUBLIC / "pdf").mkdir()
+    for nom in ("pdf.min.mjs", "pdf.worker.min.mjs"): shutil.copy(pdf / nom, PUBLIC / "pdf" / nom)
     print("public/ prêt :", ", ".join(sorted(p.name for p in PUBLIC.iterdir())))
 
 if __name__ == "__main__":

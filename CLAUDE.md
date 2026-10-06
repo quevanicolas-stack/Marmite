@@ -428,6 +428,7 @@ tests/test_assistant_personnes_theme.py   Nicolas/Aurélie, thème, assistant si
 docs/prototype-beta-resume.md      résumé du prototype de l'app grand public
 miamm/app.html                    Miamm : source de l'app (une page, sans framework)
 miamm/moteur.js                   moteur de Miamm : N personnes, objectifs calculés, Express (priorité au stock)
+miamm/ticket.js                   lecteur de ticket sans IA (lignes, quantités, poids, remises, rapprochement, apprentissage du foyer)
 miamm/construire.py               app.html + moteur.js + badge + blocs de donnees/ → miamm/miamm.html (non versionné)
 miamm/logo/                       mascotte-source.jpg, chef-courses-source.png (vrai PNG transparent), chef-stock-source.webp (vrai PNG transparent), fabriquer.py (détourage blanc ou faux damier, badge, scènes, icônes), logo-rond.png, logo-complet.png, badge-192, chef-courses, chef-stock (.txt embarqués dans la page)
 cloudflare/wrangler.toml           Worker « miamm » : page (public/), D1 « miamm », cron des rappels
@@ -438,6 +439,7 @@ cloudflare/statique/               service worker, manifeste, icônes de Miamm
 .github/workflows/cloudflare.yml   mise en ligne de Miamm à chaque fusion dans main
 tests/test_miamm.py               wrangler dev + clé d'accès simulée : invitation, compte, sur mesure, foyer partagé, connexion, tickets, Express, rappels
 tests/test_miamm_moteur.js        moteur de Miamm : objectifs, N personnes, enfant, invités, budget, Express, exclusions, graine
+tests/test_miamm_ticket.js        lecteur de ticket : ticket Leclerc type, abréviations, non-alimentaire, corrections apprises
 ```
 
 ## 9. Miamm (05/10/2026)
@@ -448,7 +450,7 @@ L'app pour soi et ses proches qui succède à Marmite. Code dans `miamm/` (front
 
 ```bash
 python3 miamm/construire.py                 # → miamm/miamm.html (s'ouvre aussi en fichier : mode d'essai, sans compte)
-node tests/test_miamm_moteur.js
+node tests/test_miamm_moteur.js && node tests/test_miamm_ticket.js
 cd cloudflare && npm install && cd .. && python3 tests/test_miamm.py    # wrangler dev en local, clé d'accès simulée
 ```
 
@@ -459,7 +461,7 @@ cd cloudflare && npm install && cd .. && python3 tests/test_miamm.py    # wrangl
 - **Code de secours** (16 caractères, montré une seule fois, haché en base, renouvelé à chaque usage) : `/api/secours`.
 - **Session** : cookie `miamm_session` HttpOnly, SameSite=Lax, Secure (sauf localhost), 180 jours ; requêtes qui modifient : même origine et JSON.
 - **Document du foyer** : `docs` clé `foyer:<id>`, avec révision ; l'app fusionne à trois en cas de conflit (même logique que Marmite).
-- **Garde-fous de dépense** : 30 appels « chef » et 15 tickets par foyer et par jour.
+- **Garde-fous de dépense** : lecture des photos coupée par défaut (`LECTURE_CHEF`) ; sinon 30 appels « chef » et 15 tickets par foyer et par jour.
 - **Temps de calcul** : le corps JSON n'est lu qu'une fois et le contenu du ticket n'est pas parcouru par une expression régulière (limite de CPU des Workers). Les erreurs du chef sont renvoyées avec leur code et journalisées (`[observability]` dans `wrangler.toml`, journaux dans le tableau de bord Cloudflare).
 
 ### Le front (`miamm/app.html`)
@@ -468,7 +470,8 @@ cd cloudflare && npm install && cd .. && python3 tests/test_miamm.py    # wrangl
 - **DA** : aubergine `#3B1F4A`, safran `#F5B700`, paprika `#E4572E`, basilic `#7DB46C`, crème `#FFFBF2` ; Bricolage Grotesque (titres) et Outfit (texte) ; clair et sombre (`localStorage["miamm-theme"]`). Icônes à tracé, pas d'emoji. L'app ne parle jamais de Claude : c'est « le chef ».
 - **Écrans** : accueil = un gros bouton « On mange quoi cette semaine ? » (appareil photo, « Scanner mon ticket » : menu express, connexion par la clé d'abord si besoin), puis « Se connecter », « Première fois ? J'ai une invitation » (masqué sur un appareil déjà connecté, `localStorage["miamm-deja"]`) et le code de secours en petit → choix (même gros bouton express, puis **Sur mesure**) ; l'express reste en tête de l'onglet Menu → proposition (bilan, courses, menu ; chaque plat se change depuis la bibliothèque ; « Une autre idée, chef ») → l'app : Aujourd'hui (portions par personne, « Je l'ai fait »), Menu, Courses (cases, prix payé, « Ajouter un ticket de caisse »), Stock (ce matin + ce qui manque pour 3 jours ; « Refaire le menu avec ce que j'ai », aussi en bas de Courses : nouveau menu du premier jour libre au bout du menu, à partir du stock réel, `priorite:"stock"`, mode `stock` ; un ticket ajouté ouvre Stock), Foyer (personnes, invitations, rappels, compte).
 - **Sur mesure** : personnes (sexe, âge, taille, poids, objectif, activité, petit-déjeuner sucré / salé / aucun, « pas de régime »), durée 7 à 30 jours, budget du mois (ramené à la durée), jour des courses (la première a lieu le jour du début), produits exclus.
-- **Express** : photo du ticket (réduite à 1 800 px, JPEG) ou PDF envoyé par le magasin (6 Mo au plus, envoyé tel quel en bloc `document`) → `/api/ticket` (schéma JSON : libellé, aliment du catalogue, nombre, poids, prix, alimentaire) → lignes à vérifier → jours, adultes, enfants, « huile, épices, sauces à la maison », desserts → menu à partir du stock (`priorite:"stock"`) et liste « À compléter ». Les prix du ticket deviennent les prix de référence (`doc.prix`, source `ticket`).
+- **Tickets, gratuits par défaut (06/10/2026)** : le PDF du magasin est lu sur l'appareil (pdf.js, `pdfjs-dist` copié dans `public/pdf/` par `preparer.py`) ; pour un ticket papier, le texte copié par le téléphone (Texte en direct, Google Lens) est collé. `miamm/ticket.js` (`LecteurTicket`, injecté à la place de `__TICKET__`) découpe les lignes sans IA (prix en fin de ligne, « 2 X 1,49 », « 0,912 kg x », remises, total, non-alimentaire) et rapproche chaque libellé : d'abord **ce que le foyer a appris** (`doc.appris` : libellé sans chiffres ni unités → produit, ou « » pour ignorer ; chaque correction d'une ligne l'enregistre, partagé par le foyer), puis un dictionnaire de mots de caisse (abréviations comprises). En cours de menu, un ticket passe par une feuille de vérification avant d'entrer au stock. La lecture des **photos par le chef** (payante) n'existe que si `LECTURE_CHEF = "oui"` dans `wrangler.toml` (`non` par défaut) ; ses lignes sont aussi corrigées par `doc.appris`.
+- **Express** : ticket (PDF, texte collé, ou photo lue par le chef si ouverte) → lignes à vérifier → jours, adultes, enfants, « huile, épices, sauces à la maison », desserts → menu à partir du stock (`priorite:"stock"`) et liste « À compléter ». Les prix du ticket deviennent les prix de référence (`doc.prix`, source `ticket`).
 - **Convives** : les portions se lisent avec les personnes du menu (`periode.personnes`), pas celles du foyer ; `periode.profils` garde leurs profils complets pour recomposer. Un menu express reprend le foyer quand les compteurs adultes / enfants lui correspondent (`convivesExpress`).
 - **Document** : `{ version, personnes, reglages: { budget, jourCourses, jours, debut, exclus, desserts }, periode, bilan, mode, suivi: { coches, achats, payes, remplacements }, prix, ajouts, tickets, archives }`.
 

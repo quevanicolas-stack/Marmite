@@ -188,8 +188,10 @@ async function chef(corps, env, compte) {
 // photo (JPEG, PNG, WebP) ou PDF du ticket, en data URI ; pas d'expression régulière sur le contenu (plusieurs centaines
 // de Ko) : le temps de calcul d'un Worker est compté
 const TYPES_TICKET = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+// lecture des photos par le chef : payante, coupée tant que LECTURE_CHEF ne vaut pas « oui » (l'app lit les PDF et le texte collé sans elle)
+const lectureChef = env => !!env.ANTHROPIC_API_KEY && env.LECTURE_CHEF === "oui";
 async function ticket(corps, env, compte) {
-  if (!env.ANTHROPIC_API_KEY) return erreur("indisponible", "La lecture des tickets n'est pas branchée sur ce serveur.", 503);
+  if (!lectureChef(env)) return erreur("indisponible", "La lecture des photos par le chef est coupée : envoie le PDF du ticket ou colle son texte.", 503);
   const { image, catalogue } = corps;
   const v = typeof image === "string" ? image.indexOf(";base64,") : -1, type = v > 5 ? image.slice(5, v) : "";
   if (!TYPES_TICKET.includes(type) || !image.startsWith("data:")) return erreur("requete", "Envoie une photo ou un PDF du ticket.", 400);
@@ -221,7 +223,7 @@ async function api(req, env) {
   const corps = m !== "GET" ? await req.json().catch(() => ({})) : {};
   const compte = await compteDe(env, req);
 
-  if (chemin === "/api/etat") return json({ miamm: true, chef: !!env.ANTHROPIC_API_KEY, vapid: (await clesVapid(env)).publique,
+  if (chemin === "/api/etat") return json({ miamm: true, chef: !!env.ANTHROPIC_API_KEY, lectureChef: lectureChef(env), vapid: (await clesVapid(env)).publique,
     compte: compte ? { id: compte.id, nom: compte.nom, foyer: compte.foyer } : null });
   if (chemin === "/api/rappel") {
     // lu par le service worker à la réception d'un rappel : le texte du jour pour le foyer de la session, sinon générique

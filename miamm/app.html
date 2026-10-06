@@ -174,6 +174,7 @@ button.hero h1{ max-width:none; font-size:38px; }
 const BADGE = "__BADGE__";   // la mascotte du chef dans son badge (miamm/logo/fabriquer.py)
 const CHEF_COURSES = "__CHEF_COURSES__", CHEF_STOCK = "__CHEF_STOCK__";   // le chef au caddie, le chef au frigo</script>
 <script>__MOTEUR__</script>
+<script>__TICKET__</script>
 <script>
 "use strict";
 /* ============================================================
@@ -218,7 +219,7 @@ const deB64 = s => Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/") 
 
 /* ---------- État ---------- */
 const DOC0 = () => ({ version: 1, personnes: [], reglages: { budget: null, jourCourses: 6, jours: 7, exclus: [], desserts: true },
-  periode: null, bilan: null, mode: null, suivi: { coches: {}, achats: {}, payes: {}, remplacements: {} }, prix: {}, ajouts: [], tickets: [], archives: [] });
+  periode: null, bilan: null, mode: null, suivi: { coches: {}, achats: {}, payes: {}, remplacements: {} }, prix: {}, ajouts: [], tickets: [], archives: [], appris: {} });
 const S = { serveur: false, chef: false, vapid: null, compte: null, doc: DOC0(), rev: 0, base: null, ecran: "chargement", vue: "jour", jour: null, qui: null,
   brouillon: null, proposition: null, express: null, courseSel: null, envoi: false, encore: false, minuterie: null, secours: null };
 const D = () => S.doc;
@@ -287,7 +288,7 @@ document.onvisibilitychange = () => { if (document.visibilityState === "visible"
 async function demarrer() {
   if (/^https?:$/.test(location.protocol)) try {
     const r = await fetch("/api/etat", { cache: "no-store", credentials: "same-origin" });
-    if (r.ok) { const e = await r.json(); if (e.miamm) Object.assign(S, { serveur: true, chef: !!e.chef, vapid: e.vapid, compte: e.compte }); }
+    if (r.ok) { const e = await r.json(); if (e.miamm) Object.assign(S, { serveur: true, chef: !!e.chef, lectureChef: !!e.lectureChef, vapid: e.vapid, compte: e.compte }); }
   } catch (e) {}
   if (!S.serveur) {   // mode d'essai : tout sur l'appareil
     try { const l = localStorage.getItem("miamm-doc"); if (l) S.doc = Object.assign(DOC0(), JSON.parse(l)); } catch (e) {}
@@ -441,6 +442,78 @@ function majPrix(l) {
 }
 
 /* ---------- Tickets de caisse ---------- */
+// Gratuit par défaut : le PDF du magasin est lu sur l'appareil (pdf.js servi par le Worker), le texte d'une photo est
+// copié par le téléphone (Texte en direct, Google Lens) puis collé ; LecteurTicket découpe les lignes sans IA.
+// La lecture des photos par le chef (payante) n'existe que si le serveur l'autorise (LECTURE_CHEF).
+async function textePdf(fichier) {
+  const pdfjs = await import("/pdf/pdf.min.mjs");
+  pdfjs.GlobalWorkerOptions.workerSrc = "/pdf/pdf.worker.min.mjs";
+  const doc = await pdfjs.getDocument({ data: new Uint8Array(await fichier.arrayBuffer()) }).promise, lignes = [];
+  for (let n = 1; n <= doc.numPages; n++) {
+    // les morceaux de texte d'une même hauteur forment une ligne du ticket
+    const rangs = [];
+    for (const it of (await (await doc.getPage(n)).getTextContent()).items) {
+      if (!it.str || !it.str.trim()) continue;
+      const y = it.transform[5]; let r = rangs.find(x => Math.abs(x.y - y) < 3);
+      if (!r) rangs.push(r = { y, l: [] });
+      r.l.push([it.transform[4], it.str]);
+    }
+    rangs.sort((a, b) => b.y - a.y).forEach(r => lignes.push(r.l.sort((a, b) => a[0] - b[0]).map(x => x[1]).join(" ")));
+  }
+  return lignes.join("\n");
+}
+const lireTexteTicket = texte => LecteurTicket.lire(texte, ALIMENTS, D().appris || {});
+// ce que le foyer a appris corrige aussi la lecture du chef
+function corrigerParAppris(t) {
+  const ap = D().appris || {};
+  for (const l of t.lignes || []) { const k = LecteurTicket.cle(l.libelle); if (k in ap) { l.aliment = ap[k]; l.alimentaire = ap[k] !== ""; } }
+  return t;
+}
+// une correction devient une habitude du foyer : le même libellé sera reconnu au prochain ticket, pour tout le foyer
+function apprendre(libelle, a) {
+  const k = LecteurTicket.cle(libelle); if (!k) return;
+  D().appris = Object.assign({}, D().appris, { [k]: a }); sauver();
+}
+const optionsTicket = ou => `<div class="pile">
+    <label class="bouton plein accent" style="cursor:pointer">PDF du magasin<input type="file" accept="application/pdf,.pdf" data-pdf="${ou}" class="sr"></label>
+    <button class="bouton plein leger" data-action="coller" data-ou="${ou}">Coller le texte d'une photo</button>
+    ${S.lectureChef ? `<label class="bouton plein leger" style="cursor:pointer">Photo lue par le chef<input type="file" accept="image/*,application/pdf" data-photo="${ou}" class="sr"></label>` : ""}</div>`;
+let revue = null;   // ticket ajouté en cours de menu, à vérifier avant d'entrer au stock
+function fermerCouche() { edition = null; choix = null; revue = null; document.getElementById("couche").innerHTML = ""; }
+function feuilleSource(ou) {
+  document.getElementById("couche").innerHTML = `<div class="voile"><div class="feuille" role="dialog" aria-modal="true" aria-labelledby="t-src">
+    <div class="tete"><h2 id="t-src">Ajouter un ticket</h2><button class="rond" data-action="fermer" aria-label="Fermer">×</button></div>
+    <p class="discret" style="margin:0 0 12px">Le PDF envoyé par le magasin est lu directement. Pour un ticket papier, copie son texte avec ton téléphone et colle-le.</p>
+    ${optionsTicket(ou)}</div></div>`;
+}
+function feuilleCollage(ou) {
+  document.getElementById("couche").innerHTML = `<div class="voile"><div class="feuille" role="dialog" aria-modal="true" aria-labelledby="t-col">
+    <div class="tete"><h2 id="t-col">Coller le texte du ticket</h2><button class="rond" data-action="fermer" aria-label="Fermer">×</button></div>
+    <ol class="discret petit" style="margin:0 0 12px;padding-left:18px"><li>Prends le ticket en photo.</li><li>iPhone : ouvre la photo, appuie longuement sur le texte, « Tout sélectionner », « Copier ». Android : Google Lens, « Texte », « Tout copier ».</li><li>Colle ici.</li></ol>
+    <label class="champ"><span class="sr">Texte du ticket</span><textarea id="t-texte" rows="10" placeholder="FILET POULET 1KG  11,83"></textarea></label>
+    <button class="bouton plein accent" style="margin-top:12px" data-action="lire-texte" data-ou="${ou}">Lire le ticket</button></div></div>`;
+  setTimeout(() => { const t = document.getElementById("t-texte"); if (t) t.focus(); }, 50);
+}
+function feuilleRevue() {
+  if (!revue) return fermerCouche();
+  const l = revue.lignes.map((x, i) => `<div class="ligne-ticket"><span class="lib">${echap(x.libelle)}${x.prix ? " · " + euros(x.prix) : ""}</span>
+      <label><span class="sr">Produit</span><select data-revue="${i}"><option value="">Ignorer</option>${ALIMENTS.map(a => `<option ${a === x.a ? "selected" : ""}>${echap(a)}</option>`).join("")}</select></label>
+      <span class="q">${x.a ? fmtQ(x.a, x.q) : "—"}</span></div>`).join("");
+  document.getElementById("couche").innerHTML = `<div class="voile"><div class="feuille" role="dialog" aria-modal="true" aria-labelledby="t-rev">
+    <div class="tete"><h2 id="t-rev">${echap(revue.info.magasin || "Ticket")}${revue.info.total ? " · " + euros(revue.info.total) : ""}</h2><button class="rond" data-action="fermer" aria-label="Fermer">×</button></div>
+    <p class="discret petit" style="margin:0 0 6px">Vérifie les produits : chaque correction est retenue pour les prochains tickets du foyer.</p>
+    ${l || `<p class="discret">Aucune ligne d'article trouvée.</p>`}
+    <button class="bouton plein accent" style="margin-top:14px" data-action="revue-ok" ${revue.lignes.some(x => x.a) ? "" : "disabled"}>Ajouter au stock</button></div></div>`;
+}
+// quantité d'une ligne quand on choisit son produit à la main
+function qDeLigne(l) { const c = CAT0[l.a]; return !c ? 0 : c.vrac ? (l.poids || 500) : c.nut && c.nut[1] !== "unité" && l.poids > 0 ? l.poids : Math.max(1, l.nombre) * c.cond; }
+function recevoirTicket(t, ou) {
+  if (!t) return;
+  if (!t.lignes || !t.lignes.length) { toast("Aucune ligne d'article trouvée dans ce ticket"); return; }
+  const lignes = lignesDuTicket(t), info = { magasin: t.magasin, total: t.total, date: t.date };
+  if (ou === "express") { fermerCouche(); S.express.etape = "saisie"; S.express.ticket = info; S.express.lignes = S.express.lignes.concat(lignes); return rendre(); }
+  revue = { info, lignes }; feuilleRevue();
+}
 async function lirePhoto(fichier) {
   const img = await new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = ko; i.src = URL.createObjectURL(fichier); });
   const max = 1800, f = Math.min(1, max / Math.max(img.width, img.height));
@@ -464,7 +537,7 @@ function lignesDuTicket(t) {
 const lireFichier = fichier => new Promise((ok, ko) => { const l = new FileReader(); l.onload = () => ok(l.result); l.onerror = ko; l.readAsDataURL(fichier); });
 const estPdf = fichier => fichier.type === "application/pdf" || /\.pdf$/i.test(fichier.name || "");
 async function envoyerTicket(fichier) {
-  if (!S.serveur || !S.chef) { toast("La lecture des tickets n'est pas disponible ici"); return null; }
+  if (!S.serveur || !S.lectureChef) { toast("La lecture des photos est coupée : colle le texte du ticket"); return null; }
   let image;
   if (estPdf(fichier)) {
     if (fichier.size > 6e6) { toast("PDF trop lourd (6 Mo au plus)"); return null; }
@@ -477,7 +550,7 @@ async function envoyerTicket(fichier) {
     toast(r.d.message || (r.status ? `Le serveur n'a pas pu lire le ticket (erreur ${r.status}), réessaie` : "Pas de connexion, réessaie"));
     return null;
   }
-  return r.d;
+  return corrigerParAppris(r.d);
 }
 
 /* ---------- Rappels ---------- */
@@ -631,7 +704,7 @@ function lirePersonne() {
 /* ----- Express ----- */
 function ecranExpress() {
   const x = S.express;
-  if (x.etape === "lecture") return `<div class="page"><div class="attente">${chef(130)}<h2>Le chef lit ton ticket…</h2><p class="discret">Les produits, les quantités et les prix.</p></div></div>`;
+  if (x.etape === "lecture") return `<div class="page"><div class="attente">${chef(130)}<h2>Lecture du ticket…</h2><p class="discret">Les produits, les quantités et les prix.</p></div></div>`;
   const lignes = x.lignes.map((l, i) => `<div class="ligne-ticket"><span class="lib">${echap(l.libelle || "Produit ajouté")}${l.prix ? " · " + euros(l.prix) : ""}</span>
       <label><span class="sr">Produit</span><select data-ligne="${i}"><option value="">Ignorer</option>${ALIMENTS.map(a => `<option ${a === l.a ? "selected" : ""}>${echap(a)}</option>`).join("")}</select></label>
       <span class="q">${l.a ? fmtQ(l.a, l.q) : "—"}</span></div>`).join("");
@@ -641,10 +714,10 @@ function ecranExpress() {
     <h1 style="margin-bottom:14px">Express</h1>
     ${x.lignes.length ? `<div class="carte"><div class="rangee" style="justify-content:space-between"><h3>${x.ticket ? echap(x.ticket.magasin || "Ticket") : "Ce que tu as"}</h3><span class="discret petit">${x.lignes.filter(l => l.a).length} produits${x.ticket && x.ticket.total ? " · " + euros(x.ticket.total) : ""}</span></div>
         ${lignes}
-        <div class="rangee" style="margin-top:10px"><button class="lien" data-action="ligne-ajouter">Ajouter un produit</button>${S.chef ? `<label class="lien" style="cursor:pointer">Autre ticket<input type="file" accept="image/*,application/pdf" data-photo="express" class="sr"></label>` : ""}</div></div>`
-      : `<label class="photo-zone" style="position:relative;margin-bottom:14px"><span class="ico">${ICONES.photo}</span><b style="font-family:var(--titre);font-size:22px">Photo ou PDF du ticket</b>
-        <span class="discret">${S.chef ? "Prends-le en photo, ou choisis le PDF envoyé par le magasin : produits, quantités et prix sont lus dessus." : "La lecture des tickets n'est pas disponible ici : ajoute les produits à la main."}</span>
-        ${S.chef ? `<input type="file" accept="image/*,application/pdf" data-photo="express">` : ""}</label>
+        <div class="rangee" style="margin-top:10px"><button class="lien" data-action="ligne-ajouter">Ajouter un produit</button><button class="lien" data-action="ticket" data-ou="express">Autre ticket</button></div></div>`
+      : `<div class="photo-zone" style="margin-bottom:14px;cursor:default"><span class="ico">${ICONES.photo}</span><b style="font-family:var(--titre);font-size:22px">Ton ticket de caisse</b>
+        <span class="discret">Le PDF envoyé par le magasin, ou le texte d'une photo copié avec ton téléphone : produits, quantités et prix sont lus dessus.</span>
+        <div style="width:100%;margin-top:4px">${optionsTicket("express")}</div></div>
         <button class="lien" data-action="ligne-ajouter">Ajouter les produits à la main</button>`}
     ${compteur("jours", x.jours + (x.jours > 1 ? " jours" : " jour"), "Jours à couvrir")}
     <div class="grille-2">${compteur("adultes", x.adultes, "Adultes")}${compteur("enfants", x.enfants, "Enfants")}</div>
@@ -817,7 +890,7 @@ function vueCourses() {
     ${boutonTicket()}
     <button class="bouton plein leger" data-action="refaire-stock">Refaire le menu avec ce que j'ai</button></div>`;
 }
-const boutonTicket = () => S.chef ? `<label class="bouton plein leger" style="cursor:pointer">Ajouter un ticket de caisse<input type="file" accept="image/*,application/pdf" data-photo="courses" class="sr"></label>` : "";
+const boutonTicket = () => `<button class="bouton plein leger" data-action="ticket" data-ou="courses">Ajouter un ticket de caisse</button>`;
 function vueStock() {
   const p = P(), j = jourDuPlan(), s = stockReel(j), besoin3 = {};
   for (let d = j; d < Math.min(p.jours, j + 3) + 1 && d <= p.jours; d++) for (const m of p.plan[d - 1].meals) for (const [qid, it] of Object.entries(repas(d, m.k).items)) for (const [a, q] of it) besoin3[a] = (besoin3[a] || 0) + q * (qid === "invites" ? (p.invites || 0) : 1);
@@ -900,7 +973,15 @@ async function action(b) {
     case "personne-retirer": D().personnes = D().personnes.filter(p => p.id !== d.id); sauver(); return rendre();
     case "exclu-ajouter": { lireReglages(); const v = document.getElementById("g-exclu").value; D().reglages.exclus = (D().reglages.exclus || []).concat(v); sauver(); return rendre(); }
     case "exclu-retirer": lireReglages(); D().reglages.exclus = (D().reglages.exclus || []).filter(a => a !== d.a); sauver(); return rendre();
-    case "fermer": edition = null; choix = null; document.getElementById("couche").innerHTML = ""; return;
+    case "fermer": return fermerCouche();
+    case "ticket": return feuilleSource(d.ou);
+    case "coller": return feuilleCollage(d.ou);
+    case "lire-texte": {
+      const texte = (document.getElementById("t-texte") || {}).value || "";
+      if (!texte.trim()) return toast("Colle d'abord le texte du ticket");
+      return recevoirTicket(lireTexteTicket(texte), d.ou);
+    }
+    case "revue-ok": { const r = revue; fermerCouche(); return integrerTicket(r.info, r.lignes); }
     case "changer": choix = { j: +d.j, k: d.k, q: "", filtre: "", cible: d.cible || "proposition" }; return feuilleChoix();
     case "voir": return toast("Ce jour est passé");
     case "choix-filtre": choix.filtre = d.f; return feuilleChoix();
@@ -923,7 +1004,7 @@ async function action(b) {
   }
 }
 document.onclick = e => {
-  const v = e.target.closest(".voile"); if (v && e.target === v) { edition = null; choix = null; document.getElementById("couche").innerHTML = ""; return; }
+  const v = e.target.closest(".voile"); if (v && e.target === v) return fermerCouche();
   const b = e.target.closest("[data-action]"); if (b && !b.disabled) return action(b);
   const n = e.target.closest("[data-vue]"); if (n) { S.vue = n.dataset.vue; S.jour = null; window.scrollTo(0, 0); return rendre(); }
 };
@@ -946,7 +1027,15 @@ document.oninput = e => {
 };
 document.onchange = async e => {
   const t = e.target;
-  if (t.dataset.ligne != null) { const l = S.express.lignes[+t.dataset.ligne], a = t.value; l.a = a; if (a) { const c = CAT0[a]; l.q = c.vrac ? (l.poids || 500) : Math.max(1, l.nombre) * c.cond; } return rendre(); }
+  if (t.dataset.ligne != null) { const l = S.express.lignes[+t.dataset.ligne]; l.a = t.value; l.q = qDeLigne(l); if (l.libelle) apprendre(l.libelle, l.a); return rendre(); }
+  if (t.dataset.revue != null && revue) { const l = revue.lignes[+t.dataset.revue]; l.a = t.value; l.q = qDeLigne(l); apprendre(l.libelle, l.a); return feuilleRevue(); }
+  if (t.dataset.pdf && t.files && t.files[0]) {
+    const ou = t.dataset.pdf, fichier = t.files[0];
+    let texte = "";
+    try { texte = await textePdf(fichier); } catch (err) { return toast("Ce PDF ne s'ouvre pas ici : colle plutôt le texte du ticket"); }
+    if (!texte.trim()) return toast("Ce PDF ne contient pas de texte (c'est une image) : colle le texte d'une photo");
+    return recevoirTicket(lireTexteTicket(texte), ou);
+  }
   if (t.dataset.paye != null) {
     const k = t.dataset.paye, v = parseFloat(String(t.value).replace(",", "."));
     if (isNaN(v)) delete D().suivi.payes[k]; else { D().suivi.payes[k] = v; D().suivi.achats[k] = true; }
@@ -954,19 +1043,17 @@ document.onchange = async e => {
   }
   if (t.dataset.photo && t.files && t.files[0]) {
     const ou = t.dataset.photo, fichier = t.files[0];
+    fermerCouche();
     if (ou === "express") { S.express.etape = "lecture"; rendre(); }
     const ticket = await envoyerTicket(fichier);
-    if (ou === "express") {
-      S.express.etape = "saisie";
-      if (ticket) { S.express.ticket = { magasin: ticket.magasin, total: ticket.total, date: ticket.date }; S.express.lignes = S.express.lignes.concat(lignesDuTicket(ticket)); }
-      return rendre();
-    }
-    if (ticket) return integrerTicket(ticket);
+    if (ou === "express") S.express.etape = "saisie";
+    if (ticket) return recevoirTicket(ticket, ou);
+    return rendre();
   }
 };
 // Ticket ajouté en cours de menu : coche les articles prévus de la course la plus proche, le reste entre au stock
-function integrerTicket(t) {
-  const lignes = lignesDuTicket(t).filter(l => l.a), p = P(), auj = aujourdhui();
+function integrerTicket(t, lignesVues) {
+  const lignes = lignesVues.filter(l => l.a), p = P(), auj = aujourdhui();
   const course = p.courses.filter(c => c.date <= auj || c.complement).slice(-1)[0] || p.courses[0];
   let coches = 0, ajoutes = 0;
   for (const l of lignes) {
@@ -979,7 +1066,7 @@ function integrerTicket(t) {
   S.vue = "stock"; window.scrollTo(0, 0);
   sauver(); rendre(); toast(`Ticket ajouté : ${coches} articles cochés, ${ajoutes} au stock`);
 }
-document.onkeydown = e => { if (e.key === "Escape" && (edition || choix)) { edition = null; choix = null; document.getElementById("couche").innerHTML = ""; } };
+document.onkeydown = e => { if (e.key === "Escape" && document.getElementById("couche").innerHTML) fermerCouche(); };
 
 demarrer();
 </script>

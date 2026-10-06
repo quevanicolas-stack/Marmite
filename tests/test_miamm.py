@@ -21,6 +21,21 @@ TICKET = {"magasin": "E.Leclerc Saint-Pierre", "date": "2026-10-05", "total": 41
     {"libelle": "OEUFS PLEIN AIR X12", "aliment": "Œufs", "nombre": 1, "poids_g": 0, "prix": 4.2, "alimentaire": True},
     {"libelle": "COCA 1,5L", "aliment": "", "nombre": 1, "poids_g": 0, "prix": 2.1, "alimentaire": False},
     {"libelle": "PATE FEUILLETEE", "aliment": "", "nombre": 1, "poids_g": 0, "prix": 1.5, "alimentaire": True}]}
+def pdf_texte(lignes):
+    """PDF minimal avec du vrai texte (comme le e-ticket d'un magasin), une ligne par entrée."""
+    flux = "BT /F1 9 Tf 12 TL 20 560 Td " + " ".join("(%s) '" % l.replace("\\", "").replace("(", "").replace(")", "") for l in lignes) + " ET"
+    objets = ["<</Type/Catalog/Pages 2 0 R>>", "<</Type/Pages/Kids[3 0 R]/Count 1>>",
+              "<</Type/Page/Parent 2 0 R/MediaBox[0 0 300 600]/Resources<</Font<</F1 4 0 R>>>>/Contents 5 0 R>>",
+              "<</Type/Font/Subtype/Type1/BaseFont/Helvetica/Encoding/WinAnsiEncoding>>",
+              "<</Length %d>>stream\n%s\nendstream" % (len(flux.encode("latin-1")), flux)]
+    sortie, pos = bytearray(b"%PDF-1.4\n"), []
+    for i, o in enumerate(objets, 1): pos.append(len(sortie)); sortie += ("%d 0 obj\n%s\nendobj\n" % (i, o)).encode("latin-1")
+    xref = len(sortie)
+    sortie += ("xref\n0 %d\n0000000000 65535 f \n" % (len(objets) + 1) + "".join("%010d 00000 n \n" % p for p in pos)
+               + "trailer\n<</Size %d/Root 1 0 R>>\nstartxref\n%d\n%%%%EOF\n" % (len(objets) + 1, xref)).encode("latin-1")
+    return bytes(sortie)
+TICKET_PDF = ["E.LECLERC SAINT-PIERRE", "06/10/2026 18:42", "FILET POULET 1,2KG 11,83", "RIZ LONG GRAIN 1KG", "2 X 1,49 2,98",
+              "COURGETTE", "0,900 kg x 2,49 2,24", "OEUFS PLEIN AIR X12 3,15", "COCA COLA 1,5L 1,89", "ART MYSTERE MAISON 1,00", "TOTAL A PAYER 23,09"]
 class Faux(BaseHTTPRequestHandler):
     def log_message(self, *a): pass
     def do_POST(self):
@@ -46,7 +61,7 @@ async def main():
     pw = port_libre(); base = f"http://localhost:{pw}"   # une clé d'accès exige un nom de domaine (pas une adresse IP)
     env = {k: v for k, v in os.environ.items() if "proxy" not in k.lower()}
     wr = subprocess.Popen(["npx", "wrangler", "dev", "--ip", "127.0.0.1", "--port", str(pw), "--test-scheduled", "--persist-to", tempfile.mkdtemp(prefix="miamm-"),
-                           "--var", "INVITATION_INITIALE:POPO-TE01", "--var", "ANTHROPIC_API_KEY:cle-de-test", "--var", f"ANTHROPIC_BASE_URL:http://127.0.0.1:{pf}",
+                           "--var", "INVITATION_INITIALE:POPO-TE01", "--var", "ANTHROPIC_API_KEY:cle-de-test", "--var", "LECTURE_CHEF:oui", "--var", f"ANTHROPIC_BASE_URL:http://127.0.0.1:{pf}",
                            "--show-interactive-dev-session=false"], cwd=CF, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     try:
         for _ in range(120):
@@ -127,7 +142,11 @@ async def main():
 
             # 5. ticket ajouté aux courses : articles prévus cochés, le reste au stock, prix mis à jour
             await a.click("nav button[data-vue=courses]")
+            await a.click("button[data-action=ticket][data-ou=courses]")
+            verif(await a.locator("input[data-photo=courses]").count() == 1, "photo par le chef absente alors que le serveur l'autorise")
             await a.set_input_files("input[data-photo=courses]", str(CF / "statique" / "icone-512.png"))
+            await a.wait_for_selector("button[data-action=revue-ok]", timeout=15000)
+            await a.click("button[data-action=revue-ok]")
             await a.wait_for_selector("text=Ticket ajouté", timeout=15000)
             r = await a.evaluate("({ coches: Object.keys(D().suivi.achats).length, prix: D().prix['Poulet'] && D().prix['Poulet'].prix, ajouts: D().ajouts.length })")
             verif(r["coches"] + r["ajouts"] == 4 and abs(r["prix"] - 11.83) < 0.01, f"ticket dans les courses : {r}")
@@ -140,18 +159,20 @@ async def main():
             c, errs_c = await telephone()
             await inscrire(c, code2, "Léa")
             await c.click("button[data-action=express]")
-            # le ticket en PDF (celui qu'envoie le magasin), pas en photo
+            # le ticket en PDF (celui qu'envoie le magasin) : lu sur l'appareil, sans appel au chef
             pdf = pathlib.Path(tempfile.mkdtemp()) / "ticket.pdf"
-            pdf.write_bytes(b"%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj 2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj 3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 200 400]>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF\n")
+            pdf.write_bytes(pdf_texte(TICKET_PDF))
             avant = len(RECUS)
-            await c.set_input_files("input[data-photo=express]", str(pdf))
-            await c.wait_for_selector("text=E.Leclerc Saint-Pierre", timeout=15000)
-            appel = next((json.loads(c2) for chemin, h, c2 in RECUS[avant:] if chemin.startswith("/v1/messages")), None)
-            piece = appel and appel["messages"][0]["content"][0]
-            verif(piece and piece["type"] == "document" and piece["source"]["media_type"] == "application/pdf", f"ticket PDF envoyé comme document : {piece and piece['type']}")
-            verif(await c.locator("input[data-photo][capture]").count() == 0, "le champ du ticket force encore l'appareil photo (pas de PDF possible)")
+            verif(await c.locator("input[data-photo][capture]").count() == 0, "le champ du ticket force encore l'appareil photo")
+            await c.set_input_files("input[data-pdf=express]", str(pdf))
+            await c.wait_for_selector("text=E.Leclerc", timeout=15000)
+            verif(not any(ch.startswith("/v1/messages") for ch, h, c2 in RECUS[avant:]), "le PDF a été envoyé au chef (payant)")
             r = await c.evaluate("S.express.lignes.map(l => [l.a, l.q])")
-            verif(r == [["Poulet", 1200], ["Riz (sec)", 2000], ["Courgettes", 900], ["Œufs", 12], ["", 0]], f"lignes du ticket : {r}")
+            verif(r[:4] == [["Poulet", 1200], ["Riz (sec)", 2000], ["Courgettes", 900], ["Œufs", 12]] and r[4] == ["", 0] and len(r) == 5, f"lignes du PDF : {r}")
+            # correction : la ligne inconnue devient de la citrouille, et c'est retenu pour le foyer
+            await c.select_option("select[data-ligne='4']", "Citrouille")
+            r = await c.evaluate("({ appris: D().appris[LecteurTicket.cle('ART MYSTERE MAISON')], q: S.express.lignes[4].q })")
+            verif(r["appris"] == "Citrouille" and r["q"] > 0, f"correction non retenue : {r}")
             await c.click("button[data-action=plus][data-cle=enfants]")
             await c.click("button[data-action=moins][data-cle=jours]"); await c.click("button[data-action=moins][data-cle=jours]")
             verif(await c.evaluate("document.documentElement.scrollWidth <= innerWidth"), "Express déborde à 360 px")
@@ -173,6 +194,20 @@ async def main():
             verif(r["mode"] == "stock" and r["utilises"] >= 2, f"menu refait avec le stock : {r}")
             await c.click("button[data-action=valider]"); await c.wait_for_selector("nav button[data-vue=jour]")
             verif(await c.evaluate("P().profils.length === P().personnes.length && statsJour(jourDuPlan(), qui()).kcal > 500"), "menu refait sans profils ou sans calories")
+            await c.click("nav button[data-vue=courses]")
+            await c.click("button[data-action=ticket][data-ou=courses]")
+            await c.click("button[data-action=coller]")
+            await c.fill("#t-texte", "LECLERC\nART MYSTERE MAISON 2KG   1,20\nCHAMPI PARIS 250G   1,59\nLESSIVE 2L   6,90\nTOTAL 9,69")
+            avant = len(RECUS)
+            await c.click("button[data-action=lire-texte]")
+            await c.wait_for_selector("button[data-action=revue-ok]")
+            r = await c.evaluate("revue.lignes.map(l => l.a)")
+            verif(r == ["Citrouille", "Champignons"], f"texte collé, habitude du foyer : {r}")
+            verif(await c.evaluate("document.documentElement.scrollWidth <= innerWidth"), "vérification du ticket déborde à 360 px")
+            await c.click("button[data-action=revue-ok]")
+            await c.wait_for_selector("text=Ticket ajouté")
+            verif(await c.evaluate("stockReel(jourDuPlan())['Citrouille'] > 0"), "ticket collé absent du stock")
+            verif(not any(ch.startswith("/v1/messages") for ch, h, c2 in RECUS[avant:]), "le texte collé a été envoyé au chef")
             verif(await a.evaluate("(async () => (await api('/api/foyer')).d.doc.mode)()") == "mesure", "le foyer de Nicolas a été touché par celui de Léa")
 
             # 7. rappels du foyer de Nicolas envoyés par le cron

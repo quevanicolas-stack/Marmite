@@ -24,6 +24,9 @@ FUSEAU = "Indian/Reunion"
 CONTACT = "https://github.com/quevanicolas-stack/Marmite"
 CHEF_PAR_JOUR = "30"
 TICKETS_PAR_JOUR = "15"
+# Lecture des photos de tickets par le chef (payante, sur la clé ANTHROPIC_API_KEY) : « oui » pour l'ouvrir.
+# Sans elle, l'app lit gratuitement les PDF et le texte collé, et apprend les corrections du foyer.
+LECTURE_CHEF = "non"
 
 # Secrets (jamais dans ce fichier) : INVITATION_INITIALE (le premier code d'invitation, réutilisable),
 # ANTHROPIC_API_KEY (lecture des tickets et « J'ai faim » ; sans elle, tout le reste marche).
