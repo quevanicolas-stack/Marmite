@@ -160,6 +160,10 @@ button.hero h1{ max-width:none; font-size:38px; }
 .case svg{ width:20px; height:20px; }
 .article .nom{ flex:1; min-width:0; }
 .article .nom small{ display:block; color:var(--doux); font-size:13px; }
+.article .titre-article{ display:block; overflow-wrap:anywhere; }
+.article .achete{ display:flex; align-items:center; gap:6px; margin:4px 0 2px; min-width:0; }
+.article .achete input{ width:76px; min-height:36px; border-radius:10px; border:2px solid var(--trait); background:var(--surface); padding:4px 8px; text-align:right; font-size:16px; text-decoration:none; }
+.article .achete .unite{ font-size:13px; color:var(--doux); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
 .article .prix{ width:92px; flex-shrink:0; }
 .article .prix input{ width:100%; min-height:42px; border-radius:12px; border:2px solid var(--trait); background:var(--surface); padding:6px 8px; text-align:right; font-size:16px; }
 .article.coche .nom{ text-decoration:line-through; color:var(--doux); }
@@ -247,7 +251,7 @@ const deB64 = s => Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/") 
 
 /* ---------- État ---------- */
 const DOC0 = () => ({ version: 1, personnes: [], reglages: { budget: null, jourCourses: 6, jours: 7, exclus: [], desserts: true },
-  periode: null, bilan: null, mode: null, suivi: { coches: {}, achats: {}, payes: {}, remplacements: {} }, prix: {}, ajouts: [], tickets: [], archives: [], appris: {} });
+  periode: null, bilan: null, mode: null, suivi: { coches: {}, achats: {}, payes: {}, quantites: {}, remplacements: {} }, prix: {}, ajouts: [], tickets: [], archives: [], appris: {} });
 const S = { serveur: false, chef: false, vapid: null, compte: null, doc: DOC0(), rev: 0, base: null, ecran: "chargement", vue: "jour", jour: null, qui: null,
   brouillon: null, proposition: null, express: null, courseSel: null, envoi: false, encore: false, minuterie: null, secours: null };
 const D = () => S.doc;
@@ -390,6 +394,8 @@ function repas(j, k) {
   const m = P().plan[j - 1].meals.find(x => x.k === k);
   return r ? Object.assign({}, m, r) : m;
 }
+// Quantité réellement achetée sur une ligne de course (grammes en vrac, nombre de paquets sinon) : saisie, sinon prévue
+const buyDe = (k, it) => { const q = (D().suivi.quantites || {})[k]; return q != null ? q : it.buy; };
 const quantiteAchat = (a, buy) => { const c = CAT()[a]; if (!c) return 0; return c.vrac ? buy * (c.rend || 1) : buy * c.cond; };
 const cleLigne = (cid, a) => `c${cid}-${a}`;
 // la personne affichée : parmi celles du menu (un menu express peut avoir été composé pour d'autres convives que le foyer)
@@ -410,7 +416,7 @@ function stockReel(j) {
   const p = P(), date = j > p.jours ? ajouterJours(p.fin, 1) : p.plan[j - 1].date;
   const inv = D().inventaire && D().inventaire.periode === p.debut ? D().inventaire : null, depuis = inv && j >= inv.jour ? inv : null;
   const s = Object.assign({}, depuis ? depuis.stock : p.stockDepart || {}), apres = t => !depuis || quand(t) > depuis.t;
-  for (const c of p.courses) if (c.date <= date || c.complement) for (const it of c.items) { const v = D().suivi.achats[cleLigne(c.id, it.a)]; if (v && apres(v)) s[it.a] = (s[it.a] || 0) + quantiteAchat(it.a, it.buy); }
+  for (const c of p.courses) if (c.date <= date || c.complement) for (const it of c.items) { const v = D().suivi.achats[cleLigne(c.id, it.a)]; if (v && apres(v)) s[it.a] = (s[it.a] || 0) + quantiteAchat(it.a, buyDe(cleLigne(c.id, it.a), it)); }
   for (const x of D().ajouts) if (x.date <= date && apres(x.t)) s[x.a] = (s[x.a] || 0) + x.q;
   for (let d = depuis ? depuis.jour : 1; d < j; d++) for (const m of p.plan[d - 1].meals) {
     if (depuis && d === depuis.jour && depuis.faits.includes(m.k)) continue;
@@ -440,13 +446,13 @@ function bilanCourses() {
   let paye = 0, reste = 0;
   for (const c of P().courses) for (const it of c.items) {
     const k = cleLigne(c.id, it.a);
-    if (D().suivi.achats[k]) paye += D().suivi.payes[k] != null ? +D().suivi.payes[k] : estimation(it);
-    else reste += estimation(it);
+    if (D().suivi.achats[k]) paye += D().suivi.payes[k] != null ? +D().suivi.payes[k] : estimation(it, buyDe(k, it));
+    else reste += estimation(it, buyDe(k, it));
   }
   for (const x of D().ajouts) if (x.prix) paye += +x.prix;
   return { paye, reste };
 }
-function estimation(it) { const c = CAT()[it.a]; if (!c || c.prix == null) return it.est || 0; return c.vrac ? it.buy / 1000 * c.prix : it.buy * c.prix; }
+function estimation(it, buy = it.buy) { const c = CAT()[it.a]; if (!c || c.prix == null) return it.buy ? (it.est || 0) * buy / it.buy : 0; return c.vrac ? buy / 1000 * c.prix : buy * c.prix; }
 function libelleAchat(it) { const c = CAT()[it.a] || {}; return c.vrac ? nb(it.buy) + " g" : nb(it.buy) + " × " + (c.achat || "paquet"); }
 
 /* ---------- Composer avec le moteur ---------- */
@@ -466,7 +472,7 @@ function validerProposition() {
   if (doc.periode) doc.archives = (doc.archives || []).concat([{ periode: { debut: doc.periode.debut, fin: doc.periode.fin, titre: doc.periode.titre }, bilan: doc.bilan && doc.bilan.cout, date: aujourdhui() }]).slice(-12);
   const profils = pr.mode === "stock" ? convivesStock() : pr.mode === "express" ? convivesExpress(S.express) : doc.personnes;
   doc.periode = Object.assign({}, pr.periode, { profils: cloneJ(profils) }); doc.bilan = pr.bilan; doc.mode = pr.mode;
-  doc.suivi = { coches: {}, achats: {}, payes: {}, remplacements: {} };
+  doc.suivi = { coches: {}, achats: {}, payes: {}, quantites: {}, remplacements: {} };
   doc.ajouts = []; doc.inventaire = null;
   if (pr.mode === "express") {
     doc.personnes = doc.personnes.length ? doc.personnes : pr.periode.personnes.map(p => Object.assign(PERSONNE0(), personnesExpress(S.express.adultes, S.express.enfants).find(x => x.id === p.id)));
@@ -1067,9 +1073,12 @@ function vueCourses() {
   const cid = courses.some(c => c.id === S.courseSel) ? S.courseSel : (courses.find(c => c.items.some(it => !D().suivi.achats[cleLigne(c.id, it.a)])) || courses[0]).id;
   const c = courses.find(x => x.id === cid), b = bilanCourses();
   const lignes = c.items.map(it => {
-    const k = cleLigne(c.id, it.a), coche = !!D().suivi.achats[k], paye = D().suivi.payes[k];
+    const k = cleLigne(c.id, it.a), coche = !!D().suivi.achats[k], paye = D().suivi.payes[k], cat = CAT()[it.a] || {}, buy = buyDe(k, it), change = buy !== it.buy;
+    const unite = cat.vrac ? "g" : "× " + (cat.achat || "paquet");
     return `<div class="article ${coche ? "coche" : ""}"><button class="case" data-action="acheter" data-cle="${echap(k)}" aria-pressed="${coche}" aria-label="${coche ? "Décocher" : "Cocher"} ${echap(it.a)}">${coche ? ICONES.coche : ""}</button>
-      <div class="nom">${echap(it.a)}<small>${libelleAchat(it)} · env. ${euros(estimation(it))}</small></div>
+      <div class="nom"><span class="titre-article">${echap(it.a)}</span>
+        <span class="achete"><label><span class="sr">Quantité achetée de ${echap(it.a)}</span><input type="number" inputmode="decimal" min="0" step="${cat.vrac ? 1 : "any"}" value="${Math.round(buy * 100) / 100}" data-qte="${echap(k)}"></label><span class="unite">${echap(unite)}</span></span>
+        <small>${change ? "prévu " + libelleAchat(it) + " · " : ""}env. ${euros(estimation(it, buy))}</small></div>
       <label class="prix"><span class="sr">Prix payé pour ${echap(it.a)}</span><input type="number" inputmode="decimal" step="0.01" min="0" placeholder="prix" value="${paye != null ? paye : ""}" data-paye="${echap(k)}"></label></div>`;
   }).join("");
   const budget = D().bilan && D().bilan.cout.budget;
@@ -1277,6 +1286,13 @@ document.onchange = async e => {
     if (!texte.trim()) return toast("Ce PDF ne contient pas de texte (c'est une image) : colle le texte d'une photo");
     return recevoirTicket(lireTexteTicket(texte), ou);
   }
+  if (t.dataset.qte != null) {
+    const k = t.dataset.qte, v = parseFloat(String(t.value).replace(",", "."));
+    const it = P().courses.flatMap(c => c.items.map(x => [cleLigne(c.id, x.a), x])).find(([cle]) => cle === k);
+    if (isNaN(v) || v < 0 || (it && v === it[1].buy)) delete (D().suivi.quantites || {})[k];
+    else { D().suivi.quantites = Object.assign({}, D().suivi.quantites, { [k]: Math.round(v * 100) / 100 }); if (!D().suivi.achats[k]) D().suivi.achats[k] = Date.now(); }
+    sauver(); return rendre();
+  }
   if (t.dataset.paye != null) {
     const k = t.dataset.paye, v = parseFloat(String(t.value).replace(",", "."));
     if (isNaN(v)) delete D().suivi.payes[k]; else { D().suivi.payes[k] = v; if (!D().suivi.achats[k]) D().suivi.achats[k] = Date.now(); }
@@ -1299,7 +1315,12 @@ function integrerTicket(t, lignesVues) {
   let coches = 0, ajoutes = 0;
   for (const l of lignes) {
     const it = course && course.items.find(x => x.a === l.a);
-    if (it) { const k = cleLigne(course.id, it.a); D().suivi.achats[k] = Date.now(); if (l.prix) D().suivi.payes[k] = l.prix; coches++; }
+    if (it) {
+      const k = cleLigne(course.id, it.a), c = CAT()[it.a] || {}; D().suivi.achats[k] = Date.now(); if (l.prix) D().suivi.payes[k] = l.prix; coches++;
+      // Quantité du ticket : poids en vrac (ou produit pesé), nombre de paquets sinon
+      const q = c.vrac ? (l.poids > 0 ? l.poids : null) : l.poids > 0 && c.cond && c.nut && c.nut[1] !== "unité" ? Math.round(l.poids / c.cond * 100) / 100 : l.nombre > 0 ? l.nombre : null;
+      if (q != null && q !== it.buy) D().suivi.quantites = Object.assign({}, D().suivi.quantites, { [k]: q });
+    }
     else { D().ajouts.push({ a: l.a, q: l.q, prix: l.prix, date: auj, t: Date.now() }); ajoutes++; }
     if (l.prix > 0) majPrix(l);
   }

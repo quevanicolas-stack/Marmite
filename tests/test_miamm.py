@@ -259,6 +259,16 @@ async def main():
             r = await c.evaluate("Object.values(D().suivi.chronos)[0]")
             verif(r and r["pas"] == 4 and r["duree"] >= 65000, f"chrono des courses : {r}")
             verif(await c.evaluate("document.documentElement.scrollWidth <= innerWidth"), "Courses déborde à 360 px avec le chrono")
+            # quantité achetée modifiable sur la ligne (poids en vrac, paquets sinon)
+            k = await c.evaluate("document.querySelector('input[data-qte]').dataset.qte")
+            avant = await c.evaluate("bilanCourses().paye + bilanCourses().reste")
+            prevu = float(await c.evaluate("document.querySelector('input[data-qte]').value"))
+            await c.fill("input[data-qte]", str(prevu * 2)); await c.dispatch_event("input[data-qte]", "change")
+            r = await c.evaluate(f"({{ q: D().suivi.quantites[{k!r}], coche: !!D().suivi.achats[{k!r}], total: bilanCourses().paye + bilanCourses().reste, prevu: !!document.querySelector('.article small') && document.querySelector('.article small').textContent.includes('prévu') }})")
+            verif(r["q"] == prevu * 2 and r["coche"] and r["total"] > avant and r["prevu"], f"quantité achetée : {r}")
+            verif(await c.evaluate("document.documentElement.scrollWidth <= innerWidth"), "Courses déborde à 360 px avec la quantité")
+            await c.fill("input[data-qte]", str(prevu).rstrip("0").rstrip(".")); await c.dispatch_event("input[data-qte]", "change")
+            verif(await c.evaluate(f"D().suivi.quantites[{k!r}] === undefined"), "retour à la quantité prévue")
             verif(await a.evaluate("(async () => (await api('/api/foyer')).d.doc.mode)()") == "mesure", "le foyer de Nicolas a été touché par celui de Léa")
 
             # 7. rappels du foyer de Nicolas envoyés par le cron
