@@ -269,6 +269,17 @@ async def main():
             verif(await c.evaluate("document.documentElement.scrollWidth <= innerWidth"), "Courses déborde à 360 px avec la quantité")
             await c.fill("input[data-qte]", str(prevu).rstrip("0").rstrip(".")); await c.dispatch_event("input[data-qte]", "change")
             verif(await c.evaluate(f"D().suivi.quantites[{k!r}] === undefined"), "retour à la quantité prévue")
+            # ajouter puis retirer une ligne de la liste
+            n0 = await c.evaluate("document.querySelectorAll('.article').length")
+            await c.select_option("#lc-a", "Concombre"); await c.fill("#lc-q", "2"); await c.click("button[data-action=liste-ajouter]")
+            verif(await c.evaluate("document.querySelectorAll('.article').length") == n0 + 1 and "Concombre" in await c.inner_text(".carte:has(.article)"), "produit ajouté à la liste")
+            await c.click("button[data-action=liste-retirer][data-a=Concombre]")
+            premier = await c.evaluate("document.querySelector('button[data-action=liste-retirer]').dataset.a")
+            await c.click("button[data-action=liste-retirer]")
+            verif(await c.evaluate("document.querySelectorAll('.article').length") == n0 - 1, "ligne prévue retirée")
+            verif(await c.evaluate("document.documentElement.scrollWidth <= innerWidth"), "Courses déborde à 360 px avec l'ajout")
+            await c.click("button[data-action=liste-remettre]")
+            verif(await c.evaluate("document.querySelectorAll('.article').length") == n0 and premier in await c.inner_text(".carte:has(.article)"), "ligne remise")
             verif(await a.evaluate("(async () => (await api('/api/foyer')).d.doc.mode)()") == "mesure", "le foyer de Nicolas a été touché par celui de Léa")
 
             # 7. rappels du foyer de Nicolas envoyés par le cron
